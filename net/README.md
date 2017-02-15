@@ -94,9 +94,14 @@ Some other MACROSES could be seen in templates if some optional triggers are def
 |Fault|General|uptime_restarted|The {HOST.NAME} has just been restarted|sysUptime.last(0)<600 or snmpTrapFallback.str(coldStart)}=1|sysUptime.last(0)}>600 or sysUptime.nodata(1800)=1|Warning(2)|N|-|-|Y|  
 ||  
 |Inventory|Inventory|sn_changed|Device serial number has been changed|serial_number.diff(0)=1|-|Warning(2)|Y|-|-|ONLY MANUAL CLOSE|  
-|Inventory|Inventory|firmware_changed|Device firmware has been changed|firmware_version.diff(0)=1|-|Warning(2)|N|-|-|ONLY MANUAL CLOSE|  
+|Inventory|Inventory|firmware_changed|Device firmware has been changed|firmware_version.diff(0)=1|-|Warning(2)|N|-|-|ONLY MANUAL CLOSE| 
+
 ## Translations
 Most Templates' items and triggers are also provided with translation in Russian. Use templates with `RU` suffix instead of `EN`.  
+
+## Import  
+Import templates from `deps` with RU or EN suffix depending on translation you need first.  
+Then import required templates from `net` directory.  
 
 ## Where are the network interfaces?
 Not here yet. Just attach regular SNMP Interfaces template to the template from this pack for now.
