@@ -97,7 +97,7 @@ Some other MACROSES could be seen in templates if some optional triggers are def
 |Inventory|Inventory|firmware_changed|Device firmware has been changed|firmware_version.diff(0)=1|-|Warning(2)|N|-|-|ONLY MANUAL CLOSE|  
 
 
-## Where are the netowrk interfaces?
+## Where are the network interfaces?
 Not here yet. Just attach regular SNMP Interfaces template to the template from this pack for now.
 
 ## Known issues
