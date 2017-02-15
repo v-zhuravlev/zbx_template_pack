@@ -101,6 +101,7 @@ Most Templates' items and triggers are also provided with translation in Russian
 
 ## Import  
 Import templates from `deps` with RU or EN suffix depending on translation you need first.  
+Also there is a dependency on default `Template ICMP Ping`
 Then import required templates from `net` directory.  
 
 ## Where are the network interfaces?
