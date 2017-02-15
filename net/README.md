@@ -1,5 +1,5 @@
 # Network devices
-
+See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea behind this template pack.  
 ## Devices List  
 |Vendor|Known Models|OS|Known SNMP ObjectID|Template name|MIBS used|Reference|  
 |----|-----|----|-----|------|---------|----------|    
@@ -95,7 +95,8 @@ Some other MACROSES could be seen in templates if some optional triggers are def
 ||  
 |Inventory|Inventory|sn_changed|Device serial number has been changed|serial_number.diff(0)=1|-|Warning(2)|Y|-|-|ONLY MANUAL CLOSE|  
 |Inventory|Inventory|firmware_changed|Device firmware has been changed|firmware_version.diff(0)=1|-|Warning(2)|N|-|-|ONLY MANUAL CLOSE|  
-
+## Translations
+Most Templates' items and triggers are also provided with translation in Russian. Use templates with `RU` suffix instead of `EN`.  
 
 ## Where are the network interfaces?
 Not here yet. Just attach regular SNMP Interfaces template to the template from this pack for now.
