@@ -29,7 +29,7 @@ Just import the required template into your Zabbix 3.0+. Some templates might ha
 Currently `net` template is ready to be tested.  See [`net/README.md`](https://github.com/v-zhuravlev/zbx_template_pack/tree/master/net) for all its items and triggers and supported network device types.  
 
 
-## Template  
+## Template options  
 Templates are provided in two SNMP versions (SNMPvx suffix):  
 - with SNMPv1 items  
 - with SNMPv2 items  
