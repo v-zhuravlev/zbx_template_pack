@@ -95,3 +95,11 @@ Some other MACROSES could be seen in templates if some optional triggers are def
 ||  
 |Inventory|Inventory|sn_changed|Device serial number has been changed|serial_number.diff(0)=1|-|Warning(2)|Y|-|-|ONLY MANUAL CLOSE|  
 |Inventory|Inventory|firmware_changed|Device firmware has been changed|firmware_version.diff(0)=1|-|Warning(2)|N|-|-|ONLY MANUAL CLOSE|  
+
+
+## Where are the netowrk interfaces?
+Not here yet. Just attach regular SNMP Interfaces template to the template from this pack for now.
+
+## Known issues
+- For some devices temperature sensors are discovered using LLD. Since too many sensors are discovered and no dependencies could be created between them, it could lead  to event storm in case if room cooling system is broken.Same problem could be faced with multi CPU network devices.  
+- Sometimes additional LLD rules are used when they are not strictly necessary. This is done on purpose to provide same names to metrics of same Location (like `Temperature[Ambient]`).  
