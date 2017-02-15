@@ -114,7 +114,8 @@ You can also use script provided to mass import the templates like so:
 ```git clone --recursive https://github.com/v-zhuravlev/zbx_template_pack.git
 cd zbx_template_pack/bin```
 
-```[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --lang EN ../deps        
+```
+[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --lang EN ../deps        
 template_deps_host_resources_SNMPv1_EN.xml  
 template_deps_host_resources_SNMPv2_EN.xml  
 template_deps_system_snmp_SNMPv1_EN.xml  
@@ -133,7 +134,8 @@ template_net_juniper_SNMPv2_EN.xml
 template_net_mikrotik_SNMPv1_EN.xml  
 template_net_mikrotik_SNMPv2_EN.xml  
 template_net_ubiquiti_airos_SNMPv1_EN.xml  
-template_net_ubiquiti_airos_SNMPv2_EN.xml```
+template_net_ubiquiti_airos_SNMPv2_EN.xml
+```
 
 
 ## Where are the network interfaces?  
