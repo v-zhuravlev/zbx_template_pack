@@ -27,3 +27,12 @@ Memory triggers also look similar:
 ## How to use this template pack  
 Just import the required template into your Zabbix 3.0+. Some templates might have dependencies. Check `deps` directory then.  
 Currently `net` template is ready to be tested.  See [`net/README.md`](https://github.com/v-zhuravlev/zbx_template_pack/tree/master/net) for all its items and triggers and supported network device types.  
+
+
+## Template  
+Templates are provided in two SNMP versions (SNMPvx suffix):  
+- with SNMPv1 items  
+- with SNMPv2 items  
+And two translations (EN or RU suffixes):  
+- English (Items and triggers)  
+- Russian (most of items and triggers are translated)  
