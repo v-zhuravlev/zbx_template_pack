@@ -226,7 +226,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
                <key>tempDescr.discovery</key>
-               <delay>1800</delay>
+               <delay>90</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -251,8 +251,7 @@
                   <conditions>
                       <condition>
                           <macro>{#SENSOR_LOCALE}</macro>
-                          <value>(3|4|5|7|8|9|10|12|13)</value>
-                        <!-- ambient -->
+                          <value>(4|8|9|12|13)</value>
                           <operator>8</operator>
                           <formulaid>A</formulaid>
                       </condition>
@@ -268,7 +267,7 @@
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
                      <key>cpqHeTemperatureCelsius[{#SNMPINDEX}]</key>
-                     <delay>300</delay>
+                     <delay>600</delay>
                      <history>30</history>
                      <trends>365</trends>
                      <status>0</status>
@@ -306,7 +305,7 @@
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPINDEX}]Temperature sensor location</name>
+                     <name>[{#SNMPINDEX}] Temperature sensor location</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -357,30 +356,34 @@
                      <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPINDEX}"}</name>
+                     <name>{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPINDEX}"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
+                           <name>{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"} (now: {ITEM.LASTVALUE1})</name>
                            <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>{#SNMPINDEX}</value>
                         </tag>
                         <tag>
                            <tag>Host</tag>
                            <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -388,24 +391,28 @@
                      <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
+                     <name>{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>{#SNMPINDEX}</value>
                         </tag>
                         <tag>
                            <tag>Host</tag>
                            <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -419,7 +426,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
                <key>tempDescr.discovery.ambient</key>
-               <delay>1800</delay>
+               <delay>90</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -511,30 +518,34 @@
                      <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Ambient"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Ambient temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"}</name>
+                     <name>Ambient temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Ambient temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
+                           <name>Ambient temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"} (now: {ITEM.LASTVALUE1})</name>
                            <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>Ambient</value>
                         </tag>
                         <tag>
                            <tag>Host</tag>
                            <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -542,24 +553,28 @@
                      <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Ambient temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
+                     <name>Ambient temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>Ambient</value>
                         </tag>
                         <tag>
                            <tag>Host</tag>
                            <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -574,7 +589,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
                <key>tempDescr.discovery.cpu</key>
-               <delay>1800</delay>
+               <delay>90</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -610,7 +625,7 @@
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with cpu(6) filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[CPU] Temperature</name>
+                     <name>[CPU-{#SNMPINDEX}] Temperature</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -659,30 +674,34 @@
                      <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>CPU temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
+                     <name>CPU-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>CPU temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                           <name>CPU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"} (now: {ITEM.LASTVALUE1})</name>
                            <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>CPU</value>
                         </tag>
                         <tag>
                            <tag>Host</tag>
                            <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -690,24 +709,648 @@
                      <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>CPU temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                     <name>CPU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>CPU</value>
                         </tag>
                         <tag>
                            <tag>Host</tag>
                            <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+	           <discovery_rule>
+               <name>Temperature Discovery Memory</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
+               <key>tempDescr.discovery.memory</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                      <condition>
+                          <macro>{#SENSOR_LOCALE}</macro>
+                          <value>7</value>
+                        <!-- memory -->
+                          <operator>8</operator>
+                          <formulaid>A</formulaid>
+                      </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with memory(7) filter</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[Memory-{#SNMPINDEX}] Temperature</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}]</key>
+                     <delay>600</delay>
+                     <history>30</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>C</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>CPQHLTH-MIB  </description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Temperature</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Memory"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Memory-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"Memory"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Memory-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"} (now: {ITEM.LASTVALUE1})</name>
+                           <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Memory"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>Memory</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Memory"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Memory-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>Memory</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+	           <discovery_rule>
+               <name>Temperature Discovery PSU</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
+               <key>tempDescr.discovery.psu</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                      <condition>
+                          <macro>{#SENSOR_LOCALE}</macro>
+                          <value>10</value>
+                        <!-- powerSupply -->
+                          <operator>8</operator>
+                          <formulaid>A</formulaid>
+                      </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with powerSupply(10) filter</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[PSU-{#SNMPINDEX}] Temperature</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}]</key>
+                     <delay>600</delay>
+                     <history>30</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>C</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>CPQHLTH-MIB  </description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Temperature</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"PSU"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>PSU-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"PSU"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>PSU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"} (now: {ITEM.LASTVALUE1})</name>
+                           <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"PSU"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>PSU</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"PSU"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>PSU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>PSU</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+		          <discovery_rule>
+               <name>Temperature Discovery I/O</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
+               <key>tempDescr.discovery.io</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                      <condition>
+                          <macro>{#SENSOR_LOCALE}</macro>
+                          <value>5</value>
+                        <!-- ioBoard -->
+                          <operator>8</operator>
+                          <formulaid>A</formulaid>
+                      </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with ioBoard(5) filter</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[I/O-{#SNMPINDEX}] Temperature</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"]</key>
+                     <delay>600</delay>
+                     <history>30</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>C</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>CPQHLTH-MIB  </description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Temperature</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_WARN:"I/O"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>I/O-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"I/O"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>I/O-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"} (now: {ITEM.LASTVALUE1})</name>
+                           <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_CRIT:"I/O"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>I/O</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_CRIT:"I/O"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>I/O-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>I/O</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+		          <discovery_rule>
+               <name>Temperature Discovery System</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},.1.3.6.1.4.1.232.6.2.6.8.1.3]</snmp_oid>
+               <key>tempDescr.discovery.io</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                      <condition>
+                          <macro>{#SENSOR_LOCALE}</macro>
+                          <value>3</value>
+                        <!-- ioBoard -->
+                          <operator>8</operator>
+                          <formulaid>A</formulaid>
+                      </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with system(3) filter</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[System-{#SNMPINDEX}] Temperature</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>cpqHeTemperatureCelsius[System-{#SNMPINDEX}]</key>
+                     <delay>600</delay>
+                     <history>30</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>C</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>CPQHLTH-MIB  </description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Temperature</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Device"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>System-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"Device"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>System-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"} (now: {ITEM.LASTVALUE1})</name>
+                           <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>Device</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template HP iLO SNMPv2:cpqHeTemperatureCelsius[System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>System-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Location.type</tag>
+                           <value>Device</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                        <tag>
+                           <tag>Temperature</tag>
+                           <value/>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -721,7 +1364,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.232.3.2.2.1.1.1,{#CNTLR_SLOT},1.3.6.1.4.1.232.3.2.2.1.1.5,{#CNTLR_LOCATION},1.3.6.1.4.1.232.3.2.2.1.1.20]</snmp_oid>
                <key>array.discovery</key>
-               <delay>1800</delay>
+               <delay>90</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -853,14 +1496,14 @@
                      <url/>
                      <status>0</status>
                      <priority>5</priority>
-                     <description>Please check the device for faults</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.Please check the device for faults</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
-                           <value>{#CNTLR_LOCATION}</value>
+                           <tag>Location.type</tag>
+                           <value/>
                         </tag>
                         <tag>
                            <tag>Host</tag>
@@ -878,7 +1521,7 @@
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Please check the device for warnings</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.Please check the device for warnings</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
@@ -890,8 +1533,8 @@
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
-                           <value>{#CNTLR_LOCATION}</value>
+                           <tag>Location.type</tag>
+                           <value/>
                         </tag>
                         <tag>
                            <tag>Host</tag>
@@ -909,7 +1552,7 @@
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Please check the device for errors</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.Please check the device for errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
@@ -921,8 +1564,8 @@
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
-                           <value>{#CNTLR_LOCATION}</value>
+                           <tag>Location.type</tag>
+                           <value/>
                         </tag>
                         <tag>
                            <tag>Host</tag>
@@ -941,7 +1584,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.3.2.5.1.1.5,{#DISK_LOCATION},1.3.6.1.4.1.232.3.2.5.1.1.64]</snmp_oid>
                <key>physicalDisk.discovery</key>
-               <delay>1800</delay>
+               <delay>90</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -1081,7 +1724,7 @@
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Please check physical disk for warnings or errors</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.Please check physical disk for warnings or errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
@@ -1098,8 +1741,8 @@
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
-                           <value>{#DISK_LOCATION}</value>
+                           <tag>Location.type</tag>
+                           <value/>
                         </tag>
                         <tag>
                            <tag>Host</tag>
@@ -1117,7 +1760,7 @@
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Please check physical disk for warnings or errors</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.Please check physical disk for warnings or errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
@@ -1129,8 +1772,8 @@
                      </dependencies>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
-                           <value>{#DISK_LOCATION}</value>
+                           <tag>Location.type</tag>
+                           <value/>
                         </tag>
                         <tag>
                            <tag>Host</tag>
@@ -1148,14 +1791,14 @@
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Please check physical disk for warnings or errors</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.Please check physical disk for warnings or errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
-                           <value>{#DISK_LOCATION}</value>
+                           <tag>Location.type</tag>
+                           <value/>
                         </tag>
                         <tag>
                            <tag>Host</tag>
@@ -1237,7 +1880,7 @@
          <url/>
          <status>0</status>
          <priority>5</priority>
-         <description>Please check the device for faults</description>
+         <description>Last value: {ITEM.LASTVALUE1}.Please check the device for faults</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -1253,7 +1896,7 @@
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>Please check the device for warnings</description>
+         <description>Last value: {ITEM.LASTVALUE1}.Please check the device for warnings</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -1275,7 +1918,7 @@
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description>Please check the device for errors</description>
+         <description>Last value: {ITEM.LASTVALUE1}.Please check the device for errors</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>

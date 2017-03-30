@@ -73,7 +73,7 @@
                <logtimefmt/>
             </item>
             <item>
-               <name>Free memory</name>
+               <name>Available memory</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>1</multiplier>
@@ -311,28 +311,28 @@
          <expression>{Template Ubiquiti AirOS SNMPv2:loadValue.2.avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Загрузка ЦПУ слишком велика</name>
+         <name>Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags>
             <tag>
-                        <tag>Location</tag>
+                        <tag>Location.type</tag>
+                        <value>CPU</value>
+                     </tag>
+            <tag>
+                        <tag>Performance</tag>
                         <value/>
                      </tag>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
-                     </tag>
-            <tag>
-                        <tag>Performance</tag>
-                        <value/>
                      </tag>
          </tags>
       </trigger>
@@ -340,20 +340,20 @@
          <expression>{Template Ubiquiti AirOS SNMPv2:memoryUsedPercentage.avg(300)}&gt;90</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Мало свободной памяти ОЗУ</name>
+         <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags>
             <tag>
-                        <tag>Location</tag>
-                        <value/>
+                        <tag>Location.type</tag>
+                        <value>Memory</value>
                      </tag>
             <tag>
                         <tag>Host</tag>

@@ -289,7 +289,7 @@
                <publickey/>
                <privatekey/>
                <port>161</port>
-               <description>MIKROTIK-MIB  software version</description>
+               <description>MIKROTIK-MIB  Software version</description>
                <inventory_link>5</inventory_link>
                <applications>
                   <application>
@@ -307,7 +307,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]</snmp_oid>
                <key>hrProcessorLoad.discovery</key>
-               <delay>1800</delay>
+               <delay>90</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -384,28 +384,28 @@
                      <expression>{Template Mikrotik SNMPv2:hrProcessorLoad[{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPINDEX}] Загрузка ЦПУ слишком велика</name>
+                     <name>[{#SNMPINDEX}] Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags>
                         <tag>
-                           <tag>Location</tag>
+                           <tag>Location.type</tag>
                            <value>{#SNMPINDEX}</value>
-                        </tag>
-                        <tag>
-                           <tag>Host</tag>
-                           <value>{HOST.HOST}</value>
                         </tag>
                         <tag>
                            <tag>Performance</tag>
                            <value/>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
                         </tag>
                      </tags>
                   </trigger_prototype>
@@ -452,20 +452,20 @@
          <expression>{Template Mikrotik SNMPv2:memoryUsedPercentage[Memory].avg(300)}&gt;90</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Мало свободной памяти ОЗУ</name>
+         <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags>
             <tag>
-                        <tag>Location</tag>
-                        <value/>
+                        <tag>Location.type</tag>
+                        <value>Memory</value>
                      </tag>
             <tag>
                         <tag>Host</tag>
@@ -477,30 +477,34 @@
          <expression>{Template Mikrotik SNMPv2:mtxrHlProcessorTemperature.avg(300)}&gt;{$TEMP_WARN:"CPU"}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>[CPU] Температура выше нормы: &gt;{$TEMP_WARN:"CPU"}</name>
+         <name>[CPU] Температура выше нормы: &gt;{$TEMP_WARN:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>[CPU]Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"}</name>
+               <name>[CPU]Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
                <expression>{Template Mikrotik SNMPv2:mtxrHlProcessorTemperature.avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags>
             <tag>
-                        <tag>Location</tag>
+                        <tag>Location.type</tag>
                         <value>CPU</value>
                      </tag>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
+                     </tag>
+            <tag>
+                        <tag>Temperature</tag>
+                        <value/>
                      </tag>
          </tags>
       </trigger>
@@ -508,24 +512,28 @@
          <expression>{Template Mikrotik SNMPv2:mtxrHlProcessorTemperature.avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>[CPU]Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"}</name>
+         <name>[CPU]Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags>
             <tag>
-                        <tag>Location</tag>
+                        <tag>Location.type</tag>
                         <value>CPU</value>
                      </tag>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
+                     </tag>
+            <tag>
+                        <tag>Temperature</tag>
+                        <value/>
                      </tag>
          </tags>
       </trigger>
@@ -533,30 +541,34 @@
          <expression>{Template Mikrotik SNMPv2:mtxrHlTemperature.avg(300)}&gt;{$TEMP_WARN:"Device"}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>[Device] Температура выше нормы: &gt;{$TEMP_WARN:"Device"}</name>
+         <name>[Device] Температура выше нормы: &gt;{$TEMP_WARN:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>[Device]Температура очень высокая: &gt;{$TEMP_CRIT:"Device"}</name>
+               <name>[Device]Температура очень высокая: &gt;{$TEMP_CRIT:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
                <expression>{Template Mikrotik SNMPv2:mtxrHlTemperature.avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags>
             <tag>
-                        <tag>Location</tag>
+                        <tag>Location.type</tag>
                         <value>Device</value>
                      </tag>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
+                     </tag>
+            <tag>
+                        <tag>Temperature</tag>
+                        <value/>
                      </tag>
          </tags>
       </trigger>
@@ -564,24 +576,28 @@
          <expression>{Template Mikrotik SNMPv2:mtxrHlTemperature.avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>[Device]Температура очень высокая: &gt;{$TEMP_CRIT:"Device"}</name>
+         <name>[Device]Температура очень высокая: &gt;{$TEMP_CRIT:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags>
             <tag>
-                        <tag>Location</tag>
+                        <tag>Location.type</tag>
                         <value>Device</value>
                      </tag>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
+                     </tag>
+            <tag>
+                        <tag>Temperature</tag>
+                        <value/>
                      </tag>
          </tags>
       </trigger>
