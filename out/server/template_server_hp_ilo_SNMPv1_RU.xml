@@ -41,7 +41,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.232.6.2.6.1.0</snmp_oid>
-               <key>cpqHeThermalCondition.0</key>
+               <key>sensor.temp.status[cpqHeThermalCondition.0]</key>
                <delay>300</delay>
                <history>30</history>
                <trends>365</trends>
@@ -93,7 +93,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>.1.3.6.1.4.1.232.2.1.3.0</snmp_oid>
-               <key>cpqSiMibCondition.0</key>
+               <key>system.status[cpqSiMibCondition.0]</key>
                <delay>300</delay>
                <history>30</history>
                <trends>365</trends>
@@ -266,7 +266,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius[{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}]</key>
                      <delay>600</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -310,7 +310,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.3.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureLocale[{#SNMPINDEX}]</key>
+                     <key>sensor.temp.locale[cpqHeTemperatureLocale.{#SNMPINDEX}]</key>
                      <delay>3600</delay>
                      <history>7</history>
                      <trends>0</trends>
@@ -353,7 +353,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPINDEX}"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPINDEX}] Температура выше нормы: &gt;{$TEMP_WARN:"{#SNMPINDEX}"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -368,7 +368,7 @@
                      <dependencies>
                         <dependency>
                            <name>[{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -388,7 +388,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -474,7 +474,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -515,7 +515,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Ambient"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Ambient"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Ambient] Температура выше нормы: &gt;{$TEMP_WARN:"Ambient"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -530,7 +530,7 @@
                      <dependencies>
                         <dependency>
                            <name>[Ambient]Температура очень высокая: &gt;{$TEMP_CRIT:"Ambient"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -550,7 +550,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Ambient]Температура очень высокая: &gt;{$TEMP_CRIT:"Ambient"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -630,7 +630,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -671,7 +671,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"CPU"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[CPU-{#SNMPINDEX}] Температура выше нормы: &gt;{$TEMP_WARN:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -686,7 +686,7 @@
                      <dependencies>
                         <dependency>
                            <name>[CPU-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -706,7 +706,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[CPU-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -785,7 +785,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}]</key>
                      <delay>600</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -826,7 +826,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Memory"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Memory"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Memory-{#SNMPINDEX}] Температура выше нормы: &gt;{$TEMP_WARN:"Memory"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -841,7 +841,7 @@
                      <dependencies>
                         <dependency>
                            <name>[Memory-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"Memory"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Memory"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Memory"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -861,7 +861,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Memory"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Memory"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Memory-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"Memory"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -940,7 +940,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}]</key>
                      <delay>600</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -981,7 +981,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"PSU"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"PSU"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[PSU-{#SNMPINDEX}] Температура выше нормы: &gt;{$TEMP_WARN:"PSU"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -996,7 +996,7 @@
                      <dependencies>
                         <dependency>
                            <name>[PSU-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"PSU"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"PSU"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"PSU"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1016,7 +1016,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"PSU"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"PSU"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[PSU-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"PSU"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -1095,7 +1095,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"]</key>
                      <delay>600</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1136,7 +1136,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_WARN:"I/O"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_WARN:"I/O"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[I/O-{#SNMPINDEX}] Температура выше нормы: &gt;{$TEMP_WARN:"I/O"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -1151,7 +1151,7 @@
                      <dependencies>
                         <dependency>
                            <name>[I/O-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"I/O"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_CRIT:"I/O"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_CRIT:"I/O"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1171,7 +1171,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius["I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_CRIT:"I/O"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(300)}&gt;{$TEMP_CRIT:"I/O"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[I/O-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"I/O"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -1250,7 +1250,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqHeTemperatureCelsius[System-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}]</key>
                      <delay>600</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1291,7 +1291,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Device"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"Device"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[System-{#SNMPINDEX}] Температура выше нормы: &gt;{$TEMP_WARN:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -1306,7 +1306,7 @@
                      <dependencies>
                         <dependency>
                            <name>[System-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
+                           <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1326,7 +1326,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqHeTemperatureCelsius[System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
+                     <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[System-{#SNMPINDEX}]Температура очень высокая: &gt;{$TEMP_CRIT:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
@@ -1397,12 +1397,12 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.2.1.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqDaCntlrCondition[{#SNMPINDEX}]</key>
+                     <key>system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}]</key>
                      <delay>300</delay>
-                     <history>30</history>
-                     <trends>365</trends>
+                     <history>7</history>
+                     <trends>0</trends>
                      <status>0</status>
-                     <value_type>3</value_type>
+                     <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
                      <delta>0</delta>
@@ -1444,12 +1444,12 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.2.1.1.2.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqDaCntlrModel[{#SNMPINDEX}]</key>
-                     <delay>300</delay>
+                     <key>system.hw.diskarray.model[cpqDaCntlrModel.{#SNMPINDEX}]</key>
+                     <delay>86400</delay>
                      <history>30</history>
-                     <trends>365</trends>
+                     <trends>0</trends>
                      <status>0</status>
-                     <value_type>3</value_type>
+                     <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
                      <delta>0</delta>
@@ -1487,7 +1487,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqDaCntlrCondition[{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
+                     <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#CNTLR_LOCATION}] Статус контроллера дискового массива: сбой</name>
@@ -1512,7 +1512,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqDaCntlrCondition[{#SNMPINDEX}].last(0)}={$DISK_ARRAY_WARN_STATUS}</expression>
+                     <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_WARN_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#CNTLR_LOCATION}] Статус контроллера дискового массива: предупреждение</name>
@@ -1527,7 +1527,7 @@
                      <dependencies>
                         <dependency>
                            <name>[{#CNTLR_LOCATION}] Статус контроллера дискового массива: авария</name>
-                           <expression>{Template HP iLO SNMPv1:cpqDaCntlrCondition[{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
+                           <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1543,7 +1543,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqDaCntlrCondition[{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
+                     <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#CNTLR_LOCATION}] Статус контроллера дискового массива: авария</name>
@@ -1558,7 +1558,7 @@
                      <dependencies>
                         <dependency>
                            <name>[{#CNTLR_LOCATION}] Статус контроллера дискового массива: сбой</name>
-                           <expression>{Template HP iLO SNMPv1:cpqDaCntlrCondition[{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
+                           <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1617,10 +1617,10 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqDaPhyDrvStatus[{#SNMPINDEX}]</key>
+                     <key>system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
-                     <trends>365</trends>
+                     <trends>0</trends>
                      <status>0</status>
                      <value_type>1</value_type>
                      <allowed_hosts/>
@@ -1669,10 +1669,10 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.51.{#SNMPINDEX}</snmp_oid>
-                     <key>cpqDaPhyDrvSerialNum[{#SNMPINDEX}]</key>
+                     <key>system.hw.physicaldisk.serialnumber[cpqDaPhyDrvSerialNum.{#SNMPINDEX}]</key>
                      <delay>86400</delay>
                      <history>30</history>
-                     <trends>365</trends>
+                     <trends>0</trends>
                      <status>0</status>
                      <value_type>1</value_type>
                      <allowed_hosts/>
@@ -1714,8 +1714,8 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].str({$DISK_OK_STATUS})}=0 and 
-				{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].str("")}=0</expression>
+                     <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].str({$DISK_OK_STATUS})}=0 and 
+						{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].str("")}=0</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#DISK_LOCATION}] Статус физического диска не норма</name>
@@ -1730,12 +1730,12 @@
                      <dependencies>
                         <dependency>
                            <name>[{#DISK_LOCATION}] Статус физического диска: сбой</name>
-                           <expression>{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
+                           <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
                         <dependency>
                            <name>[{#DISK_LOCATION}] Статус физического диска: предупреждение</name>
-                           <expression>{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
+                           <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1751,7 +1751,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
+                     <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#DISK_LOCATION}] Статус физического диска: предупреждение</name>
@@ -1766,7 +1766,7 @@
                      <dependencies>
                         <dependency>
                            <name>[{#DISK_LOCATION}] Статус физического диска: сбой</name>
-                           <expression>{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
+                           <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1782,7 +1782,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP iLO SNMPv1:cpqDaPhyDrvStatus[{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
+                     <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#DISK_LOCATION}] Статус физического диска: сбой</name>
@@ -1871,7 +1871,7 @@
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template HP iLO SNMPv1:cpqSiMibCondition.0.last(0)}={$HEALTH_DISASTER_STATUS}</expression>
+         <expression>{Template HP iLO SNMPv1:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_DISASTER_STATUS}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Статус системы: сбой</name>
@@ -1884,10 +1884,15 @@
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
-         <tags/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
       </trigger>
       <trigger>
-         <expression>{Template HP iLO SNMPv1:cpqSiMibCondition.0.last(0)}={$HEALTH_WARN_STATUS}</expression>
+         <expression>{Template HP iLO SNMPv1:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_WARN_STATUS}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Статус системы: предупреждение</name>
@@ -1902,14 +1907,19 @@
          <dependencies>
             <dependency>
                <name>Статус системы: авария</name>
-               <expression>{Template HP iLO SNMPv1:cpqSiMibCondition.0.last(0)}={$HEALTH_CRIT_STATUS}</expression>
+               <expression>{Template HP iLO SNMPv1:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
-         <tags/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
       </trigger>
       <trigger>
-         <expression>{Template HP iLO SNMPv1:cpqSiMibCondition.0.last(0)}={$HEALTH_CRIT_STATUS}</expression>
+         <expression>{Template HP iLO SNMPv1:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Статус системы: авария</name>
@@ -1924,11 +1934,16 @@
          <dependencies>
             <dependency>
                <name>Статус системы: сбой</name>
-               <expression>{Template HP iLO SNMPv1:cpqSiMibCondition.0.last(0)}={$HEALTH_DISASTER_STATUS}</expression>
+               <expression>{Template HP iLO SNMPv1:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_DISASTER_STATUS}</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
-         <tags/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
       </trigger>
    </triggers>
    <value_maps>

@@ -73,7 +73,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.9.9.109.1.1.1.1.8.{#SNMPINDEX}</snmp_oid>
-                     <key>cpmCPUTotal5minRev[{#SNMPINDEX}]</key>
+                     <key>system.cpu.load[cpmCPUTotal5minRev.{#SNMPINDEX}.]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -114,7 +114,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:cpmCPUTotal5minRev[{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:system.cpu.load[cpmCPUTotal5minRev.{#SNMPINDEX}.].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPINDEX}] CPU load is too high (now: {ITEM.LASTVALUE1})</name>
@@ -187,7 +187,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoMemoryPoolUsed[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -231,7 +231,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoMemoryPoolFree[{#SNMPVALUE}]</key>
+                     <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -275,7 +275,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>memoryUsedPercentage[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -293,7 +293,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(ciscoMemoryPoolUsed[{#SNMPVALUE}])/(last(ciscoMemoryPoolFree[{#SNMPVALUE}])+last(ciscoMemoryPoolUsed[{#SNMPVALUE}])))*100</params>
+                     <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])))*100</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -316,7 +316,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:memoryUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
@@ -375,7 +375,7 @@
                   <conditions/>
                </filter>
                <lifetime>30</lifetime>
-               <description>Discovery of ciscoEnvMonTemperatureStatusTable (ciscoEnvMonTemperatureStatusDescr), a table of ambient temperature status
+               <description>Discovery of ciscoEnvMonsensor.temp.statusTable (ciscoEnvMonsensor.temp.statusDescr), a table of ambient temperature status
                  maintained by the environmental monitor.
 				</description>
                <item_prototypes>
@@ -385,7 +385,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.3.1.3.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoEnvMonTemperatureStatusValue[{#SNMPVALUE}]</key>
+                     <key>sensor.temp.value[ciscoEnvMonsensor.temp.statusValue.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -429,7 +429,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.3.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoEnvMonTemperatureState[{#SNMPVALUE}]</key>
+                     <key>sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -472,7 +472,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:ciscoEnvMonTemperatureStatusValue[{#SNMPVALUE}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPVALUE}"}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:sensor.temp.value[ciscoEnvMonsensor.temp.statusValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPVALUE}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})</name>
@@ -487,7 +487,7 @@
                      <dependencies>
                         <dependency>
                            <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:ciscoEnvMonTemperatureStatusValue[{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}</expression>
+                           <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:sensor.temp.value[ciscoEnvMonsensor.temp.statusValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -507,7 +507,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:ciscoEnvMonTemperatureStatusValue[{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:sensor.temp.value[ciscoEnvMonsensor.temp.statusValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})</name>
@@ -637,7 +637,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.9.9.109.1.1.1.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>cpmCPUTotal5min[{#SNMPINDEX}]</key>
+                     <key>system.cpu.load[cpmCPUTotal5min.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -682,7 +682,7 @@ of value (0..100)</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:cpmCPUTotal5min[{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:system.cpu.load[cpmCPUTotal5min.{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] CPU load is too high (now: {ITEM.LASTVALUE1})</name>
@@ -754,7 +754,7 @@ of value (0..100)</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoMemoryPoolUsed[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -798,7 +798,7 @@ of value (0..100)</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoMemoryPoolFree[{#SNMPVALUE}]</key>
+                     <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -842,7 +842,7 @@ of value (0..100)</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>memoryUsedPercentage[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -860,7 +860,7 @@ of value (0..100)</description>
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(ciscoMemoryPoolUsed[{#SNMPVALUE}])/(last(ciscoMemoryPoolFree[{#SNMPVALUE}])+last(ciscoMemoryPoolUsed[{#SNMPVALUE}])))*100</params>
+                     <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])))*100</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -883,7 +883,7 @@ of value (0..100)</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:memoryUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
@@ -971,7 +971,7 @@ of value (0..100)</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>.1.3.6.1.4.1.9.2.1.58</snmp_oid>
-               <key>avgBusy5</key>
+               <key>system.cpu.load[avgBusy5]</key>
                <delay>300</delay>
                <history>30</history>
                <trends>365</trends>
@@ -1051,7 +1051,7 @@ average of the CPU busy percentage.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoMemoryPoolUsed[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1095,7 +1095,7 @@ average of the CPU busy percentage.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>ciscoMemoryPoolFree[{#SNMPVALUE}]</key>
+                     <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1139,7 +1139,7 @@ average of the CPU busy percentage.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>memoryUsedPercentage[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1157,7 +1157,7 @@ average of the CPU busy percentage.</description>
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(ciscoMemoryPoolUsed[{#SNMPVALUE}])/(last(ciscoMemoryPoolFree[{#SNMPVALUE}])+last(ciscoMemoryPoolUsed[{#SNMPVALUE}])))*100</params>
+                     <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])))*100</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -1180,7 +1180,7 @@ average of the CPU busy percentage.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:memoryUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
@@ -1236,7 +1236,7 @@ average of the CPU busy percentage.</description>
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:avgBusy5.avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
+         <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:system.cpu.load[avgBusy5].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>CPU load is too high (now: {ITEM.LASTVALUE1})</name>

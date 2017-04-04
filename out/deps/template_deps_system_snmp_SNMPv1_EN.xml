@@ -29,7 +29,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>1</multiplier>
                <snmp_oid>1.3.6.1.2.1.1.3.0</snmp_oid>
-               <key>sysUpTime</key>
+               <key>system.uptime</key>
                <delay>60</delay>
                <history>30</history>
                <trends>365</trends>
@@ -74,8 +74,8 @@
                <snmp_oid>1</snmp_oid>
                <key>snmptrap.fallback</key>
                <delay>60</delay>
-               <history>30</history>
-               <trends>365</trends>
+               <history>7</history>
+               <trends>0</trends>
                <status>0</status>
                <value_type>2</value_type>
                <allowed_hosts/>
@@ -115,7 +115,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.1.6.0</snmp_oid>
-               <key>sysLocation</key>
+               <key>system.location</key>
                <delay>3600</delay>
                <history>7</history>
                <trends>0</trends>
@@ -158,12 +158,12 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.1.4.0</snmp_oid>
-               <key>sysContact</key>
+               <key>system.contact</key>
                <delay>3600</delay>
                <history>7</history>
                <trends>0</trends>
                <status>0</status>
-               <value_type>4</value_type>
+               <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
                <delta>0</delta>
@@ -201,10 +201,10 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.1.2.0</snmp_oid>
-               <key>sysObjectID</key>
+               <key>system.objectid</key>
                <delay>3600</delay>
-               <history>30</history>
-               <trends>365</trends>
+               <history>7</history>
+               <trends>0</trends>
                <status>0</status>
                <value_type>1</value_type>
                <allowed_hosts/>
@@ -244,7 +244,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.1.5.0</snmp_oid>
-               <key>sysName</key>
+               <key>system.name</key>
                <delay>3600</delay>
                <history>7</history>
                <trends>0</trends>
@@ -287,7 +287,7 @@
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
-               <key>sysDescr</key>
+               <key>system.objectid</key>
                <delay>3600</delay>
                <history>7</history>
                <trends>0</trends>
@@ -340,9 +340,9 @@ networking software.</description>
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv1:sysUpTime.last(0)}&lt;600 or {Template SNMP Generic SNMPv1:snmptrap.fallback.str(coldStart)}=1</expression>
+         <expression>{Template SNMP Generic SNMPv1:system.uptime.last(0)}&lt;600 or {Template SNMP Generic SNMPv1:snmptrap.fallback.str(coldStart)}=1</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template SNMP Generic SNMPv1:sysUpTime.last(0)}&gt;600 or {Template SNMP Generic SNMPv1:sysUpTime.nodata(1800)}=1</recovery_expression>
+         <recovery_expression>{Template SNMP Generic SNMPv1:system.uptime.last(0)}&gt;600 or {Template SNMP Generic SNMPv1:system.uptime.nodata(1800)}=1</recovery_expression>
          <name> The {HOST.NAME} has just been  restarted</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -355,14 +355,19 @@ networking software.</description>
          <dependencies>
             <dependency>
                <name> No SNMP data collection</name>
-               <expression>{Template SNMP Generic SNMPv1:sysUpTime.nodata({$SNMP_TIMEOUT})}=1</expression>
+               <expression>{Template SNMP Generic SNMPv1:system.uptime.nodata({$SNMP_TIMEOUT})}=1</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
-         <tags/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
       </trigger>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv1:sysUpTime.nodata({$SNMP_TIMEOUT})}=1</expression>
+         <expression>{Template SNMP Generic SNMPv1:system.uptime.nodata({$SNMP_TIMEOUT})}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name> No SNMP data collection</name>
@@ -375,7 +380,12 @@ networking software.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
-         <tags/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
       </trigger>
    </triggers>
    <value_maps/>

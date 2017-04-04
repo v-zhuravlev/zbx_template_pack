@@ -72,7 +72,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}</snmp_oid>
-                     <key>hrProcessorLoad[{#SNMPINDEX}]</key>
+                     <key>system.cpu.load[hrProcessorLoad.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -113,7 +113,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:hrProcessorLoad[{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:system.cpu.load[hrProcessorLoad.{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPINDEX}] Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
@@ -198,7 +198,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>hrStorageAllocationUnits[{#SNMPVALUE}]</key>
+                     <key>vm.memory.units[hrStorageAllocationUnits.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -244,7 +244,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>hrStorageUsed[{#SNMPVALUE}]</key>
+                     <key>vm.memory.units.used[hrStorageUsed.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -288,7 +288,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>hrStorageSize[{#SNMPVALUE}]</key>
+                     <key>vm.memory.units.total[hrStorageSize.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -332,7 +332,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>memoryUsed[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used[memoryUsed.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -350,7 +350,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(hrStorageUsed[{#SNMPVALUE}])*last(hrStorageAllocationUnits[{#SNMPVALUE}]))</params>
+                     <params>(last(vm.memory.units.used[hrStorageUsed.{#SNMPVALUE}])*last(vm.memory.units[hrStorageAllocationUnits.{#SNMPVALUE}]))</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -376,7 +376,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>memoryTotal[{#SNMPVALUE}]</key>
+                     <key>vm.memory.total[memoryTotal.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -394,7 +394,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(hrStorageSize[{#SNMPVALUE}])*last(hrStorageAllocationUnits[{#SNMPVALUE}]))</params>
+                     <params>(last(vm.memory.units.total[hrStorageSize.{#SNMPVALUE}])*last(vm.memory.units[hrStorageAllocationUnits.{#SNMPVALUE}]))</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -420,7 +420,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>memoryUsedPercentage[{#SNMPVALUE}]</key>
+                     <key>vm.memory.used.percentage[memoryUsedPercentage.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -438,7 +438,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(hrStorageUsed[{#SNMPVALUE}])/last(hrStorageSize[{#SNMPVALUE}]))*100</params>
+                     <params>(last(vm.memory.units.used[hrStorageUsed.{#SNMPVALUE}])/last(vm.memory.units.total[hrStorageSize.{#SNMPVALUE}]))*100</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -461,7 +461,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:memoryUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vm.memory.used.percentage[memoryUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
@@ -542,7 +542,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>hrStorageAllocationUnits[Storage-{#SNMPVALUE}]</key>
+                     <key>vfs.fs.units[hrStorageAllocationUnits.Storage-{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -588,7 +588,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>hrStorageUsed[Storage-{#SNMPVALUE}]</key>
+                     <key>vfs.fs.units.used[hrStorageUsed.Storage-{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -632,7 +632,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>hrStorageSize[Storage-{#SNMPVALUE}]</key>
+                     <key>vfs.fs.units.total[hrStorageSize.Storage-{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -676,7 +676,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>storageUsed[{#SNMPVALUE}]</key>
+                     <key>vfs.fs.used[storageUsed.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -694,7 +694,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(hrStorageUsed[Storage-{#SNMPVALUE}])*last(hrStorageAllocationUnits[Storage-{#SNMPVALUE}]))</params>
+                     <params>(last(vfs.fs.units.used[hrStorageUsed.Storage-{#SNMPVALUE}])*last(vfs.fs.units[hrStorageAllocationUnits.Storage-{#SNMPVALUE}]))</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -720,7 +720,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>storageTotal[{#SNMPVALUE}]</key>
+                     <key>vfs.fs.total[storageTotal.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -738,7 +738,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(hrStorageSize[Storage-{#SNMPVALUE}])*last(hrStorageAllocationUnits[Storage-{#SNMPVALUE}]))</params>
+                     <params>(last(vfs.fs.units.total[hrStorageSize.Storage-{#SNMPVALUE}])*last(vfs.fs.units[hrStorageAllocationUnits.Storage-{#SNMPVALUE}]))</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -764,7 +764,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>storageUsedPercentage[{#SNMPVALUE}]</key>
+                     <key>vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -782,7 +782,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(hrStorageUsed[Storage-{#SNMPVALUE}])/last(hrStorageSize[Storage-{#SNMPVALUE}]))*100</params>
+                     <params>(last(vfs.fs.units.used[hrStorageUsed.Storage-{#SNMPVALUE}])/last(vfs.fs.units.total[hrStorageSize.Storage-{#SNMPVALUE}]))*100</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -805,7 +805,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:storageUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Свободного места {#SNMPVALUE} меньше 10%</name>
@@ -818,10 +818,15 @@
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
-                     <tags/>
+                     <tags>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:storageUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;80</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;80</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Свободного места {#SNMPVALUE} меньше 20%</name>
@@ -836,11 +841,16 @@
                      <dependencies>
                         <dependency>
                            <name>[{#SNMPVALUE}] Свободного места {#SNMPVALUE} меньше 10%</name>
-                           <expression>{Template HOST-RESOURCES-MIB SNMPv1:storageUsedPercentage[{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                           <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
-                     <tags/>
+                     <tags>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
                   </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes/>
