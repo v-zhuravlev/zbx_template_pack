@@ -67,12 +67,12 @@
                <description>HOST-RESOURCES-MIB::hrProcessorTable discovery</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPINDEX}] CPU Load</name>
+                     <name>[{#SNMPINDEX}] CPU Utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}</snmp_oid>
-                     <key>system.cpu.load[hrProcessorLoad.{#SNMPINDEX}]</key>
+                     <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -113,10 +113,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:system.cpu.load[hrProcessorLoad.{#SNMPINDEX}].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPINDEX}] CPU load is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPINDEX}] CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>

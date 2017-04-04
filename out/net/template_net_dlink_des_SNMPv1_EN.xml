@@ -33,12 +33,12 @@
          </applications>
          <items>
             <item>
-               <name>CPU Load</name>
+               <name>CPU Utilization</name>
                <type>1</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.171.12.1.1.6.2.0</snmp_oid>
-               <key>system.cpu.load[agentCPUutilizationIn1min.0]</key>
+               <key>system.cpu.util[agentCPUutilizationIn1min.0]</key>
                <delay>300</delay>
                <history>30</history>
                <trends>365</trends>
@@ -432,7 +432,7 @@
                <value>65</value>
             </macro>
             <macro>
-               <macro>{$CPU_LOAD_MAX}</macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -449,10 +449,10 @@
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template D-Link DES SNMPv1:system.cpu.load[agentCPUutilizationIn1min.0].avg(300)}&gt;{$CPU_LOAD_MAX}</expression>
+         <expression>{Template D-Link DES SNMPv1:system.cpu.util[agentCPUutilizationIn1min.0].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>CPU load is too high (now: {ITEM.LASTVALUE1})</name>
+         <name>CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
