@@ -417,6 +417,35 @@
                         </tag>
                      </tags>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(300)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].min(300)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
+                     <name>{#SNMPVALUE} temperature is too low: &lt;{$TEMP_CRIT_LOW:""} (now: {ITEM.LASTVALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Alarm.object.type</tag>
+                           <value>Device</value>
+                        </tag>
+                        <tag>
+                           <tag>Alarm.type</tag>
+                           <value>Cold Temperature</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
@@ -434,6 +463,10 @@
             <macro>
                <macro>{$CPU_UTIL_MAX}</macro>
                <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
             </macro>
          </macros>
          <templates>
