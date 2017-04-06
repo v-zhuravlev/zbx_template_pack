@@ -27,9 +27,224 @@
             <application>
                <name>Temperature</name>
             </application>
+            <application>
+               <name>Inventory</name>
+            </application>
          </applications>
-         <items/>
+         <items>
+            <item>
+               <name>Модель</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <multiplier>0</multiplier>
+               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
+               <key>system.hw.model</key>
+               <delay>300</delay>
+               <history>7</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>ENTITY-MIB  </description>
+               <inventory_link>29</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+            <item>
+               <name>Серийный номер</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <multiplier>0</multiplier>
+               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
+               <key>system.hw.serialnumber</key>
+               <delay>300</delay>
+               <history>7</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>ENTITY-MIB  </description>
+               <inventory_link>8</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+         </items>
          <discovery_rules>
+  	  	
+
+
+  	  	      <discovery_rule>
+               <name>Entity Serial Numbers Discovery</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},.1.3.6.1.2.1.47.1.1.1.1.7,{#ENT_SN},1.3.6.1.2.1.47.1.1.1.1.11]</snmp_oid>
+               <key>entity_sn.discovery</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                        <evaltype>1</evaltype>
+                        <formula/>
+                        <conditions>
+                            <condition>
+                                <macro>{#ENT_SN}</macro>
+                                <value>.+</value>
+                                <operator>8</operator>
+                                <formulaid>B</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#ENT_CLASS}</macro>
+                                <value>[^3]</value> 
+                        <!-- all other than chassis (chassis is not from LLD) -->
+                                <operator>8</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+               <lifetime>30</lifetime>
+               <description/>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[{#ENT_NAME}] Серийный номер</name>
+                     <type>1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>7</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>ENTITY-MIB  </description>
+                     <inventory_link>8</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Inventory</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.Изменился серийный номер {#ENT_NAME}. Подтвердите и закройте.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+
+
+
+
 	  	        <discovery_rule>
                <name>CPU Discovery</name>
                <type>1</type>
@@ -646,9 +861,219 @@
             <application>
                <name>Temperature</name>
             </application>
+            <application>
+               <name>Inventory</name>
+            </application>
          </applications>
-         <items/>
+         <items>
+            <item>
+               <name>Модель</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <multiplier>0</multiplier>
+               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
+               <key>system.hw.model</key>
+               <delay>300</delay>
+               <history>7</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>ENTITY-MIB  </description>
+               <inventory_link>29</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+            <item>
+               <name>Серийный номер</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <multiplier>0</multiplier>
+               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
+               <key>system.hw.serialnumber</key>
+               <delay>300</delay>
+               <history>7</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>ENTITY-MIB  </description>
+               <inventory_link>8</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+         </items>
          <discovery_rules>
+	  	        <discovery_rule>
+               <name>Entity Serial Numbers Discovery</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},.1.3.6.1.2.1.47.1.1.1.1.7,{#ENT_SN},1.3.6.1.2.1.47.1.1.1.1.11]</snmp_oid>
+               <key>entity_sn.discovery</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                        <evaltype>1</evaltype>
+                        <formula/>
+                        <conditions>
+                            <condition>
+                                <macro>{#ENT_SN}</macro>
+                                <value>.+</value>
+                                <operator>8</operator>
+                                <formulaid>B</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#ENT_CLASS}</macro>
+                                <value>[^3]</value> 
+                        <!-- all other than chassis (chassis is not from LLD) -->
+                                <operator>8</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+               <lifetime>30</lifetime>
+               <description/>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[{#ENT_NAME}] Серийный номер</name>
+                     <type>1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>7</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>ENTITY-MIB  </description>
+                     <inventory_link>8</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Inventory</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.Изменился серийный номер {#ENT_NAME}. Подтвердите и закройте.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+
+
 	  	        <discovery_rule>
                <name>CPU Discovery</name>
                <type>1</type>
@@ -1026,6 +1451,9 @@ of value (0..100)</description>
             <application>
                <name>Temperature</name>
             </application>
+            <application>
+               <name>Inventory</name>
+            </application>
          </applications>
          <items>
             <item>
@@ -1072,8 +1500,213 @@ average of the CPU busy percentage.</description>
                <valuemap/>
                <logtimefmt/>
             </item>
+            <item>
+               <name>Модель</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <multiplier>0</multiplier>
+               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
+               <key>system.hw.model</key>
+               <delay>300</delay>
+               <history>7</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>ENTITY-MIB  </description>
+               <inventory_link>29</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+            <item>
+               <name>Серийный номер</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <multiplier>0</multiplier>
+               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
+               <key>system.hw.serialnumber</key>
+               <delay>300</delay>
+               <history>7</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>ENTITY-MIB  </description>
+               <inventory_link>8</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
          </items>
          <discovery_rules>
+  	  
+	  	        <discovery_rule>
+               <name>Entity Serial Numbers Discovery</name>
+               <type>1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},.1.3.6.1.2.1.47.1.1.1.1.7,{#ENT_SN},1.3.6.1.2.1.47.1.1.1.1.11]</snmp_oid>
+               <key>entity_sn.discovery</key>
+               <delay>90</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <filter>
+                        <evaltype>1</evaltype>
+                        <formula/>
+                        <conditions>
+                            <condition>
+                                <macro>{#ENT_SN}</macro>
+                                <value>.+</value>
+                                <operator>8</operator>
+                                <formulaid>B</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#ENT_CLASS}</macro>
+                                <value>[^3]</value> 
+                        <!-- all other than chassis (chassis is not from LLD) -->
+                                <operator>8</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+               <lifetime>30</lifetime>
+               <description/>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[{#ENT_NAME}] Серийный номер</name>
+                     <type>1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>7</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>ENTITY-MIB  </description>
+                     <inventory_link>8</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Inventory</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.Изменился серийный номер {#ENT_NAME}. Подтвердите и закройте.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>  	  
 	  	        <discovery_rule>
                <name>Memory Discovery</name>
                <type>1</type>
@@ -1303,6 +1936,48 @@ average of the CPU busy percentage.</description>
    </templates>
    <triggers>
       <trigger>
+         <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:system.hw.serialnumber.diff()}=1 and {Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv1:system.hw.serialnumber.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Возможно замена устройства (новый серийный номер:{ITEM.VALUE1})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Последнее значение: {ITEM.LASTVALUE1}.Изменился серийный номер устройства. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
+      <trigger>
+         <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:system.hw.serialnumber.diff()}=1 and {Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv1:system.hw.serialnumber.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Возможно замена устройства (новый серийный номер:{ITEM.VALUE1})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Последнее значение: {ITEM.LASTVALUE1}.Изменился серийный номер устройства. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
+      <trigger>
          <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:system.cpu.util[avgBusy5].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
@@ -1329,6 +2004,27 @@ average of the CPU busy percentage.</description>
                         <tag>Performance</tag>
                         <value/>
                      </tag>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
+      <trigger>
+         <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:system.hw.serialnumber.diff()}=1 and {Template Cisco IOS Software releases prior to 12.0_3_T SNMPv1:system.hw.serialnumber.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Возможно замена устройства (новый серийный номер:{ITEM.VALUE1})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Последнее значение: {ITEM.LASTVALUE1}.Изменился серийный номер устройства. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
