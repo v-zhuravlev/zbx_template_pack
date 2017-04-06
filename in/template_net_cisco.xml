@@ -96,6 +96,23 @@
                  maintained by the environmental monitor.
 				</description>
 		</discoveryRule>
+	  
+		<discoveryRule>
+				<name>PSU Discovery</name>
+                <snmp_oid>discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.5.1.2]</snmp_oid>
+                <key>psu.discovery</key>
+				<description>The table of power supply status maintained by the environmental monitor card.</description>               
+		</discoveryRule>		
+
+  	  	<discoveryRule>
+				<name>FAN Discovery</name>
+                <snmp_oid>discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.4.1.2]</snmp_oid>
+                <key>fan.discovery</key>
+                <description>The table of fan status maintained by the environmental monitor.</description>
+		</discoveryRule>	  
+	  
+	  
+	  
 	  </discoveryRules>
 	  <metrics>
 	    <system.cpu.util>
@@ -153,6 +170,24 @@
 		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>	    
 	    </sensor.temp.status>
 	    
+	    <sensor.psu.status>
+	    	  <oid>1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>ciscoEnvMonSupplyState.{#SNMPINDEX}</snmpObject>
+		      <mib>CISCO-ENVMON-MIB</mib>
+		      <discoveryRule>PSU Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_INFO}</alarmObject>
+		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>
+	    </sensor.psu.status>
+	    
+ 	    <sensor.fan.status>
+	    	  <oid>1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>ciscoEnvMonFanState.{#SNMPINDEX}</snmpObject>
+		      <mib>CISCO-ENVMON-MIB</mib>
+		      <discoveryRule>FAN Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_INFO}</alarmObject>
+		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>
+	    </sensor.fan.status>
+	    
 		<system.hw.model>
 	    	  <oid>1.3.6.1.2.1.47.1.1.1.1.13.1</oid><!--1= Chassis s/n (can't use LLD to populate inventory) -->
 		      <snmpObject>entPhysicalModelName.1</snmpObject>
@@ -197,6 +232,15 @@
             <macro>{$TEMP_CRIT_STATUS}</macro>
             <value>3</value> <!-- 3 critical -->
         </macro> 
+        
+        <macro>
+            <macro>{$PSU_CRIT_STATUS}</macro>
+            <value>3</value> <!-- 3 critical -->
+        </macro>
+        <macro>
+            <macro>{$FAN_CRIT_STATUS}</macro>
+        	<value>3</value> <!-- 3 critical -->
+        </macro>         
          	   	
 	   	
 	   </macros>
@@ -235,6 +279,20 @@
                         </conditions>
                     </filter>               
 		</discoveryRule>
+
+		<discoveryRule>
+				<name>PSU Discovery</name>
+                <snmp_oid>discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.5.1.2]</snmp_oid>
+                <key>psu.discovery</key>
+				<description>The table of power supply status maintained by the environmental monitor card.</description>               
+		</discoveryRule>		
+
+  	  	<discoveryRule>
+				<name>FAN Discovery</name>
+                <snmp_oid>discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.4.1.2]</snmp_oid>
+                <key>fan.discovery</key>
+                <description>The table of fan status maintained by the environmental monitor.</description>
+		</discoveryRule>	
 
 
 	  	<discoveryRule>
@@ -312,6 +370,24 @@ of value (0..100)</vendorDescription>
 		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>	    
 	    </sensor.temp.status>
 	    
+	    <sensor.psu.status>
+	    	  <oid>1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>ciscoEnvMonSupplyState.{#SNMPINDEX}</snmpObject>
+		      <mib>CISCO-ENVMON-MIB</mib>
+		      <discoveryRule>PSU Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_INFO}</alarmObject>
+		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>
+	    </sensor.psu.status>
+	    
+ 	    <sensor.fan.status>
+	    	  <oid>1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>ciscoEnvMonFanState.{#SNMPINDEX}</snmpObject>
+		      <mib>CISCO-ENVMON-MIB</mib>
+		      <discoveryRule>FAN Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_INFO}</alarmObject>
+		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>
+	    </sensor.fan.status>	    
+	    
 	    
 	    <!-- INVENTORY -->
 		<system.hw.model>
@@ -336,8 +412,7 @@ of value (0..100)</vendorDescription>
 	    
 	  </metrics>
 	  
-	  
-	  <macros>
+	   <macros>
 	   	<macro>
 	   		<macro>{$TEMP_CRIT:"CPU"}</macro>
 	   		<value>75</value>
@@ -346,6 +421,29 @@ of value (0..100)</vendorDescription>
 	   		<macro>{$TEMP_WARN:"CPU"}</macro>
 	   		<value>70</value>
 	   	</macro>
+        <macro>
+			<macro>{$HEALTH_CRIT_STATUS}</macro>
+			<value>4</value>
+        </macro>
+        <macro>
+        	<macro>{$TEMP_WARN_STATUS}</macro>
+            <value>2</value> <!-- 2 - warning-->
+        </macro>
+		<macro>
+            <macro>{$TEMP_CRIT_STATUS}</macro>
+            <value>3</value> <!-- 3 critical -->
+        </macro> 
+        
+        <macro>
+            <macro>{$PSU_CRIT_STATUS}</macro>
+            <value>3</value> <!-- 3 critical -->
+        </macro>
+        <macro>
+            <macro>{$FAN_CRIT_STATUS}</macro>
+        	<value>3</value> <!-- 3 critical -->
+        </macro>         
+         	   	
+	   	
 	   </macros>
   </template>
   
@@ -384,6 +482,20 @@ of value (0..100)</vendorDescription>
                         </conditions>
                     </filter>               
 		</discoveryRule>  	  
+		
+		<discoveryRule>
+				<name>PSU Discovery</name>
+                <snmp_oid>discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.5.1.2]</snmp_oid>
+                <key>psu.discovery</key>
+				<description>The table of power supply status maintained by the environmental monitor card.</description>               
+		</discoveryRule>		
+
+  	  	<discoveryRule>
+				<name>FAN Discovery</name>
+                <snmp_oid>discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.4.1.2]</snmp_oid>
+                <key>fan.discovery</key>
+                <description>The table of fan status maintained by the environmental monitor.</description>
+		</discoveryRule>			
 	  	<discoveryRule>
 			<name>Memory Discovery</name>
                 <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.9.9.48.1.1.1.2]</snmp_oid>
@@ -444,6 +556,24 @@ average of the CPU busy percentage.</vendorDescription>
 	    </sensor.temp.status>
 	    
 	    
+	    <sensor.psu.status>
+	    	  <oid>1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>ciscoEnvMonSupplyState.{#SNMPINDEX}</snmpObject>
+		      <mib>CISCO-ENVMON-MIB</mib>
+		      <discoveryRule>PSU Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_INFO}</alarmObject>
+		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>
+	    </sensor.psu.status>
+	    
+ 	    <sensor.fan.status>
+	    	  <oid>1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>ciscoEnvMonFanState.{#SNMPINDEX}</snmpObject>
+		      <mib>CISCO-ENVMON-MIB</mib>
+		      <discoveryRule>FAN Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_INFO}</alarmObject>
+		      <valueMap>CISCO-ENVMON-MIB::CiscoEnvMonState</valueMap>
+	    </sensor.fan.status>	    
+	    
 		<system.hw.model>
 	    	  <oid>1.3.6.1.2.1.47.1.1.1.1.13.1</oid><!--1= Chassis s/n (can't use LLD to populate inventory) -->
 		      <snmpObject>entPhysicalModelName.1</snmpObject>
@@ -464,6 +594,41 @@ average of the CPU busy percentage.</vendorDescription>
 	    
 	    
 	  </metrics>
+	  
+	   <macros>
+	   	<macro>
+	   		<macro>{$TEMP_CRIT:"CPU"}</macro>
+	   		<value>75</value>
+	   	</macro>
+	   	<macro>
+	   		<macro>{$TEMP_WARN:"CPU"}</macro>
+	   		<value>70</value>
+	   	</macro>
+        <macro>
+			<macro>{$HEALTH_CRIT_STATUS}</macro>
+			<value>4</value>
+        </macro>
+        <macro>
+        	<macro>{$TEMP_WARN_STATUS}</macro>
+            <value>2</value> <!-- 2 - warning-->
+        </macro>
+		<macro>
+            <macro>{$TEMP_CRIT_STATUS}</macro>
+            <value>3</value> <!-- 3 critical -->
+        </macro> 
+        
+        <macro>
+            <macro>{$PSU_CRIT_STATUS}</macro>
+            <value>3</value> <!-- 3 critical -->
+        </macro>
+        <macro>
+            <macro>{$FAN_CRIT_STATUS}</macro>
+        	<value>3</value> <!-- 3 critical -->
+        </macro>         
+         	   	
+	   	
+	   </macros>	  
+	  
   </template>
   
   <!-- multiple CPU:
