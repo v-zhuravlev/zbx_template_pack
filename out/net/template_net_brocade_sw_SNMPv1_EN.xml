@@ -484,22 +484,26 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:""}</expression>
+                     <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:""}
+							or
+							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(300)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is above warning threshold: &gt;{$TEMP_WARN:""} (now: {ITEM.LASTVALUE1})</name>
+                     <name>{#SENSOR_INFO} temperature is above warning threshold: &gt;{$TEMP_WARN:""} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
+                           <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                           <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}
+							or
+							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}</expression>
                            <recovery_expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
                      </dependencies>
@@ -519,16 +523,18 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
+                     <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}
+							or
+							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})</name>
+                     <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -597,6 +603,10 @@
             <macro>
                <macro>{$HEALTH_WARN_STATUS}</macro>
                <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>5</value>
             </macro>
             <macro>
                <macro>{$CPU_UTIL_MAX}</macro>
