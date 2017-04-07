@@ -465,7 +465,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:vm.memory.used.percentage[memoryUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:vm.memory.used.percentage[memoryUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
@@ -810,10 +810,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Свободного места {#SNMPVALUE} меньше 10%</name>
+                     <name>[{#SNMPVALUE}] Мало свободного места (использовано: {ITEM.VALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -831,10 +831,10 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;80</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv2:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$STORAGE_UTIL_WARN}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Свободного места {#SNMPVALUE} меньше 20%</name>
+                     <name>[{#SNMPVALUE}] Мало свободного места (использовано: {ITEM.VALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -845,8 +845,8 @@
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#SNMPVALUE}] Свободного места {#SNMPVALUE} меньше 10%</name>
-                           <expression>{Template HOST-RESOURCES-MIB SNMPv2:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                           <name>[{#SNMPVALUE}] Мало свободного места (использовано: {ITEM.VALUE1})</name>
+                           <expression>{Template HOST-RESOURCES-MIB SNMPv2:vfs.fs.used.percentage[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>

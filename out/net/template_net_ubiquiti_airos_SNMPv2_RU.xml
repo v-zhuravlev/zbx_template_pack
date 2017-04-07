@@ -294,6 +294,10 @@
                <macro>{$CPU_UTIL_MAX}</macro>
                <value>90</value>
             </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
          </macros>
          <templates>
             <template>
@@ -341,7 +345,7 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Ubiquiti AirOS SNMPv2:vm.memory.used.percentage[memoryUsedPercentage].avg(300)}&gt;90</expression>
+         <expression>{Template Ubiquiti AirOS SNMPv2:vm.memory.used.percentage[memoryUsedPercentage].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>

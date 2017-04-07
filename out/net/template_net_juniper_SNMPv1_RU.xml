@@ -301,7 +301,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv1:vm.memory.used.percentage[jnxOperatingBuffer{#SNMPVALUE}].avg(300)}&gt;90</expression>
+                     <expression>{Template Juniper SNMPv1:vm.memory.used.percentage[jnxOperatingBuffer{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
@@ -525,6 +525,10 @@
                <value>90</value>
             </macro>
             <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
                <macro>{$TEMP_CRIT}</macro>
                <value>60</value>
             </macro>
@@ -535,6 +539,14 @@
             <macro>
                <macro>{$TEMP_CRIT_LOW}</macro>
                <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$STORAGE_UTIL_CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$STORAGE_UTIL_WARN}</macro>
+               <value>80</value>
             </macro>
          </macros>
          <templates>
