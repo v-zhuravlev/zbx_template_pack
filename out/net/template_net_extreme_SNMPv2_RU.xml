@@ -941,10 +941,12 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_WARN:""}</expression>
+         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_WARN:""}
+							or
+							{Template Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_WARN_STATUS}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(300)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-         <name>[Device] Температура выше нормы: &gt;{$TEMP_WARN:""} (сейчас: {ITEM.LASTVALUE1})</name>
+         <name>[Device] Температура выше нормы: &gt;{$TEMP_WARN:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -956,7 +958,9 @@
          <dependencies>
             <dependency>
                <name>[Device]Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
-               <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
+               <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_CRIT:""}
+							or
+							{Template Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
                <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
             </dependency>
          </dependencies>
@@ -976,7 +980,9 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
+         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_CRIT:""}
+							or
+							{Template Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
          <name>[Device]Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
