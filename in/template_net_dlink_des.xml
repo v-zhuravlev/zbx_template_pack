@@ -43,6 +43,44 @@
                 <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.171.12.11.1.8.1.1]</snmp_oid>
                 <key>temperature.discovery</key>
 		</discoveryRule>
+		
+		<discoveryRule>
+			<name>PSU Discovery</name>
+            <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.171.12.11.1.6.1.2,{#STATUS},1.3.6.1.4.1.171.12.11.1.6.1.3]</snmp_oid>
+            <key>psu.discovery</key>
+            <description>swPowerID of EQUIPMENT-MIB::swPowerTable</description>
+                   <filter>
+                     <evaltype>0</evaltype>
+                     <formula/>
+                     <conditions>
+						<condition>
+                             <macro>{#STATUS}</macro>
+                             <value>[^0]</value> <!-- (0)other - means not installed actually -->
+                             <operator>8</operator>
+                             <formulaid>A</formulaid>
+                         </condition>
+                     </conditions>
+                 </filter>
+		</discoveryRule>
+		
+		<discoveryRule>
+			<name>FAN Discovery</name>
+            <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.171.12.11.1.7.1.2,{#STATUS},1.3.6.1.4.1.171.12.11.1.7.1.3]</snmp_oid>
+            <key>fan.discovery</key>
+            <description>swFanID of EQUIPMENT-MIB::swFanTable</description>
+                             <filter>
+                     <evaltype>0</evaltype>
+                     <formula/>
+                     <conditions>
+						<condition>
+                             <macro>{#STATUS}</macro>
+                             <value>[^0]</value><!-- (0)other - means not installed actually -->
+                             <operator>8</operator>
+                             <formulaid>A</formulaid>
+                         </condition>
+                     </conditions>
+                 </filter> 
+		</discoveryRule>
 	  </discoveryRules>
 	  <metrics>
 	    <system.cpu.util>
@@ -68,6 +106,37 @@
 		      <alarmObject>{#SNMPVALUE}</alarmObject>
 		      <discoveryRule>Temperature Discovery</discoveryRule>
 	    </sensor.temp.value>
+	    
+	    <sensor.fan.status>
+	    	  <oid>1.3.6.1.4.1.171.12.11.1.7.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>swFanStatus.{#SNMPINDEX}</snmpObject>
+		      <mib>EQUIPMENT-MIB</mib>
+		      <vendorDescription>Indicates the current fan status.
+speed-0     : If the fan function is normal and the fan does not spin            due to the temperature not  reaching the threshold,              the status of the fan is speed 0.
+speed-low   : Fan spin using the lowest speed.
+speed-middle: Fan spin using the middle speed.
+speed-high  : Fan spin using the highest speed.</vendorDescription>
+		      <alarmObject>{#SNMPVALUE}</alarmObject>
+		      <discoveryRule>FAN Discovery</discoveryRule>
+		      <valueMap>EQUIPMENT-MIB::swFanStatus</valueMap>
+	    </sensor.fan.status>
+	    
+	    <sensor.psu.status>
+	    	  <oid>1.3.6.1.4.1.171.12.11.1.6.1.3.{#SNMPINDEX}</oid>
+		      <snmpObject>swPowerStatus.{#SNMPINDEX}</snmpObject>
+		      <mib>EQUIPMENT-MIB</mib>
+		      <vendorDescription>Indicates the current power status.
+lowVoltage : The voltage of the power unit is too low.
+overCurrent: The current of the power unit is too high.
+working    : The power unit is working normally.
+fail       : The power unit has failed.
+connect    : The power unit is connected but not powered on.
+disconnect : The power unit is not connected.
+</vendorDescription>
+		      <alarmObject>{#SNMPVALUE}</alarmObject>
+		      <discoveryRule>PSU Discovery</discoveryRule>
+		      <valueMap>EQUIPMENT-MIB::swPowerStatus</valueMap>
+	    </sensor.psu.status>
 	    
 	    <system.hw.model>
 	      <oid>1.3.6.1.2.1.1.1.0</oid>
@@ -108,7 +177,85 @@
                <macro>{$TEMP_WARN}</macro>
                <value>65</value>
             </macro>
+           <macro>
+                 <macro>{$PSU_CRIT_STATUS}</macro>
+                  <value>4</value> 
+              </macro>
+               <macro>
+                  <macro>{$FAN_CRIT_STATUS}</macro>
+                  <value>2</value> <!-- fail -->
+              </macro>
          </macros>	   
   </template>
+	<value_maps>
+        <value_map>
+            <name>EQUIPMENT-MIB::swFanStatus</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>other</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>working</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>fail</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>speed-0</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>speed-low</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>speed-middle</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>speed-high</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        
+       <value_map>
+            <name>EQUIPMENT-MIB::swPowerStatus</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>other</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>lowVoltage</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>overCurrent</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>working</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>fail</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>connect</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>disconnect</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>        
+    </value_maps>    
+
   
   </tns:root>
