@@ -492,7 +492,8 @@
                   <trigger_prototype>
                      <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:""}
 							or
-							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}</expression>
+							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}
+							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(300)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
                      <name>[{#SENSOR_INFO}] Температура выше нормы: &gt;{$TEMP_WARN:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
@@ -506,12 +507,8 @@
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
-                           <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}
-							or
-							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
-							or
-							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
+                           <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})</name>
+                           <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
                      </dependencies>
@@ -531,14 +528,10 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}
-							or
-							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
-							or
-							{Template Brocade SNMPv1:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
+                     <expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade SNMPv1:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                     <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1021,31 +1014,6 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Brocade SNMPv1:system.status[swOperStatus.0].last(0)}={$HEALTH_DISASTER_STATUS}</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>Статус системы: сбой (сейчас: {ITEM.LASTVALUE1})</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>4</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.Проверьте устройство</description>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies/>
-         <tags>
-            <tag>
-                        <tag>Alarm.type</tag>
-                        <value>HEALTH_FAIL</value>
-                     </tag>
-            <tag>
-                        <tag>Host</tag>
-                        <value>{HOST.HOST}</value>
-                     </tag>
-         </tags>
-      </trigger>
-      <trigger>
          <expression>{Template Brocade SNMPv1:system.status[swOperStatus.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
@@ -1058,13 +1026,7 @@
          <description>Последнее значение: {ITEM.LASTVALUE1}.Проверьте устройство</description>
          <type>0</type>
          <manual_close>0</manual_close>
-         <dependencies>
-            <dependency>
-               <name>Статус системы: сбой (сейчас: {ITEM.LASTVALUE1})</name>
-               <expression>{Template Brocade SNMPv1:system.status[swOperStatus.0].last(0)}={$HEALTH_DISASTER_STATUS}</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
+         <dependencies/>
          <tags>
             <tag>
                         <tag>Alarm.type</tag>

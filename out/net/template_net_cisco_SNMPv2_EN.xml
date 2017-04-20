@@ -726,7 +726,8 @@
                   <trigger_prototype>
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPVALUE}"}
 							or
-							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_WARN_STATUS}</expression>
+							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_WARN_STATUS}
+							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_WARN:"{#SNMPVALUE}"}-5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
@@ -744,8 +745,10 @@
                            <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_CRIT_STATUS}
-							or
-							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
+							
+								or
+								{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}
+							</expression>
                            <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
                         </dependency>
                      </dependencies>
@@ -768,8 +771,10 @@
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_CRIT_STATUS}
-							or
-							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
+							
+								or
+								{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}
+							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
