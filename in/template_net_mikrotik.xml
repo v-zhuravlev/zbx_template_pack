@@ -84,7 +84,12 @@ SQUID-MIB -->
 	      <snmpObject>hrStorageUsed.Memory</snmpObject>
 	      <mib>HOST-RESOURCES-MIB</mib>
 	      <vendorDescription>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</vendorDescription>
-	      <multiplier>1024</multiplier>
+	      <preprocessing>
+			<step>
+				<type>multiplier</type>
+				<params>1024</params>
+            </step>
+	      </preprocessing>
 	    </vm.memory.used>
 	    <vm.memory.total>
 	      <oid>1.3.6.1.2.1.25.2.3.1.5.65536</oid>
@@ -100,7 +105,12 @@ SQUID-MIB -->
 	      the amount of disk space allocated to virtual memory
 	      might be modified.
 	      </vendorDescription>
-	      <multiplier>1024</multiplier>
+	      <preprocessing>
+			<step>
+				<type>multiplier</type>
+				<params>1024</params>
+            </step>
+	      </preprocessing>
 	    </vm.memory.total>
 	    <vm.memory.used.percentage>
 			 <snmpObject>memoryUsedPercentage.Memory</snmpObject>
@@ -117,7 +127,12 @@ SQUID-MIB -->
 		      <discoveryRule>Temperature Discovery CPU</discoveryRule>
 		      <alarmObject>CPU</alarmObject>
 		      <alarmObjectType>CPU</alarmObjectType>
-		      <multiplier>0.1</multiplier>
+      	      <preprocessing>
+				<step>
+					<type>multiplier</type>
+					<params>0.1</params>
+	            </step>
+	      	  </preprocessing>
 	    </sensor.temp.value>
 	    <sensor.temp.value>
 	    	  <oid>1.3.6.1.4.1.14988.1.1.3.10.0</oid>
@@ -127,7 +142,12 @@ SQUID-MIB -->
 		      <vendorDescription>(mtxrHlTemperature) Device temperature in Celsius (degrees C). Might be missing in entry models (RB750, RB450G..)</vendorDescription>
 		      <alarmObject>Device</alarmObject>
 		      <alarmObjectType>Device</alarmObjectType>
-		      <multiplier>0.1</multiplier>
+		      <preprocessing>
+				<step>
+					<type>multiplier</type>
+					<params>0.1</params>
+	            </step>
+	      	  </preprocessing>
 	    </sensor.temp.value>
 	    
    	    <!--  storage -->
@@ -136,7 +156,12 @@ SQUID-MIB -->
 	      <snmpObject>hrStorageSize.{#SNMPINDEX}</snmpObject>
 	      <mib>HOST-RESOURCES-MIB</mib>
 	      <vendorDescription>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</vendorDescription>
-	      <multiplier>1024</multiplier>
+	      <preprocessing>
+				<step>
+					<type>multiplier</type>
+					<params>1024</params>
+	            </step>
+	      	  </preprocessing>
 	      <discoveryRule>Storage Discovery</discoveryRule>
 	      <alarmObject>Disk-{#SNMPINDEX}</alarmObject>
 	    </vfs.fs.used>
@@ -154,7 +179,12 @@ SQUID-MIB -->
 	      the amount of disk space allocated to virtual memory
 	      might be modified.
 	      </vendorDescription>
-	      <multiplier>1024</multiplier>
+	      <preprocessing>
+				<step>
+					<type>multiplier</type>
+					<params>1024</params>
+	            </step>
+	      	  </preprocessing>
 	      <discoveryRule>Storage Discovery</discoveryRule>
 	      <alarmObject>Disk-{#SNMPINDEX}</alarmObject>
 	    </vfs.fs.total>
