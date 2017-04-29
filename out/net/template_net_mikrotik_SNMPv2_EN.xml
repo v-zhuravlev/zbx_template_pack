@@ -139,7 +139,7 @@
                <type>15</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid/>
-               <key>vm.memory.used.percentage[memoryUsedPercentage.Memory]</key>
+               <key>vm.memory.pused[memoryUsedPercentage.Memory]</key>
                <delay>180</delay>
                <history>30</history>
                <trends>365</trends>
@@ -821,7 +821,7 @@
                      <type>15</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid/>
-                     <key>vfs.fs.used.percentage[hrStorageSize.{#SNMPINDEX}]</key>
+                     <key>vfs.fs.pused[hrStorageSize.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -860,7 +860,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv2:vfs.fs.used.percentage[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                     <expression>{Template Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Disk-{#SNMPINDEX}] Free disk space is low (utilized by {ITEM.VALUE1})</name>
@@ -889,7 +889,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv2:vfs.fs.used.percentage[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_WARN}</expression>
+                     <expression>{Template Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_WARN}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Disk-{#SNMPINDEX}] Free disk space is low (utilized by {ITEM.VALUE1})</name>
@@ -904,7 +904,7 @@
                      <dependencies>
                         <dependency>
                            <name>[Disk-{#SNMPINDEX}] Free disk space is low (utilized by {ITEM.VALUE1})</name>
-                           <expression>{Template Mikrotik SNMPv2:vfs.fs.used.percentage[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                           <expression>{Template Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -981,7 +981,7 @@
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template Mikrotik SNMPv2:vm.memory.used.percentage[memoryUsedPercentage.Memory].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Mikrotik SNMPv2:vm.memory.pused[memoryUsedPercentage.Memory].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
