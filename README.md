@@ -1,5 +1,5 @@
 # zbx_template_pack
-The idea behind this template pack is to provide single template class for each device type and just define SNMP oids required to collect common metrics liks `CPU load`, `memory`, `temperature` and so on to generate new template for new vendor.  
+The idea behind this template pack is to provide single template class for each device type and just define SNMP oids required to collect common metrics liks `CPU load`, `Memory`, `Temperature` and so on to generate new template for new vendor.  
 
 
 So all templates are generated using only SNMP OIDs and other vendor specific details.  
@@ -26,7 +26,7 @@ Memory triggers also look similar:
 
 ## How to use this template pack  
 Just import the required template into your Zabbix 3.0+. Some templates might have dependencies. Check `deps` directory then.  
-Currently `net` template is ready to be tested.  See [`net/README.md`](https://github.com/v-zhuravlev/zbx_template_pack/tree/master/net) for all its items and triggers and supported network device types.  
+Currently `net` template is ready to be tested.  See [`out/net/README.md`](https://github.com/v-zhuravlev/zbx_template_pack/tree/master/out/net) for all its items and triggers and supported network device types.  
 
 
 ## Template options  
