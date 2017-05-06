@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-   <version>3.2</version>
+   <version>3.4</version>
    <date>2015-12-30T14:41:30Z</date>
    <groups>
       <group>
@@ -11,7 +11,7 @@
       <template>
          <template>Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2</template>
          <name>Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2</name>
-         <description>Cisco IOS Software releases 12.2(3.5) or later</description>
+         <description>Cisco IOS Software releases 12.2(3.5) or later version: 0.6</description>
          <groups>
             <group>
                <name>Templates</name>
@@ -42,7 +42,6 @@
                <name>Hardware model name</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
                <key>system.hw.model</key>
                <delay>3600</delay>
@@ -52,7 +51,6 @@
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -60,11 +58,9 @@
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -80,12 +76,12 @@
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
             </item>
             <item>
-               <name>Hardware Serial Number</name>
+               <name>Hardware serial number</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
                <key>system.hw.serialnumber</key>
                <delay>3600</delay>
@@ -95,7 +91,6 @@
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -103,11 +98,9 @@
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -123,6 +116,53 @@
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
+            </item>
+            <item>
+               <name>Operating system</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
+               <key>system.sw.os</key>
+               <delay>3600</delay>
+               <history>14</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>SNMPv2-MIB  </description>
+               <inventory_link>5</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>Version (.+), RELEASE
+\1</params>
+                  </step>
+               </preprocessing>
             </item>
          </items>
          <discovery_rules>
@@ -177,10 +217,9 @@
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Hardware Serial Number</name>
+                     <name>[{#ENT_NAME}] Hardware serial number</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
                      <key>system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]</key>
                      <delay>3600</delay>
@@ -190,7 +229,6 @@
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -198,11 +236,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -218,6 +254,7 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -297,10 +334,9 @@
                   In case of a single CPU, cpmCPUTotalTable has only one entry.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPINDEX}] CPU Utilization</name>
+                     <name>[{#SNMPINDEX}] CPU utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.9.9.109.1.1.1.1.8.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}.]</key>
                      <delay>180</delay>
@@ -310,7 +346,6 @@
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>%</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -318,11 +353,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -338,6 +371,7 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -414,7 +448,6 @@
                      <name>[{#SNMPVALUE}] Used memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -424,7 +457,6 @@
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>B</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -432,11 +464,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -452,13 +482,13 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Available memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -468,7 +498,6 @@
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>B</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -476,11 +505,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -496,15 +523,15 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Memory utilization</name>
                      <type>15</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}]</key>
+                     <key>vm.memory.pused[vm.memory.pused.{#SNMPVALUE}]</key>
                      <delay>180</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -512,7 +539,6 @@
                      <value_type>0</value_type>
                      <allowed_hosts/>
                      <units>%</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -520,11 +546,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])))*100</params>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -540,12 +564,13 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
@@ -616,7 +641,6 @@
                      <name>[{#SNMPVALUE}] Temperature</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.3.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -626,7 +650,6 @@
                      <value_type>0</value_type>
                      <allowed_hosts/>
                      <units>°С</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -634,11 +657,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -654,13 +675,13 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Temperature status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.3.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -670,7 +691,6 @@
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -678,11 +698,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -700,6 +718,7 @@
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -707,7 +726,8 @@
                   <trigger_prototype>
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPVALUE}"}
 							or
-							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_WARN_STATUS}</expression>
+							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_WARN_STATUS}
+							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_WARN:"{#SNMPVALUE}"}-5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
@@ -725,8 +745,10 @@
                            <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_CRIT_STATUS}
-							or
-							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
+							
+								or
+								{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}
+							</expression>
                            <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
                         </dependency>
                      </dependencies>
@@ -749,8 +771,10 @@
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_CRIT_STATUS}
-							or
-							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
+							
+								or
+								{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}
+							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
@@ -849,7 +873,6 @@
                      <name>[{#SENSOR_INFO}] Power supply status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -859,7 +882,6 @@
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -867,11 +889,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -889,6 +909,7 @@
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -964,7 +985,6 @@
                      <name>[{#SENSOR_INFO}] Fan status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -974,7 +994,6 @@
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -982,11 +1001,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1004,6 +1021,7 @@
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1045,6 +1063,7 @@
 	  
 	  
 	        </discovery_rules>
+         <httptests/>
          <macros>
             <macro>
                <macro>{$TEMP_CRIT:"CPU"}</macro>
@@ -1128,7 +1147,7 @@
       <template>
          <template>Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2</template>
          <name>Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2</name>
-         <description>Cisco IOS Software releases later to 12.0(3)T and prior to 12.2(3.5)</description>
+         <description>Cisco IOS Software releases later to 12.0(3)T and prior to 12.2(3.5) version: 0.6</description>
          <groups>
             <group>
                <name>Templates</name>
@@ -1159,7 +1178,6 @@
                <name>Hardware model name</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
                <key>system.hw.model</key>
                <delay>3600</delay>
@@ -1169,7 +1187,6 @@
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1177,11 +1194,9 @@
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -1197,12 +1212,12 @@
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
             </item>
             <item>
-               <name>Hardware Serial Number</name>
+               <name>Hardware serial number</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
                <key>system.hw.serialnumber</key>
                <delay>3600</delay>
@@ -1212,7 +1227,6 @@
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1220,11 +1234,9 @@
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -1240,6 +1252,53 @@
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
+            </item>
+            <item>
+               <name>Operating system</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
+               <key>system.sw.os</key>
+               <delay>3600</delay>
+               <history>14</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>SNMPv2-MIB  </description>
+               <inventory_link>5</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>Version (.+), RELEASE
+\1</params>
+                  </step>
+               </preprocessing>
             </item>
          </items>
          <discovery_rules>
@@ -1291,10 +1350,9 @@
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Hardware Serial Number</name>
+                     <name>[{#ENT_NAME}] Hardware serial number</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
                      <key>system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]</key>
                      <delay>3600</delay>
@@ -1304,7 +1362,6 @@
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1312,11 +1369,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1332,6 +1387,7 @@
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1407,7 +1463,6 @@
                      <name>[{#SENSOR_INFO}] Power supply status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -1417,7 +1472,6 @@
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1425,11 +1479,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1447,6 +1499,7 @@
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1522,7 +1575,6 @@
                      <name>[{#SENSOR_INFO}] Fan status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -1532,7 +1584,6 @@
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1540,11 +1591,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1562,6 +1611,7 @@
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1639,10 +1689,9 @@
                      In case of a single CPU, cpmCPUTotalTable has only one entry.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] CPU Utilization</name>
+                     <name>[{#SNMPVALUE}] CPU utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.4.1.9.9.109.1.1.1.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -1652,7 +1701,6 @@
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>%</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1660,11 +1708,9 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1684,6 +1730,7 @@ of value (0..100)</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1759,7 +1806,6 @@ of value (0..100)</description>
                      <name>[{#SNMPVALUE}] Used memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -1769,7 +1815,6 @@ of value (0..100)</description>
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>B</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1777,11 +1822,9 @@ of value (0..100)</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1797,13 +1840,13 @@ of value (0..100)</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Available memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -1813,7 +1856,6 @@ of value (0..100)</description>
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>B</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1821,11 +1863,9 @@ of value (0..100)</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1841,15 +1881,15 @@ of value (0..100)</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Memory utilization</name>
                      <type>15</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}]</key>
+                     <key>vm.memory.pused[vm.memory.pused.{#SNMPVALUE}]</key>
                      <delay>180</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1857,7 +1897,6 @@ of value (0..100)</description>
                      <value_type>0</value_type>
                      <allowed_hosts/>
                      <units>%</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1865,11 +1904,9 @@ of value (0..100)</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])))*100</params>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -1885,12 +1922,13 @@ of value (0..100)</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
@@ -1923,6 +1961,7 @@ of value (0..100)</description>
                <host_prototypes/>
             </discovery_rule>
 	        </discovery_rules>
+         <httptests/>
          <macros>
             <macro>
                <macro>{$TEMP_CRIT:"CPU"}</macro>
@@ -2006,7 +2045,7 @@ of value (0..100)</description>
       <template>
          <template>Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2</template>
          <name>Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2</name>
-         <description>Cisco IOS Software releases prior to 12.0(3)T</description>
+         <description>Cisco IOS Software releases prior to 12.0(3)T version: 0.6</description>
          <groups>
             <group>
                <name>Templates</name>
@@ -2034,10 +2073,9 @@ of value (0..100)</description>
          </applications>
          <items>
             <item>
-               <name>CPU Utilization</name>
+               <name>CPU utilization</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>.1.3.6.1.4.1.9.2.1.58</snmp_oid>
                <key>system.cpu.util[avgBusy5]</key>
                <delay>180</delay>
@@ -2047,7 +2085,6 @@ of value (0..100)</description>
                <value_type>3</value_type>
                <allowed_hosts/>
                <units>%</units>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2055,11 +2092,9 @@ of value (0..100)</description>
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -2076,12 +2111,12 @@ average of the CPU busy percentage.</description>
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
             </item>
             <item>
                <name>Hardware model name</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
                <key>system.hw.model</key>
                <delay>3600</delay>
@@ -2091,7 +2126,6 @@ average of the CPU busy percentage.</description>
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2099,11 +2133,9 @@ average of the CPU busy percentage.</description>
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -2119,12 +2151,12 @@ average of the CPU busy percentage.</description>
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
             </item>
             <item>
-               <name>Hardware Serial Number</name>
+               <name>Hardware serial number</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
                <key>system.hw.serialnumber</key>
                <delay>3600</delay>
@@ -2134,7 +2166,6 @@ average of the CPU busy percentage.</description>
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
-               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2142,11 +2173,9 @@ average of the CPU busy percentage.</description>
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <formula>0</formula>
                <delay_flex/>
                <params/>
                <ipmi_sensor/>
-               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -2162,6 +2191,53 @@ average of the CPU busy percentage.</description>
                </applications>
                <valuemap/>
                <logtimefmt/>
+               <preprocessing/>
+            </item>
+            <item>
+               <name>Operating system</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
+               <key>system.sw.os</key>
+               <delay>3600</delay>
+               <history>14</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>SNMPv2-MIB  </description>
+               <inventory_link>5</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>Version (.+), RELEASE
+\1</params>
+                  </step>
+               </preprocessing>
             </item>
          </items>
          <discovery_rules>
@@ -2214,10 +2290,9 @@ average of the CPU busy percentage.</description>
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Hardware Serial Number</name>
+                     <name>[{#ENT_NAME}] Hardware serial number</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
                      <key>system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]</key>
                      <delay>3600</delay>
@@ -2227,7 +2302,6 @@ average of the CPU busy percentage.</description>
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2235,11 +2309,9 @@ average of the CPU busy percentage.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -2255,6 +2327,7 @@ average of the CPU busy percentage.</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -2330,7 +2403,6 @@ average of the CPU busy percentage.</description>
                      <name>[{#SENSOR_INFO}] Power supply status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -2340,7 +2412,6 @@ average of the CPU busy percentage.</description>
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2348,11 +2419,9 @@ average of the CPU busy percentage.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -2370,6 +2439,7 @@ average of the CPU busy percentage.</description>
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -2445,7 +2515,6 @@ average of the CPU busy percentage.</description>
                      <name>[{#SENSOR_INFO}] Fan status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}]</key>
                      <delay>180</delay>
@@ -2455,7 +2524,6 @@ average of the CPU busy percentage.</description>
                      <value_type>1</value_type>
                      <allowed_hosts/>
                      <units/>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2463,11 +2531,9 @@ average of the CPU busy percentage.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -2485,6 +2551,7 @@ average of the CPU busy percentage.</description>
                         <name>CISCO-ENVMON-MIB::CiscoEnvMonState</name>
                      </valuemap>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -2560,7 +2627,6 @@ average of the CPU busy percentage.</description>
                      <name>[{#SNMPVALUE}] Used memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -2570,7 +2636,6 @@ average of the CPU busy percentage.</description>
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>B</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2578,11 +2643,9 @@ average of the CPU busy percentage.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -2598,13 +2661,13 @@ average of the CPU busy percentage.</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Available memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}]</key>
                      <delay>180</delay>
@@ -2614,7 +2677,6 @@ average of the CPU busy percentage.</description>
                      <value_type>3</value_type>
                      <allowed_hosts/>
                      <units>B</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2622,11 +2684,9 @@ average of the CPU busy percentage.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params/>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -2642,15 +2702,15 @@ average of the CPU busy percentage.</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
                      <name>[{#SNMPVALUE}] Memory utilization</name>
                      <type>15</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <multiplier>0</multiplier>
                      <snmp_oid/>
-                     <key>vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}]</key>
+                     <key>vm.memory.pused[vm.memory.pused.{#SNMPVALUE}]</key>
                      <delay>180</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -2658,7 +2718,6 @@ average of the CPU busy percentage.</description>
                      <value_type>0</value_type>
                      <allowed_hosts/>
                      <units>%</units>
-                     <delta>0</delta>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -2666,11 +2725,9 @@ average of the CPU busy percentage.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <formula>0</formula>
                      <delay_flex/>
                      <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPVALUE}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPVALUE}])))*100</params>
                      <ipmi_sensor/>
-                     <data_type>0</data_type>
                      <authtype>0</authtype>
                      <username/>
                      <password/>
@@ -2686,12 +2743,13 @@ average of the CPU busy percentage.</description>
                      </applications>
                      <valuemap/>
                      <logtimefmt/>
+                     <preprocessing/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:vm.memory.used.percentage[vm.memory.used.percentage.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
@@ -2724,6 +2782,7 @@ average of the CPU busy percentage.</description>
                <host_prototypes/>
             </discovery_rule>
   	      </discovery_rules>
+         <httptests/>
          <macros>
             <macro>
                <macro>{$TEMP_CRIT:"CPU"}</macro>
