@@ -22,9 +22,9 @@ See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea beh
  
 |Metric type|Application|key|name|units|required|Source type|note|inventory_link|  
 |----|----|----|----|----|----|----|----|----|  
-|Performance|CPU|__	system.cpu.util__|CPU utilization|%|Y|SNMP|-|
+|Performance|CPU|__system.cpu.util__|CPU utilization|%|Y|SNMP|-|
 ||
-|Performance|Memory|__	vm.memory.pused__|Memory utilization|%|Y|SNMP/Calculated|-|
+|Performance|Memory|__vm.memory.pused__|Memory utilization|%|Y|SNMP/Calculated|-|
 |Performance|Internal items|vm.memory.used|Memory units|-|N|SNMP|Inerited from 'Template HOST-RESOURCES-MIB'|
 |Performance|Internal items|vm.memory.units.used|Used memory in units|units|N|SNMP|Inerited from 'Template HOST-RESOURCES-MIB'|
 |Performance|Internal items|vm.memory.units.total|Total memory in units|units|N|SNMP|Inerited from 'Template HOST-RESOURCES-MIB'|
@@ -53,7 +53,7 @@ See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea beh
 ||
 |Inventory|General|__system.name__|Device name|-|Y|SNMP|Inerited|3|
 |Inventory|General|__system.contact__|Device contact details|-|Y|SNMP|Inerited|23|
-|Inventory|General|__system.objectid|System object ID|-|Y|SNMP|Inerited|
+|Inventory|General|__system.objectid__|System object ID|-|Y|SNMP|Inerited|
 |Inventory|General|__system.description__|Device description|-|Y|SNMP|Inerited|14|
 |Inventory|General|__system.location__|Device location|-|Y|SNMP|Inerited|24|
 ||
@@ -123,7 +123,9 @@ You can also use script provided to mass import the templates like so:
 
 - Then do:  
 ```git clone --recursive https://github.com/v-zhuravlev/zbx_template_pack.git
-cd zbx_template_pack/bin```
+cd zbx_template_pack/bin
+```
+
 
 ```
 [user@host bin]$ perl import-templates.pl -u Admin -p zabbix --lang EN ../out/deps/3.2        
