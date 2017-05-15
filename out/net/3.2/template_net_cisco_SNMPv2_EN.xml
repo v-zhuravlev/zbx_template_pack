@@ -343,10 +343,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}.].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}.].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPINDEX}] CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPINDEX}] High CPU utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -545,10 +545,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] High memory utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -705,12 +705,12 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_WARN:"{#SNMPVALUE}"}
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(5m)}&gt;{$TEMP_WARN:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_WARN_STATUS}
 							</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_WARN:"{#SNMPVALUE}"}-5</recovery_expression>
+                     <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(5m)}&lt;{$TEMP_WARN:"{#SNMPVALUE}"}-5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -723,14 +723,14 @@
                      <dependencies>
                         <dependency>
                            <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
-                           <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
+                           <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(5m)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_CRIT_STATUS}
 							
 								or
 								{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}
 							</expression>
-                           <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
+                           <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(5m)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags>
@@ -749,7 +749,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(5m)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_CRIT_STATUS}
 							
@@ -757,7 +757,7 @@
 								{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPVALUE}].last(0)}={$TEMP_DISASTER_STATUS}
 							</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
+                     <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].max(5m)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -784,9 +784,9 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(300)}&lt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}</expression>
+                     <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].min(300)}&gt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}+5</recovery_expression>
+                     <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPVALUE}].min(5m)}&gt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}+5</recovery_expression>
                      <name>{#SNMPVALUE} temperature is too low: &lt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"} (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1694,10 +1694,10 @@ of value (0..100)</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] High CPU utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1895,10 +1895,10 @@ of value (0..100)</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] High memory utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2696,10 +2696,10 @@ average of the CPU busy percentage.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] High memory utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2870,10 +2870,10 @@ average of the CPU busy percentage.</description>
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.cpu.util[avgBusy5].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.cpu.util[avgBusy5].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
+         <name>High CPU utilization (now: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

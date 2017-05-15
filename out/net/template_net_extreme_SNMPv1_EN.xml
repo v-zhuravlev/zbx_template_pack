@@ -534,10 +534,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Extreme EXOS SNMPv1:vm.memory.pused[{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Extreme EXOS SNMPv1:vm.memory.pused[{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] High memory utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -897,10 +897,10 @@
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv1:system.cpu.util[extremeCpuMonitorTotalUtilization.0].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Extreme EXOS SNMPv1:system.cpu.util[extremeCpuMonitorTotalUtilization.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
+         <name>High CPU utilization (now: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -926,9 +926,9 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_WARN:""}</expression>
+         <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(300)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
+         <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
          <name>Device temperature is above warning threshold: &gt;{$TEMP_WARN:""} (now: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -941,11 +941,11 @@
          <dependencies>
             <dependency>
                <name>Device temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
-               <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_CRIT:""}
+               <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}
 							</expression>
-               <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
+               <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
             </dependency>
          </dependencies>
          <tags>
@@ -964,12 +964,12 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&gt;{$TEMP_CRIT:""}
+         <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}
 							</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
+         <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
          <name>Device temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -996,9 +996,9 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(300)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+         <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].min(300)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
+         <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
          <name>Device temperature is too low: &lt;{$TEMP_CRIT_LOW:""} (now: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>

@@ -458,7 +458,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Mikrotik SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPINDEX}] Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
@@ -572,9 +572,9 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_WARN:"CPU"}</expression>
+                     <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(300)}&lt;{$TEMP_WARN:"CPU"}-5</recovery_expression>
+                     <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-5</recovery_expression>
                      <name>[CPU] Температура выше нормы: &gt;{$TEMP_WARN:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -587,8 +587,8 @@
                      <dependencies>
                         <dependency>
                            <name>[CPU] Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
-                           <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(300)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
+                           <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                           <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags>
@@ -607,9 +607,9 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(300)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                     <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(300)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
+                     <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
                      <name>[CPU] Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -636,9 +636,9 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(300)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
+                     <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].min(300)}&gt;{$TEMP_CRIT_LOW:"CPU"}+5</recovery_expression>
+                     <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+5</recovery_expression>
                      <name>[CPU] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"CPU"} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -860,7 +860,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv1:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                     <expression>{Template Mikrotik SNMPv1:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Disk-{#SNMPINDEX}] Мало свободного места (использовано: {ITEM.VALUE1})</name>
@@ -889,7 +889,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Mikrotik SNMPv1:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_WARN}</expression>
+                     <expression>{Template Mikrotik SNMPv1:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_WARN}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[Disk-{#SNMPINDEX}] Мало свободного места (использовано: {ITEM.VALUE1})</name>
@@ -904,7 +904,7 @@
                      <dependencies>
                         <dependency>
                            <name>[Disk-{#SNMPINDEX}] Мало свободного места (использовано: {ITEM.VALUE1})</name>
-                           <expression>{Template Mikrotik SNMPv1:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                           <expression>{Template Mikrotik SNMPv1:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -981,7 +981,7 @@
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template Mikrotik SNMPv1:vm.memory.pused[memoryUsedPercentage.Memory].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Mikrotik SNMPv1:vm.memory.pused[memoryUsedPercentage.Memory].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
@@ -1010,9 +1010,9 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(300)}&gt;{$TEMP_WARN:"Device"}</expression>
+         <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(5m)}&gt;{$TEMP_WARN:"Device"}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].max(300)}&lt;{$TEMP_WARN:"Device"}-5</recovery_expression>
+         <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].max(5m)}&lt;{$TEMP_WARN:"Device"}-5</recovery_expression>
          <name>[Device] Температура выше нормы: &gt;{$TEMP_WARN:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -1025,8 +1025,8 @@
          <dependencies>
             <dependency>
                <name>[Device] Температура очень высокая: &gt;{$TEMP_CRIT:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
-               <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
-               <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].max(300)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
+               <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
+               <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].max(5m)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
             </dependency>
          </dependencies>
          <tags>
@@ -1045,9 +1045,9 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(300)}&gt;{$TEMP_CRIT:"Device"}</expression>
+         <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].max(300)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
+         <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].max(5m)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
          <name>[Device] Температура очень высокая: &gt;{$TEMP_CRIT:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -1074,9 +1074,9 @@
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(300)}&lt;{$TEMP_CRIT_LOW:"Device"}</expression>
+         <expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Device"}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].min(300)}&gt;{$TEMP_CRIT_LOW:"Device"}+5</recovery_expression>
+         <recovery_expression>{Template Mikrotik SNMPv1:sensor.temp.value[mtxrHlTemperature].min(5m)}&gt;{$TEMP_CRIT_LOW:"Device"}+5</recovery_expression>
          <name>[Device] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"Device"} (сейчас: {ITEM.LASTVALUE1})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>

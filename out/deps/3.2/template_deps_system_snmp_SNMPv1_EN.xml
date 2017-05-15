@@ -331,7 +331,7 @@ networking software.</description>
          <macros>
             <macro>
                <macro>{$SNMP_TIMEOUT}</macro>
-               <value>600</value>
+               <value>10m</value>
             </macro>
          </macros>
          <templates/>
@@ -340,9 +340,9 @@ networking software.</description>
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv1:system.uptime.last(0)}&lt;600 or {Template SNMP Generic SNMPv1:snmptrap.fallback.str(coldStart)}=1</expression>
+         <expression>{Template SNMP Generic SNMPv1:system.uptime.last(0)}&lt;10m or {Template SNMP Generic SNMPv1:snmptrap.fallback.str(coldStart)}=1</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template SNMP Generic SNMPv1:system.uptime.last(0)}&gt;600 or {Template SNMP Generic SNMPv1:system.uptime.nodata(1800)}=1</recovery_expression>
+         <recovery_expression>{Template SNMP Generic SNMPv1:system.uptime.last(0)}&gt;10m or {Template SNMP Generic SNMPv1:system.uptime.nodata(30m)}=1</recovery_expression>
          <name> The {HOST.NAME} has just been  restarted</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>

@@ -113,10 +113,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPINDEX}] CPU utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPINDEX}] High CPU utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -461,10 +461,10 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vm.memory.pused[memoryUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vm.memory.pused[memoryUsedPercentage.{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Memory utilization is too high (now: {ITEM.LASTVALUE1})</name>
+                     <name>High memory utilization (now: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -810,7 +810,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPVALUE}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Free disk space is low (utilized by {ITEM.VALUE1})</name>
@@ -839,7 +839,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$STORAGE_UTIL_WARN}</expression>
+                     <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPVALUE}].avg(5m)}&gt;{$STORAGE_UTIL_WARN}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Free disk space is low (utilized by {ITEM.VALUE1})</name>
@@ -854,7 +854,7 @@
                      <dependencies>
                         <dependency>
                            <name>[{#SNMPVALUE}] Free disk space is low (utilized by {ITEM.VALUE1})</name>
-                           <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPVALUE}].avg(300)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                           <expression>{Template HOST-RESOURCES-MIB SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPVALUE}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -881,7 +881,7 @@
          <macros>
             <macro>
                <macro>{$SNMP_TIMEOUT}</macro>
-               <value>600</value>
+               <value>10m</value>
             </macro>
          </macros>
          <templates/>

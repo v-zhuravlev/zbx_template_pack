@@ -326,7 +326,7 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Huawei VRP SNMPv2:system.cpu.util[hwEntityCpuUsage.{#SNMPINDEX}].avg(300)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Huawei VRP SNMPv2:system.cpu.util[hwEntityCpuUsage.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
@@ -355,7 +355,7 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Huawei VRP SNMPv2:vm.memory.pused[hwEntityMemUsage.{#SNMPINDEX}].avg(300)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Huawei VRP SNMPv2:vm.memory.pused[hwEntityMemUsage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
@@ -384,9 +384,9 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_WARN:""}</expression>
+                     <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].max(300)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
+                     <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
                      <name>[{#SNMPVALUE}] Температура выше нормы: &gt;{$TEMP_WARN:""} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -399,8 +399,8 @@
                      <dependencies>
                         <dependency>
                            <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})</name>
-                           <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
-                           <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
+                           <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                           <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags>
@@ -419,9 +419,9 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(300)}&gt;{$TEMP_CRIT:""}</expression>
+                     <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].max(300)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
+                     <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                      <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -448,9 +448,9 @@
                      </tags>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(300)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+                     <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].min(300)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
+                     <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPVALUE}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
                      <name>[{#SNMPVALUE}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""} (сейчас: {ITEM.LASTVALUE1})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
