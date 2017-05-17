@@ -69,7 +69,7 @@
             <item>
                <name>SNMP traps (fallback)</name>
                <type>17</type>
-               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_community/>
                <multiplier>0</multiplier>
                <snmp_oid/>
                <key>snmptrap.fallback</key>
@@ -326,6 +326,51 @@ networking software.</description>
                <valuemap/>
                <logtimefmt/>
             </item>
+            <item>
+               <name>SNMP availability</name>
+               <type>5</type>
+               <snmp_community/>
+               <multiplier>0</multiplier>
+               <snmp_oid/>
+               <key>zabbix[host,snmp,available]</key>
+               <delay>60</delay>
+               <history>14</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>  </description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap>
+                  <name>zabbix.host.available</name>
+               </valuemap>
+               <logtimefmt/>
+            </item>
          </items>
          <discovery_rules/>
          <macros>
@@ -395,6 +440,49 @@ networking software.</description>
                      </tag>
          </tags>
       </trigger>
+      <trigger>
+         <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].last()}=0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name> No SNMP data collection</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.SNMP is not available for polling. Please check device connectivity and SNMP settings.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags>
+            <tag>
+                        <tag>Alarm.type</tag>
+                        <value>NO_DATA</value>
+                     </tag>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
    </triggers>
-   <value_maps/>
+   <value_maps>
+      <value_map>
+  		     <name>zabbix.host.available</name>
+  		     <mappings>
+           <mapping>
+               <value>0</value>
+               <newvalue>not available</newvalue>
+           </mapping>
+           <mapping>
+               <value>1</value>
+               <newvalue>available</newvalue>
+           </mapping>
+           <mapping>
+               <value>2</value>
+               <newvalue>unknown</newvalue>
+           </mapping>
+  		     </mappings>
+  	   </value_map>
+   </value_maps>
 </zabbix_export>
