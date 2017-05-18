@@ -379,6 +379,171 @@ networking software.</description>
                <value>3m</value>
             </macro>
          </macros>
+         <templates>
+            <template>
+		  		         <name>Template ICMP ping</name>
+		  	       </template>
+         </templates>
+         <screens/>
+      </template>
+      <template>
+         <template>Template ICMP ping</template>
+         <name>Template ICMP ping</name>
+         <description>Template ICMP ping version: 0.6</description>
+         <groups>
+            <group>
+               <name>Templates</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Status</name>
+            </application>
+         </applications>
+         <items>
+            <item>
+               <name>ICMP ping</name>
+               <type>3</type>
+               <snmp_community/>
+               <multiplier>0</multiplier>
+               <snmp_oid/>
+               <key>icmpping</key>
+               <delay>60</delay>
+               <history>7</history>
+               <trends>365</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>  </description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Status</name>
+                  </application>
+               </applications>
+               <valuemap>
+                  <name>Service state</name>
+               </valuemap>
+               <logtimefmt/>
+            </item>
+            <item>
+               <name>ICMP loss</name>
+               <type>3</type>
+               <snmp_community/>
+               <multiplier>0</multiplier>
+               <snmp_oid/>
+               <key>icmppingloss</key>
+               <delay>60</delay>
+               <history>7</history>
+               <trends>365</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>  </description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Status</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+            <item>
+               <name>ICMP response time</name>
+               <type>3</type>
+               <snmp_community/>
+               <multiplier>0</multiplier>
+               <snmp_oid/>
+               <key>icmppingsec</key>
+               <delay>60</delay>
+               <history>7</history>
+               <trends>365</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>s</units>
+               <delta>0</delta>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <data_type>0</data_type>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port>161</port>
+               <description>  </description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Status</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+            </item>
+         </items>
+         <discovery_rules/>
+         <macros>
+            <macro>
+               <macro>{$ICMP_LOSS_WARN}</macro>
+               <value/>
+            </macro>
+            <macro>
+               <macro>{$ICMP_RESPONSE_TIME_WARN}</macro>
+               <value/>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
@@ -430,8 +595,8 @@ networking software.</description>
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name/>
-               <expression/>
+               <name>Нет ответа на ICMP ping</name>
+               <expression>{Template SNMP Generic SNMPv2:icmpping.max(#3)}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
@@ -440,6 +605,94 @@ networking software.</description>
                         <tag>Alarm.type</tag>
                         <value>NO_DATA</value>
                      </tag>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
+      <trigger>
+         <expression>{Template ICMP ping:icmpping.max(#3)}=0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Нет ответа на ICMP ping</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>4</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.Last three attempts returned timeout.  Please check device connectivity.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags>
+            <tag>
+                        <tag>Alarm.type</tag>
+                        <value>NO_PING</value>
+                     </tag>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
+      <trigger>
+         <expression>{Template ICMP ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Потеря пакетов ICMP ping</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description/>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Нет ответа на ICMP ping</name>
+               <expression>{Template ICMP ping:icmpping.max(#3)}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags>
+            <tag>
+                        <tag>Alarm.type</tag>
+                        <value>PING_LOSS</value>
+                     </tag>
+            <tag>
+                        <tag>Host</tag>
+                        <value>{HOST.HOST}</value>
+                     </tag>
+         </tags>
+      </trigger>
+      <trigger>
+         <expression>{Template ICMP ping:icmppingsec.avg(5m)}&gt;{$ICMP_RESPONSE_TIME_WARN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High response time</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description/>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Нет ответа на ICMP ping</name>
+               <expression>{Template ICMP ping:icmpping.max(#3)}=0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Потеря пакетов ICMP ping</name>
+               <expression>{Template ICMP ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags>
             <tag>
                         <tag>Host</tag>
                         <value>{HOST.HOST}</value>
