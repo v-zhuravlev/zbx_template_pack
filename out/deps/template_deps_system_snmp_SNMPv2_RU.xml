@@ -358,7 +358,7 @@ networking software.</description>
          <macros>
             <macro>
                <macro>{$SNMP_TIMEOUT}</macro>
-               <value>10m</value>
+               <value>3m</value>
             </macro>
          </macros>
          <templates/>
@@ -382,7 +382,7 @@ networking software.</description>
          <dependencies>
             <dependency>
                <name> Нет сбора данных по SNMP</name>
-               <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].max(#3)}=0</expression>
+               <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
@@ -398,7 +398,7 @@ networking software.</description>
          </tags>
       </trigger>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].max(#3)}=0</expression>
+         <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name> Нет сбора данных по SNMP</name>
@@ -410,7 +410,13 @@ networking software.</description>
          <description>Последнее значение: {ITEM.LASTVALUE1}.Не удается опросить по SNMP. Проверьте доступность устройства и настройки SNMP.</description>
          <type>0</type>
          <manual_close>0</manual_close>
-         <dependencies/>
+         <dependencies>
+            <dependency>
+               <name/>
+               <expression/>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
          <tags>
             <tag>
                         <tag>Alarm.type</tag>
