@@ -400,7 +400,7 @@ networking software.</description>
          <dependencies>
             <dependency>
                <name> No SNMP data collection</name>
-               <expression>{Template SNMP Generic SNMPv2:system.uptime.nodata({$SNMP_TIMEOUT})}=1</expression>
+               <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].last()}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
@@ -408,31 +408,6 @@ networking software.</description>
             <tag>
                         <tag>Alarm.type</tag>
                         <value>RESTARTED</value>
-                     </tag>
-            <tag>
-                        <tag>Host</tag>
-                        <value>{HOST.HOST}</value>
-                     </tag>
-         </tags>
-      </trigger>
-      <trigger>
-         <expression>{Template SNMP Generic SNMPv2:system.uptime.nodata({$SNMP_TIMEOUT})}=1</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name> No SNMP data collection</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>2</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.SNMP object sysUptime.0 is not available for polling. Please check device connectivity and SNMP settings.</description>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies/>
-         <tags>
-            <tag>
-                        <tag>Alarm.type</tag>
-                        <value>NO_DATA</value>
                      </tag>
             <tag>
                         <tag>Host</tag>
