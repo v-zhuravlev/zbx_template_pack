@@ -17,19 +17,23 @@
                <name>Templates</name>
             </group>
          </groups>
-         <applications/>
+         <applications>
+            <application>
+               <name>Interfaces</name>
+            </application>
+         </applications>
          <items>
             <item>
-               <name/>
-               <type/>
+               <name>SNMP traps (interfaces)</name>
+               <type>17</type>
                <snmp_community/>
-               <snmp_oid>.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</snmp_oid>
-               <key>ifOperStatus.{#SNMPINDEX}</key>
-               <delay/>
-               <history/>
-               <trends/>
+               <snmp_oid/>
+               <key>snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"]</key>
+               <delay>300</delay>
+               <history>14</history>
+               <trends>0</trends>
                <status>0</status>
-               <value_type/>
+               <value_type>2</value_type>
                <allowed_hosts/>
                <units/>
                <snmpv3_contextname/>
@@ -48,15 +52,15 @@
                <publickey/>
                <privatekey/>
                <port>161</port>
-               <description/>
+               <description>Item is used to collect all SNMP traps matched for interfaces</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name/>
+                     <name>Interfaces</name>
                   </application>
                </applications>
                <valuemap/>
-               <logtimefmt/>
+               <logtimefmt>hh:mm:sszyyyy/MM/dd</logtimefmt>
                <preprocessing/>
             </item>
          </items>
@@ -93,280 +97,316 @@
                </filter>
                <lifetime>30</lifetime>
                <description>IF-MIB:ifTable</description>
-               <item_prototypes/>
-               <trigger_prototypes/>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>[{#SNMPINDEX}({#IFNAME})({#IFALIAS})] ifOperStatus</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</snmp_oid>
+                     <key>net.if.status[ifOperStatus.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>IF-MIB The current operational state of the interface. The testing(3) state indicates that no operational packet scan be passed.  If ifAdminStatus is down(2) then ifOperStatus should be down(2).  If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic; it should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection); it should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state; it should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Interfaces</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IF-MIB:ifOperStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>[{#SNMPINDEX}({#IFNAME})({#IFALIAS})] ifOctetsIn</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>.1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}</snmp_oid>
+                     <key>net.if.in[ifInOctets.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>bps</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>IF-MIB The total number of octets received on the interface,including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and atother times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Interfaces</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                        <step>
+                           <type>1</type>
+                           <params>8</params>
+                        </step>
+                     </preprocessing>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>[{#SNMPINDEX}({#IFNAME})({#IFALIAS})] ifOctetsOut</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>.1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}</snmp_oid>
+                     <key>net.if.out[ifOutOctets.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>bps</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>IF-MIB The total number of octets transmitted out of the interface, including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Interfaces</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                        <step>
+                           <type>1</type>
+                           <params>8</params>
+                        </step>
+                     </preprocessing>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>[{#SNMPINDEX}({#IFNAME})({#IFALIAS})] ifErrorsIn</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>.1.3.6.1.2.1.2.2.1.14.{#SNMPINDEX}</snmp_oid>
+                     <key>net.if.in.errors[ifInErrors.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>IF-MIB For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Interfaces</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                     </preprocessing>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>[{#SNMPINDEX}({#IFNAME})({#IFALIAS})] ifErrorsOut</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>.1.3.6.1.2.1.2.2.1.20.{#SNMPINDEX}</snmp_oid>
+                     <key>net.if.out.errors[ifOutErrors.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port>161</port>
+                     <description>IF-MIB For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors.  For character-oriented or fixed-lengthinterfaces, the number of outbound transmission units that could not be transmitted because of errors. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Interfaces</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                     </preprocessing>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{TRIGGER.VALUE}=0 and ({Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=2 or
+({Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
+{Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.3",1s)}=1))</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{TRIGGER.VALUE}=1 and ({Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=1 or
+({Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
+{Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.4",1s)}=1))</recovery_expression>
+                     <name>{#SNMPINDEX}({#IFNAME})({#IFALIAS}) недоступен</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.интерфейс недоступен</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags>
+                        <tag>
+                           <tag>Alarm.type</tag>
+                           <value>LINK_DOWN</value>
+                        </tag>
+                        <tag>
+                           <tag>Host</tag>
+                           <value>{HOST.HOST}</value>
+                        </tag>
+                     </tags>
+                  </trigger_prototype>
+               </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
             </discovery_rule>
 	        </discovery_rules>
          <httptests/>
          <macros/>
-         <templates>
-            <template>
-		  		         <name>Template ICMP Ping</name>
-		  	       </template>
-         </templates>
-         <screens/>
-      </template>
-      <template>
-         <template>Template ICMP Ping</template>
-         <name>Template ICMP Ping</name>
-         <description>Template ICMP Ping version: 0.7</description>
-         <groups>
-            <group>
-               <name>Templates</name>
-            </group>
-         </groups>
-         <applications>
-            <application>
-               <name>Status</name>
-            </application>
-         </applications>
-         <items>
-            <item>
-               <name>ICMP ping</name>
-               <type>3</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>icmpping</key>
-               <delay>60</delay>
-               <history>7</history>
-               <trends>365</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <delay_flex/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port>161</port>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Status</name>
-                  </application>
-               </applications>
-               <valuemap>
-                  <name>Service state</name>
-               </valuemap>
-               <logtimefmt/>
-               <preprocessing/>
-            </item>
-            <item>
-               <name>ICMP loss</name>
-               <type>3</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>icmppingloss</key>
-               <delay>60</delay>
-               <history>7</history>
-               <trends>365</trends>
-               <status>0</status>
-               <value_type>0</value_type>
-               <allowed_hosts/>
-               <units>%</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <delay_flex/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port>161</port>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Status</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-            </item>
-            <item>
-               <name>ICMP response time</name>
-               <type>3</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>icmppingsec</key>
-               <delay>60</delay>
-               <history>7</history>
-               <trends>365</trends>
-               <status>0</status>
-               <value_type>0</value_type>
-               <allowed_hosts/>
-               <units>s</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <delay_flex/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port>161</port>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Status</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-            </item>
-         </items>
-         <discovery_rules/>
-         <httptests/>
-         <macros>
-            <macro>
-               <macro>{$ICMP_LOSS_WARN}</macro>
-               <value>20</value>
-            </macro>
-            <macro>
-               <macro>{$ICMP_RESPONSE_TIME_WARN}</macro>
-               <value>0.15</value>
-            </macro>
-         </macros>
          <templates/>
          <screens/>
       </template>
    </templates>
-   <triggers>
-      <trigger>
-         <expression>{Template ICMP Ping:icmpping.max(#3)}=0</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>Нет ответа на ICMP ping</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>4</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.Last three attempts returned timeout.  Please check device connectivity.</description>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies/>
-         <tags>
-            <tag>
-                        <tag>Alarm.type</tag>
-                        <value>NO_PING</value>
-                     </tag>
-            <tag>
-                        <tag>Host</tag>
-                        <value>{HOST.HOST}</value>
-                     </tag>
-         </tags>
-      </trigger>
-      <trigger>
-         <expression>{Template ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>Потеря пакетов ICMP ping (сейчас: {ITEM.LASTVALUE1})</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>2</priority>
-         <description/>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies>
-            <dependency>
-               <name>Нет ответа на ICMP ping</name>
-               <expression>{Template ICMP Ping:icmpping.max(#3)}=0</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
-         <tags>
-            <tag>
-                        <tag>Alarm.type</tag>
-                        <value>PING_LOSS</value>
-                     </tag>
-            <tag>
-                        <tag>Host</tag>
-                        <value>{HOST.HOST}</value>
-                     </tag>
-         </tags>
-      </trigger>
-      <trigger>
-         <expression>{Template ICMP Ping:icmppingsec.avg(5m)}&gt;{$ICMP_RESPONSE_TIME_WARN}</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>High response time (now: {ITEM.LASTVALUE1})</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>2</priority>
-         <description/>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies>
-            <dependency>
-               <name>Нет ответа на ICMP ping</name>
-               <expression>{Template ICMP Ping:icmpping.max(#3)}=0</expression>
-               <recovery_expression/>
-            </dependency>
-            <dependency>
-               <name>Потеря пакетов ICMP ping (сейчас: {ITEM.LASTVALUE1})</name>
-               <expression>{Template ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
-         <tags>
-            <tag>
-                        <tag>Host</tag>
-                        <value>{HOST.HOST}</value>
-                     </tag>
-         </tags>
-      </trigger>
-   </triggers>
+   <triggers/>
    <value_maps>
       <value_map>
-  		     <name>zabbix.host.available</name>
+  		     <name>IF-MIB:ifOperStatus</name>
   		     <mappings>
            <mapping>
-               <value>0</value>
-               <newvalue>not available</newvalue>
-           </mapping>
-           <mapping>
                <value>1</value>
-               <newvalue>available</newvalue>
+               <newvalue>up</newvalue>
            </mapping>
            <mapping>
                <value>2</value>
+               <newvalue>down</newvalue>
+           </mapping>
+           <mapping>
+               <value>3</value>
+               <newvalue>testing</newvalue>
+           </mapping>
+           <mapping>
+               <value>4</value>
                <newvalue>unknown</newvalue>
+           </mapping>
+           <mapping>
+               <value>5</value>
+               <newvalue>dormant</newvalue>
+           </mapping>
+           <mapping>
+               <value>6</value>
+               <newvalue>notPresent</newvalue>
+           </mapping>
+           <mapping>
+               <value>7</value>
+               <newvalue>lowerLayerDown</newvalue>
            </mapping>
   		     </mappings>
   	   </value_map>
