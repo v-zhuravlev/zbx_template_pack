@@ -524,9 +524,11 @@ networking software.</description>
    </templates>
    <triggers>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv2:system.uptime.last(0)}&lt;10m or {Template SNMP Generic SNMPv2:snmptrap.fallback.str(coldStart)}=1</expression>
+         <expression>{TRIGGER.VALUE}=0 and ({Template SNMP Generic SNMPv2:system.uptime.avg(1s)}&lt;10m or
+{Template SNMP Generic SNMPv2:snmptrap.fallback.str(".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.1",1s)}=1 or
+{Template SNMP Generic SNMPv2:snmptrap.fallback.str("coldStart",1s)}=1)</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template SNMP Generic SNMPv2:system.uptime.last(0)}&gt;10m or {Template SNMP Generic SNMPv2:system.uptime.nodata(30m)}=1</recovery_expression>
+         <recovery_expression>{TRIGGER.VALUE}=1 and ({Template SNMP Generic SNMPv2:system.uptime.avg(1s)}&gt;10m)</recovery_expression>
          <name>{HOST.NAME} был только что перезагружен</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
