@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:root xmlns:tns="http://www.example.org/zbx_template_new/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/zbx_template_new/ ../../src/main/resources/templates/metrics.xsd">
+  <template>
+	  <classes>
+	  	<class>Interfaces</class>
+	  </classes>
+	  <name>Template SNMP Interfaces</name>
+	  <description>Template SNMP Interfaces</description>
+	  <sysObjectID>na</sysObjectID>
+	  <discoveryRules>
+	  	  	<discoveryRule>
+				<name>Network Interfaces Discovery</name>
+		        <snmp_oid>discovery[{#SNMPVALUE},ifOperStatus,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},.1.3.6.1.2.1.2.2.1.2,{#IFTYPE},ifType]</snmp_oid>
+		        <key>net.if.discovery</key>
+		        <description>IF-MIB:ifTable</description>
+	  		</discoveryRule>
+	  </discoveryRules>
+	  <metrics>
+    	<net.if.status>
+    		<oid>.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</oid>
+    		<snmpObject>ifOperStatus.{#SNMPINDEX}</snmpObject>
+    		<mib>IF-MIB</mib>
+    		<alarmObject>{#SNMPINDEX}({#IFNAME})({#IFALIAS})</alarmObject>
+    		<valueMap>IF-MIB:ifOperStatus</valueMap>
+    		<discoveryRule>Network Interfaces Discovery</discoveryRule>
+    		<vendorDescription>The current operational state of the interface. The testing(3) state indicates that no operational packet scan be passed.  If ifAdminStatus is down(2) then ifOperStatus should be down(2).  If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic; it should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection); it should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state; it should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.</vendorDescription>
+    	</net.if.status>
+    	<net.if.in>
+    		<oid>.1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}</oid>
+    		<snmpObject>ifInOctets.{#SNMPINDEX}</snmpObject>
+    		<mib>IF-MIB</mib>
+    		<alarmObject>{#SNMPINDEX}({#IFNAME})({#IFALIAS})</alarmObject>
+    		<discoveryRule>Network Interfaces Discovery</discoveryRule>
+    		<vendorDescription>The total number of octets received on the interface,including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and atother times as indicated by the value of ifCounterDiscontinuityTime.</vendorDescription>
+            <preprocessing>
+                <step>
+                    <type>delta_per_second</type>
+                    <params/>
+                </step>
+                <step>
+                    <type>multiplier</type>
+                    <params>8</params>
+                </step>
+            </preprocessing>      		
+    	</net.if.in>
+    	<net.if.out>
+    		<oid>.1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}</oid>
+    		<snmpObject>ifOutOctets.{#SNMPINDEX}</snmpObject>
+    		<mib>IF-MIB</mib>
+    		<alarmObject>{#SNMPINDEX}({#IFNAME})({#IFALIAS})</alarmObject>
+    		<discoveryRule>Network Interfaces Discovery</discoveryRule>
+    		<vendorDescription>The total number of octets transmitted out of the interface, including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</vendorDescription>
+            <preprocessing>
+                <step>
+                    <type>delta_per_second</type>
+                    <params/>
+                </step>
+                <step>
+                    <type>multiplier</type>
+                    <params>8</params>
+                </step>
+            </preprocessing>    		
+    	</net.if.out>
+    	<net.if.in.errors>
+    		<oid>.1.3.6.1.2.1.2.2.1.14.{#SNMPINDEX}</oid>
+    		<snmpObject>ifInErrors.{#SNMPINDEX}</snmpObject>
+    		<mib>IF-MIB</mib>
+    		<alarmObject>{#SNMPINDEX}({#IFNAME})({#IFALIAS})</alarmObject>
+    		<discoveryRule>Network Interfaces Discovery</discoveryRule>
+    		<vendorDescription>For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</vendorDescription>
+            <preprocessing>
+                <step>
+                    <type>delta_per_second</type>
+                    <params/>
+                </step>
+            </preprocessing>      	
+    	</net.if.in.errors>
+    	<net.if.out.errors>
+    		<oid>.1.3.6.1.2.1.2.2.1.20.{#SNMPINDEX}</oid>
+    		<snmpObject>ifOutErrors.{#SNMPINDEX}</snmpObject>
+    		<mib>IF-MIB</mib>
+    		<alarmObject>{#SNMPINDEX}({#IFNAME})({#IFALIAS})</alarmObject>
+    		<discoveryRule>Network Interfaces Discovery</discoveryRule>
+    		<vendorDescription>For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors.  For character-oriented or fixed-lengthinterfaces, the number of outbound transmission units that could not be transmitted because of errors. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</vendorDescription>
+            <preprocessing>
+                <step>
+                    <type>delta_per_second</type>
+                    <params/>
+                </step>
+            </preprocessing>     	
+    	</net.if.out.errors>
+    	
+    	<net.if.traps>
+    		<itemType>snmptrap</itemType>    	
+    	</net.if.traps>	
+	   </metrics>
+  </template>
+  
+	 
+  
+  <value_maps>
+  	<value_map>
+  		<name>IF-MIB:ifOperStatus</name>
+  		<mappings>
+           <mapping>
+               <value>1</value>
+               <newvalue>up</newvalue>
+           </mapping>
+           <mapping>
+               <value>2</value>
+               <newvalue>down</newvalue>
+           </mapping>
+           <mapping>
+               <value>3</value>
+               <newvalue>testing</newvalue>
+           </mapping>
+           <mapping>
+               <value>4</value>
+               <newvalue>unknown</newvalue>
+           </mapping>
+           <mapping>
+               <value>5</value>
+               <newvalue>dormant</newvalue>
+           </mapping>
+           <mapping>
+               <value>6</value>
+               <newvalue>notPresent</newvalue>
+           </mapping>
+           <mapping>
+               <value>7</value>
+               <newvalue>lowerLayerDown</newvalue>
+           </mapping>
+  		</mappings>
+  	</value_map>  
+  </value_maps>
+  </tns:root>
