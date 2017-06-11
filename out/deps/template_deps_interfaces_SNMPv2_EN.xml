@@ -329,13 +329,15 @@
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{TRIGGER.VALUE}=0 and ({Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=2 or
+                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({TRIGGER.VALUE}=0 and (
+({Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=2 and {Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1) or
 ({Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
-{Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.3",1s)}=1))</expression>
+{Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.3",1s)}=1)))</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{TRIGGER.VALUE}=1 and ({Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=1 or
+                     <recovery_expression>{$IFCONTROL:"{#IFNAME}"}=0 or ({TRIGGER.VALUE}=1 and (
+{Template SNMP Interfaces SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=1 or
 ({Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
-{Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.4",1s)}=1))</recovery_expression>
+{Template SNMP Interfaces SNMPv2:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.4",1s)}=1)))</recovery_expression>
                      <name>{#SNMPINDEX}({#IFNAME})({#IFALIAS}) is down</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -344,7 +346,7 @@
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.linkDown</description>
                      <type>0</type>
-                     <manual_close>1</manual_close>
+                     <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
@@ -399,7 +401,12 @@
             </discovery_rule>
 	        </discovery_rules>
          <httptests/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
