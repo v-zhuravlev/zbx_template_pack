@@ -834,8 +834,12 @@
                <value>4</value>
             </macro>
             <macro>
-               <macro>{$HEALTH_WARN_STATUS}</macro>
+               <macro>{$HEALTH_WARN_STATUS:"offline"}</macro>
                <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$HEALTH_WARN_STATUS:"testing"}</macro>
+               <value>3</value>
             </macro>
             <macro>
                <macro>{$TEMP_WARN_STATUS}</macro>
@@ -970,7 +974,7 @@
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Brocade SNMPv2:system.status[swOperStatus.0].last(0)}={$HEALTH_WARN_STATUS}</expression>
+         <expression>{Template Brocade SNMPv2:system.status[swOperStatus.0].last(0)}={$HEALTH_WARN_STATUS:"offline"} or {Template Brocade SNMPv2:system.status[swOperStatus.0].last(0)}={$HEALTH_WARN_STATUS:"testing"}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Статус системы: предупреждение (сейчас: {ITEM.LASTVALUE1})</name>
