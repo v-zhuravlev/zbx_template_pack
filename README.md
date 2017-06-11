@@ -11,7 +11,7 @@ As the output we would have a pack of templates for different vendors(Cisco, Jun
 
 
 ## Required and optional items  
-Some items are marked `required` so the new device we want to add must provide ways to monitor this item. Otherwise this device will not be added since we expect similar behaviour from all devices using template from the pack. If we can't control CPU load or memory load for `net` device then it's not going to be here.
+Some items are marked `required` so the new device we want to add must provide ways to monitor these items. Otherwise this device will not be added since we expect similar behaviour from all devices using the template from the pack. If we can't control CPU load or memory load for `net` device then it's not going to be here.
 Rules for `optional` metrics are not so strict. We can still live without them but they can be handy in some situations so we add them if they are ways to collect them.  
 
 ## Examples
