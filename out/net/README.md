@@ -14,9 +14,10 @@ See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea beh
 |QTech|Qtech QSW-2800-28T|-|.1.3.6.1.4.1.27514.1.1.1.49|Template QTech QSW|QTECH-MIB,ENTITY-MIB|-|  
 |Extreme|	X670V-48x|EXOS|.1.3.6.1.4.1.1916.2.168|Template Extreme EXOS|	EXTREME-SYSTEM-MIB,EXTREME-SOFTWARE-MONITOR-MIB|-|  
 |Alcatel|ALCATEL SR 7750|TiMOS|.1.3.6.1.4.1.6527.1.3.4|Template Alcatel Timetra TiMOS|EXTREME-SYSTEM-MIB,EXTREME-SOFTWARE-MONITOR-MIB|https://share.zabbix.com/network_devices/extreme/template-extreme-x450a|  
-|Brocade FC Switch|-|-|.1.3.6.1.4.1.1588.2.1.1.[1,71]|Template Brocade|SW-MIB,ENTITY-MIB|-|  
+|Brocade FC Switch|-|-|.1.3.6.1.4.1.1588.2.1.1.[1,71]|Template Brocade FC|SW-MIB,ENTITY-MIB|-|  
 |Huawei VRP|	S2352P-EI|-|.1.3.6.1.4.1.2011.2.23.94|Template Huawei VRP|ENTITY-MIB,HUAWEI-ENTITY-EXTENT-MIB|-|  
 |Dell Force S-Series|	S4810|-|.1.3.6.1.4.1.6027.1.3.14|Template Dell Force S-Series|F10-S-SERIES-CHASSIS-MIB|https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx|    
+|Brocade ICX|ICX6610|-||Template Brocade ICX|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
 
 
 ## Items supported by template  
