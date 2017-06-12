@@ -554,7 +554,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>vfs.fs.units[hrStorageAllocationUnits.Storage-{#SNMPVALUE}]</key>
+                     <key>vfs.fs.units[hrStorageAllocationUnits.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>7</history>
                      <trends>0</trends>
@@ -600,7 +600,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
-                     <key>vfs.fs.units.used[hrStorageUsed.Storage-{#SNMPVALUE}]</key>
+                     <key>vfs.fs.units.used[hrStorageUsed.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>7</history>
                      <trends>0</trends>
@@ -644,7 +644,7 @@
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>.1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>vfs.fs.units.total[hrStorageSize.Storage-{#SNMPVALUE}]</key>
+                     <key>vfs.fs.units.total[hrStorageSize.{#SNMPINDEX}]</key>
                      <delay>300</delay>
                      <history>7</history>
                      <trends>0</trends>
@@ -706,7 +706,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(vfs.fs.units.used[hrStorageUsed.Storage-{#SNMPVALUE}])*last(vfs.fs.units[hrStorageAllocationUnits.Storage-{#SNMPVALUE}]))</params>
+                     <params>(last(vfs.fs.units.used[hrStorageUsed.{#SNMPINDEX}])*last(vfs.fs.units[hrStorageAllocationUnits.{#SNMPINDEX}]))</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -750,7 +750,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(vfs.fs.units.total[hrStorageSize.Storage-{#SNMPVALUE}])*last(vfs.fs.units[hrStorageAllocationUnits.Storage-{#SNMPVALUE}]))</params>
+                     <params>(last(vfs.fs.units.total[hrStorageSize.{#SNMPINDEX}])*last(vfs.fs.units[hrStorageAllocationUnits.{#SNMPINDEX}]))</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -794,7 +794,7 @@
                      <snmpv3_privpassphrase/>
                      <formula>0</formula>
                      <delay_flex/>
-                     <params>(last(vfs.fs.units.used[hrStorageUsed.Storage-{#SNMPVALUE}])/last(vfs.fs.units.total[hrStorageSize.Storage-{#SNMPVALUE}]))*100</params>
+                     <params>(last(vfs.fs.units.used[hrStorageUsed.{#SNMPINDEX}])/last(vfs.fs.units.total[hrStorageSize.{#SNMPINDEX}]))*100</params>
                      <ipmi_sensor/>
                      <data_type>0</data_type>
                      <authtype>0</authtype>
@@ -859,7 +859,36 @@
                <host_prototypes/>
             </discovery_rule>
 	        </discovery_rules>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$STORAGE_UTIL_CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$STORAGE_UTIL_WARN}</macro>
+               <value>80</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
