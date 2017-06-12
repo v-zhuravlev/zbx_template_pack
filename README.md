@@ -1,4 +1,4 @@
-# zbx_template_pack
+# Zabbix Templates Pack
 The idea behind this template pack is to provide single template class for each device type and just define SNMP oids required to collect common metrics liks `CPU load`, `Memory`, `Temperature` and so on to generate new template for new vendor.  
 
 
