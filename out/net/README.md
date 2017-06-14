@@ -19,6 +19,8 @@ See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea beh
 |Dell Force S-Series|	S4810|-|.1.3.6.1.4.1.6027.1.3.14|Template Dell Force S-Series|F10-S-SERIES-CHASSIS-MIB|https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx|    
 |Brocade ICX|ICX6610|-||Template Brocade ICX|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
 |Mellanox|SX1036|MLNX-OS|.1.3.6.1.4.1.33049.1.1.1.1036|Template Mellanox |HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB,MELLANOX-MIB|http://www.mellanox.com/page/ethernet_switch_overview|
+|Intel/QLogic|Infiniband 12300|-|.1.3.6.1.4.1.10222.7.1.2|Template QLogic Infiniband |ICS-CHASSIS-MIB|https://www.intel.com/content/www/us/en/high-performance-computing-fabrics/true-scale-12000-switch-family.html|
+
 
 
 ## Items supported by template  
