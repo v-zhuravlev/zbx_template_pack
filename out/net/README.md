@@ -18,6 +18,7 @@ See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea beh
 |Huawei VRP|	S2352P-EI|-|.1.3.6.1.4.1.2011.2.23.94|Template Huawei VRP|ENTITY-MIB,HUAWEI-ENTITY-EXTENT-MIB|-|  
 |Dell Force S-Series|	S4810|-|.1.3.6.1.4.1.6027.1.3.14|Template Dell Force S-Series|F10-S-SERIES-CHASSIS-MIB|https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx|    
 |Brocade ICX|ICX6610|-||Template Brocade ICX|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
+|Mellanox|SX1036|MLNX-OS|.1.3.6.1.4.1.33049.1.1.1.1036|Template Mellanox |HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB,MELLANOX-MIB|http://www.mellanox.com/page/ethernet_switch_overview|
 
 
 ## Items supported by template  
