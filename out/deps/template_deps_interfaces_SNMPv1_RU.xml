@@ -601,6 +601,36 @@
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template SNMP Interfaces SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}
+or {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template SNMP Interfaces SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2
+and {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2</recovery_expression>
+                     <name>{#SNMPINDEX}({#IFNAME})({#IFALIAS}) большое количество ошибок</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#SNMPINDEX}({#IFNAME})({#IFALIAS}) недоступен</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({TRIGGER.VALUE}=0 and (
+({Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=2 and {Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1) or
+({Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
+{Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.3",1s)}=1)))</expression>
+                           <recovery_expression>{$IFCONTROL:"{#IFNAME}"}=0 or ({TRIGGER.VALUE}=1 and (
+{Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=1 or
+({Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
+{Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.4",1s)}=1)))</recovery_expression>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
@@ -684,6 +714,10 @@
             <macro>
                <macro>{$IF_UTIL_MAX}</macro>
                <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$IF_ERRORS_WARN}</macro>
+               <value>2</value>
             </macro>
             <macro>
                <macro>{$SNMP_PORT}</macro>
