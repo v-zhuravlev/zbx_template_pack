@@ -602,6 +602,43 @@ and {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}]
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].change()}&lt;0 and {Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}&gt;0
+and (
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or 
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or 
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or 
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or 
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or 
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=117
+)
+</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].change()}&gt;0 and {Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].prev()}&gt;0</recovery_expression>
+                     <name>{#SNMPINDEX}({#IFNAME})({#IFALIAS}) Ethernet интерфейс не на максимальной скорости:</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#SNMPINDEX}({#IFNAME})({#IFALIAS}) недоступен</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({TRIGGER.VALUE}=0 and (
+({Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=2 and {Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1) or
+({Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
+{Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.3",1s)}=1)))</expression>
+                           <recovery_expression>{$IFCONTROL:"{#IFNAME}"}=0 or ({TRIGGER.VALUE}=1 and (
+{Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].avg(1s)}=1 or
+({Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str("  .1.3.6.1.2.1.2.2.1.1           type=2  value=INTEGER: {#SNMPINDEX}",1s)}=1 and
+{Template SNMP Interfaces SNMPv1:snmptrap[".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.[3-4]"].str(".1.3.6.1.6.3.1.1.5.4",1s)}=1)))</recovery_expression>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
