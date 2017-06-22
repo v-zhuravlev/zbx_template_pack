@@ -11,4 +11,6 @@ Devices wanted list:
 -	Alcatel-Lucent (not TimOS) devices  
 -	Netgear switches  
 -	Zyxel MES switches  
--	Ubiquiti Airfiber  
+-	Ubiquiti Airfiber
+-   Intel/Qlogic Infiniband  
+-	Brocade ICX Family

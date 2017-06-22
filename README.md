@@ -46,8 +46,8 @@ Currently `net` template is ready to be tested.  See [`out/net/README.md`](https
 |Huawei VRP|	S2352P-EI|-|.1.3.6.1.4.1.2011.2.23.94|Template Huawei VRP|ENTITY-MIB,HUAWEI-ENTITY-EXTENT-MIB|-|  
 |Dell Force S-Series|	S4810|-|.1.3.6.1.4.1.6027.1.3.14|Template Dell Force S-Series|F10-S-SERIES-CHASSIS-MIB|https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx|    
 |Brocade ICX|ICX6610|-||Template Brocade ICX|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
-|Mellanox|SX1036|MLNX-OS|.1.3.6.1.4.1.33049.1.1.1.1036|Template Mellanox |HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB,MELLANOX-MIB|http://www.mellanox.com/page/ethernet_switch_overview|
-|Intel/QLogic|Infiniband 12300|-|.1.3.6.1.4.1.10222.7.1.2|Template QLogic Infiniband |ICS-CHASSIS-MIB|https://www.intel.com/content/www/us/en/high-performance-computing-fabrics/true-scale-12000-switch-family.html|
+|Mellanox|SX1036|MLNX-OS|.1.3.6.1.4.1.33049.1.1.1.1036|Template Mellanox |HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB,MELLANOX-MIB|http://www.mellanox.com/page/ethernet_switch_overview,https://community.mellanox.com/docs/DOC-2383,https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/Welcome%20to%20High%20Performance%20Computing%20(HPC)%20Central/page/Mellanox%20InfiniBand%20Management%20and%20Monitoring%20Best%20Practices|
+|Intel/QLogic|Infiniband 12300|-|.1.3.6.1.4.1.10222.7.1.2|Template QLogic Infiniband |ICS-CHASSIS-MIB|https://www.intel.com/content/www/us/en/high-performance-computing-fabrics/true-scale-12000-switch-family.html,https://www.ietf.org/proceedings/53/I-D/draft-ietf-ipoib-ibif-mib-01.txt|
 
 ## Template options  
 Templates are provided in two SNMP versions (SNMPvx suffix):  
