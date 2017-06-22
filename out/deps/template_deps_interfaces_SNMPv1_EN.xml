@@ -89,7 +89,7 @@
                <privatekey/>
                <port>{$SNMP_PORT}</port>
                <filter>
-                        <evaltype>2</evaltype>
+                        <evaltype>1</evaltype>
                         <formula/>
                         <conditions>
                             <condition>
@@ -99,6 +99,13 @@
                                 <operator>8</operator>
                                 <formulaid>B</formulaid>
                             </condition>
+                            <condition>
+                                <macro>{#IFNAME}</macro>
+                                <value>@Network interfaces for discovery</value> 
+                        <!-- should filter out loopbacks and nulls -->
+                                <operator>8</operator>
+                                <formulaid>B</formulaid>
+                            </condition>                            
                         </conditions>
                 </filter>
                <lifetime>30d</lifetime>

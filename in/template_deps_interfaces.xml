@@ -17,7 +17,7 @@
 		        <key>net.if.discovery</key>
 		        <description>Discovering interfaces from IF-MIB. Interfaces with down(2) Administrative Status are not discovered.</description>
 				<filter>
-                        <evaltype>2</evaltype>
+                        <evaltype>1</evaltype>
                         <formula/>
                         <conditions>
                             <condition>
@@ -26,6 +26,12 @@
                                 <operator>8</operator>
                                 <formulaid>B</formulaid>
                             </condition>
+                            <condition>
+                                <macro>{#IFNAME}</macro>
+                                <value>@Network interfaces for discovery</value> <!-- should filter out loopbacks and nulls -->
+                                <operator>8</operator>
+                                <formulaid>B</formulaid>
+                            </condition>                            
                         </conditions>
                 </filter>
 	  		</discoveryRule>
