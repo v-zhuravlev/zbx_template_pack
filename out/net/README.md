@@ -136,10 +136,6 @@ template_net_ubiquiti_airos_SNMPv1_EN.xml
 template_net_ubiquiti_airos_SNMPv2_EN.xml
 ```
 
-
-## Where are the network interfaces?  
-Not here yet. Just attach regular SNMP Interfaces template to the template from this pack for now.
-
 ## Known issues  
 - For some devices temperature sensors are discovered using LLD. Since too many sensors are discovered and no dependencies could be created between them, it could lead  to event storm in case if room cooling system is broken.Same problem could be faced with multi CPU network devices.  
 - Sometimes additional LLD rules are used when they are not strictly necessary. This is done on purpose to provide same names to metrics of same Location (like `Temperature[Ambient]`).  
