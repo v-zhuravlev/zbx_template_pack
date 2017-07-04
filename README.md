@@ -48,6 +48,8 @@ Currently `net` template is ready to be tested.  See [`out/net/README.md`](https
 |Brocade ICX|ICX6610|-||Template Brocade ICX|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
 |Mellanox|SX1036|MLNX-OS|.1.3.6.1.4.1.33049.1.1.1.1036|Template Mellanox |HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB,MELLANOX-MIB|http://www.mellanox.com/page/ethernet_switch_overview,https://community.mellanox.com/docs/DOC-2383,https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/Welcome%20to%20High%20Performance%20Computing%20(HPC)%20Central/page/Mellanox%20InfiniBand%20Management%20and%20Monitoring%20Best%20Practices|
 |Intel/QLogic|Infiniband 12300|-|.1.3.6.1.4.1.10222.7.1.2|Template QLogic Infiniband |ICS-CHASSIS-MIB|https://www.intel.com/content/www/us/en/high-performance-computing-fabrics/true-scale-12000-switch-family.html,https://www.ietf.org/proceedings/53/I-D/draft-ietf-ipoib-ibif-mib-01.txt|
+|HP (H3C) Comware|HP A5500-24G-4SFP HI Switch|-|.1.3.6.1.4.1.25506.11.1.101|Template HP Comware HH3C |HH3C-ENTITY-EXT-MIB,ENTITY-MIB|http://certifiedgeek.weebly.com/blog/hp-comware-snmp-mib-for-cpu-memory-and-temperature|
+|TP-LINK|T2600G-28TS v2.0|-|.1.3.6.1.4.1.11863.5.33|Template TP-LINK|TPLINK-SYSMONITOR-MIB,TPLINK-SYSINFO-MIB|http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files|
 
 ## Template options  
 Templates are provided in two SNMP versions (SNMPvx suffix):  
