@@ -575,11 +575,9 @@ networking software.
    <graphs/>
    <triggers>
       <trigger>
-         <expression>{TRIGGER.VALUE}=0 and ({Template SNMP Generic SNMPv2:system.uptime.avg(1s)}&lt;10m or
-{Template SNMP Generic SNMPv2:snmptrap.fallback.str(".1.3.6.1.6.3.1.1.4.1.0         type=6  value=OID: .1.3.6.1.6.3.1.1.5.1",1s)}=1 or
-{Template SNMP Generic SNMPv2:snmptrap.fallback.str("coldStart",1s)}=1)</expression>
-         <recovery_mode>1</recovery_mode>
-         <recovery_expression>{TRIGGER.VALUE}=1 and ({Template SNMP Generic SNMPv2:system.uptime.avg(1s)}&gt;10m)</recovery_expression>
+         <expression>{Template SNMP Generic SNMPv2:system.uptime.last()}&lt;10m</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
          <name> The {HOST.NAME} has just been  restarted</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -587,7 +585,7 @@ networking software.
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.
-The device uptime is less then 10 minutes or SNMP trap(coldStart) received</description>
+The device uptime is less then 10 minutes</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies>
