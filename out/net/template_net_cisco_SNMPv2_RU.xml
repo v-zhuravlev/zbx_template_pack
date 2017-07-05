@@ -278,7 +278,7 @@ device : C2911, C7600
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <name>Возможно замена {#ENT_NAME} (получен новый серийный номер)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -384,7 +384,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}.].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPINDEX}] Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPINDEX}] Загрузка ЦПУ слишком велика</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -601,7 +601,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -780,7 +780,7 @@ The current state of the testpoint being instrumented.
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"{#SNMPVALUE}"}-5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура выше нормы: &gt;{$TEMP_WARN:"{#SNMPVALUE}"} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                     <name>[{#SNMPVALUE}] Температура выше нормы: &gt;{$TEMP_WARN:"{#SNMPVALUE}"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -792,7 +792,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                           <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"}</name>
                            <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"{#SNMPVALUE}"}
 							or
 							{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
@@ -815,7 +815,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"{#SNMPVALUE}"}-5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                     <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:"{#SNMPVALUE}"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -832,7 +832,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}+5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"} (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"{#SNMPVALUE}"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -932,7 +932,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Статус блока питания: авария (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Статус блока питания: авария</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1032,7 +1032,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Статус вентилятора: сбой (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1399,7 +1399,7 @@ SNMPv2-MIB
                      <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <name>Возможно замена {#ENT_NAME} (получен новый серийный номер)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1499,7 +1499,7 @@ SNMPv2-MIB
                      <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Статус блока питания: авария (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Статус блока питания: авария</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1599,7 +1599,7 @@ SNMPv2-MIB
                      <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Статус вентилятора: сбой (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1707,7 +1707,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Загрузка ЦПУ слишком велика</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1923,7 +1923,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2357,7 +2357,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <name>Возможно замена {#ENT_NAME} (получен новый серийный номер)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2457,7 +2457,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Статус блока питания: авария (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Статус блока питания: авария</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2557,7 +2557,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Статус вентилятора: сбой (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2740,7 +2740,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2905,7 +2905,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <expression>{Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Cisco IOS Software releases 12.2_3.5_ or later SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
-         <name>Возможно замена устройства (новый серийный номер:{ITEM.VALUE1})</name>
+         <name>Возможно замена устройства (получен новый серийный номер)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -2922,7 +2922,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <expression>{Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Cisco IOS Software releases later to 12.0_3_T and prior to 12.2_3.5_ SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
-         <name>Возможно замена устройства (новый серийный номер:{ITEM.VALUE1})</name>
+         <name>Возможно замена устройства (получен новый серийный номер)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -2939,7 +2939,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.cpu.util[avgBusy5].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Загрузка ЦПУ слишком велика (сейчас: {ITEM.LASTVALUE1})</name>
+         <name>Загрузка ЦПУ слишком велика</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -2956,7 +2956,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <expression>{Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Cisco IOS Software releases prior to 12.0_3_T SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
-         <name>Возможно замена устройства (новый серийный номер:{ITEM.VALUE1})</name>
+         <name>Возможно замена устройства (получен новый серийный номер)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

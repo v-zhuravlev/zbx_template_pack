@@ -362,7 +362,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <expression>{Template Brocade ICX SNMPv2:sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Power supply is in critical state (now: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -467,7 +467,7 @@ Please check the power supply unit for errors</description>
                      <expression>{Template Brocade ICX SNMPv2:sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE} fan is in critical state (now: {ITEM.LASTVALUE1})</name>
+                     <name>{#SNMPVALUE} fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -618,7 +618,7 @@ Please check the fan unit</description>
          <expression>{Template Brocade ICX SNMPv2:system.cpu.util[snAgGblCpuUtil1MinAvg.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High CPU utilization (now: {ITEM.LASTVALUE1})</name>
+         <name>High CPU utilization</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -635,7 +635,7 @@ Please check the fan unit</description>
          <expression>{Template Brocade ICX SNMPv2:vm.memory.pused[snAgGblDynMemUtil.0].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High memory utilization (now: {ITEM.LASTVALUE1})</name>
+         <name>High memory utilization</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -652,7 +652,7 @@ Please check the fan unit</description>
          <expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-         <name> temperature is above warning threshold: &gt;{$TEMP_WARN:""} (now: {ITEM.LASTVALUE1})</name>
+         <name> temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -664,7 +664,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name> temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})</name>
+               <name> temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                <expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                <recovery_expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
             </dependency>
@@ -675,7 +675,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-         <name> temperature is above critical threshold: &gt;{$TEMP_CRIT:""} (now: {ITEM.LASTVALUE1})</name>
+         <name> temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -692,7 +692,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Brocade ICX SNMPv2:sensor.temp.value[snChasActualTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-         <name> temperature is too low: &lt;{$TEMP_CRIT_LOW:""} (now: {ITEM.LASTVALUE1})</name>
+         <name> temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -709,7 +709,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Brocade ICX SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Brocade ICX SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
-         <name>Device might have been replaced (new serial number:{ITEM.VALUE1})</name>
+         <name>Device might have been replaced (new serial number received)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -726,7 +726,7 @@ Device serial number has changed. Ack to close</description>
          <expression>{Template Brocade ICX SNMPv2:system.hw.firmware.diff()}=1 and {Template Brocade ICX SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
-         <name>Firmware has changed: (new:{ITEM.VALUE1})</name>
+         <name>Firmware has changed</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

@@ -266,7 +266,7 @@ The operational status of the sensor.
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>[{#SENSOR_INFO}] Температура выше нормы: &gt;{$TEMP_WARN:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                     <name>[{#SENSOR_INFO}] Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -278,7 +278,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                           <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.status[icsChassisSensorSlotOperStatus.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
@@ -295,7 +295,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""} (сейчас: {ITEM.LASTVALUE1})({ITEM.VALUE2})</name>
+                     <name>[{#SENSOR_INFO}] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -312,7 +312,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>[{#SENSOR_INFO}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""} (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SENSOR_INFO}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -417,7 +417,7 @@ The serial number of the FRU.  If not available, this value is a zero-length str
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:system.hw.serialnumber[icsChassisSystemUnitFruSerialNumber.{#SNMPINDEX}].diff()}=1 and {Template Intel_Qlogic Infiniband SNMPv1:system.hw.serialnumber[icsChassisSystemUnitFruSerialNumber.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Возможно замена {#ENT_NAME} (новый серийный номер:{ITEM.VALUE1})</name>
+                     <name>Возможно замена {#ENT_NAME} (получен новый серийный номер)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -525,7 +525,7 @@ The serial number of the FRU.  If not available, this value is a zero-length str
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Статус блока питания: авария (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Статус блока питания: авария</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -626,7 +626,7 @@ The operational status of the fan unit.
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.fan.status[icsChassisFanOperStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Статус вентилятора: сбой (сейчас: {ITEM.LASTVALUE1})</name>
+                     <name>[{#SNMPVALUE}] Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -715,7 +715,7 @@ The operational status of the fan unit.
          <expression>{Template Intel_Qlogic Infiniband SNMPv1:system.hw.firmware.diff()}=1 and {Template Intel_Qlogic Infiniband SNMPv1:system.hw.firmware.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
-         <name>Версия прошивки изменилась: (сейчас:{ITEM.VALUE1})</name>
+         <name>Версия прошивки изменилась</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
