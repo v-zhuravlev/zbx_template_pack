@@ -114,11 +114,11 @@ cd zbx_template_pack/bin
 
 
 ```
-[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --lang EN ../out/deps/3.2        
-template_deps_host_resources_SNMPv1_EN.xml  
-template_deps_host_resources_SNMPv2_EN.xml  
-template_deps_system_snmp_SNMPv1_EN.xml  
-template_deps_system_snmp_SNMPv2_EN.xml  
+[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --lang EN ../out/module/3.2        
+template_module_host_resources_SNMPv1_EN.xml  
+template_module_host_resources_SNMPv2_EN.xml  
+template_module_system_snmp_SNMPv1_EN.xml  
+template_module_system_snmp_SNMPv2_EN.xml  
 ```
 
 
