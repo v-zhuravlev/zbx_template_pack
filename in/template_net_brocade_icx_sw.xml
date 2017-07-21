@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:root xmlns:tns="http://www.example.org/zbx_template_new/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/zbx_template_new/ ../../src/main/resources/templates/metrics.xsd">
   <template>
-  <!-- http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html  -->
+  <!-- http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html
+      http://www.brocade.com/en/products-services/routers/mlx-series.html -->
+  <!-- https://share.zabbix.com/network_devices/brocade-icx-mlx-fcx by Stefan Krüger -->
 	  <classes>
 	  	<class>Performance</class>
 	  	<class>Fault</class>
@@ -14,23 +16,45 @@
 	  </classes>
 	  <name>Template Brocade ICX</name>
 	  <description>Template Brocade ICX</description>
-	  <sysObjectID>xxx</sysObjectID>
+	  <sysObjectID>.1.3.6.1.4.1.1991.1.3.55.2.2</sysObjectID>
+	  <documentation>
+		  <known_devices>
+              <device>
+                  <name>Brocade MLXe</name>
+                  <version>(System Mode: MLX), IronWare Version V5.4.0eT163 Compiled on Oct 30 2013 at 16:40:24 labeled as V5.4.00e</version>
+              </device>
+          </known_devices>
+	  </documentation>
 	  <discoveryRules>
 
 		
   	  	<discoveryRule>
 				<name>PSU Discovery</name>
-                <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.1991.1.1.1.2.2.1.3]</snmp_oid>
+                <snmp_oid>discovery[{#PSU_UNIT},1.3.6.1.4.1.1991.1.1.1.2.2.1.1,{#PSU_INDEX},1.3.6.1.4.1.1991.1.1.1.2.2.1.2]</snmp_oid>
                 <key>psu.discovery</key>
-                <description>snChasPwrSupply2Description: The index to power supply table snChasPwrSupply2Table</description>              
+                <description>snChasPwrSupply2Table: A table of each power supply information for each unit. Only installedpower supply appears in a table row.</description>
 		</discoveryRule>		
  
   	  	<discoveryRule>
 				<name>FAN Discovery</name>
-                <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.1991.1.1.1.3.2.1.3]</snmp_oid>
+				<snmp_oid>discovery[{#FAN_UNIT},.1.3.6.1.4.1.1991.1.1.1.3.2.1.1,{#FAN_INDEX},.1.3.6.1.4.1.1991.1.1.1.3.2.1.2]</snmp_oid>
                 <key>fan.discovery</key>
-                <description>snChasFan2Description: The index to fan table. snChasFan2Table</description> 
+                <description>snChasFan2Table: A table of each fan information for each unit. Only installedfan appears in a table row.</description>
 		</discoveryRule>
+
+	  <discoveryRule>
+          <name>Chassis Discovery</name>
+          <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.1991.1.1.1.4.1.1.1]</snmp_oid>
+          <key>chassis.discovery</key>
+          <description>snChasUnitIndex: The index to chassis table.</description>
+      </discoveryRule>
+
+      <discoveryRule>
+          <name>Temperature Discovery</name>
+          <snmp_oid>discovery[{#SENSOR_DESCR},1.3.6.1.4.1.1991.1.1.2.13.3.1.4]</snmp_oid>
+          <key>temp.discovery</key>
+          <description>snAgentTemp2Table:Table to list temperatures of the modules in the device for each unit. This table is applicable to only those modules with temperature sensors.</description>
+      </discoveryRule>
 		
 	  </discoveryRules>
 	  <metrics>
@@ -60,16 +84,55 @@
 		      <vendorDescription>Temperature of the chassis. Each unit is 0.5 degrees Celcius.
 		      Only management module built with temperature sensor hardware is applicable.
 		       For those non-applicable management module, it returns no-such-name.</vendorDescription>
+			<preprocessing>
+				<step>
+					<type>multiplier</type>
+					<params>0.5</params>
+				</step>
+			</preprocessing>
 	    </sensor.temp.value>
-	    
 
-	    
-	    <sensor.psu.status>
+		  <sensor.temp.value>
+          <oid>1.3.6.1.4.1.1991.1.1.1.4.1.1.4.{#SNMPINDEX}</oid>
+          <snmpObject>snChasUnitActualTemperature.{#SNMPINDEX}</snmpObject>
+          <mib>FOUNDRY-SN-AGENT-MIB</mib>
+          <vendorDescription>Temperature of the chassis. Each unit is 0.5 degrees Celcius.
+              Only management module built with temperature sensor hardwareis applicable. For those non-applicable management module, it returns no-such-name.</vendorDescription>
+          <discoveryRule>Chassis Discovery</discoveryRule>
+          <alarmObject>Unit {#SNMPVALUE}</alarmObject>
+          <preprocessing>
+              <step>
+                  <type>multiplier</type>
+                  <params>0.5</params>
+              </step>
+          </preprocessing>
+      </sensor.temp.value>
+
+      <sensor.temp.value>
+          <oid>1.3.6.1.4.1.1991.1.1.2.13.3.1.5.{#SNMPINDEX}</oid>
+          <snmpObject>snAgentTemp2Value.{#SNMPINDEX}</snmpObject>
+          <mib>FOUNDRY-SN-AGENT-MIB</mib>
+          <vendorDescription>Temperature of the sensor represented by this row. Each unit is 0.5 degrees Celsius.</vendorDescription>
+          <discoveryRule>Temperature Discovery</discoveryRule>
+          <alarmObject>{#SENSOR_DESCR}</alarmObject>
+          <preprocessing>
+              <step>
+                  <type>multiplier</type>
+                  <params>0.5</params>
+              </step>
+          </preprocessing>
+      </sensor.temp.value>
+
+
+
+
+
+		  <sensor.psu.status>
 	    	  <oid>.1.3.6.1.4.1.1991.1.1.1.2.2.1.4.{#SNMPINDEX}</oid>
 		      <snmpObject>snChasPwrSupply2OperStatus.{#SNMPINDEX}</snmpObject>
 		      <mib>FOUNDRY-SN-AGENT-MIB</mib>
 		      <discoveryRule>PSU Discovery</discoveryRule>
-		      <alarmObject>{#SNMPVALUE}</alarmObject>
+		      <alarmObject>Unit {#PSU_UNIT} PSU {#PSU_INDEX}</alarmObject>
 		      <valueMap>FOUNDRY-SN-AGENT-MIB::snChasPwrSupply2OperStatus</valueMap>
 	    </sensor.psu.status>
  
@@ -79,7 +142,7 @@
 		      <snmpObject>snChasFan2OperStatus.{#SNMPINDEX}</snmpObject>
 		      <mib>FOUNDRY-SN-AGENT-MIB</mib>
 		      <discoveryRule>FAN Discovery</discoveryRule>
-		      <alarmObject>{#SNMPVALUE}</alarmObject>
+			<alarmObject>Unit {#FAN_UNIT} Fan {#FAN_INDEX}</alarmObject>
 		      <valueMap>FOUNDRY-SN-AGENT-MIB::snChasFan2OperStatus</valueMap>
 	    </sensor.fan.status>
 
@@ -94,15 +157,22 @@
 	    	  <oid>1.3.6.1.4.1.1991.1.1.1.1.2.0</oid>
 		      <snmpObject>snChasSerNum.0</snmpObject>
 		      <mib>FOUNDRY-SN-AGENT-MIB</mib>
-	    </system.hw.serialnumber> 
-	    
-	    <system.hw.firmware>
-	    	<oid>1.3.6.1.4.1.1991.1.1.2.1.11.0</oid>
-	        <snmpObject>snAgImgVer.0</snmpObject>
-		    <mib>FOUNDRY-SN-AGENT-MIB</mib>
-		    <vendorDescription>The version of the running software in the form'major.minor.maintenance[letters]'</vendorDescription>
-	    </system.hw.firmware>
-	    
+	    </system.hw.serialnumber>
+	    <system.hw.serialnumber>
+			  <oid>1.3.6.1.4.1.1991.1.1.1.4.1.1.2.{#SNMPINDEX}</oid>
+			  <snmpObject>snChasUnitSerNum.{#SNMPINDEX}</snmpObject>
+			  <mib>FOUNDRY-SN-AGENT-MIB</mib>
+			  <discoveryRule>Chassis Discovery</discoveryRule>
+			  <alarmObject>Unit {#SNMPVALUE}</alarmObject>
+			  <vendorDescription>The serial number of the chassis for each unit. If the serial number is unknown or unavailable then the value should be a zero length string.</vendorDescription>
+		</system.hw.serialnumber>
+
+		<system.hw.firmware>
+			  <oid>1.3.6.1.4.1.1991.1.1.2.1.11.0</oid>
+			  <snmpObject>snAgImgVer.0</snmpObject>
+			  <mib>FOUNDRY-SN-AGENT-MIB</mib>
+			  <vendorDescription>The version of the running software in the form'major.minor.maintenance[letters]'</vendorDescription>
+	  	</system.hw.firmware>
 	   </metrics>
 		<macros>
             <macro>
