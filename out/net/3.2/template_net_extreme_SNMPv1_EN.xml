@@ -89,7 +89,7 @@ Total CPU utlization (percentage) as of last sampling.
                <logtimefmt/>
             </item>
             <item>
-               <name>[Device] Temperature</name>
+               <name>Device: Temperature</name>
                <type>1</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
@@ -135,7 +135,7 @@ Reference: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-supp
                <logtimefmt/>
             </item>
             <item>
-               <name>[Device] Temperature status</name>
+               <name>Device: Temperature status</name>
                <type>1</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
@@ -445,7 +445,7 @@ The software revision of the primary image stored in this device.
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Available memory</name>
+                     <name>#{#SNMPVALUE}: Available memory</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -491,7 +491,7 @@ Total amount of free memory in Kbytes in the system.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Total memory</name>
+                     <name>#{#SNMPVALUE}: Total memory</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -537,7 +537,7 @@ Total amount of DRAM in Kbytes in the system.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>#{#SNMPVALUE}: Memory utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <multiplier>0</multiplier>
@@ -587,7 +587,7 @@ Total amount of DRAM in Kbytes in the system.
                      <expression>{Template Extreme EXOS SNMPv1:vm.memory.pused[{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] High memory utilization</name>
+                     <name>#{#SNMPVALUE}: High memory utilization</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -603,7 +603,7 @@ Total amount of DRAM in Kbytes in the system.
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>#{#SNMPVALUE}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -672,7 +672,7 @@ Total amount of DRAM in Kbytes in the system.
                <description>Table of status of all power supplies in the system.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[PSU {#SNMPVALUE}] Power supply status</name>
+                     <name>PSU {#SNMPVALUE}: Power supply status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -725,7 +725,7 @@ Status of the power supply {#SNMPVALUE}
                      <expression>{Template Extreme EXOS SNMPv1:sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[PSU {#SNMPVALUE}] Power supply is in critical state</name>
+                     <name>PSU {#SNMPVALUE}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -777,7 +777,7 @@ Please check the power supply unit for errors</description>
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Fan {#SNMPVALUE}] Fan status</name>
+                     <name>Fan {#SNMPVALUE}: Fan status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -825,7 +825,7 @@ Operational status of a cooling fan.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Fan {#SNMPVALUE}] Fan speed</name>
+                     <name>Fan {#SNMPVALUE}: Fan speed</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -876,7 +876,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
                      <expression>{Template Extreme EXOS SNMPv1:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Fan {#SNMPVALUE} fan is in critical state</name>
+                     <name>Fan {#SNMPVALUE}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1015,7 +1015,7 @@ Please check the fan unit</description>
          <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-         <name>Device temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+         <name>Device: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1027,7 +1027,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>Device temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+               <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}
@@ -1044,7 +1044,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
 							</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-         <name>Device temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+         <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1061,7 +1061,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-         <name>Device temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+         <name>Device: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

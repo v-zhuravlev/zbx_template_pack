@@ -47,7 +47,7 @@ ENTITY-MIB
                <name>MPU Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
+               <snmp_oid>discovery[{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
                <key>mpu.discovery</key>
                <delay>3600</delay>
                <status>0</status>
@@ -72,7 +72,7 @@ ENTITY-MIB
                         <formula/>
                         <conditions>
 							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
+                                <macro>{#ENT_NAME}</macro>
                                 <value>MPU.*</value> 
                         <!-- Main Processing Unit -->
                                 <operator>8</operator>
@@ -84,7 +84,7 @@ ENTITY-MIB
                <description>http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?contentId=KB1000090234. Filter limits results to Main Processing Units</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Загрузка процессора</name>
+                     <name>{#ENT_NAME}: Загрузка процессора</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.{#SNMPINDEX}</snmp_oid>
@@ -124,10 +124,11 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>{#ENT_NAME}: Memory utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.{#SNMPINDEX}</snmp_oid>
@@ -167,10 +168,11 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Температура</name>
+                     <name>{#ENT_NAME}: Температура</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
@@ -209,10 +211,11 @@ The temperature for the {#SNMPVALUE}.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Серийный номер</name>
+                     <name>{#ENT_NAME}: Серийный номер</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</snmp_oid>
@@ -251,10 +254,11 @@ The temperature for the {#SNMPVALUE}.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Версия ревизии</name>
+                     <name>{#ENT_NAME}: Версия ревизии</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.8.{#SNMPINDEX}</snmp_oid>
@@ -293,10 +297,11 @@ The temperature for the {#SNMPVALUE}.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Operating system</name>
+                     <name>{#ENT_NAME}: Operating system</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.10.{#SNMPINDEX}</snmp_oid>
@@ -335,6 +340,7 @@ The temperature for the {#SNMPVALUE}.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -343,7 +349,7 @@ The temperature for the {#SNMPVALUE}.
                      <expression>{Template Huawei VRP SNMPv2:system.cpu.util[hwEntityCpuUsage.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Высокая загрузка процессора</name>
+                     <name>{#ENT_NAME}: Высокая загрузка процессора</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -360,7 +366,7 @@ The temperature for the {#SNMPVALUE}.
                      <expression>{Template Huawei VRP SNMPv2:vm.memory.pused[hwEntityMemUsage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ</name>
+                     <name>{#ENT_NAME}: Мало свободной памяти ОЗУ</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -377,7 +383,7 @@ The temperature for the {#SNMPVALUE}.
                      <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#ENT_NAME}: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -389,7 +395,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#ENT_NAME}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -400,7 +406,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#ENT_NAME}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -417,7 +423,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Huawei VRP SNMPv2:sensor.temp.value[hwEntityTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#ENT_NAME}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -434,14 +440,14 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Huawei VRP SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Huawei VRP SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Возможно замена {#SNMPVALUE} (получен новый серийный номер)</name>
+                     <name>{#ENT_NAME}: Возможно замена устройства (получен новый серийный номер)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
                      <description>Последнее значение: {ITEM.LASTVALUE1}.
-Изменился серийный номер {#SNMPVALUE}. Подтвердите и закройте.</description>
+Изменился серийный номер устройства. Подтвердите и закройте.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -450,7 +456,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] CPU utilization</name>
+                     <name>{#ENT_NAME}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -482,7 +488,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      </graph_items>
                   </graph_prototype>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>{#ENT_NAME}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -515,13 +521,14 @@ This trigger uses temperature sensor values as well as temperature sensor status
                   </graph_prototype>
                </graph_prototypes>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 	  	
   	         <discovery_rule>
                <name>Entity Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5]</snmp_oid>
+               <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
                <key>entity.discovery</key>
                <delay>3600</delay>
                <status>0</status>
@@ -558,7 +565,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>Модель</name>
+                     <name>{#ENT_NAME}: Модель</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.2.{#SNMPINDEX}</snmp_oid>
@@ -597,12 +604,14 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
                <trigger_prototypes/>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
   	
 		          <discovery_rule>
@@ -638,7 +647,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Статус вентилятора</name>
+                     <name>#{#SNMPVALUE}: Статус вентилятора</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2011.5.25.31.1.1.10.1.7.{#SNMPINDEX}</snmp_oid>
@@ -679,6 +688,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -687,7 +697,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Huawei VRP SNMPv2:sensor.fan.status[hwEntityFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Статус вентилятора: сбой</name>
+                     <name>#{#SNMPVALUE}: Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -703,6 +713,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 	  		  		  	
 	        </discovery_rules>

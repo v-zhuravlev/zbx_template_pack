@@ -315,7 +315,7 @@ A text string containing the serial number of this device.
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>#{#SNMPVALUE}: Memory utilization</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -366,7 +366,7 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                      <expression>{Template D-Link DES SNMPv1:vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] High memory utilization</name>
+                     <name>#{#SNMPVALUE}: High memory utilization</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -382,7 +382,7 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>#{#SNMPVALUE}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -451,7 +451,7 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Temperature</name>
+                     <name>#{#SNMPVALUE}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -502,7 +502,7 @@ The shelf current temperature.
                      <expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>#{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -514,7 +514,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>#{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -525,7 +525,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>#{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -542,7 +542,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template D-Link DES SNMPv1:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>#{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -602,7 +602,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>swPowerID of EQUIPMENT-MIB::swPowerTable</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Power supply status</name>
+                     <name>#{#SNMPVALUE}: Power supply status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -662,7 +662,7 @@ disconnect : The power unit is not connected.
                      <expression>{Template D-Link DES SNMPv1:sensor.psu.status[swPowerStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Power supply is in critical state</name>
+                     <name>#{#SNMPVALUE}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -722,7 +722,7 @@ Please check the power supply unit for errors</description>
                <description>swFanID of EQUIPMENT-MIB::swFanTable</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Fan status</name>
+                     <name>#{#SNMPVALUE}: Fan status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -779,7 +779,7 @@ speed-high  : Fan spin using the highest speed.
                      <expression>{Template D-Link DES SNMPv1:sensor.fan.status[swFanStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE} fan is in critical state</name>
+                     <name>#{#SNMPVALUE}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>

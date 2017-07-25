@@ -309,7 +309,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                <description>snChasPwrSupply2Table: A table of each power supply information for each unit. Only installedpower supply appears in a table row.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Unit {#PSU_UNIT} PSU {#PSU_INDEX}] Power supply status</name>
+                     <name>Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -362,7 +362,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <expression>{Template Brocade ICX SNMPv1:sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[Unit {#PSU_UNIT} PSU {#PSU_INDEX}] Power supply is in critical state</name>
+                     <name>Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -414,7 +414,7 @@ Please check the power supply unit for errors</description>
                <description>snChasFan2Table: A table of each fan information for each unit. Only installedfan appears in a table row.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Unit {#FAN_UNIT} Fan {#FAN_INDEX}] Fan status</name>
+                     <name>Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -467,7 +467,7 @@ Please check the power supply unit for errors</description>
                      <expression>{Template Brocade ICX SNMPv1:sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Unit {#FAN_UNIT} Fan {#FAN_INDEX} fan is in critical state</name>
+                     <name>Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -519,7 +519,7 @@ Please check the fan unit</description>
                <description>snChasUnitIndex: The index to chassis table.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Unit {#SNMPVALUE}] Temperature</name>
+                     <name>Unit {#SNMPVALUE}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -566,7 +566,7 @@ Temperature of the chassis. Each unit is 0.5 degrees Celcius.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Unit {#SNMPVALUE}] Hardware serial number</name>
+                     <name>Unit {#SNMPVALUE}: Hardware serial number</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -617,7 +617,7 @@ The serial number of the chassis for each unit. If the serial number is unknown 
                      <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>Unit {#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>Unit {#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -629,7 +629,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Unit {#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>Unit {#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -640,7 +640,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>Unit {#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>Unit {#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -657,7 +657,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasUnitActualTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>Unit {#SNMPVALUE} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>Unit {#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -674,14 +674,14 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Brocade ICX SNMPv1:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].diff()}=1 and {Template Brocade ICX SNMPv1:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Unit {#SNMPVALUE} might have been replaced (new serial number received)</name>
+                     <name>Unit {#SNMPVALUE}: Device might have been replaced (new serial number received)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.
-Unit {#SNMPVALUE} serial number has changed. Ack to close</description>
+Device serial number has changed. Ack to close</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -726,7 +726,7 @@ Unit {#SNMPVALUE} serial number has changed. Ack to close</description>
                <description>snAgentTemp2Table:Table to list temperatures of the modules in the device for each unit. This table is applicable to only those modules with temperature sensors.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SENSOR_DESCR}] Temperature</name>
+                     <name>{#SENSOR_DESCR}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -777,7 +777,7 @@ Temperature of the sensor represented by this row. Each unit is 0.5 degrees Cels
                      <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SENSOR_DESCR} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#SENSOR_DESCR}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -789,7 +789,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SENSOR_DESCR} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#SENSOR_DESCR}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -800,7 +800,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SENSOR_DESCR} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#SENSOR_DESCR}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -817,7 +817,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>{#SENSOR_DESCR} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#SENSOR_DESCR}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -998,7 +998,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-         <name> temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+         <name>Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1010,7 +1010,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name> temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+               <name>Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
             </dependency>
@@ -1021,7 +1021,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-         <name> temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+         <name>Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1038,7 +1038,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Brocade ICX SNMPv1:sensor.temp.value[snChasActualTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-         <name> temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+         <name>Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

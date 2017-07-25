@@ -62,7 +62,7 @@ CISCO-MEMORY-POOL-MIB
                 http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15216-contiguous-memory.html</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Used memory</name>
+                     <name>{#SNMPVALUE}: Used memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -109,7 +109,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Available memory</name>
+                     <name>{#SNMPVALUE}: Available memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -156,7 +156,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>{#SNMPVALUE}: Memory utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <multiplier>0</multiplier>
@@ -206,7 +206,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <expression>{Template Cisco CISCO-MEMORY-POOL-MIB SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] High memory utilization</name>
+                     <name>{#SNMPVALUE}: High memory utilization</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -222,7 +222,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>{#SNMPVALUE}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -386,7 +386,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[#{#SNMPINDEX}] CPU utilization</name>
+                     <name>#{#SNMPINDEX}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -554,7 +554,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] CPU utilization</name>
+                     <name>{#SNMPVALUE}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -823,7 +823,7 @@ ENTITY-MIB
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Hardware serial number</name>
+                     <name>{#ENT_NAME}: Hardware serial number</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -874,14 +874,14 @@ ENTITY-MIB
                      <expression>{Template Cisco Inventory SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Cisco Inventory SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>{#ENT_NAME} might have been replaced (new serial number received)</name>
+                     <name>{#ENT_NAME}: Device might have been replaced (new serial number received)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.
-{#ENT_NAME} serial number has changed. Ack to close</description>
+Device serial number has changed. Ack to close</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -957,7 +957,7 @@ CISCO-ENVMON-MIB
 					</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Temperature</name>
+                     <name>{#SNMPVALUE}: Temperature</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -1003,7 +1003,7 @@ The current measurement of the test point being instrumented.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Temperature status</name>
+                     <name>{#SNMPVALUE}: Temperature status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -1059,7 +1059,7 @@ The current state of the test point being instrumented.
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1071,7 +1071,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
@@ -1094,7 +1094,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1111,7 +1111,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1163,7 +1163,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>The table of power supply status maintained by the environmental monitor card.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SENSOR_INFO}] Power supply status</name>
+                     <name>{#SENSOR_INFO}: Power supply status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -1216,7 +1216,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SENSOR_INFO}] Power supply is in critical state</name>
+                     <name>{#SENSOR_INFO}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1268,7 +1268,7 @@ Please check the power supply unit for errors</description>
                <description>The table of fan status maintained by the environmental monitor.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SENSOR_INFO}] Fan status</name>
+                     <name>{#SENSOR_INFO}: Fan status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -1321,7 +1321,7 @@ Please check the power supply unit for errors</description>
                      <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SENSOR_INFO} fan is in critical state</name>
+                     <name>{#SENSOR_INFO}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>

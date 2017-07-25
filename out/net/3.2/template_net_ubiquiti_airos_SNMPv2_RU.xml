@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<zabbix_export>
-   <version>3.4</version>
+<zabbix_export xmlns="zabbix.com/zbx_template_pack"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <version>3.2</version>
    <date>2015-12-30T14:41:30Z</date>
    <groups>
       <group>
@@ -9,12 +10,26 @@
    </groups>
    <templates>
       <template>
-         <template>Template QTech QSW SNMPv2</template>
-         <name>Template QTech QSW SNMPv2</name>
-         <description>Template QTech QSW version: 0.9
+         <template>Template Ubiquiti AirOS SNMPv2</template>
+         <name>Template Ubiquiti AirOS SNMPv2</name>
+         <description>Template Ubiquiti AirOS version: 0.9
 MIBs used:
-QTECH-MIB
-ENTITY-MIB
+FROGFOOT-RESOURCES-MIB
+IEEE802dot11-MIB
+
+Known Issues:
+description : UBNT unifi reports speed: like IF-MIB::ifSpeed.1 = Gauge32: 4294967295 for all interfaces
+version : Firmware: BZ.ar7240.v3.7.51.6230.170322.1513
+device : UBNT UAP-LR
+description : UBNT AirMax(NanoStation, NanoBridge etc) reports ifSpeed: as 0 for VLAN and wireless(ath0) interfaces
+version : Firmware: XW.ar934x.v5.6-beta4.22359.140521.1836
+device : NanoStation M5
+description : UBNT AirMax(NanoStation, NanoBridge etc) reports always return ifType: as ethernet(6) even for wifi,vlans and other types
+version : Firmware: XW.ar934x.v5.6-beta4.22359.140521.1836
+device : NanoStation M5
+description : ifXTable is not provided in IF-MIB. So Interfaces Simple Template is used instead
+version : all above
+device : NanoStation, UAP-LR
 </description>
          <groups>
             <group>
@@ -37,15 +52,17 @@ ENTITY-MIB
                <name>Загрузка процессора</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.4.1.27514.100.1.11.10.0</snmp_oid>
-               <key>system.cpu.util[switchCpuUsage.0]</key>
+               <multiplier>0</multiplier>
+               <snmp_oid>.1.3.6.1.4.1.10002.1.1.1.4.2.1.3.2</snmp_oid>
+               <key>system.cpu.util[loadValue.2]</key>
                <delay>180</delay>
-               <history>30d</history>
-               <trends>365d</trends>
+               <history>30</history>
+               <trends>365</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
                <units>%</units>
+               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -53,16 +70,19 @@ ENTITY-MIB
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
                <params/>
                <ipmi_sensor/>
+               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>MIB: QTECH-MIB
-CPU utilization in %
+               <description>MIB: FROGFOOT-RESOURCES-MIB
+5 minute load average of processor load.
 </description>
                <inventory_link>0</inventory_link>
                <applications>
@@ -72,22 +92,22 @@ CPU utilization in %
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
             </item>
             <item>
-               <name>Used memory</name>
+               <name>Available memory</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.4.1.27514.100.1.11.7.0</snmp_oid>
-               <key>vm.memory.used[switchMemoryBusy.0]</key>
+               <multiplier>1</multiplier>
+               <snmp_oid>1.3.6.1.4.1.10002.1.1.1.1.2.0</snmp_oid>
+               <key>vm.memory.free[memFree]</key>
                <delay>180</delay>
-               <history>30d</history>
-               <trends>365d</trends>
+               <history>30</history>
+               <trends>365</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
                <units>B</units>
+               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -95,16 +115,19 @@ CPU utilization in %
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
+               <formula>1024</formula>
+               <delay_flex/>
                <params/>
                <ipmi_sensor/>
+               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>MIB: QTECH-MIB
-Used memory in Bytes
+               <description>MIB: FROGFOOT-RESOURCES-MIB
+
 </description>
                <inventory_link>0</inventory_link>
                <applications>
@@ -114,22 +137,22 @@ Used memory in Bytes
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
             </item>
             <item>
                <name>Total memory</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.4.1.27514.100.1.11.6.0</snmp_oid>
-               <key>vm.memory.total[switchMemorySize.0]</key>
+               <multiplier>1</multiplier>
+               <snmp_oid>1.3.6.1.4.1.10002.1.1.1.1.1.0</snmp_oid>
+               <key>vm.memory.total[memTotal]</key>
                <delay>180</delay>
-               <history>30d</history>
-               <trends>365d</trends>
+               <history>30</history>
+               <trends>365</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
                <units>B</units>
+               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -137,15 +160,18 @@ Used memory in Bytes
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
+               <formula>1024</formula>
+               <delay_flex/>
                <params/>
                <ipmi_sensor/>
+               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>MIB: QTECH-MIB
+               <description>MIB: FROGFOOT-RESOURCES-MIB
 Total memory in Bytes
 </description>
                <inventory_link>0</inventory_link>
@@ -156,22 +182,22 @@ Total memory in Bytes
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
             </item>
             <item>
                <name>Memory utilization</name>
                <type>15</type>
                <snmp_community/>
+               <multiplier>0</multiplier>
                <snmp_oid/>
-               <key>vm.memory.pused[vm.memory.pused.0]</key>
+               <key>vm.memory.pused[memoryUsedPercentage]</key>
                <delay>180</delay>
-               <history>30d</history>
-               <trends>365d</trends>
+               <history>30</history>
+               <trends>365</trends>
                <status>0</status>
                <value_type>0</value_type>
                <allowed_hosts/>
                <units>%</units>
+               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -179,8 +205,11 @@ Total memory in Bytes
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <params>(last(vm.memory.used[switchMemoryBusy.0])/last(vm.memory.total[switchMemorySize.0]))*100</params>
+               <formula>0</formula>
+               <delay_flex/>
+               <params>((last(vm.memory.total[memTotal])-last(vm.memory.free[memFree]))/last(vm.memory.total[memTotal]))*100</params>
                <ipmi_sensor/>
+               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
@@ -197,22 +226,22 @@ Total memory in Bytes
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
             </item>
             <item>
                <name>Модель</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.13.1</snmp_oid>
+               <multiplier>0</multiplier>
+               <snmp_oid>.1.2.840.10036.3.1.2.1.3.5</snmp_oid>
                <key>system.hw.model</key>
                <delay>3600</delay>
-               <history>14d</history>
-               <trends>0d</trends>
+               <history>14</history>
+               <trends>0</trends>
                <status>0</status>
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
+               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -220,16 +249,19 @@ Total memory in Bytes
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
                <params/>
                <ipmi_sensor/>
+               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>MIB: ENTITY-MIB
-
+               <description>MIB: IEEE802dot11-MIB
+A printable string used to identify the manufacturer's product name of the resource. Maximum string length is 128 octets.
 </description>
                <inventory_link>29</inventory_link>
                <applications>
@@ -239,64 +271,22 @@ Total memory in Bytes
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-            </item>
-            <item>
-               <name>Серийный номер</name>
-               <type>4</type>
-               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.11.1</snmp_oid>
-               <key>system.hw.serialnumber</key>
-               <delay>3600</delay>
-               <history>14d</history>
-               <trends>0d</trends>
-               <status>0</status>
-               <value_type>1</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>MIB: ENTITY-MIB
-
-</description>
-               <inventory_link>8</inventory_link>
-               <applications>
-                  <application>
-                     <name>Inventory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
             </item>
             <item>
                <name>Версия прошивки</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.9.1</snmp_oid>
+               <multiplier>0</multiplier>
+               <snmp_oid>.1.2.840.10036.3.1.2.1.4.5</snmp_oid>
                <key>system.hw.firmware</key>
                <delay>3600</delay>
-               <history>14d</history>
-               <trends>0d</trends>
+               <history>14</history>
+               <trends>0</trends>
                <status>0</status>
                <value_type>1</value_type>
                <allowed_hosts/>
                <units/>
+               <delta>0</delta>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -304,16 +294,19 @@ Total memory in Bytes
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
+               <formula>0</formula>
+               <delay_flex/>
                <params/>
                <ipmi_sensor/>
+               <data_type>0</data_type>
                <authtype>0</authtype>
                <username/>
                <password/>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>MIB: ENTITY-MIB
-
+               <description>MIB: IEEE802dot11-MIB
+Printable string used to identify the manufacturer's product version of the resource. Maximum string length is 128 octets.
 </description>
                <inventory_link>0</inventory_link>
                <applications>
@@ -323,116 +316,10 @@ Total memory in Bytes
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-            </item>
-            <item>
-               <name>Версия ревизии</name>
-               <type>4</type>
-               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.8.1</snmp_oid>
-               <key>system.hw.version</key>
-               <delay>3600</delay>
-               <history>14d</history>
-               <trends>0d</trends>
-               <status>0</status>
-               <value_type>1</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>MIB: ENTITY-MIB
-
-</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Inventory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-            </item>
-            <item>
-               <name>Operating system</name>
-               <type>4</type>
-               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>1.3.6.1.4.1.27514.100.1.3.0</snmp_oid>
-               <key>system.sw.os</key>
-               <delay>3600</delay>
-               <history>14d</history>
-               <trends>0d</trends>
-               <status>0</status>
-               <value_type>1</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>MIB: QTECH-MIB
-
-</description>
-               <inventory_link>5</inventory_link>
-               <applications>
-                  <application>
-                     <name>Inventory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
             </item>
          </items>
-         <discovery_rules>
-		
-	
-	  </discovery_rules>
-         <httptests/>
+         <discovery_rules/>
          <macros>
-            <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>75</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>65</value>
-            </macro>
-            <macro>
-               <macro>{$PSU_CRIT_STATUS}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_CRIT_STATUS}</macro>
-               <value>1</value>
-            </macro>
             <macro>
                <macro>{$CPU_UTIL_MAX}</macro>
                <value>90</value>
@@ -441,25 +328,10 @@ Total memory in Bytes
                <macro>{$MEMORY_UTIL_MAX}</macro>
                <value>90</value>
             </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
          </macros>
          <templates>
             <template>
-               <name>Template SNMP Interfaces SNMPv2</name>
-            </template>
-            <template>
-               <name>Template SNMP EtherLike-MIB SNMPv2</name>
+               <name>Template SNMP Interfaces Simple SNMPv2</name>
             </template>
             <template>
                <name>Template SNMP Generic SNMPv2</name>
@@ -495,8 +367,8 @@ Total memory in Bytes
                         <calc_fnc>2</calc_fnc>
                         <type>0</type>
                         <item>
-                           <host>Template QTech QSW SNMPv2</host>
-                           <key>system.cpu.util[switchCpuUsage.0]</key>
+                           <host>Template Ubiquiti AirOS SNMPv2</host>
+                           <key>system.cpu.util[loadValue.2]</key>
                         </item>
                      </graph_item>
                   </graph_items>
@@ -527,8 +399,8 @@ Total memory in Bytes
                         <calc_fnc>2</calc_fnc>
                         <type>0</type>
                         <item>
-                           <host>Template QTech QSW SNMPv2</host>
-                           <key>vm.memory.pused[vm.memory.pused.0]</key>
+                           <host>Template Ubiquiti AirOS SNMPv2</host>
+                           <key>vm.memory.pused[memoryUsedPercentage]</key>
                         </item>
                      </graph_item>
                   </graph_items>
@@ -536,10 +408,10 @@ Total memory in Bytes
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template QTech QSW SNMPv2:system.cpu.util[switchCpuUsage.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Ubiquiti AirOS SNMPv2:system.cpu.util[loadValue.2].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Высокая загрузка процессора</name>
+         <name>Загрузка ЦПУ слишком велика</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -553,7 +425,7 @@ Total memory in Bytes
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template QTech QSW SNMPv2:vm.memory.pused[vm.memory.pused.0].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Ubiquiti AirOS SNMPv2:vm.memory.pused[memoryUsedPercentage].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Мало свободной памяти ОЗУ</name>
@@ -570,24 +442,7 @@ Total memory in Bytes
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template QTech QSW SNMPv2:system.hw.serialnumber.diff()}=1 and {Template QTech QSW SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
-         <recovery_mode>2</recovery_mode>
-         <recovery_expression/>
-         <name>Возможно замена устройства (получен новый серийный номер)</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.
-Изменился серийный номер устройства. Подтвердите и закройте.</description>
-         <type>0</type>
-         <manual_close>1</manual_close>
-         <dependencies/>
-         <tags/>
-      </trigger>
-      <trigger>
-         <expression>{Template QTech QSW SNMPv2:system.hw.firmware.diff()}=1 and {Template QTech QSW SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
+         <expression>{Template Ubiquiti AirOS SNMPv2:system.hw.firmware.diff()}=1 and {Template Ubiquiti AirOS SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Версия прошивки изменилась</name>
@@ -604,36 +459,5 @@ Total memory in Bytes
          <tags/>
       </trigger>
    </triggers>
-   <value_maps>
-      <value_map>
-            <name>QTECH-MIB::sysFanStatus</name>
-            <mappings>
-                <mapping>
-                    <value>0</value>
-                    <newvalue>normal</newvalue>
-                </mapping>
-                <mapping>
-                    <value>1</value>
-                    <newvalue>abnormal</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
-      <value_map>
-            <name>QTECH-MIB::sysPowerStatus</name>
-            <mappings>
-                <mapping>
-                    <value>0</value>
-                    <newvalue>normal</newvalue>
-                </mapping>
-                <mapping>
-                    <value>1</value>
-                    <newvalue>abnormal</newvalue>
-                </mapping>
-                <mapping>
-                    <value>2</value>
-                    <newvalue>not available</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
-   </value_maps>
+   <value_maps/>
 </zabbix_export>

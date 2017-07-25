@@ -98,6 +98,7 @@ The red alarm indication on the craft interface
                </valuemap>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Hardware serial number</name>
@@ -139,6 +140,7 @@ The serial number of this subject, blank if unknown or unavailable.
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Hardware model name</name>
@@ -180,6 +182,7 @@ The name, model, or detailed description of the box,indicating which product the
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Operating system</name>
@@ -227,6 +230,7 @@ The name, model, or detailed description of the box,indicating which product the
 \1</params>
                   </step>
                </preprocessing>
+               <jmx_endpoint/>
             </item>
          </items>
          <discovery_rules>
@@ -312,10 +316,11 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>{#SNMPVALUE}: Memory utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.11.{#SNMPINDEX}</snmp_oid>
@@ -355,6 +360,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -380,7 +386,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <expression>{Template Juniper SNMPv2:vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] High memory utilization</name>
+                     <name>{#SNMPVALUE}: High memory utilization</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -396,7 +402,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] CPU utilization</name>
+                     <name>{#SNMPVALUE}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -428,7 +434,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      </graph_items>
                   </graph_prototype>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>{#SNMPVALUE}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -461,6 +467,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                   </graph_prototype>
                </graph_prototypes>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		          <discovery_rule>
                <name>Temperature discovery</name>
@@ -503,7 +510,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                     http://kb.juniper.net/InfoCenter/index?page=content&amp;id=KB17526&amp;actp=search. Filter limits results to Routing Engines</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SENSOR_INFO}] Temperature</name>
+                     <name>{#SENSOR_INFO}: Temperature</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.7.{#SNMPINDEX}</snmp_oid>
@@ -542,6 +549,7 @@ The temperature in Celsius (degrees C) of {#SENSOR_INFO}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -550,7 +558,7 @@ The temperature in Celsius (degrees C) of {#SENSOR_INFO}
                      <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#SENSOR_INFO}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -562,7 +570,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -573,7 +581,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -590,7 +598,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#SENSOR_INFO}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -606,6 +614,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>	  	
 		          <discovery_rule>
                <name>FAN Discovery</name>
@@ -640,7 +649,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning JUNIPER-MIB::jnxOperatingTable for Fans</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Fan status</name>
+                     <name>{#SNMPVALUE}: Fan status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.6.4.{#SNMPINDEX}</snmp_oid>
@@ -681,6 +690,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -689,7 +699,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Juniper SNMPv2:sensor.fan.status[jnxOperatingState.4.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE} fan is in critical state</name>
+                     <name>{#SNMPVALUE}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -705,6 +715,7 @@ Please check the fan unit</description>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 	  	
 		          <discovery_rule>
@@ -740,7 +751,7 @@ Please check the fan unit</description>
                <description>Scanning JUNIPER-MIB::jnxOperatingTable for Power Supplies</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Power supply status</name>
+                     <name>{#SNMPVALUE}: Power supply status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.6.2.{#SNMPINDEX}</snmp_oid>
@@ -782,6 +793,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -790,7 +802,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
                      <expression>{Template Juniper SNMPv2:sensor.psu.status[jnxOperatingState.2.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Power supply is in critical state</name>
+                     <name>{#SNMPVALUE}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -806,6 +818,7 @@ Please check the power supply unit for errors</description>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>	  		  	
 	        </discovery_rules>
          <httptests/>

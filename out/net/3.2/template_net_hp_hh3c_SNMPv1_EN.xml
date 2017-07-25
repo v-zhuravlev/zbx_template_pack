@@ -143,7 +143,7 @@ The CPU usage for this entity. Generally, the CPU usage
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#MODULE_NAME}] Memory utilization</name>
+                     <name>{#MODULE_NAME}: Memory utilization</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -212,7 +212,7 @@ percent of memory are used.
                      <expression>{Template HP Comware HH3C SNMPv1:vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#MODULE_NAME}] High memory utilization</name>
+                     <name>{#MODULE_NAME}: High memory utilization</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -228,7 +228,7 @@ percent of memory are used.
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#MODULE_NAME}] CPU utilization</name>
+                     <name>{#MODULE_NAME}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -260,7 +260,7 @@ percent of memory are used.
                      </graph_items>
                   </graph_prototype>
                   <graph_prototype>
-                     <name>[{#MODULE_NAME}] Memory utilization</name>
+                     <name>{#MODULE_NAME}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -350,7 +350,7 @@ percent of memory are used.
                <description>Discovering modules temperature (same filter as in Module Discovery) plus and temperature sensors</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Temperature</name>
+                     <name>{#SNMPVALUE}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -401,7 +401,7 @@ The temperature for the {#SNMPVALUE}.
                      <expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -413,7 +413,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -424,7 +424,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -441,7 +441,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP Comware HH3C SNMPv1:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>{#SNMPVALUE} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -499,7 +499,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Discovering all entities of PhysicalClass - 7: fan(7)</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Fan status</name>
+                     <name>{#ENT_NAME}: Fan status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -553,7 +553,7 @@ Indicate the error state of this entity object.
                      <expression>{Template HP Comware HH3C SNMPv1:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"fanError"} or {Template HP Comware HH3C SNMPv1:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"hardwareFaulty"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#ENT_NAME} fan is in critical state</name>
+                     <name>{#ENT_NAME}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -612,7 +612,7 @@ Please check the fan unit</description>
                <description>Discovering all entities of PhysicalClass - 6: powerSupply(6)</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Power supply status</name>
+                     <name>{#ENT_NAME}: Power supply status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -668,7 +668,7 @@ Indicate the error state of this entity object.
                      <expression>{Template HP Comware HH3C SNMPv1:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"psuError"} or {Template HP Comware HH3C SNMPv1:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"rpsError"} or {Template HP Comware HH3C SNMPv1:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"hardwareFaulty"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#ENT_NAME}] Power supply is in critical state</name>
+                     <name>{#ENT_NAME}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -728,7 +728,7 @@ Please check the power supply unit for errors</description>
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>Hardware model name</name>
+                     <name>{#ENT_NAME}: Hardware model name</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -774,7 +774,7 @@ Please check the power supply unit for errors</description>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Hardware serial number</name>
+                     <name>{#ENT_NAME}: Hardware serial number</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -820,7 +820,7 @@ Please check the power supply unit for errors</description>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Firmware version</name>
+                     <name>{#ENT_NAME}: Firmware version</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -866,7 +866,7 @@ Please check the power supply unit for errors</description>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Hardware version(revision)</name>
+                     <name>{#ENT_NAME}: Hardware version(revision)</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -912,7 +912,7 @@ Please check the power supply unit for errors</description>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Operating system</name>
+                     <name>{#ENT_NAME}: Operating system</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -963,14 +963,14 @@ Please check the power supply unit for errors</description>
                      <expression>{Template HP Comware HH3C SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template HP Comware HH3C SNMPv1:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>{#ENT_NAME} might have been replaced (new serial number received)</name>
+                     <name>{#ENT_NAME}: Device might have been replaced (new serial number received)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.
-{#ENT_NAME} serial number has changed. Ack to close</description>
+Device serial number has changed. Ack to close</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -980,7 +980,7 @@ Please check the power supply unit for errors</description>
                      <expression>{Template HP Comware HH3C SNMPv1:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].diff()}=1 and {Template HP Comware HH3C SNMPv1:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Firmware has changed</name>
+                     <name>{#ENT_NAME}: Firmware has changed</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>

@@ -76,7 +76,7 @@ IF-MIB
                <description>Discovering interfaces from IF-MIB. Interfaces with down(2) Administrative Status are not discovered.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] текущий статус</name>
+                     <name>{#IFNAME}({#IFALIAS}): Текущий статус интерфейса</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -124,7 +124,7 @@ The current operational state of the interface. The testing(3) state indicates t
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Трафик входящий</name>
+                     <name>{#IFNAME}({#IFALIAS}): Трафик входящий</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -170,7 +170,7 @@ The total number of octets received on the interface,including framing character
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Трафик исходящий</name>
+                     <name>{#IFNAME}({#IFALIAS}): Трафик исходящий</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -216,7 +216,7 @@ The total number of octets transmitted out of the interface, including framing c
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Ошибки входящие</name>
+                     <name>{#IFNAME}({#IFALIAS}): Ошибки входящие</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -262,7 +262,7 @@ For packet-oriented interfaces, the number of inbound packets that contained err
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Ошибки исходящие</name>
+                     <name>{#IFNAME}({#IFALIAS}): Ошибки исходящие</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -308,7 +308,7 @@ For packet-oriented interfaces, the number of outbound packets that contained er
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Пакетов отброшено (исходящих)</name>
+                     <name>{#IFNAME}({#IFALIAS}): Пакетов отброшено (исходящих)</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -358,7 +358,7 @@ The number of outbound packets which were chosen to be discarded
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Пакетов отброшено (входящих)</name>
+                     <name>{#IFNAME}({#IFALIAS}): Пакетов отброшено (входящих)</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -408,7 +408,7 @@ The number of inbound packets which were chosen to be discarded
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Тип</name>
+                     <name>{#IFNAME}({#IFALIAS}): Тип интерфейса</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -458,7 +458,7 @@ The type of interface.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Interface {#IFNAME}({#IFALIAS})] Скорость</name>
+                     <name>{#IFNAME}({#IFALIAS}): Скорость</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -509,7 +509,7 @@ An estimate of the interface's current bandwidth in units of 1,000,000 bits per 
                      <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Interface {#IFNAME}({#IFALIAS}) недоступен</name>
+                     <name>{#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -527,7 +527,7 @@ An estimate of the interface's current bandwidth in units of 1,000,000 bits per 
 {Template SNMP Interfaces SNMPv1:net.if.out[ifHCOutOctets.{#SNMPINDEX}].avg(5m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Interface {#IFNAME}({#IFALIAS}) сильно загружен &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
+                     <name>{#IFNAME}({#IFALIAS}): Интерфейс сильно загружен &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -539,7 +539,7 @@ An estimate of the interface's current bandwidth in units of 1,000,000 bits per 
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Interface {#IFNAME}({#IFALIAS}) недоступен</name>
+                           <name>{#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -552,7 +552,7 @@ or {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template SNMP Interfaces SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2
 and {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2</recovery_expression>
-                     <name>Interface {#IFNAME}({#IFALIAS}) большое количество ошибок</name>
+                     <name>{#IFNAME}({#IFALIAS}): Большое количество ошибок интерфейса</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -564,7 +564,7 @@ and {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}]
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Interface {#IFNAME}({#IFALIAS}) недоступен</name>
+                           <name>{#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -574,17 +574,17 @@ and {Template SNMP Interfaces SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}]
                   <trigger_prototype>
                      <expression>{Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].change()}&lt;0 and {Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}&gt;0
 and (
-{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or 
-{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or 
-{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or 
-{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or 
-{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or 
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or
+{Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or
 {Template SNMP Interfaces SNMPv1:net.if.type[ifType.{#SNMPINDEX}].last()}=117
 )
 </expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].change()}&gt;0 and {Template SNMP Interfaces SNMPv1:net.if.speed[ifHighSpeed.{#SNMPINDEX}].prev()}&gt;0</recovery_expression>
-                     <name>Interface {#IFNAME}({#IFALIAS}) перешел на более низкую скорость, чем был ранее</name>
+                     <name>{#IFNAME}({#IFALIAS}): Интерфейс перешел на более низкую скорость, чем был ранее</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -596,7 +596,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Interface {#IFNAME}({#IFALIAS}) недоступен</name>
+                           <name>{#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -606,7 +606,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>Interface {#IFNAME}({#IFALIAS}) traffic</name>
+                     <name>{#IFNAME}({#IFALIAS}): Interface traffic</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>

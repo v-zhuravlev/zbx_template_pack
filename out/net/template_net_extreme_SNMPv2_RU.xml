@@ -83,9 +83,10 @@ Total CPU utlization (percentage) as of last sampling.
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
-               <name>[Device] Температура</name>
+               <name>Device: Температура</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1916.1.1.1.8.0</snmp_oid>
@@ -125,9 +126,10 @@ Reference: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-supp
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
-               <name>[Device] Temperature status</name>
+               <name>Device: Temperature status</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1916.1.1.1.7.0</snmp_oid>
@@ -168,6 +170,7 @@ Temperature status of testpoint: Device
                </valuemap>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Модель</name>
@@ -209,6 +212,7 @@ Temperature status of testpoint: Device
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Серийный номер</name>
@@ -250,6 +254,7 @@ Temperature status of testpoint: Device
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Версия прошивки</name>
@@ -291,6 +296,7 @@ Temperature status of testpoint: Device
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Версия ревизии</name>
@@ -332,6 +338,7 @@ Temperature status of testpoint: Device
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Operating system</name>
@@ -376,6 +383,7 @@ The software revision of the primary image stored in this device.
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
          </items>
          <discovery_rules>
@@ -412,7 +420,7 @@ The software revision of the primary image stored in this device.
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Available memory</name>
+                     <name>#{#SNMPVALUE}: Available memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1916.1.32.2.2.1.3.{#SNMPINDEX}</snmp_oid>
@@ -456,10 +464,11 @@ Total amount of free memory in Kbytes in the system.
                            <params>1024</params>
                         </step>
                      </preprocessing>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Total memory</name>
+                     <name>#{#SNMPVALUE}: Total memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1916.1.32.2.2.1.2.{#SNMPINDEX}</snmp_oid>
@@ -503,10 +512,11 @@ Total amount of DRAM in Kbytes in the system.
                            <params>1024</params>
                         </step>
                      </preprocessing>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>#{#SNMPVALUE}: Memory utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -544,6 +554,7 @@ Total amount of DRAM in Kbytes in the system.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -552,7 +563,7 @@ Total amount of DRAM in Kbytes in the system.
                      <expression>{Template Extreme EXOS SNMPv2:vm.memory.pused[{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Мало свободной памяти ОЗУ</name>
+                     <name>#{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -568,7 +579,7 @@ Total amount of DRAM in Kbytes in the system.
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPVALUE}] Memory utilization</name>
+                     <name>#{#SNMPVALUE}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -601,6 +612,7 @@ Total amount of DRAM in Kbytes in the system.
                   </graph_prototype>
                </graph_prototypes>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 
   	  	      <discovery_rule>
@@ -636,7 +648,7 @@ Total amount of DRAM in Kbytes in the system.
                <description>Table of status of all power supplies in the system.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[PSU {#SNMPVALUE}] Статус блока питания</name>
+                     <name>PSU {#SNMPVALUE}: Статус блока питания</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1916.1.1.1.27.1.2.{#SNMPINDEX}</snmp_oid>
@@ -677,6 +689,7 @@ Status of the power supply {#SNMPVALUE}
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -685,7 +698,7 @@ Status of the power supply {#SNMPVALUE}
                      <expression>{Template Extreme EXOS SNMPv2:sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[PSU {#SNMPVALUE}] Статус блока питания: авария</name>
+                     <name>PSU {#SNMPVALUE}: Статус блока питания: авария</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -701,6 +714,7 @@ Status of the power supply {#SNMPVALUE}
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>		
 
   	  	      <discovery_rule>
@@ -736,7 +750,7 @@ Status of the power supply {#SNMPVALUE}
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Fan {#SNMPVALUE}] Статус вентилятора</name>
+                     <name>Fan {#SNMPVALUE}: Статус вентилятора</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.1916.1.1.1.9.1.2.{#SNMPINDEX}</snmp_oid>
@@ -777,10 +791,11 @@ Operational status of a cooling fan.
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Fan {#SNMPVALUE}] Скорость вращения вентилятора</name>
+                     <name>Fan {#SNMPVALUE}: Скорость вращения вентилятора</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}</snmp_oid>
@@ -819,6 +834,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -827,7 +843,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
                      <expression>{Template Extreme EXOS SNMPv2:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[Fan {#SNMPVALUE}] Статус вентилятора: сбой</name>
+                     <name>Fan {#SNMPVALUE}: Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -843,6 +859,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 	        </discovery_rules>
@@ -967,7 +984,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
          <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-         <name>[Device] Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
+         <name>Device: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -979,7 +996,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>[Device] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
+               <name>Device: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}
@@ -996,7 +1013,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
 							</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-         <name>[Device] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
+         <name>Device: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1013,7 +1030,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-         <name>[Device] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
+         <name>Device: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

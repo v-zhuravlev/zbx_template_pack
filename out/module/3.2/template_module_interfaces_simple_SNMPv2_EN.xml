@@ -76,7 +76,7 @@ IF-MIB
                <description>Discovering interfaces from IF-MIB. Interfaces with down(2) Administrative Status are not discovered.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} operational status</name>
+                     <name>{#IFDESCR}: Interface operational status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -124,7 +124,7 @@ The current operational state of the interface. The testing(3) state indicates t
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} bits in</name>
+                     <name>{#IFDESCR}: Bits in</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -170,7 +170,7 @@ The total number of octets received on the interface,including framing character
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} bits out</name>
+                     <name>{#IFDESCR}: Bits out</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -216,7 +216,7 @@ The total number of octets transmitted out of the interface, including framing c
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} errors in</name>
+                     <name>{#IFDESCR}: Errors in</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -262,7 +262,7 @@ For packet-oriented interfaces, the number of inbound packets that contained err
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} errors out</name>
+                     <name>{#IFDESCR}: Errors out</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -308,7 +308,7 @@ For packet-oriented interfaces, the number of outbound packets that contained er
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} packets discarded out</name>
+                     <name>{#IFDESCR}: Packets discarded out</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -358,7 +358,7 @@ The number of outbound packets which were chosen to be discarded
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} packets discarded in</name>
+                     <name>{#IFDESCR}: Packets discarded in</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -408,7 +408,7 @@ The number of inbound packets which were chosen to be discarded
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} type</name>
+                     <name>{#IFDESCR}: Interface type</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -458,7 +458,7 @@ The type of interface.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFDESCR} speed</name>
+                     <name>{#IFDESCR}: Speed</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -515,7 +515,7 @@ The type of interface.
                      <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Interface {#IFDESCR} is down</name>
+                     <name>{#IFDESCR}: Interface is down</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -533,7 +533,7 @@ Interface is down</description>
 {Template SNMP Interfaces Simple SNMPv2:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(5m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Interface {#IFDESCR} high bandwidth usage &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
+                     <name>{#IFDESCR}: Interface high bandwidth usage &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -545,7 +545,7 @@ Interface is down</description>
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Interface {#IFDESCR} is down</name>
+                           <name>{#IFDESCR}: Interface is down</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -558,7 +558,7 @@ or {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPI
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template SNMP Interfaces Simple SNMPv2:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2
 and {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2</recovery_expression>
-                     <name>Interface {#IFDESCR} high error rate</name>
+                     <name>{#IFDESCR}: Interface high error rate</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -570,7 +570,7 @@ and {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMP
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Interface {#IFDESCR} is down</name>
+                           <name>{#IFDESCR}: Interface is down</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -580,17 +580,17 @@ and {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMP
                   <trigger_prototype>
                      <expression>{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].change()}&lt;0 and {Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}&gt;0
 and (
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or 
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or 
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or 
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or 
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or 
+{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or
+{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or
+{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or
+{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or
+{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or
 {Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=117
 )
 </expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].change()}&gt;0 and {Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].prev()}&gt;0</recovery_expression>
-                     <name>Interface {#IFDESCR} of type Ethernet has changed to lower speed than it was before</name>
+                     <name>{#IFDESCR}: Interface of type Ethernet has changed to lower speed than it was before</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -602,7 +602,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Interface {#IFDESCR} is down</name>
+                           <name>{#IFDESCR}: Interface is down</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -612,7 +612,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>Interface {#IFDESCR} traffic</name>
+                     <name>{#IFDESCR}: Interface traffic</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>

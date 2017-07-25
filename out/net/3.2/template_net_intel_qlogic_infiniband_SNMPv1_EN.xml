@@ -169,7 +169,7 @@ ICS-CHASSIS-MIB
                <description>Discovering sensor's table with temperature filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SENSOR_INFO}] Temperature</name>
+                     <name>{#SENSOR_INFO}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -215,7 +215,7 @@ The current value read from the sensor.
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SENSOR_INFO}] Temperature status</name>
+                     <name>{#SENSOR_INFO}: Temperature status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -271,7 +271,7 @@ The operational status of the sensor.
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#SENSOR_INFO}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -283,7 +283,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}
 							or
 							{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.status[icsChassisSensorSlotOperStatus.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
@@ -300,7 +300,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
 							</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -317,7 +317,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>{#SENSOR_INFO} temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#SENSOR_INFO}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -376,7 +376,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Hardware serial number</name>
+                     <name>{#ENT_NAME}: Hardware serial number</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -427,14 +427,14 @@ The serial number of the FRU.  If not available, this value is a zero-length str
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:system.hw.serialnumber[icsChassisSystemUnitFruSerialNumber.{#SNMPINDEX}].diff()}=1 and {Template Intel_Qlogic Infiniband SNMPv1:system.hw.serialnumber[icsChassisSystemUnitFruSerialNumber.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>{#ENT_NAME} might have been replaced (new serial number received)</name>
+                     <name>{#ENT_NAME}: Device might have been replaced (new serial number received)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.
-{#ENT_NAME} serial number has changed. Ack to close</description>
+Device serial number has changed. Ack to close</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -478,7 +478,7 @@ The serial number of the FRU.  If not available, this value is a zero-length str
                <description>A textual description of the power supply, that can be assigned by the administrator.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Power supply status</name>
+                     <name>{#SNMPVALUE}: Power supply status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -540,7 +540,7 @@ The serial number of the FRU.  If not available, this value is a zero-length str
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPVALUE}] Power supply is in critical state</name>
+                     <name>{#SNMPVALUE}: Power supply is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -593,7 +593,7 @@ Please check the power supply unit for errors</description>
                <description>icsChassisFanDescription of icsChassisFanTable</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Fan status</name>
+                     <name>{#SNMPVALUE}: Fan status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -646,7 +646,7 @@ The operational status of the fan unit.
                      <expression>{Template Intel_Qlogic Infiniband SNMPv1:sensor.fan.status[icsChassisFanOperStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE} fan is in critical state</name>
+                     <name>{#SNMPVALUE}: Fan is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>

@@ -80,6 +80,7 @@ The value of sgiCpuUsage indicates the current CPU utilization for the system.
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Used memory</name>
@@ -126,6 +127,7 @@ The value of sgiKbMemoryUsed indicates the total pre-allocated pool memory, in k
                      <params>1024</params>
                   </step>
                </preprocessing>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Available memory</name>
@@ -172,6 +174,7 @@ The value of sgiKbMemoryAvailable indicates the amount of freememory, in kilobyt
                      <params>1024</params>
                   </step>
                </preprocessing>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Memory utilization</name>
@@ -212,6 +215,7 @@ The value of sgiKbMemoryAvailable indicates the amount of freememory, in kilobyt
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Модель</name>
@@ -259,6 +263,7 @@ The value of sgiKbMemoryAvailable indicates the amount of freememory, in kilobyt
 \3</params>
                   </step>
                </preprocessing>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Operating system</name>
@@ -306,6 +311,7 @@ The value of sgiKbMemoryAvailable indicates the amount of freememory, in kilobyt
 \1</params>
                   </step>
                </preprocessing>
+               <jmx_endpoint/>
             </item>
          </items>
          <discovery_rules>
@@ -352,7 +358,7 @@ The value of sgiKbMemoryAvailable indicates the amount of freememory, in kilobyt
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPVALUE}] Температура</name>
+                     <name>{#SNMPVALUE}: Температура</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.6527.3.1.2.2.1.8.1.18.{#SNMPINDEX}</snmp_oid>
@@ -391,6 +397,7 @@ The current temperature reading in degrees celsius from this hardware component'
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -399,7 +406,7 @@ The current temperature reading in degrees celsius from this hardware component'
                      <expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
+                     <name>{#SNMPVALUE}: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -411,7 +418,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
+                           <name>{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                            <recovery_expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
                         </dependency>
@@ -422,7 +429,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
+                     <name>{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -439,7 +446,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+5</recovery_expression>
-                     <name>[{#SNMPVALUE}] Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <name>{#SNMPVALUE}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -455,6 +462,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 		
@@ -499,7 +507,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPINDEX}] Статус вентилятора</name>
+                     <name>#{#SNMPINDEX}: Статус вентилятора</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.6527.3.1.2.2.1.4.1.2.{#SNMPINDEX}</snmp_oid>
@@ -540,6 +548,7 @@ Current status of the Fan tray.
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -548,7 +557,7 @@ Current status of the Fan tray.
                      <expression>{Template Alcatel Timetra TiMOS SNMPv1:sensor.fan.status[tmnxChassisFanOperStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#SNMPINDEX}] Статус вентилятора: сбой</name>
+                     <name>#{#SNMPINDEX}: Статус вентилятора: сбой</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -564,6 +573,7 @@ Current status of the Fan tray.
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 		          <discovery_rule>
@@ -606,7 +616,7 @@ Current status of the Fan tray.
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#ENT_NAME}] Серийный номер</name>
+                     <name>{#ENT_NAME}: Серийный номер</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.6527.3.1.2.2.1.8.1.5.{#SNMPINDEX}</snmp_oid>
@@ -645,6 +655,7 @@ Current status of the Fan tray.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -653,14 +664,14 @@ Current status of the Fan tray.
                      <expression>{Template Alcatel Timetra TiMOS SNMPv1:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].diff()}=1 and {Template Alcatel Timetra TiMOS SNMPv1:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
-                     <name>Возможно замена {#ENT_NAME} (получен новый серийный номер)</name>
+                     <name>{#ENT_NAME}: Возможно замена устройства (получен новый серийный номер)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
                      <description>Последнее значение: {ITEM.LASTVALUE1}.
-Изменился серийный номер {#ENT_NAME}. Подтвердите и закройте.</description>
+Изменился серийный номер устройства. Подтвердите и закройте.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -669,6 +680,7 @@ Current status of the Fan tray.
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 		

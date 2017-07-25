@@ -41,7 +41,7 @@ CPQIDA-MIB
          </applications>
          <items>
             <item>
-               <name>[System] Temperature status</name>
+               <name>System: Temperature status</name>
                <type>1</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.232.6.2.6.1.0</snmp_oid>
@@ -89,6 +89,7 @@ This value specifies the overall condition of the system's
                </valuemap>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Overall system health status</name>
@@ -132,6 +133,7 @@ The overall condition. This object represents the overall status of the server i
                </valuemap>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Hardware model name</name>
@@ -173,6 +175,7 @@ The machine product name.The name of the machine used in this system.
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
             <item>
                <name>Hardware serial number</name>
@@ -214,6 +217,7 @@ The serial number of the physical system unit. The string will be empty if the s
                <valuemap/>
                <logtimefmt/>
                <preprocessing/>
+               <jmx_endpoint/>
             </item>
          </items>
          <discovery_rules>
@@ -257,7 +261,7 @@ The serial number of the physical system unit. The string will be empty if the s
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#SNMPINDEX}] Temperature</name>
+                     <name>{#SNMPINDEX}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -296,10 +300,11 @@ Temperature readings of testpoint: {#SNMPINDEX}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#SNMPINDEX}] Temperature sensor location</name>
+                     <name>{#SNMPINDEX}: Temperature sensor location</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.3.{#SNMPINDEX}</snmp_oid>
@@ -340,6 +345,7 @@ This specifies the location of the temperature sensor present in the system.
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -348,7 +354,7 @@ This specifies the location of the temperature sensor present in the system.
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"{#SNMPINDEX}"}-5</recovery_expression>
-                     <name>{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPINDEX}"}</name>
+                     <name>{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPINDEX}"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -360,7 +366,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
+                           <name>{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"{#SNMPINDEX}"}-5</recovery_expression>
                         </dependency>
@@ -371,7 +377,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"{#SNMPINDEX}"}-5</recovery_expression>
-                     <name>{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
+                     <name>{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -388,7 +394,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"{#SNMPINDEX}"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"{#SNMPINDEX}"}+5</recovery_expression>
-                     <name>{#SNMPINDEX} temperature is too low: &lt;{$TEMP_CRIT_LOW:"{#SNMPINDEX}"}</name>
+                     <name>{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"{#SNMPINDEX}"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -404,6 +410,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 	           <discovery_rule>
                <name>Temperature Discovery Ambient</name>
@@ -453,7 +460,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with ambient(11) and 0.1 index filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Ambient] Temperature</name>
+                     <name>Ambient: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -492,6 +499,7 @@ Temperature readings of testpoint: Ambient
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -500,7 +508,7 @@ Temperature readings of testpoint: Ambient
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Ambient"}-5</recovery_expression>
-                     <name>Ambient temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"}</name>
+                     <name>Ambient: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -512,7 +520,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Ambient temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
+                           <name>Ambient: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-5</recovery_expression>
                         </dependency>
@@ -523,7 +531,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-5</recovery_expression>
-                     <name>Ambient temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
+                     <name>Ambient: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -540,7 +548,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+5</recovery_expression>
-                     <name>Ambient temperature is too low: &lt;{$TEMP_CRIT_LOW:"Ambient"}</name>
+                     <name>Ambient: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -556,6 +564,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 	           <discovery_rule>
@@ -599,7 +608,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with cpu(6) filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[CPU-{#SNMPINDEX}] Temperature</name>
+                     <name>CPU-{#SNMPINDEX}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -638,6 +647,7 @@ Temperature readings of testpoint: CPU-{#SNMPINDEX}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -646,7 +656,7 @@ Temperature readings of testpoint: CPU-{#SNMPINDEX}
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-5</recovery_expression>
-                     <name>CPU-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
+                     <name>CPU-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -658,7 +668,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>CPU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                           <name>CPU-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
                         </dependency>
@@ -669,7 +679,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
-                     <name>CPU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                     <name>CPU-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -686,7 +696,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+5</recovery_expression>
-                     <name>CPU-{#SNMPINDEX} temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
+                     <name>CPU-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -702,6 +712,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 	           <discovery_rule>
                <name>Temperature Discovery Memory</name>
@@ -744,7 +755,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with memory(7) filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Memory-{#SNMPINDEX}] Temperature</name>
+                     <name>Memory-{#SNMPINDEX}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -783,6 +794,7 @@ Temperature readings of testpoint: Memory-{#SNMPINDEX}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -791,7 +803,7 @@ Temperature readings of testpoint: Memory-{#SNMPINDEX}
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Memory"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Memory"}-5</recovery_expression>
-                     <name>Memory-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"Memory"}</name>
+                     <name>Memory-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Memory"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -803,7 +815,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Memory-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"}</name>
+                           <name>Memory-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Memory"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Memory"}-5</recovery_expression>
                         </dependency>
@@ -814,7 +826,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Memory"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Memory"}-5</recovery_expression>
-                     <name>Memory-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"}</name>
+                     <name>Memory-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -831,7 +843,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Memory"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Memory"}+5</recovery_expression>
-                     <name>Memory-{#SNMPINDEX} temperature is too low: &lt;{$TEMP_CRIT_LOW:"Memory"}</name>
+                     <name>Memory-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Memory"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -847,6 +859,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 	           <discovery_rule>
                <name>Temperature Discovery PSU</name>
@@ -889,7 +902,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with powerSupply(10) filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[PSU-{#SNMPINDEX}] Temperature</name>
+                     <name>PSU-{#SNMPINDEX}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -928,6 +941,7 @@ Temperature readings of testpoint: PSU-{#SNMPINDEX}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -936,7 +950,7 @@ Temperature readings of testpoint: PSU-{#SNMPINDEX}
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"PSU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"PSU"}-5</recovery_expression>
-                     <name>PSU-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"PSU"}</name>
+                     <name>PSU-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"PSU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -948,7 +962,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>PSU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"}</name>
+                           <name>PSU-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"PSU"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"PSU"}-5</recovery_expression>
                         </dependency>
@@ -959,7 +973,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"PSU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"PSU"}-5</recovery_expression>
-                     <name>PSU-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"}</name>
+                     <name>PSU-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -976,7 +990,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"PSU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"PSU"}+5</recovery_expression>
-                     <name>PSU-{#SNMPINDEX} temperature is too low: &lt;{$TEMP_CRIT_LOW:"PSU"}</name>
+                     <name>PSU-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"PSU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -992,6 +1006,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		          <discovery_rule>
                <name>Temperature Discovery I/O</name>
@@ -1034,7 +1049,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with ioBoard(5) filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[I/O-{#SNMPINDEX}] Temperature</name>
+                     <name>I/O-{#SNMPINDEX}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -1073,6 +1088,7 @@ Temperature readings of testpoint: I/O-{#SNMPINDEX}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1081,7 +1097,7 @@ Temperature readings of testpoint: I/O-{#SNMPINDEX}
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_WARN:"I/O"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_WARN:"I/O"}-5</recovery_expression>
-                     <name>I/O-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"I/O"}</name>
+                     <name>I/O-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"I/O"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1093,7 +1109,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>I/O-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"}</name>
+                           <name>I/O-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_CRIT:"I/O"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_CRIT:"I/O"}-5</recovery_expression>
                         </dependency>
@@ -1104,7 +1120,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_CRIT:"I/O"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_CRIT:"I/O"}-5</recovery_expression>
-                     <name>I/O-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"}</name>
+                     <name>I/O-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1121,7 +1137,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&lt;{$TEMP_CRIT_LOW:"I/O"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].min(5m)}&gt;{$TEMP_CRIT_LOW:"I/O"}+5</recovery_expression>
-                     <name>I/O-{#SNMPINDEX} temperature is too low: &lt;{$TEMP_CRIT_LOW:"I/O"}</name>
+                     <name>I/O-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"I/O"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1137,6 +1153,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		          <discovery_rule>
                <name>Temperature Discovery System</name>
@@ -1179,7 +1196,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with system(3) filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[System-{#SNMPINDEX}] Temperature</name>
+                     <name>System-{#SNMPINDEX}: Temperature</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>.1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
@@ -1218,6 +1235,7 @@ Temperature readings of testpoint: System-{#SNMPINDEX}
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1226,7 +1244,7 @@ Temperature readings of testpoint: System-{#SNMPINDEX}
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Device"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Device"}-5</recovery_expression>
-                     <name>System-{#SNMPINDEX} temperature is above warning threshold: &gt;{$TEMP_WARN:"Device"}</name>
+                     <name>System-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Device"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1238,7 +1256,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>System-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
+                           <name>System-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
                            <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
                            <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
                         </dependency>
@@ -1249,7 +1267,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
-                     <name>System-{#SNMPINDEX} temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
+                     <name>System-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1266,7 +1284,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Device"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template HP iLO SNMPv1:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Device"}+5</recovery_expression>
-                     <name>System-{#SNMPINDEX} temperature is too low: &lt;{$TEMP_CRIT_LOW:"Device"}</name>
+                     <name>System-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Device"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1282,6 +1300,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		          <discovery_rule>
                <name>Array Controller Discovery</name>
@@ -1316,7 +1335,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Scanning table of Array controllers: CPQIDA-MIB::cpqDaCntlrTable </description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#CNTLR_LOCATION}] Disk array controller status</name>
+                     <name>{#CNTLR_LOCATION}: Disk array controller status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.2.1.1.6.{#SNMPINDEX}</snmp_oid>
@@ -1358,10 +1377,11 @@ This value represents the overall condition of this controller,
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#CNTLR_LOCATION}] Disk array controller model</name>
+                     <name>{#CNTLR_LOCATION}: Disk array controller model</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.2.1.1.2.{#SNMPINDEX}</snmp_oid>
@@ -1402,6 +1422,7 @@ Array Controller Model. The type of controller card.
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1410,7 +1431,7 @@ Array Controller Model. The type of controller card.
                      <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#CNTLR_LOCATION}] Disk array controller is in unrecoverable state!</name>
+                     <name>{#CNTLR_LOCATION}: Disk array controller is in unrecoverable state!</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1427,7 +1448,7 @@ Please check the device for faults</description>
                      <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_WARN_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#CNTLR_LOCATION}] Disk array controller is in warning state</name>
+                     <name>{#CNTLR_LOCATION}: Disk array controller is in warning state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1439,7 +1460,7 @@ Please check the device for warnings</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#CNTLR_LOCATION}] Disk array controller is in critical state</name>
+                           <name>{#CNTLR_LOCATION}: Disk array controller is in critical state</name>
                            <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
@@ -1450,7 +1471,7 @@ Please check the device for warnings</description>
                      <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#CNTLR_LOCATION}] Disk array controller is in critical state</name>
+                     <name>{#CNTLR_LOCATION}: Disk array controller is in critical state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1462,7 +1483,7 @@ Please check the device for errors</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#CNTLR_LOCATION}] Disk array controller is in unrecoverable state!</name>
+                           <name>{#CNTLR_LOCATION}: Disk array controller is in unrecoverable state!</name>
                            <expression>{Template HP iLO SNMPv1:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
@@ -1472,6 +1493,7 @@ Please check the device for errors</description>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 		          <discovery_rule>
@@ -1507,7 +1529,7 @@ Please check the device for errors</description>
                <description>Scanning  table of physical drive entries CPQIDA-MIB::cpqDaPhyDrvTable.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[{#DISK_LOCATION}] Physical Disk Status</name>
+                     <name>{#DISK_LOCATION}: Physical Disk Status</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.6.{#SNMPINDEX}</snmp_oid>
@@ -1554,10 +1576,11 @@ Physical Drive Status. This shows the status of the physical drive. The followin
                      </valuemap>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[{#DISK_LOCATION}] Physical Disk Serial Number</name>
+                     <name>{#DISK_LOCATION}: Physical Disk Serial Number</name>
                      <type>1</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.51.{#SNMPINDEX}</snmp_oid>
@@ -1600,6 +1623,7 @@ Physical Drive Serial Number.
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
+                     <jmx_endpoint/>
                      <application_prototypes/>
                   </item_prototype>
                </item_prototypes>
@@ -1609,7 +1633,7 @@ Physical Drive Serial Number.
 						{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].str("")}=0</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#DISK_LOCATION}] Physical disk is not in OK state</name>
+                     <name>{#DISK_LOCATION}: Physical disk is not in OK state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1621,12 +1645,12 @@ Please check physical disk for warnings or errors</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#DISK_LOCATION}] Physical disk failed</name>
+                           <name>{#DISK_LOCATION}: Physical disk failed</name>
                            <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
                         <dependency>
-                           <name>[{#DISK_LOCATION}] Physical disk is in warning state</name>
+                           <name>{#DISK_LOCATION}: Physical disk is in warning state</name>
                            <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
@@ -1637,7 +1661,7 @@ Please check physical disk for warnings or errors</description>
                      <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#DISK_LOCATION}] Physical disk is in warning state</name>
+                     <name>{#DISK_LOCATION}: Physical disk is in warning state</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1649,7 +1673,7 @@ Please check physical disk for warnings or errors</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[{#DISK_LOCATION}] Physical disk failed</name>
+                           <name>{#DISK_LOCATION}: Physical disk failed</name>
                            <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
                            <recovery_expression/>
                         </dependency>
@@ -1660,7 +1684,7 @@ Please check physical disk for warnings or errors</description>
                      <expression>{Template HP iLO SNMPv1:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[{#DISK_LOCATION}] Physical disk failed</name>
+                     <name>{#DISK_LOCATION}: Physical disk failed</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1676,6 +1700,7 @@ Please check physical disk for warnings or errors</description>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
+               <jmx_endpoint/>
             </discovery_rule>
 		
 	        </discovery_rules>

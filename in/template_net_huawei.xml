@@ -23,7 +23,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 	  <discoveryRules>
 	  	<discoveryRule>
 	  				<name>MPU Discovery</name>
-                    <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
+                    <snmp_oid>discovery[{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
                     <key>mpu.discovery</key>
                     <description>http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?contentId=KB1000090234. Filter limits results to Main Processing Units</description>
                     <filter>
@@ -31,7 +31,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
                         <formula/>
                         <conditions>
 							<condition>
-                                <macro>{#SNMPVALUE}</macro>
+                                <macro>{#ENT_NAME}</macro>
                                 <value>MPU.*</value> <!-- Main Processing Unit -->
                                 <operator>8</operator>
                                 <formulaid>A</formulaid>
@@ -42,7 +42,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 	  	
   	   <discoveryRule>
 				<name>Entity Discovery</name>
-                <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5]</snmp_oid>
+                <snmp_oid>discovery[{#ENT_CLASS},.1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
                 <key>entity.discovery</key>
                  <filter>
                      <evaltype>0</evaltype>
@@ -73,7 +73,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 	      <ref>http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?contentId=KB1000090234</ref>
 	      <vendorDescription>The CPU usage for this entity. Generally, the CPU usage will calculate the overall CPU usage on the entity, and itis not sensible with the number of CPU on the entity.</vendorDescription>
 	      <discoveryRule>MPU Discovery</discoveryRule>
-	      <alarmObject>{#SNMPVALUE}</alarmObject>
+	      <alarmObject>{#ENT_NAME}</alarmObject>
 	    </system.cpu.util>
 	    <vm.memory.pused>
 		  <oid>1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.{#SNMPINDEX}</oid>
@@ -82,7 +82,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 		  <ref>http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?contentId=KB1000090234</ref>
 	      <vendorDescription>The memory usage for the entity. This object indicates what percent of memory are used.</vendorDescription>
 	      <discoveryRule>MPU Discovery</discoveryRule>
-	      <alarmObject>{#SNMPVALUE}</alarmObject>
+	      <alarmObject>{#ENT_NAME}</alarmObject>
 	    </vm.memory.pused>
 	    
 	    <!-- fault metrics -->
@@ -92,7 +92,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 		      <mib>HUAWEI-ENTITY-EXTENT-MIB</mib>
 		      <vendorDescription>The temperature for the {#SNMPVALUE}.</vendorDescription>
 		      <discoveryRule>MPU Discovery</discoveryRule>
-		      <alarmObject>{#SNMPVALUE}</alarmObject>
+		      <alarmObject>{#ENT_NAME}</alarmObject>
 	     </sensor.temp.value>
 	     
 	    
@@ -101,7 +101,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 		      <snmpObject>hwEntityFanState.{#SNMPINDEX}</snmpObject>
 		      <mib>HUAWEI-ENTITY-EXTENT-MIB</mib>
 		      <discoveryRule>FAN Discovery</discoveryRule>
-		      <alarmObject>{#SNMPVALUE}</alarmObject>
+		      <alarmObject>#{#SNMPVALUE}</alarmObject>
 		      <valueMap>HUAWEI-ENTITY-EXTENT-MIB::hwEntityFanState</valueMap>
 	    </sensor.fan.status>
 	     
@@ -111,7 +111,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 			<oid>1.3.6.1.2.1.47.1.1.1.1.2.{#SNMPINDEX}</oid>
 	        <snmpObject>entPhysicalDescr.{#SNMPINDEX}</snmpObject>
 		  	<mib>ENTITY-MIB</mib>
-		  	<alarmObject>{#SNMPVALUE}</alarmObject>
+		  	<alarmObject>{#ENT_NAME}</alarmObject>
 	      	<discoveryRule>Entity Discovery</discoveryRule>
 	    </system.hw.model>
 	    
@@ -119,7 +119,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 	    	<oid>1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}</oid>
 	        <snmpObject>entPhysicalSerialNum.{#SNMPINDEX}</snmpObject>
 		  	<mib>ENTITY-MIB</mib>
-		  	<alarmObject>{#SNMPVALUE}</alarmObject>
+		  	<alarmObject>{#ENT_NAME}</alarmObject>
 	      	<discoveryRule>MPU Discovery</discoveryRule>
 	    </system.hw.serialnumber>
 	    
@@ -128,7 +128,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 	    	<oid>1.3.6.1.2.1.47.1.1.1.1.8.{#SNMPINDEX}</oid>
 	        <snmpObject>entPhysicalHardwareRev.{#SNMPINDEX}</snmpObject>
 		    <mib>ENTITY-MIB</mib>
-		    <alarmObject>{#SNMPVALUE}</alarmObject>
+		    <alarmObject>{#ENT_NAME}</alarmObject>
 		    <discoveryRule>MPU Discovery</discoveryRule>
 	    </system.hw.version>
 	    
@@ -136,7 +136,7 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 			<oid>1.3.6.1.2.1.47.1.1.1.1.10.{#SNMPINDEX}</oid>
 	        <snmpObject>entPhysicalSoftwareRev.{#SNMPINDEX}</snmpObject>
 		    <mib>ENTITY-MIB</mib>
-		    <alarmObject>{#SNMPVALUE}</alarmObject>
+		    <alarmObject>{#ENT_NAME}</alarmObject>
 		    <discoveryRule>MPU Discovery</discoveryRule>
 	    </system.sw.os>	    
 	     

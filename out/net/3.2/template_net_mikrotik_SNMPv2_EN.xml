@@ -183,7 +183,7 @@ The size of the storage represented by this entry, in
                <logtimefmt/>
             </item>
             <item>
-               <name>[Device] Temperature</name>
+               <name>Device: Temperature</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>1</multiplier>
@@ -443,7 +443,7 @@ Current firmware version
                <description>HOST-RESOURCES-MIB::hrProcessorTable discovery</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>{#SNMPINDEX}: CPU utilization</name>
+                     <name>#{#SNMPINDEX}: CPU utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
@@ -494,7 +494,7 @@ The average, over the last minute, of the percentage of time that this processor
                      <expression>{Template Mikrotik SNMPv2:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPINDEX}: High CPU utilization</name>
+                     <name>#{#SNMPINDEX}: High CPU utilization</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -510,7 +510,7 @@ The average, over the last minute, of the percentage of time that this processor
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>[{#SNMPINDEX}] CPU utilization</name>
+                     <name>#{#SNMPINDEX}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -579,7 +579,7 @@ The average, over the last minute, of the percentage of time that this processor
 Since temperature of CPU is not available on all Mikrotik hardware, this is done to avoid unsupported items.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[CPU] Temperature</name>
+                     <name>CPU: Temperature</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -630,7 +630,7 @@ Since temperature of CPU is not available on all Mikrotik hardware, this is done
                      <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-5</recovery_expression>
-                     <name>CPU temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
+                     <name>CPU: Temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -642,7 +642,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>CPU temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                           <name>CPU: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
                            <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                            <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
                         </dependency>
@@ -653,7 +653,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-5</recovery_expression>
-                     <name>CPU temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                     <name>CPU: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -670,7 +670,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+5</recovery_expression>
-                     <name>CPU temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
+                     <name>CPU: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -735,7 +735,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>HOST-RESOURCES-MIB::hrStorage discovery with storage filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>[Disk-{#SNMPINDEX}] Used space</name>
+                     <name>Disk-{#SNMPINDEX}: Used space</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -781,7 +781,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Disk-{#SNMPINDEX}] Total space</name>
+                     <name>Disk-{#SNMPINDEX}: Total space</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -836,7 +836,7 @@ The size of the storage represented by this entry, in
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>[Disk-{#SNMPINDEX}] Storage utilization</name>
+                     <name>Disk-{#SNMPINDEX}: Storage utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <multiplier>0</multiplier>
@@ -886,7 +886,7 @@ The size of the storage represented by this entry, in
                      <expression>{Template Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[Disk-{#SNMPINDEX}] Free disk space is low</name>
+                     <name>Disk-{#SNMPINDEX}: Free disk space is low</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -903,7 +903,7 @@ The size of the storage represented by this entry, in
                      <expression>{Template Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_WARN}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>[Disk-{#SNMPINDEX}] Free disk space is low</name>
+                     <name>Disk-{#SNMPINDEX}: Free disk space is low</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -915,7 +915,7 @@ The size of the storage represented by this entry, in
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>[Disk-{#SNMPINDEX}] Free disk space is low</name>
+                           <name>Disk-{#SNMPINDEX}: Free disk space is low</name>
                            <expression>{Template Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
                            <recovery_expression/>
                         </dependency>
@@ -1033,7 +1033,7 @@ The size of the storage represented by this entry, in
          <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].avg(5m)}&gt;{$TEMP_WARN:"Device"}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].max(5m)}&lt;{$TEMP_WARN:"Device"}-5</recovery_expression>
-         <name>Device temperature is above warning threshold: &gt;{$TEMP_WARN:"Device"}</name>
+         <name>Device: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Device"}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1045,7 +1045,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>Device temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
+               <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
                <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
                <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].max(5m)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
             </dependency>
@@ -1056,7 +1056,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].max(5m)}&lt;{$TEMP_CRIT:"Device"}-5</recovery_expression>
-         <name>Device temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
+         <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1073,7 +1073,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Device"}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Mikrotik SNMPv2:sensor.temp.value[mtxrHlTemperature].min(5m)}&gt;{$TEMP_CRIT_LOW:"Device"}+5</recovery_expression>
-         <name>Device temperature is too low: &lt;{$TEMP_CRIT_LOW:"Device"}</name>
+         <name>Device: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Device"}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
