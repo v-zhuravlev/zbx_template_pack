@@ -280,8 +280,6 @@ FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are 
                 <key>chassis.discovery</key>
                 <description>snChasUnitIndex: The index to chassis table.</description>
             </discoveryRule>
-
-
         </discoveryRules>
         <metrics>
             <system.cpu.util>
@@ -366,7 +364,13 @@ FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are 
 	  </documentation>
 	  <discoveryRules>
 
-		
+
+      <discoveryRule>
+          <name>Stack Discovery</name>
+          <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.1991.1.1.3.31.2.1.1.5]</snmp_oid>
+          <key>stack.discovery</key>
+          <description>Discovering snStackingConfigUnitTable for Model names</description>
+      </discoveryRule>
 
 
 	  <discoveryRule>
@@ -400,6 +404,14 @@ FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are 
               <imported>true</imported>
           </sensor.fan.status>
 
+          <system.hw.model>
+              <oid>.1.3.6.1.4.1.1991.1.1.3.31.2.1.1.5.{#SNMPINDEX}</oid>
+              <snmpObject>snStackingConfigUnitType.{#SNMPINDEX}</snmpObject>
+              <mib>FOUNDRY-SN-STACKING-MIB</mib>
+              <discoveryRule>Stack Discovery</discoveryRule>
+              <alarmObject>Unit {#SNMPINDEX}</alarmObject>
+              <vendorDescription>A description of the configured/active system type for each unit.</vendorDescription>
+          </system.hw.model>
 		<!--<system.hw.serialnumber>
 	    	  <oid>1.3.6.1.4.1.1991.1.1.1.1.2.0</oid>
 		      <snmpObject>snChasSerNum.0</snmpObject>

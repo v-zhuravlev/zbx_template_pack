@@ -1121,8 +1121,6 @@ Device serial number has changed. Ack to close</description>
                <graph_prototypes/>
                <host_prototypes/>
             </discovery_rule>
-
-
         </discovery_rules>
          <macros>
             <macro>
@@ -1175,6 +1173,7 @@ Device serial number has changed. Ack to close</description>
          <name>Template Brocade ICX_MLX Stackable SNMPv2</name>
          <description>Template Brocade ICX_MLX Stackable version: 0.9
 MIBs used:
+FOUNDRY-SN-STACKING-MIB
 FOUNDRY-SN-AGENT-MIB
 
 Known Issues:
@@ -1241,7 +1240,91 @@ The version of the running software in the form 'major.minor.maintenance[letters
          </items>
          <discovery_rules>
 
-		
+
+            <discovery_rule>
+               <name>Stack Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.1991.1.1.3.31.2.1.1.5]</snmp_oid>
+               <key>stack.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>Discovering snStackingConfigUnitTable for Model names</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Unit {#SNMPINDEX}: Hardware model name</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>.1.3.6.1.4.1.1991.1.1.3.31.2.1.1.5.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.model[snStackingConfigUnitType.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: FOUNDRY-SN-STACKING-MIB
+A description of the configured/active system type for each unit.
+</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Inventory</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes/>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
 
 
 	           <discovery_rule>
