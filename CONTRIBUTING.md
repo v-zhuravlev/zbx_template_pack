@@ -7,12 +7,10 @@ or (tcpdump/wireshark .pcap dump of this snmpwalk)
 - Any links to the official documentation would also be nice.
 
 Devices wanted list:  
--	HP Procurve switches  
--	HP (H3C) Comware network devices  
 -	Alcatel-Lucent (not TimOS) devices  
+- Dell switches  
 -	Netgear switches  
 -	Zyxel MES switches  
--	Ubiquiti Airfiber
--   Intel/Qlogic Infiniband  
--	Brocade ICX Family
--	ZTE Switches
+-	Ubiquiti Airfiber  
+- Intel/Qlogic Infiniband  
+-	ZTE Switches  
