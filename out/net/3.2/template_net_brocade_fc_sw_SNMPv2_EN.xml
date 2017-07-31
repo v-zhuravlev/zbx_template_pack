@@ -61,7 +61,7 @@ device : SW5480
                <history>30</history>
                <trends>365</trends>
                <status>0</status>
-               <value_type>3</value_type>
+               <value_type>0</value_type>
                <allowed_hosts/>
                <units>%</units>
                <delta>0</delta>
@@ -516,9 +516,8 @@ Temperature status of testpoint: {#SENSOR_INFO}
                <trigger_prototypes>
                   <trigger_prototype>
                      <expression>{Template Brocade FC SNMPv2:sensor.temp.value[swSensorValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}
-							or
-							{Template Brocade FC SNMPv2:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}
-							</expression>
+or
+{Template Brocade FC SNMPv2:sensor.temp.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Brocade FC SNMPv2:sensor.temp.value[swSensorValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                      <name>{#SENSOR_INFO}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>

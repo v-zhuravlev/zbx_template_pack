@@ -318,7 +318,7 @@ CISCO-PROCESS-MIB
                      <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
-                     <value_type>3</value_type>
+                     <value_type>0</value_type>
                      <allowed_hosts/>
                      <units>%</units>
                      <snmpv3_contextname/>
@@ -480,7 +480,7 @@ CISCO-PROCESS-MIB
                      <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
-                     <value_type>3</value_type>
+                     <value_type>0</value_type>
                      <allowed_hosts/>
                      <units>%</units>
                      <snmpv3_contextname/>
@@ -609,7 +609,7 @@ OLD-CISCO-CPU-MIB
                <history>30d</history>
                <trends>365d</trends>
                <status>0</status>
-               <value_type>3</value_type>
+               <value_type>0</value_type>
                <allowed_hosts/>
                <units>%</units>
                <snmpv3_contextname/>
@@ -1074,9 +1074,8 @@ The current state of the test point being instrumented.
                <trigger_prototypes>
                   <trigger_prototype>
                      <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}
-							or
-							{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}
-							</expression>
+or
+{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                      <name>{#SNMPVALUE}: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
@@ -1093,12 +1092,10 @@ This trigger uses temperature sensor values as well as temperature sensor status
                         <dependency>
                            <name>{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                            <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}
-							or
-							{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
-							
-								or
-								{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}
-							</expression>
+or
+{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
+or
+{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
                            <recovery_expression>{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                         </dependency>
                      </dependencies>
@@ -1106,12 +1103,10 @@ This trigger uses temperature sensor values as well as temperature sensor status
                   </trigger_prototype>
                   <trigger_prototype>
                      <expression>{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}
-							or
-							{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
-							
-								or
-								{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}
-							</expression>
+or
+{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}
+or
+{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Cisco CISCO-ENVMON-MIB SNMPv1:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                      <name>{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>

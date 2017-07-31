@@ -53,7 +53,7 @@ ENTITY-MIB
                <history>30d</history>
                <trends>365d</trends>
                <status>0</status>
-               <value_type>3</value_type>
+               <value_type>0</value_type>
                <allowed_hosts/>
                <units>%</units>
                <snmpv3_contextname/>
@@ -998,9 +998,8 @@ This trigger uses temperature sensor values as well as temperature sensor status
             <dependency>
                <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
-							or
-							{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}
-							</expression>
+or
+{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
                <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
             </dependency>
          </dependencies>
@@ -1008,9 +1007,8 @@ This trigger uses temperature sensor values as well as temperature sensor status
       </trigger>
       <trigger>
          <expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
-							or
-							{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}
-							</expression>
+or
+{Template Extreme EXOS SNMPv1:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
          <recovery_mode>1</recovery_mode>
          <recovery_expression>{Template Extreme EXOS SNMPv1:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
          <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
