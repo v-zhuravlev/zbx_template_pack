@@ -1,5 +1,5 @@
 # Zabbix Templates Pack
-The idea behind this template pack is to provide single template class for each device type and just define SNMP oids required to collect common metrics liks `CPU load`, `Memory`, `Temperature` and so on to generate new template for new vendor.  
+The idea behind this template pack is to provide single template class for each device type and just define SNMP oids required to collect common metrics like `CPU utilization`, `Memory`, `Temperature` and so on to generate new template for new vendor.  
 
 
 So all templates are generated using only SNMP OIDs and other vendor specific details.  
@@ -25,7 +25,7 @@ Memory triggers also look similar:
 
 
 ## How to use this template pack  
-Just import the required template into your Zabbix 3.2+. Some templates might have dependencies. Check `deps` directory then.  
+Just import the required template into your Zabbix 3.2+. Some templates might have dependencies. Check `module` directory then.  
 Currently `net` template is ready to be tested.  See [`out/net/README.md`](https://github.com/v-zhuravlev/zbx_template_pack/tree/master/out/net) for all its items and triggers. 
 
 ### `net` Devices List  
@@ -45,16 +45,18 @@ Currently `net` template is ready to be tested.  See [`out/net/README.md`](https
 |Brocade FC Switch|-|-|.1.3.6.1.4.1.1588.2.1.1.[1,71]|Template Brocade FC|SW-MIB,ENTITY-MIB|-|  
 |Huawei VRP|	S2352P-EI|-|.1.3.6.1.4.1.2011.2.23.94|Template Huawei VRP|ENTITY-MIB,HUAWEI-ENTITY-EXTENT-MIB|-|  
 |Dell Force S-Series|	S4810|-|.1.3.6.1.4.1.6027.1.3.14|Template Dell Force S-Series|F10-S-SERIES-CHASSIS-MIB|https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx|    
-|Brocade ICX|ICX6610|-||Template Brocade ICX|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
+|Brocade_Foundry|ICX6610|-||Template Brocade_Foundry|FOUNDRY-SN-AGENT-MIB|http://www.brocade.com/en/products-services/switches/campus-network-switches/icx-6610-switch.html|  
 |Mellanox|SX1036|MLNX-OS|.1.3.6.1.4.1.33049.1.1.1.1036|Template Mellanox |HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB,MELLANOX-MIB|http://www.mellanox.com/page/ethernet_switch_overview,https://community.mellanox.com/docs/DOC-2383,https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/Welcome%20to%20High%20Performance%20Computing%20(HPC)%20Central/page/Mellanox%20InfiniBand%20Management%20and%20Monitoring%20Best%20Practices|
 |Intel/QLogic|Infiniband 12300|-|.1.3.6.1.4.1.10222.7.1.2|Template QLogic Infiniband |ICS-CHASSIS-MIB|https://www.intel.com/content/www/us/en/high-performance-computing-fabrics/true-scale-12000-switch-family.html,https://www.ietf.org/proceedings/53/I-D/draft-ietf-ipoib-ibif-mib-01.txt|
 |HP (H3C) Comware|HP A5500-24G-4SFP HI Switch|-|.1.3.6.1.4.1.25506.11.1.101|Template HP Comware HH3C |HH3C-ENTITY-EXT-MIB,ENTITY-MIB|http://certifiedgeek.weebly.com/blog/hp-comware-snmp-mib-for-cpu-memory-and-temperature|
+|HP Enterprise Switch||-||Template HP Enterprise Switch|STATISTICS-MIB,NETSWITCH-MIB,HP-ICF-CHASSIS,ENTITY-MIB,SEMI-MIB||
 |TP-LINK|T2600G-28TS v2.0|-|.1.3.6.1.4.1.11863.5.33|Template TP-LINK|TPLINK-SYSMONITOR-MIB,TPLINK-SYSINFO-MIB|http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files|
+|Netgear Fastpath|M5300-28G|-||Template Netgear Fastpath|FASTPATH-SWITCHING-MIB,FASTPATH-BOXSERVICES-PRIVATE-MIB||
 
 ## Template options  
-Templates are provided in two SNMP versions (SNMPvx suffix):  
-- with SNMPv1 items  
+Templates could be provided in two SNMP versions (SNMPvx suffix):  
 - with SNMPv2 items  
+- or with SNMPv1 items (if SNMPv2 normally not supported by the device)  
 And two translations (EN or RU suffixes):  
 - English (Items and triggers)  
 - Russian (most of items and triggers are translated)  
