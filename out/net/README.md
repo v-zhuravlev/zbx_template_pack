@@ -97,8 +97,7 @@ Some other MACROSES could be seen in templates if some optional triggers are def
 Most Templates' items and triggers are also provided with translation in Russian. Use templates with `RU` suffix instead of `EN`.  
 
 ## Import  
-Import templates from `deps` with RU or EN suffix depending on translation you need first.  
-Also there is a dependency on default `Template ICMP Ping`  
+Import templates from `module` with RU or EN suffix depending on translation you need first.  
 Then import required templates from `net` directory.  
 
 You can also use script provided to mass import the templates like so:
