@@ -51,7 +51,7 @@ device : HP 1910-48
          </applications>
          <items/>
          <discovery_rules>
-	  	        <discovery_rule>
+            <discovery_rule>
                <name>Module Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -76,25 +76,25 @@ device : HP 1910-48
                <privatekey/>
                <port/>
                <filter>
-                        <evaltype>2</evaltype>
-                        <formula/>
-                        <conditions>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <value>^(MODULE|Module) (LEVEL|level)1$</value> 
+                  <evaltype>2</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>^(MODULE|Module) (LEVEL|level)1$</value>
                         <!--  get Module level1 on smaller models -->
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <value>(Fabric|FABRIC) (.+) (Module|MODULE)</value> 
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>(Fabric|FABRIC) (.+) (Module|MODULE)</value>
                         <!-- get things like HP 384 Gbps Fabric A7500 Module JD194B -->
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>                           
-                        </conditions>
-                    </filter>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Filter limits results to 'Module level1' or Fabric Modules</description>
                <item_prototypes>
@@ -293,7 +293,7 @@ percent of memory are used.
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-	  	        <discovery_rule>
+            <discovery_rule>
                <name>Temperature Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -318,32 +318,32 @@ percent of memory are used.
                <privatekey/>
                <port/>
                <filter>
-                        <evaltype>2</evaltype>
-                        <formula/>
-                        <conditions>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <value>^(MODULE|Module) (LEVEL|level)1$</value> 
+                  <evaltype>2</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>^(MODULE|Module) (LEVEL|level)1$</value>
                         <!--  get Module level1 on smaller models -->
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <value>(Fabric|FABRIC) (.+) (Module|MODULE)</value> 
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>(Fabric|FABRIC) (.+) (Module|MODULE)</value>
                         <!-- get things like HP 384 Gbps Fabric A7500 Module JD194B -->
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <value>(T|t)emperature.*(s|S)ensor</value> 
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>(T|t)emperature.*(s|S)ensor</value>
                         <!--  get things like 'Temperature Sensor 1 on Board' -->
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>                                                        
-                        </conditions>
-                    </filter>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Discovering modules temperature (same filter as in Module Discovery) plus and temperature sensors</description>
                <item_prototypes>
@@ -454,7 +454,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-		          <discovery_rule>
+            <discovery_rule>
                <name>FAN Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -479,17 +479,17 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <privatekey/>
                <port/>
                <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-							              <condition>
-                                <macro>{#ENT_CLASS}</macro>
-                                <value>7</value>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#ENT_CLASS}</macro>
+                        <value>7</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Discovering all entities of PhysicalClass - 7: fan(7)</description>
                <item_prototypes>
@@ -562,9 +562,8 @@ Please check the fan unit</description>
                <graph_prototypes/>
                <host_prototypes/>
                <jmx_endpoint/>
-            </discovery_rule>	  	
-
-		          <discovery_rule>
+            </discovery_rule>
+            <discovery_rule>
                <name>PSU Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -589,17 +588,17 @@ Please check the fan unit</description>
                <privatekey/>
                <port/>
                <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-							              <condition>
-                                <macro>{#ENT_CLASS}</macro>
-                                <value>6</value>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#ENT_CLASS}</macro>
+                        <value>6</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Discovering all entities of PhysicalClass - 6: powerSupply(6)</description>
                <item_prototypes>
@@ -674,9 +673,8 @@ Please check the power supply unit for errors</description>
                <graph_prototypes/>
                <host_prototypes/>
                <jmx_endpoint/>
-            </discovery_rule>	  	
-	  	
-  	         <discovery_rule>
+            </discovery_rule>
+            <discovery_rule>
                <name>Entity Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -701,18 +699,18 @@ Please check the power supply unit for errors</description>
                <privatekey/>
                <port/>
                <filter>
-                     <evaltype>0</evaltype>
-                     <formula/>
-                     <conditions>
-						               <condition>
-                             <macro>{#ENT_CLASS}</macro>
-                             <value>3</value> 
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#ENT_CLASS}</macro>
+                        <value>3</value>
                         <!-- 3 - chassis  -->
-                             <operator>8</operator>
-                             <formulaid>A</formulaid>
-                         </condition>
-                     </conditions>
-                 </filter>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description/>
                <item_prototypes>
@@ -972,10 +970,7 @@ Firmware version has changed. Ack to close</description>
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-  	
-
-	  		  		  	
-	        </discovery_rules>
+         </discovery_rules>
          <httptests/>
          <macros>
             <macro>
@@ -1045,93 +1040,77 @@ Firmware version has changed. Ack to close</description>
    <triggers/>
    <value_maps>
       <value_map>
-			      <name>HH3C-ENTITY-EXT-MIB::hh3cEntityExtErrorStatus</name>
-			      <mappings>
-				        <mapping>
-					          <value>1</value>
-					          <newvalue>notSupported</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>2</value>
-					          <newvalue>normal</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>3</value>
-					          <newvalue>postFailure</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>4</value>
-					          <newvalue>entityAbsent</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>5</value>
-					          <newvalue>poeError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>6</value>
-					          <newvalue>stackError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>7</value>
-					          <newvalue>stackPortBlocked</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>8</value>
-					          <newvalue>stackPortFailed</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>9</value>
-					          <newvalue>sfpRecvError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>10</value>
-					          <newvalue>sfpSendError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>11</value>
-					          <newvalue>sfpBothError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>12</value>
-					          <newvalue>fanError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>13</value>
-					          <newvalue>psuError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>14</value>
-					          <newvalue>rpsError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>15</value>
-					          <newvalue>moduleFaulty</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>16</value>
-					          <newvalue>sensorError</newvalue>
-				        </mapping>
-
-				        <mapping>
-					          <value>17</value>
-					          <newvalue>hardwareFaulty</newvalue>
-				        </mapping>
-			      </mappings>
-		    </value_map>
+         <name>HH3C-ENTITY-EXT-MIB::hh3cEntityExtErrorStatus</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>notSupported</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>normal</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>postFailure</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>entityAbsent</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>poeError</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>stackError</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>stackPortBlocked</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>stackPortFailed</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>sfpRecvError</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>sfpSendError</newvalue>
+            </mapping>
+            <mapping>
+               <value>11</value>
+               <newvalue>sfpBothError</newvalue>
+            </mapping>
+            <mapping>
+               <value>12</value>
+               <newvalue>fanError</newvalue>
+            </mapping>
+            <mapping>
+               <value>13</value>
+               <newvalue>psuError</newvalue>
+            </mapping>
+            <mapping>
+               <value>14</value>
+               <newvalue>rpsError</newvalue>
+            </mapping>
+            <mapping>
+               <value>15</value>
+               <newvalue>moduleFaulty</newvalue>
+            </mapping>
+            <mapping>
+               <value>16</value>
+               <newvalue>sensorError</newvalue>
+            </mapping>
+            <mapping>
+               <value>17</value>
+               <newvalue>hardwareFaulty</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
    </value_maps>
 </zabbix_export>

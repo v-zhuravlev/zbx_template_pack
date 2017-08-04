@@ -234,7 +234,7 @@ The name, model, or detailed description of the box,indicating which product the
             </item>
          </items>
          <discovery_rules>
-	  	        <discovery_rule>
+            <discovery_rule>
                <name>CPU and Memory Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -259,18 +259,18 @@ The name, model, or detailed description of the box,indicating which product the
                <privatekey/>
                <port/>
                <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <!-- <value>9\.[0-9]\.[0-9]\.[0-9]</value>  -->
-                                <value>Routing Engine.*</value>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <!-- <value>9\.[0-9]\.[0-9]\.[0-9]</value>  -->
+                        <value>Routing Engine.*</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Scanning JUNIPER-MIB::jnxOperatingTable for CPU and Memory 
                     http://kb.juniper.net/InfoCenter/index?page=content&amp;id=KB17526&amp;actp=search. Filter limits results to Routing Engines</description>
@@ -469,7 +469,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-		          <discovery_rule>
+            <discovery_rule>
                <name>Temperature discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -494,17 +494,17 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                <privatekey/>
                <port/>
                <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions>
-							              <condition>
-                                <macro>{#SNMPVALUE}</macro>
-                                <value>[^0]+</value>
-                                <operator>8</operator>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>[^0]+</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Scanning JUNIPER-MIB::jnxOperatingTable for Temperature 
                     http://kb.juniper.net/InfoCenter/index?page=content&amp;id=KB17526&amp;actp=search. Filter limits results to Routing Engines</description>
@@ -615,8 +615,8 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <graph_prototypes/>
                <host_prototypes/>
                <jmx_endpoint/>
-            </discovery_rule>	  	
-		          <discovery_rule>
+            </discovery_rule>
+            <discovery_rule>
                <name>FAN Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -717,8 +717,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-	  	
-		          <discovery_rule>
+            <discovery_rule>
                <name>PSU Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -819,8 +818,8 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
                <graph_prototypes/>
                <host_prototypes/>
                <jmx_endpoint/>
-            </discovery_rule>	  		  	
-	        </discovery_rules>
+            </discovery_rule>
+         </discovery_rules>
          <httptests/>
          <macros>
             <macro>
@@ -925,61 +924,61 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
    </triggers>
    <value_maps>
       <value_map>
-            <name>JUNIPER-ALARM-MIB::jnxRedAlarmState</name>
-            <mappings>
-                <mapping>
-                    <value>1</value>
-                    <newvalue>other</newvalue>
-                </mapping>
-                <mapping>
-                    <value>2</value>
-                    <newvalue>off</newvalue>
-                </mapping>
-                <mapping>
-                    <value>3</value>
-                    <newvalue>on - RedAlarm</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
+         <name>JUNIPER-ALARM-MIB::jnxRedAlarmState</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>off</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>on - RedAlarm</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
       <value_map>
-            <name>JUNIPER-ALARM-MIB::jnxOperatingState</name>
-            <!-- 1- Unknown 
+         <name>JUNIPER-ALARM-MIB::jnxOperatingState</name>
+         <!-- 1- Unknown 
 2- Up and running
 3- Ready to run, not running yet
 4- Held in reset, not ready yet
 5- Running at Full Speed (valid for fans only)
 6- Down or off (for power supply) 
 7- Running as a standby (Backup) -->
-            <mappings>
-                <mapping>
-                    <value>1</value>
-                    <newvalue>unknown</newvalue>
-                </mapping>
-                <mapping>
-                    <value>2</value>
-                    <newvalue>running</newvalue>
-                </mapping>
-                <mapping>
-                    <value>3</value>
-                    <newvalue>ready</newvalue>
-                </mapping>
-                <mapping>
-                    <value>4</value>
-                    <newvalue>reset</newvalue>
-                </mapping>
-				        <mapping>
-                    <value>5</value>
-                    <newvalue>runningAtFullSpeed</newvalue>
-                </mapping>
-				        <mapping>
-                    <value>6</value>
-                    <newvalue>down or off</newvalue>
-                </mapping>
-                <mapping>
-                    <value>7</value>
-                    <newvalue>standby</newvalue>
-                </mapping>  
-            </mappings>
-        </value_map>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>running</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>ready</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>reset</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>runningAtFullSpeed</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>down or off</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>standby</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
    </value_maps>
 </zabbix_export>

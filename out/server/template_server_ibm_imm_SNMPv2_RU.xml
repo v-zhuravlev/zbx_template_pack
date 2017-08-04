@@ -165,7 +165,7 @@ Machine serial number VPD information
             </item>
          </items>
          <discovery_rules>
-	  	        <discovery_rule>
+            <discovery_rule>
                <name>Temperature Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -193,15 +193,15 @@ Machine serial number VPD information
                   <evaltype>0</evaltype>
                   <formula/>
                   <conditions>
-                      <condition>
-                          <macro>{#SNMPVALUE}</macro>
-                          <value>(DIMM|PSU|PCH|RAID|RR|PCI).*</value> 
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>(DIMM|PSU|PCH|RAID|RR|PCI).*</value>
                         <!-- ambient descr, like 'Ambient Temp'-->
-                          <operator>8</operator>
-                          <formulaid>B</formulaid>
-                      </condition>
+                        <operator>8</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
                   </conditions>
-            	  </filter>
+               </filter>
                <lifetime>30d</lifetime>
                <description>Scanning IMM-MIB::tempTable</description>
                <item_prototypes>
@@ -312,8 +312,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-		
-  	         <discovery_rule>
+            <discovery_rule>
                <name>Temperature Discovery Ambient</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -341,13 +340,13 @@ This trigger uses temperature sensor values as well as temperature sensor status
                   <evaltype>0</evaltype>
                   <formula/>
                   <conditions>
-                      <condition>
-                          <macro>{#SNMPVALUE}</macro>
-                          <value>Ambient.*</value> 
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>Ambient.*</value>
                         <!-- ambient descr, like 'Ambient Temp'-->
-                          <operator>8</operator>
-                          <formulaid>B</formulaid>
-                      </condition>
+                        <operator>8</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
@@ -460,8 +459,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-		
-	           <discovery_rule>
+            <discovery_rule>
                <name>Temperature Discovery CPU</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -489,13 +487,13 @@ This trigger uses temperature sensor values as well as temperature sensor status
                   <evaltype>0</evaltype>
                   <formula/>
                   <conditions>
-                      <condition>
-                          <macro>{#SNMPVALUE}</macro>
-                          <value>CPU [0-9]* Temp</value> 
+                     <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>CPU [0-9]* Temp</value>
                         <!-- CPU descr, -->
-                          <operator>8</operator>
-                          <formulaid>B</formulaid>
-                      </condition>
+                        <operator>8</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
@@ -607,10 +605,8 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <graph_prototypes/>
                <host_prototypes/>
                <jmx_endpoint/>
-            </discovery_rule>		
-		
-		
-		          <discovery_rule>
+            </discovery_rule>
+            <discovery_rule>
                <name>Physical Disk Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -761,7 +757,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <host_prototypes/>
                <jmx_endpoint/>
             </discovery_rule>
-	        </discovery_rules>
+         </discovery_rules>
          <httptests/>
          <macros>
             <macro>
@@ -902,25 +898,25 @@ This trigger uses temperature sensor values as well as temperature sensor status
    </triggers>
    <value_maps>
       <value_map>
-            <name>IMM-MIB::systemHealthStat</name>
-            <mappings>
-                <mapping>
-                    <value>0</value>
-                    <newvalue>nonRecoverable</newvalue>
-                </mapping>
-                <mapping>
-                    <value>2</value>
-                    <newvalue>critical</newvalue>
-                </mapping>
-                <mapping>
-                    <value>4</value>
-                    <newvalue>nonCritical</newvalue>
-                </mapping>
-                <mapping>
-                    <value>255</value>
-                    <newvalue>normal</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
+         <name>IMM-MIB::systemHealthStat</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>nonRecoverable</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>critical</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>nonCritical</newvalue>
+            </mapping>
+            <mapping>
+               <value>255</value>
+               <newvalue>normal</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
    </value_maps>
 </zabbix_export>
