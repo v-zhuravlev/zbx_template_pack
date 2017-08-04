@@ -9,9 +9,9 @@
    </groups>
    <templates>
       <template>
-         <template>Template SNMP Interfaces Simple SNMPv2</template>
-         <name>Template SNMP Interfaces Simple SNMPv2</name>
-         <description>Template SNMP Interfaces Simple (no ifXTable) version: 0.10
+         <template>Template Module Interfaces Simple SNMPv2</template>
+         <name>Template Module Interfaces Simple SNMPv2</name>
+         <description>Template Interfaces Simple (no ifXTable) version: 0.10
 MIBs used:
 IF-MIB
 </description>
@@ -512,7 +512,7 @@ The type of interface.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
+                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#IFDESCR}: Интерфейс недоступен</name>
@@ -529,8 +529,8 @@ The type of interface.
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template SNMP Interfaces Simple SNMPv2:net.if.in[ifInOctets.{#SNMPINDEX}].avg(5m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} or
-{Template SNMP Interfaces Simple SNMPv2:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(5m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</expression>
+                     <expression>{Template Module Interfaces Simple SNMPv2:net.if.in[ifInOctets.{#SNMPINDEX}].avg(5m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} or
+{Template Module Interfaces Simple SNMPv2:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(5m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#IFDESCR}: Интерфейс сильно загружен &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
@@ -546,18 +546,18 @@ The type of interface.
                      <dependencies>
                         <dependency>
                            <name>{#IFDESCR}: Интерфейс недоступен</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template SNMP Interfaces Simple SNMPv2:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}
-or {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template Module Interfaces Simple SNMPv2:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}
+or {Template Module Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template SNMP Interfaces Simple SNMPv2:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2
-and {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2</recovery_expression>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv2:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2
+and {Template Module Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}-2</recovery_expression>
                      <name>{#IFDESCR}: Большое количество ошибок интерфейса</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -571,25 +571,25 @@ and {Template SNMP Interfaces Simple SNMPv2:net.if.out.errors[ifOutErrors.{#SNMP
                      <dependencies>
                         <dependency>
                            <name>{#IFDESCR}: Интерфейс недоступен</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].change()}&lt;0 and {Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}&gt;0
+                     <expression>{Template Module Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].change()}&lt;0 and {Template Module Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}&gt;0
 and (
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or
-{Template SNMP Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=117
+{Template Module Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or
+{Template Module Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or
+{Template Module Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or
+{Template Module Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or
+{Template Module Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or
+{Template Module Interfaces Simple SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=117
 )
 </expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].change()}&gt;0 and {Template SNMP Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].prev()}&gt;0</recovery_expression>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].change()}&gt;0 and {Template Module Interfaces Simple SNMPv2:net.if.speed[ifSpeed.{#SNMPINDEX}].prev()}&gt;0</recovery_expression>
                      <name>{#IFDESCR}: Интерфейс перешел на более низкую скорость, чем был ранее</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -603,7 +603,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <dependencies>
                         <dependency>
                            <name>{#IFDESCR}: Интерфейс недоступен</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template SNMP Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -637,7 +637,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template SNMP Interfaces Simple SNMPv2</host>
+                              <host>Template Module Interfaces Simple SNMPv2</host>
                               <key>net.if.in[ifInOctets.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -649,7 +649,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template SNMP Interfaces Simple SNMPv2</host>
+                              <host>Template Module Interfaces Simple SNMPv2</host>
                               <key>net.if.out[ifOutOctets.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -661,7 +661,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template SNMP Interfaces Simple SNMPv2</host>
+                              <host>Template Module Interfaces Simple SNMPv2</host>
                               <key>net.if.out.errors[ifOutErrors.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -673,7 +673,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template SNMP Interfaces Simple SNMPv2</host>
+                              <host>Template Module Interfaces Simple SNMPv2</host>
                               <key>net.if.in.errors[ifInErrors.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -685,7 +685,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template SNMP Interfaces Simple SNMPv2</host>
+                              <host>Template Module Interfaces Simple SNMPv2</host>
                               <key>net.if.out.discards[ifOutDiscards.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -697,7 +697,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template SNMP Interfaces Simple SNMPv2</host>
+                              <host>Template Module Interfaces Simple SNMPv2</host>
                               <key>net.if.in.discards[ifInDiscards.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>

@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template Extreme EXOS SNMPv2</template>
-         <name>Template Extreme EXOS SNMPv2</name>
+         <template>Template Net Extreme EXOS SNMPv2</template>
+         <name>Template Net Extreme EXOS SNMPv2</name>
          <description>Template Extreme EXOS version: 0.10
 MIBs used:
 EXTREME-SOFTWARE-MONITOR-MIB
@@ -560,7 +560,7 @@ Total amount of DRAM in Kbytes in the system.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Extreme EXOS SNMPv2:vm.memory.pused[{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Extreme EXOS SNMPv2:vm.memory.pused[{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>#{#SNMPVALUE}: High memory utilization</name>
@@ -604,7 +604,7 @@ Total amount of DRAM in Kbytes in the system.
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template Extreme EXOS SNMPv2</host>
+                              <host>Template Net Extreme EXOS SNMPv2</host>
                               <key>vm.memory.pused[{#SNMPVALUE}]</key>
                            </item>
                         </graph_item>
@@ -694,7 +694,7 @@ Status of the power supply {#SNMPVALUE}
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Extreme EXOS SNMPv2:sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Net Extreme EXOS SNMPv2:sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>PSU {#SNMPVALUE}: Power supply is in critical state</name>
@@ -838,7 +838,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Extreme EXOS SNMPv2:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Net Extreme EXOS SNMPv2:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Fan {#SNMPVALUE}: Fan is in critical state</name>
@@ -913,13 +913,13 @@ Please check the fan unit</description>
          </macros>
          <templates>
             <template>
-               <name>Template SNMP Interfaces SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP EtherLike-MIB SNMPv2</name>
+               <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP Generic SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
          </templates>
          <screens/>
@@ -952,7 +952,7 @@ Please check the fan unit</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template Extreme EXOS SNMPv2</host>
+                  <host>Template Net Extreme EXOS SNMPv2</host>
                   <key>system.cpu.util[extremeCpuMonitorTotalUtilization.0]</key>
                </item>
             </graph_item>
@@ -961,7 +961,7 @@ Please check the fan unit</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:system.cpu.util[extremeCpuMonitorTotalUtilization.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net Extreme EXOS SNMPv2:system.cpu.util[extremeCpuMonitorTotalUtilization.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High CPU utilization</name>
@@ -978,9 +978,9 @@ Please check the fan unit</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
+         <expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
+         <recovery_expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
          <name>Device: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -994,20 +994,20 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <dependencies>
             <dependency>
                <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
-               <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
+               <expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
 or
-{Template Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
-               <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+{Template Net Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
+               <recovery_expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
+         <expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}
 or
-{Template Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
+{Template Net Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+         <recovery_expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
          <name>Device: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -1022,9 +1022,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+         <expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
          <recovery_mode>1</recovery_mode>
-         <recovery_expression>{Template Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
+         <recovery_expression>{Template Net Extreme EXOS SNMPv2:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
          <name>Device: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
@@ -1039,7 +1039,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Extreme EXOS SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
+         <expression>{Template Net Extreme EXOS SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Net Extreme EXOS SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Device might have been replaced (new serial number received)</name>
@@ -1056,7 +1056,7 @@ Device serial number has changed. Ack to close</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Extreme EXOS SNMPv2:system.hw.firmware.diff()}=1 and {Template Extreme EXOS SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
+         <expression>{Template Net Extreme EXOS SNMPv2:system.hw.firmware.diff()}=1 and {Template Net Extreme EXOS SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Firmware has changed</name>

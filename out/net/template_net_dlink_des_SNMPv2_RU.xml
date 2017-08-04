@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template D-Link DES SNMPv2</template>
-         <name>Template D-Link DES SNMPv2</name>
+         <template>Template Net D-Link DES SNMPv2</template>
+         <name>Template Net D-Link DES SNMPv2</name>
          <description>Template D-Link DES version: 0.10
 MIBs used:
 DLINK-AGENT-MIB
@@ -341,7 +341,7 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template D-Link DES SNMPv2:vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net D-Link DES SNMPv2:vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>#{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
@@ -385,7 +385,7 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template D-Link DES SNMPv2</host>
+                              <host>Template Net D-Link DES SNMPv2</host>
                               <key>vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -473,9 +473,9 @@ The shelf current temperature.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
+                     <expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
+                     <recovery_expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                      <name>#{#SNMPVALUE}: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -489,16 +489,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>#{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
-                           <expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
-                           <recovery_expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                           <expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                           <recovery_expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                     <expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                     <recovery_expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                      <name>#{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -513,9 +513,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+                     <expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
+                     <recovery_expression>{Template Net D-Link DES SNMPv2:sensor.temp.value[swTemperatureCurrent.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
                      <name>#{#SNMPVALUE}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -629,7 +629,7 @@ disconnect : The power unit is not connected.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template D-Link DES SNMPv2:sensor.psu.status[swPowerStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Net D-Link DES SNMPv2:sensor.psu.status[swPowerStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>#{#SNMPVALUE}: Статус блока питания: авария</name>
@@ -742,7 +742,7 @@ speed-high  : Fan spin using the highest speed.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template D-Link DES SNMPv2:sensor.fan.status[swFanStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Net D-Link DES SNMPv2:sensor.fan.status[swFanStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>#{#SNMPVALUE}: Статус вентилятора: сбой</name>
@@ -805,13 +805,13 @@ speed-high  : Fan spin using the highest speed.
          </macros>
          <templates>
             <template>
-               <name>Template SNMP Interfaces SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP EtherLike-MIB SNMPv2</name>
+               <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP Generic SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
          </templates>
          <screens/>
@@ -844,7 +844,7 @@ speed-high  : Fan spin using the highest speed.
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template D-Link DES SNMPv2</host>
+                  <host>Template Net D-Link DES SNMPv2</host>
                   <key>system.cpu.util[agentCPUutilizationIn1min.0]</key>
                </item>
             </graph_item>
@@ -853,7 +853,7 @@ speed-high  : Fan spin using the highest speed.
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template D-Link DES SNMPv2:system.cpu.util[agentCPUutilizationIn1min.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net D-Link DES SNMPv2:system.cpu.util[agentCPUutilizationIn1min.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Высокая загрузка процессора</name>
@@ -870,7 +870,7 @@ speed-high  : Fan spin using the highest speed.
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template D-Link DES SNMPv2:system.hw.serialnumber.diff()}=1 and {Template D-Link DES SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
+         <expression>{Template Net D-Link DES SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Net D-Link DES SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Возможно замена устройства (получен новый серийный номер)</name>
@@ -887,7 +887,7 @@ speed-high  : Fan spin using the highest speed.
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template D-Link DES SNMPv2:system.hw.firmware.diff()}=1 and {Template D-Link DES SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
+         <expression>{Template Net D-Link DES SNMPv2:system.hw.firmware.diff()}=1 and {Template Net D-Link DES SNMPv2:system.hw.firmware.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Версия прошивки изменилась</name>

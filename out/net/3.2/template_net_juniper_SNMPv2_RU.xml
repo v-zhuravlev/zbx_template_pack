@@ -9,9 +9,9 @@
    </groups>
    <templates>
       <template>
-         <template>Template Juniper SNMPv2</template>
-         <name>Template Juniper SNMPv2</name>
-         <description>Template Juniper version: 0.10
+         <template>Template Net Juniper SNMPv2</template>
+         <name>Template Net Juniper SNMPv2</name>
+         <description>Template Net Juniper version: 0.10
 MIBs used:
 JUNIPER-MIB
 JUNIPER-ALARM-MIB
@@ -333,7 +333,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:system.cpu.util[jnxOperating5MinLoadAvg.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net Juniper SNMPv2:system.cpu.util[jnxOperating5MinLoadAvg.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Высокая загрузка процессора</name>
@@ -350,7 +350,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Juniper SNMPv2:vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
@@ -394,7 +394,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template Juniper SNMPv2</host>
+                              <host>Template Net Juniper SNMPv2</host>
                               <key>system.cpu.util[jnxOperating5MinLoadAvg.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -426,7 +426,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template Juniper SNMPv2</host>
+                              <host>Template Net Juniper SNMPv2</host>
                               <key>vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -525,9 +525,9 @@ The temperature in Celsius (degrees C) of {#SENSOR_INFO}
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
+                     <expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
+                     <recovery_expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                      <name>{#SENSOR_INFO}: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -541,16 +541,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>{#SENSOR_INFO}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
-                           <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
-                           <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                           <expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                           <recovery_expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                     <expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                     <recovery_expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                      <name>{#SENSOR_INFO}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -565,9 +565,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+                     <expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
+                     <recovery_expression>{Template Net Juniper SNMPv2:sensor.temp.value[jnxOperatingTemp.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
                      <name>{#SENSOR_INFO}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -669,7 +669,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:sensor.fan.status[jnxOperatingState.4.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Net Juniper SNMPv2:sensor.fan.status[jnxOperatingState.4.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Статус вентилятора: сбой</name>
@@ -774,7 +774,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Juniper SNMPv2:sensor.psu.status[jnxOperatingState.2.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Net Juniper SNMPv2:sensor.psu.status[jnxOperatingState.2.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Статус блока питания: авария</name>
@@ -847,13 +847,13 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
          </macros>
          <templates>
             <template>
-               <name>Template SNMP Interfaces SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP EtherLike-MIB SNMPv2</name>
+               <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP Generic SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
          </templates>
          <screens/>
@@ -862,7 +862,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
    <graphs/>
    <triggers>
       <trigger>
-         <expression>{Template Juniper SNMPv2:system.status[jnxRedAlarmState.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
+         <expression>{Template Net Juniper SNMPv2:system.status[jnxRedAlarmState.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Статус системы: авария</name>
@@ -879,7 +879,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Juniper SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Juniper SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
+         <expression>{Template Net Juniper SNMPv2:system.hw.serialnumber.diff()}=1 and {Template Net Juniper SNMPv2:system.hw.serialnumber.strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Возможно замена устройства (получен новый серийный номер)</name>

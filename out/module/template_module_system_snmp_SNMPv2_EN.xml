@@ -9,9 +9,9 @@
    </groups>
    <templates>
       <template>
-         <template>Template SNMP Generic SNMPv2</template>
-         <name>Template SNMP Generic SNMPv2</name>
-         <description>Template SNMP Generic version: 0.10
+         <template>Template Module Generic SNMPv2</template>
+         <name>Template Module Generic SNMPv2</name>
+         <description>Template Module Generic version: 0.10
 MIBs used:
 SNMPv2-MIB
 </description>
@@ -379,15 +379,15 @@ networking software.
          </macros>
          <templates>
             <template>
-               <name>Template ICMP Ping</name>
+               <name>Template Module ICMP Ping</name>
             </template>
          </templates>
          <screens/>
       </template>
       <template>
-         <template>Template ICMP Ping</template>
-         <name>Template ICMP Ping</name>
-         <description>Template ICMP Ping version: 0.10</description>
+         <template>Template Module ICMP Ping</template>
+         <name>Template Module ICMP Ping</name>
+         <description>Template Module ICMP Ping version: 0.10</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -541,7 +541,7 @@ networking software.
    <graphs/>
    <triggers>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv2:system.uptime.last()}&lt;10m</expression>
+         <expression>{Template Module Generic SNMPv2:system.uptime.last()}&lt;10m</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>The {HOST.NAME} has just been  restarted</name>
@@ -557,14 +557,14 @@ The device uptime is less then 10 minutes</description>
          <dependencies>
             <dependency>
                <name> No SNMP data collection</name>
-               <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
+               <expression>{Template Module Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template SNMP Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
+         <expression>{Template Module Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name> No SNMP data collection</name>
@@ -580,14 +580,14 @@ SNMP is not available for polling. Please check device connectivity and SNMP set
          <dependencies>
             <dependency>
                <name>Unavailable by ICMP ping</name>
-               <expression>{Template SNMP Generic SNMPv2:icmpping.max(#3)}=0</expression>
+               <expression>{Template Module Generic SNMPv2:icmpping.max(#3)}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template ICMP Ping:icmpping.max(#3)}=0</expression>
+         <expression>{Template Module ICMP Ping:icmpping.max(#3)}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Unavailable by ICMP ping</name>
@@ -604,7 +604,7 @@ Last three attempts returned timeout.  Please check device connectivity.</descri
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
+         <expression>{Template Module ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High ICMP ping loss</name>
@@ -619,14 +619,14 @@ Last three attempts returned timeout.  Please check device connectivity.</descri
          <dependencies>
             <dependency>
                <name>Unavailable by ICMP ping</name>
-               <expression>{Template ICMP Ping:icmpping.max(#3)}=0</expression>
+               <expression>{Template Module ICMP Ping:icmpping.max(#3)}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template ICMP Ping:icmppingsec.avg(5m)}&gt;{$ICMP_RESPONSE_TIME_WARN}</expression>
+         <expression>{Template Module ICMP Ping:icmppingsec.avg(5m)}&gt;{$ICMP_RESPONSE_TIME_WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High response time</name>
@@ -641,12 +641,12 @@ Last three attempts returned timeout.  Please check device connectivity.</descri
          <dependencies>
             <dependency>
                <name>Unavailable by ICMP ping</name>
-               <expression>{Template ICMP Ping:icmpping.max(#3)}=0</expression>
+               <expression>{Template Module ICMP Ping:icmpping.max(#3)}=0</expression>
                <recovery_expression/>
             </dependency>
             <dependency>
                <name>High ICMP ping loss</name>
-               <expression>{Template ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
+               <expression>{Template Module ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN}</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>

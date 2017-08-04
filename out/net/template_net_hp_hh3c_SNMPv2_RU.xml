@@ -9,9 +9,9 @@
    </groups>
    <templates>
       <template>
-         <template>Template HP Comware HH3C SNMPv2</template>
-         <name>Template HP Comware HH3C SNMPv2</name>
-         <description>Template HP Comware (HH3C) version: 0.10
+         <template>Template Net HP Comware HH3C SNMPv2</template>
+         <name>Template Net HP Comware HH3C SNMPv2</name>
+         <description>Template Net HP Comware (HH3C) version: 0.10
 Overview: http://certifiedgeek.weebly.com/blog/hp-comware-snmp-mib-for-cpu-memory-and-temperature
 http://www.h3c.com.hk/products___solutions/technology/system_management/configuration_example/200912/656451_57_0.htm
 
@@ -190,7 +190,7 @@ percent of memory are used.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:system.cpu.util[hh3cEntityExtCpuUsage.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:system.cpu.util[hh3cEntityExtCpuUsage.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#MODULE_NAME}: Высокая загрузка процессора</name>
@@ -207,7 +207,7 @@ percent of memory are used.
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#MODULE_NAME}: Мало свободной памяти ОЗУ</name>
@@ -251,7 +251,7 @@ percent of memory are used.
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template HP Comware HH3C SNMPv2</host>
+                              <host>Template Net HP Comware HH3C SNMPv2</host>
                               <key>system.cpu.util[hh3cEntityExtCpuUsage.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -283,7 +283,7 @@ percent of memory are used.
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template HP Comware HH3C SNMPv2</host>
+                              <host>Template Net HP Comware HH3C SNMPv2</host>
                               <key>vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
@@ -393,9 +393,9 @@ The temperature for the {#SNMPVALUE}.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
+                     <recovery_expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                      <name>{#SNMPVALUE}: Температура выше нормы: &gt;{$TEMP_WARN:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -409,16 +409,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
-                           <expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
-                           <recovery_expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                           <expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                           <recovery_expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                     <recovery_expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                      <name>{#SNMPVALUE}: Температура очень высокая: &gt;{$TEMP_CRIT:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -433,9 +433,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
+                     <recovery_expression>{Template Net HP Comware HH3C SNMPv2:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
                      <name>{#SNMPVALUE}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:""}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -542,7 +542,7 @@ Indicate the error state of this entity object.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"fanError"} or {Template HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"hardwareFaulty"}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"fanError"} or {Template Net HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"hardwareFaulty"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_NAME}: Статус вентилятора: сбой</name>
@@ -653,7 +653,7 @@ Indicate the error state of this entity object.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"psuError"} or {Template HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"rpsError"} or {Template HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"hardwareFaulty"}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"psuError"} or {Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"rpsError"} or {Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"hardwareFaulty"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_NAME}: Статус блока питания: авария</name>
@@ -932,7 +932,7 @@ Indicate the error state of this entity object.
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template HP Comware HH3C SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Net HP Comware HH3C SNMPv2:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_NAME}: Возможно замена устройства (получен новый серийный номер)</name>
@@ -949,7 +949,7 @@ Indicate the error state of this entity object.
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template HP Comware HH3C SNMPv2:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].diff()}=1 and {Template HP Comware HH3C SNMPv2:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].diff()}=1 and {Template Net HP Comware HH3C SNMPv2:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].strlen()}&gt;0</expression>
                      <recovery_mode>2</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_NAME}: Версия прошивки изменилась</name>
@@ -1024,13 +1024,13 @@ Indicate the error state of this entity object.
          </macros>
          <templates>
             <template>
-               <name>Template SNMP Interfaces SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP EtherLike-MIB SNMPv2</name>
+               <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
-               <name>Template SNMP Generic SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
          </templates>
          <screens/>
