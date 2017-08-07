@@ -5,7 +5,6 @@
 	  	<class>Inventory</class>
 	  	<class>Performance</class>
 	  	<class>Fault</class>
-	  	
 	  	<class>Interfaces</class>
 	  	<class>OS</class>
         <class>SNMP Device</class>
@@ -14,6 +13,32 @@
 	  <name>Template OS Windows</name>
 	  <description>Template OS Windows</description>
 	  <sysObjectID>{oid}</sysObjectID>
+	  <documentation>
+		  <issues>
+			<issue>
+			  <description>Doesn't support In/Out 64 bit counters even thoug1h IfxTable is present:
+Currently, Windows gets it’s interface status from MIB-2. Since these 64bit SNMP counters (ifHCInOctets, ifHCOutOctets, etc.) are defined as an extension to IF-MIB, Microsoft has not implemented it.
+https://social.technet.microsoft.com/Forums/windowsserver/en-US/07b62ff0-94f6-40ca-a99d-d129c1b33d70/windows-2008-r2-snmp-64bit-counters-support?forum=winservergen</description>
+			  <version>Win2008, Win2012R2</version>
+			  <device></device>
+		  	</issue>
+		  </issues>
+		  <issues>
+			  <issue>
+				  <description>Doesn't support ifXTable at all</description>
+				  <version>WindowsXP</version>
+				  <device></device>
+			  </issue>
+		  </issues>
+		  <issues>
+			  <issue>
+				  <description>EtherLike MIB is not supported</description>
+				  <version>*</version>
+				  <device>*</device>
+			  </issue>
+		  </issues>
+
+	  </documentation>
 	  <metrics></metrics>
 	  <templates>
 	  	<template>
