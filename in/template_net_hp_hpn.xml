@@ -34,6 +34,53 @@
 		  </issues>
   	  </documentation>
 	  <discoveryRules>
+
+		  <discoveryRule>
+			  <name>Temperature Discovery</name>
+			  <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.2.1.99.1.1.1.1,{#SENSOR_INFO},1.3.6.1.2.1.47.1.1.1.1.2,{#SENSOR_PRECISION},1.3.6.1.2.1.99.1.1.1.3]</snmp_oid>
+			  <key>temp.precision0.discovery</key>
+			  <description>ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter</description>
+			  <filter>
+				  <evaltype>1</evaltype>
+				  <formula/>
+				  <conditions>
+					  <condition>
+						  <macro>{#SNMPVALUE}</macro>
+						  <value>8</value><!-- celsius -->
+						  <operator>8</operator>
+						  <formulaid>B</formulaid>
+					  </condition>
+					  <condition>
+						  <macro>{#SENSOR_PRECISION}</macro>
+						  <value>0</value><!-- limit only to precision 0 (like 10) -->
+						  <operator>8</operator>
+						  <formulaid>B</formulaid>
+					  </condition>
+				  </conditions>
+			  </filter>
+			  <!-- An object using this data type represents the Entity Sensor
+              measurement data type associated with a physical sensor
+              value. The actual data units are determined by examining an
+              object of this type together with the associated
+              EntitySensorDataScale object.An object of this type SHOULD be defined together with
+              objects of type EntitySensorDataScale andEntitySensorPrecision.  Together, associated objects of
+              these three types are used to identify the semantics of an
+              object of type EntitySensorValue.Valid values are:
+                 other(1):        a measure other than those listed below
+                 unknown(2):      unknown measurement, or arbitrary,relative numbers
+                 voltsAC(3):      electric potential
+                 voltsDC(4):      electric potential
+                 amperes(5):      electric current
+                 watts(6):        power
+                 hertz(7):        frequency   celsius(8):
+                 temperature
+                 percentRH(9):    percent relative humidity
+                 rpm(10):         shaft revolutions per minute
+                 cmm(11),:        cubic meters per minute (airflow)
+                 truthvalue(12):  value takes { true(1), false(2) }
+-->
+		  </discoveryRule>
+
 		  <discoveryRule>
 			  <name>Memory Discovery</name>
 			  <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.1]</snmp_oid>
@@ -174,9 +221,25 @@
 		  </vm.memory.pused>
 	    
 	    <!-- fault metrics -->
-	     <sensor.temp.value>
-			<imported>true</imported> <!-- entity sensors-->
-	     </sensor.temp.value>
+		  <sensor.temp.value>
+			  <oid>.1.3.6.1.2.1.99.1.1.1.4.{#SNMPINDEX}</oid>
+			  <snmpObject>entPhySensorValue.{#SNMPINDEX}</snmpObject>
+			  <mib>ENTITY-SENSORS-MIB</mib>
+			  <vendorDescription>The most recent measurement obtained by the agent for this sensor.
+To correctly interpret the value of this object, the associated entPhySensorType,
+entPhySensorScale, and entPhySensorPrecision objects must also be examined.</vendorDescription>
+			  <discoveryRule>Temperature Discovery</discoveryRule>
+			  <alarmObject>{#SENSOR_INFO}</alarmObject>
+		  </sensor.temp.value>
+<!--		  <sensor.temp.status>
+			  <oid>.1.3.6.1.2.1.99.1.1.1.5.{#SNMPINDEX}</oid>
+			  <snmpObject>entPhySensorOperStatus.{#SNMPINDEX}</snmpObject>
+			  <mib>ENTITY-SENSORS-MIB</mib>
+			  <vendorDescription>The operational status of the sensor {#SENSOR_INFO}</vendorDescription>
+			  <discoveryRule>Temperature Discovery</discoveryRule>
+			  <alarmObject>{#SENSOR_INFO}</alarmObject>
+			  <valueMap>ENTITY-SENSORS-MIB::EntitySensorStatus</valueMap>
+		  </sensor.temp.status>-->
 
 		  <sensor.temp.status>
 			  <oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
@@ -271,12 +334,10 @@ A    the function set available in your router
 			   <macro>{$TEMP_CRIT_STATUS}</macro>
 			   <value>2</value> <!-- 2 bad-->
 		   </macro>
+
+
 	   </macros>
-	  <templates>
-		  <template>
-			  <name>Template Module ENTITY-SENSORS-MIB Temperature Sensor precision 0_SNMPvX</name>
-		  </template>
-	  </templates>
+	  <templates/>
   </template>
 
 	<value_maps>
