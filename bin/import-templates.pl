@@ -38,7 +38,14 @@ $zbx->login();
 my $temp_dir = $ARGV[0] or die "Please provide directory with templates as first ARG\n";
 
     opendir my $dir, $temp_dir  or die "Cannot open directory: $temp_dir\n";
-    my @dir_files = grep { /_$lang\.xml$/ && -f "$temp_dir/$_" } readdir($dir);
+    my @dir_files;
+    if ($lang eq 'ALL') {
+       @dir_files = grep { /\.xml$/ && -f "$temp_dir/$_" } readdir($dir);
+    }
+    else {
+       @dir_files = grep { /_$lang\.xml$/ && -f "$temp_dir/$_" } readdir($dir);
+    }
+    
     closedir $dir;
 
     foreach my $file (@dir_files) {
