@@ -20,3 +20,5 @@ Server class:
 - HP iLO different generations  
 - IBM/Lenovo IMM1/IMM2  
 - DELL servers  
+SAN class:  
+- NetApp devices  
