@@ -20,16 +20,36 @@
 	  <sysObjectID>xxx</sysObjectID>
 	  <!--  1.3.6.1.4.1.1588.2.1.1.1
 			1.3.6.1.4.1.1588.2.1.1.71
+
+
 	   -->
 	  <documentation>
-	  	<overview></overview>
+	  	<overview>https://community.brocade.com/dtscp75322/attachments/dtscp75322/fibre/25235/1/FOS_MIB_Reference_v740.pdf</overview>
 	  	<issues>
 	  		<issue>
 	  			<description>no IF-MIB::ifAlias is available</description>
-	  			<version>v6.3.1c and v7.0.0c</version>
-	  			<device>SW5480</device>
+	  			<version>v6.3.1c, v7.0.0c,  v7.4.1c</version>
+	  			<device>all</device>
 	  		</issue>
 	  	</issues>
+          <known_devices>
+              <device>
+                  <name>Brocade 6520</name>
+                  <version>v7.4.1c</version>
+                  <oid>1.3.6.1.4.1.1588.2.1.1.133</oid>
+              </device>
+              <device>
+                  <name>Brocade 300</name>
+                  <version>v7.0.0c</version>
+                  <oid>.1.3.6.1.4.1.1588.2.1.1.71</oid>
+              </device>
+              <device>
+                  <name>Brocade BL 5480</name>
+                  <version>v6.3.1c</version>
+                  <oid>.1.3.6.1.4.1.1588.2.1.1.1</oid>
+              </device>
+          </known_devices>
+
 	  
 	  </documentation>	   
 	  <discoveryRules>
@@ -179,13 +199,15 @@ faulty(4) means the switch is not operational.</vendorDescription>
 		      </vendorDescription>
 	    </sensor.fan.speed>   	    
 
- 	   <system.hw.model>  <!-- discovery means you can't populate inventory fields -->
+<!-- 	   <system.hw.model>  &lt;!&ndash; discovery means you can't populate inventory fields &ndash;&gt;
 	    	  <oid>1.3.6.1.2.1.47.1.1.1.1.2.{#SNMPINDEX}</oid>
 		      <snmpObject>entPhysicalDescr.{#SNMPINDEX}</snmpObject>
 		      <mib>ENTITY-MIB</mib>	 
 		      <discoveryRule>Entity Discovery</discoveryRule>
 		      <alarmObject></alarmObject>
-	    </system.hw.model>
+              <ref>http://www.brocade.com/content/html/en/troubleshooting-guide/FOS_740_TSHOOT/GUID-31361091-F8E4-4AEE-94A3-2CBA48375F7F.html
+https://community.brocade.com/t5/User-Contributed/How-To-Identify-FOS-NOS-based-Switch-Types-and-Product-Names/ta-p/36404</ref>
+	    </system.hw.model>-->
 		<system.hw.serialnumber> <!--  do not use ENTITY MIB, its not always available -->
 	    	  <oid>1.3.6.1.4.1.1588.2.1.1.1.1.10.0</oid>
 		      <snmpObject>swSsn.0</snmpObject>
