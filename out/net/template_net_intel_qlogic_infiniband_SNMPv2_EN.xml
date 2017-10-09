@@ -538,6 +538,29 @@ Please check the power supply unit for errors</description>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#SNMPVALUE}: Power supply is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the power supply unit for errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#SNMPVALUE}: Power supply is in critical state</name>
+                           <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
@@ -658,6 +681,10 @@ Please check the fan unit</description>
             <macro>
                <macro>{$PSU_CRIT_STATUS}</macro>
                <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_WARN_STATUS}</macro>
+               <value>4</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>

@@ -658,6 +658,29 @@ Please check the fan unit</description>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$FAN_WARN_STATUS:"warning"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#ENT_DESCR}: Fan is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the fan unit</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#ENT_DESCR}: Fan is in critical state</name>
+                           <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"bad"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
@@ -771,6 +794,29 @@ Please check the power supply unit for errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS:"warning"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#ENT_DESCR}: Power supply is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the power supply unit for errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#ENT_DESCR}: Power supply is in critical state</name>
+                           <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"bad"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -1013,8 +1059,16 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                <value>2</value>
             </macro>
             <macro>
+               <macro>{$FAN_WARN_STATUS:"warning"}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
                <macro>{$PSU_CRIT_STATUS:"bad"}</macro>
                <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_WARN_STATUS:"warning"}</macro>
+               <value>3</value>
             </macro>
             <macro>
                <macro>{$TEMP_WARN_STATUS}</macro>

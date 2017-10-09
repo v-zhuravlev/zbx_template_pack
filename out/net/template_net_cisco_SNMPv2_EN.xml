@@ -1209,7 +1209,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"critical"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"shutdown"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SENSOR_INFO}: Power supply is in critical state</name>
@@ -1223,6 +1223,29 @@ Please check the power supply unit for errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS:"warning"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS:"notFunctioning"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#SENSOR_INFO}: Power supply is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the power supply unit for errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#SENSOR_INFO}: Power supply is in critical state</name>
+                           <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"critical"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"shutdown"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -1309,7 +1332,7 @@ Please check the power supply unit for errors</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"critical"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"shutdown"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SENSOR_INFO}: Fan is in critical state</name>
@@ -1323,6 +1346,29 @@ Please check the fan unit</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_WARN_STATUS:"warning"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_WARN_STATUS:"notFunctioning"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#SENSOR_INFO}: Fan is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the fan unit</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#SENSOR_INFO}: Fan is in critical state</name>
+                           <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"critical"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"shutdown"}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -1354,20 +1400,36 @@ Please check the fan unit</description>
                <value>4</value>
             </macro>
             <macro>
-               <macro>{$PSU_CRIT_STATUS}</macro>
+               <macro>{$PSU_CRIT_STATUS:"critical"}</macro>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$PSU_OK_STATUS}</macro>
-               <value>1</value>
+               <macro>{$PSU_CRIT_STATUS:"shutdown"}</macro>
+               <value>4</value>
             </macro>
             <macro>
-               <macro>{$FAN_CRIT_STATUS}</macro>
+               <macro>{$PSU_WARN_STATUS:"warning"}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_WARN_STATUS:"notFunctioning"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_CRIT_STATUS:"critical"}</macro>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$FAN_OK_STATUS}</macro>
-               <value>1</value>
+               <macro>{$FAN_CRIT_STATUS:"shutdown"}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS:"warning"}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS:"notFunctioning"}</macro>
+               <value>6</value>
             </macro>
          </macros>
          <templates/>

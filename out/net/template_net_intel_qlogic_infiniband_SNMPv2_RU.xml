@@ -538,6 +538,29 @@ Actual status of the power supply:
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#SNMPVALUE}: Статус блока питания: предупреждение</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте блок питания</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#SNMPVALUE}: Статус блока питания: авария</name>
+                           <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
@@ -658,6 +681,10 @@ The operational status of the fan unit.</description>
             <macro>
                <macro>{$PSU_CRIT_STATUS}</macro>
                <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_WARN_STATUS}</macro>
+               <value>4</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>
