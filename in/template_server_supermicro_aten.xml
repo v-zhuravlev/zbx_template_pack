@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://www.example.org/zbx_template_new/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/zbx_template_new/ ../../src/main/resources/templates/metrics.xsd">
+  <template>
+  	  <classes>
+  	  	<class>Fault</class>
+	  	<class>Server</class>
+        <class>SNMP Device</class>
+       	<class>SNMPv2</class>
+  	  </classes>
+	  <name>Template Server Supermicro Aten</name>
+	  <!-- https://www.supermicro.com/solutions/IPMI.cfm -->
+	  <description>Template Server Supermicro Aten</description>
+	  <sysObjectID>1.3.6.1.4.1.8072.3.2.10</sysObjectID>
+      <documentation>
+          <overview>for BMC ATEN IPMI controllers of Supermicro servers
+https://www.supermicro.com/solutions/IPMI.cfm</overview>
+          <known_devices>
+              <device>
+                  <name>Supermicro X10DRI</name>
+                  <oid>1.3.6.1.4.1.8072.3.2.10</oid>
+              </device>
+          </known_devices>
+          <issues>
+          </issues>
+      </documentation>
+	  <discoveryRules>
+	  	<discoveryRule>
+			    <name>Temperature Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.3.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.21317.1.3.1.13]</snmp_oid>
+                <key>tempDescr.discovery</key>
+                <description>Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected temp sensors (Value = 0)</description>
+                <filter>
+                    <evaltype>1</evaltype>
+                    <formula/>
+                    <conditions>
+                        <condition>
+                            <macro>{#SNMPVALUE}</macro>
+                            <value>[1-9]+</value>
+                            <operator>8</operator>
+                            <formulaid>B</formulaid>
+                        </condition>
+                        <condition>
+                            <macro>{#SENSOR_DESCR}</macro>
+                            <value>.*Temp.*</value>
+                            <operator>8</operator>
+                            <formulaid>A</formulaid>
+                        </condition>
+                    </conditions>
+                </filter>
+		</discoveryRule>
+		
+
+
+
+        <discoveryRule>
+            <name>FAN Discovery</name>
+            <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.3.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.21317.1.3.1.13]</snmp_oid>
+            <key>fan.discovery</key>
+            <description>Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected FAN sensors (Value = 0)</description>
+            <filter>
+                <evaltype>1</evaltype>
+                <formula/>
+                <conditions>
+                    <condition>
+                        <macro>{#SNMPVALUE}</macro>
+                        <value>[1-9]+</value>
+                        <operator>8</operator>
+                        <formulaid>B</formulaid>
+                    </condition>
+                    <condition>
+                        <macro>{#SENSOR_DESCR}</macro>
+                        <value>FAN.*</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                    </condition>
+                </conditions>
+            </filter>
+        </discoveryRule>
+      </discoveryRules>
+
+	  
+	  <metrics>
+	  	<sensor.temp.value>
+	    	  <oid>1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}</oid>
+		      <snmpObject>sensorReading.{#SNMPINDEX}</snmpObject>
+		      <mib>ATEN-IPMI-MIB</mib>
+		      <discoveryRule>Temperature Discovery</discoveryRule>
+		      <alarmObject>{#SENSOR_DESCR}</alarmObject>
+            <vendorDescription>A textual string containing information about the interface.
+This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.</vendorDescription>
+	    </sensor.temp.value>
+
+        <sensor.fan.speed.percentage>
+          <oid>1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}</oid>
+          <snmpObject>sensorReading.{#SNMPINDEX}</snmpObject>
+          <mib>ATEN-IPMI-MIB</mib>
+          <discoveryRule>FAN Discovery</discoveryRule>
+          <alarmObject>{#SENSOR_DESCR}</alarmObject>
+            <vendorDescription>A textual string containing information about the interface.
+This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.</vendorDescription>
+        </sensor.fan.speed.percentage>
+
+	   </metrics>
+
+  </template>
+</root>
