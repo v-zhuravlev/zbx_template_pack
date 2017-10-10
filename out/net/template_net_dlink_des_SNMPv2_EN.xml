@@ -735,7 +735,7 @@ speed-high  : Fan spin using the highest speed.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net D-Link DES_DGS Switch SNMPv2:sensor.fan.status[swFanStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Net D-Link DES_DGS Switch SNMPv2:sensor.fan.status[swFanStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>#{#SNMPVALUE}: Fan is in critical state</name>

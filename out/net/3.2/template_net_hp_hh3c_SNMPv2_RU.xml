@@ -546,7 +546,7 @@ fanError(41) means that the fan stops working.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"fanError"} or {Template Net HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"hardwareFaulty"}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"fanError"},eq)}=1 or {Template Net HP Comware HH3C SNMPv2:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"hardwareFaulty"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_NAME}: Статус вентилятора: сбой</name>

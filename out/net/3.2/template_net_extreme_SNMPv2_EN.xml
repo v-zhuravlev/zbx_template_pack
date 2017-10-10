@@ -850,7 +850,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Extreme EXOS SNMPv2:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Net Extreme EXOS SNMPv2:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Fan {#SNMPVALUE}: Fan is in critical state</name>
@@ -891,14 +891,6 @@ Please check the fan unit</description>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>
                <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$PSU_OK_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_OK_STATUS}</macro>
-               <value>1</value>
             </macro>
             <macro>
                <macro>{$CPU_UTIL_MAX}</macro>

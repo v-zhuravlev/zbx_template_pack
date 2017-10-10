@@ -649,7 +649,7 @@ The operational status of the fan unit.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.fan.status[icsChassisFanOperStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS}</expression>
+                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.fan.status[icsChassisFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Fan is in critical state</name>
@@ -690,14 +690,6 @@ Please check the fan unit</description>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>
                <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$PSU_OK_STATUS}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_OK_STATUS}</macro>
-               <value>1</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT}</macro>

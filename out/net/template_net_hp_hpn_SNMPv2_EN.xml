@@ -642,7 +642,7 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"bad"}</expression>
+                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"bad"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_DESCR}: Fan is in critical state</name>
@@ -659,7 +659,7 @@ Please check the fan unit</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$FAN_WARN_STATUS:"warning"}</expression>
+                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_DESCR}: Fan is in warning state</name>
@@ -675,7 +675,7 @@ Please check the fan unit</description>
                      <dependencies>
                         <dependency>
                            <name>{#ENT_DESCR}: Fan is in critical state</name>
-                           <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$FAN_CRIT_STATUS:"bad"}</expression>
+                           <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"bad"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
