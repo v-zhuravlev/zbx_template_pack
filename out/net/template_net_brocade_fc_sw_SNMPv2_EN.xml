@@ -545,7 +545,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Brocade FC SNMPv2:sensor.psu.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Net Brocade FC SNMPv2:sensor.psu.status[swSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SENSOR_INFO}: Power supply is in critical state</name>
@@ -578,7 +578,7 @@ Please check the power supply unit for errors</description>
                      <dependencies>
                         <dependency>
                            <name>{#SENSOR_INFO}: Power supply is in critical state</name>
-                           <expression>{Template Net Brocade FC SNMPv2:sensor.psu.status[swSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                           <expression>{Template Net Brocade FC SNMPv2:sensor.psu.status[swSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>

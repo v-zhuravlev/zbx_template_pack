@@ -522,7 +522,7 @@ Actual status of the power supply:
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Power supply is in critical state</name>
@@ -539,7 +539,7 @@ Please check the power supply unit for errors</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS}</expression>
+                     <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPVALUE}: Power supply is in warning state</name>
@@ -555,7 +555,7 @@ Please check the power supply unit for errors</description>
                      <dependencies>
                         <dependency>
                            <name>{#SNMPVALUE}: Power supply is in critical state</name>
-                           <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                           <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.psu.status[icsChassisPowerSupplyEntry.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>

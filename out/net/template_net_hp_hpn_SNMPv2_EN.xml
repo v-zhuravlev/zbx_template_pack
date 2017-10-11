@@ -780,7 +780,7 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"bad"}</expression>
+                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"bad"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_DESCR}: Power supply is in critical state</name>
@@ -797,7 +797,7 @@ Please check the power supply unit for errors</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS:"warning"}</expression>
+                     <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_DESCR}: Power supply is in warning state</name>
@@ -813,7 +813,7 @@ Please check the power supply unit for errors</description>
                      <dependencies>
                         <dependency>
                            <name>{#ENT_DESCR}: Power supply is in critical state</name>
-                           <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"bad"}</expression>
+                           <expression>{Template Net HP Enterprise Switch SNMPv2:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"bad"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>

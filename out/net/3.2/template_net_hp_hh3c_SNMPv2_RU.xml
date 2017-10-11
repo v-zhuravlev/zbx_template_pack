@@ -658,7 +658,7 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"psuError"} or {Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"rpsError"} or {Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"hardwareFaulty"}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"psuError"},eq)}=1 or {Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"rpsError"},eq)}=1 or {Template Net HP Comware HH3C SNMPv2:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"hardwareFaulty"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#ENT_NAME}: Статус блока питания: авария</name>

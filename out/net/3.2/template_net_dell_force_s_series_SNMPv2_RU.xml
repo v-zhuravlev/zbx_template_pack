@@ -350,7 +350,7 @@ The status of the power supply {#SNMPVALUE}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Dell Force S-Series SNMPv2:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>PSU {#SNMPVALUE}: Статус блока питания: авария</name>
@@ -383,7 +383,7 @@ The status of the power supply {#SNMPVALUE}</description>
                      <dependencies>
                         <dependency>
                            <name>PSU {#SNMPVALUE}: Статус блока питания: авария</name>
-                           <expression>{Template Net Dell Force S-Series SNMPv2:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS}</expression>
+                           <expression>{Template Net Dell Force S-Series SNMPv2:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
