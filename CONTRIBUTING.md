@@ -7,6 +7,7 @@ or (tcpdump/wireshark .pcap dump of this snmpwalk)
 - Any links to the official documentation would also be nice.
 
 Devices wanted list:  
+
 Network class:  
 -	Alcatel-Lucent (not TimOS) devices  
 - Dell switches  
@@ -16,9 +17,10 @@ Network class:
 - Intel/Qlogic Infiniband  
 -	ZTE Switches  
 -	F5 BIG-IP load balancers  
+- Arista FC  
 Server class:  
 - HP iLO different generations  
 - IBM/Lenovo IMM1/IMM2  
-- DELL servers  
+- ~~DELL servers~~  
 SAN class:  
 - NetApp devices  
