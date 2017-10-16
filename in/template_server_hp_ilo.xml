@@ -4,7 +4,6 @@
   	  <classes>
   	  	<class>Fault</class>
   	  	<class>Inventory</class>
-  	  	
 	  	<class>Server</class>
         <class>SNMP Device</class>
 	  	<class>SNMPv2</class>
@@ -12,6 +11,15 @@
 	  <name>Template Server HP iLO</name>
 	  <description>Template Server HP iLO</description>
 	  <sysObjectID>1.3.6.1.4.1.232.9.4.10</sysObjectID>
+      <documentation>
+          <overview>for HP iLO adapters that support SNMP get. Or via operating system, using SNMP HP subagent</overview>
+          <known_devices>
+              <device>
+                  <name>iLo4, HP Proliant G9</name>
+                  <oid>1.3.6.1.4.1.232.9.4.10</oid>
+              </device>
+          </known_devices>
+      </documentation>
 	  <discoveryRules>
 	  	<discoveryRule>
 			<name>Temperature Discovery</name>
@@ -146,6 +154,21 @@
                   </conditions>
             </filter>
 		</discoveryRule>
+
+          <discoveryRule>
+              <name>PSU Discovery</name>
+              <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.9.3.1.5,{#CHASSIS_NUM},1.3.6.1.4.1.232.6.2.9.3.1.1,{#BAY_NUM},1.3.6.1.4.1.232.6.2.9.3.1.2]</snmp_oid>
+              <key>psu.discovery</key>
+              <description>CPQHLTH-MIB::cpqHeFltTolPowerSupplyStatus</description>
+          </discoveryRule>
+
+          <discoveryRule>
+              <name>FAN Discovery</name>
+              <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.7.1.9]</snmp_oid>
+              <key>fan.discovery</key>
+              <description>CPQHLTH-MIB::cpqHeFltTolFanCondition</description>
+          </discoveryRule>
+
 		<discoveryRule>
 			<name>Array Controller Discovery</name>
             <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.3.2.2.1.1.1,{#CNTLR_SLOT},1.3.6.1.4.1.232.3.2.2.1.1.5,{#CNTLR_LOCATION},1.3.6.1.4.1.232.3.2.2.1.1.20]</snmp_oid>
@@ -172,9 +195,9 @@
 		      <updateMultiplier>2</updateMultiplier>
 	    </sensor.temp.value>
 	  	<sensor.temp.value>
-	  	      <vendorDocumentation>Associated discovery limited to only single Ambient sensor on purpose</vendorDocumentation>
+	  	      <vendorDocumentation>Associated discovery limited to only single Ambient sensor on purpose.</vendorDocumentation>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}</snmpObject>
+		      <snmpObject>cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery Ambient</discoveryRule>
 		      <alarmObject>Ambient</alarmObject>
@@ -182,7 +205,7 @@
 	    </sensor.temp.value>
 	    <sensor.temp.value>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}</snmpObject>
+		      <snmpObject>cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery CPU</discoveryRule>
 		      <alarmObject>CPU-{#SNMPINDEX}</alarmObject>
@@ -190,7 +213,7 @@
 	    </sensor.temp.value>
 	    <sensor.temp.value>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}</snmpObject>
+		      <snmpObject>cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery Memory</discoveryRule>
 		      <alarmObject>Memory-{#SNMPINDEX}</alarmObject>
@@ -199,7 +222,7 @@
 	    </sensor.temp.value>
    	    <sensor.temp.value>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}</snmpObject>
+		      <snmpObject>cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery PSU</discoveryRule>
 		      <alarmObject>PSU-{#SNMPINDEX}</alarmObject>
@@ -208,7 +231,7 @@
 	    </sensor.temp.value>
      	 <sensor.temp.value>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCelsius.System-{#SNMPINDEX}</snmpObject>
+		      <snmpObject>cpqHeTemperatureCelsius.System.{#SNMPINDEX}</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery System</discoveryRule>
 		      <alarmObject>System-{#SNMPINDEX}</alarmObject>
@@ -217,7 +240,7 @@
 	    </sensor.temp.value>
      	<sensor.temp.value>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"</snmpObject>
+		      <snmpObject>cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery I/O</discoveryRule>
 		      <alarmObject>I/O-{#SNMPINDEX}</alarmObject>
@@ -227,7 +250,7 @@
 	    <!-- by element status 	    
 	    <sensor.status>
 	    	  <oid>1.3.6.1.4.1.232.6.2.6.8.1.6.{#SNMPINDEX}</oid>
-		      <snmpObject>cpqHeTemperatureCondition..{#SNMPINDEX}</snmpObject>
+		      <snmpObject>cpqHeTemperatureCondition.{#SNMPINDEX}</snmpObject>
 		      <mib>CPQHLTH-MIB</mib>
 		      <discoveryRule>Temperature Discovery</discoveryRule>
 		      <vendorDescription>The Temperature sensor condition.
@@ -273,6 +296,35 @@ failed(4)  The temperature sensor detects a condition that could  permanently da
 	      <vendorDescription>The overall condition. This object represents the overall status of the server information represented by this MIB.</vendorDescription>
 	      <valueMap>CPQSINFO-MIB::status</valueMap>
 	    </system.status>
+
+      <sensor.psu.status>
+          <oid>1.3.6.1.4.1.232.6.2.9.3.1.4.{#SNMPINDEX}</oid>
+          <snmpObject>cpqHeFltTolPowerSupplyCondition.{#SNMPINDEX}</snmpObject>
+          <mib>CPQHLTH-MIB</mib>
+          <discoveryRule>PSU Discovery</discoveryRule>
+          <vendorDescription>The condition of the power supply. This value will be one of the following:
+other(1)  The status could not be determined or not present.
+ok(2)  The power supply is operating normally.
+degraded(3)  A temperature sensor, fan or other power supply component is  outside of normal operating range.
+failed(4)  A power supply component detects a condition that could  permanently damage the system.</vendorDescription>
+          <valueMap>CPQSINFO-MIB::status</valueMap>
+          <alarmObject>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}</alarmObject>
+      </sensor.psu.status>
+
+      <sensor.fan.status>
+          <oid>1.3.6.1.4.1.232.6.2.6.7.1.9.{#SNMPINDEX}</oid>
+          <snmpObject>cpqHeFltTolFanCondition.{#SNMPINDEX}</snmpObject>
+          <mib>CPQHLTH-MIB</mib>
+          <discoveryRule>FAN Discovery</discoveryRule>
+          <vendorDescription>The condition of the fan.
+This value will be one of the following:
+other(1)  Fan status detection is not supported by this system or driver.
+ok(2)  The fan is operating properly.
+degraded(2)  A redundant fan is not operating properly.
+failed(4)  A non-redundant fan is not operating properly.</vendorDescription>
+          <valueMap>CPQSINFO-MIB::status</valueMap>
+          <alarmObject>Fan {#SNMPINDEX}</alarmObject>
+      </sensor.fan.status>
 	      
 
 	    <system.hw.diskarray.status>
@@ -312,6 +364,19 @@ predictiveFailure(4)  Indicates that the drive has a predictive failure error an
 	      <alarmObject>{#DISK_LOCATION}</alarmObject>
 	      <valueMap>CPQIDA-MIB::cpqDaPhyDrvStatus</valueMap>
 	    </system.hw.physicaldisk.status>
+
+        <system.hw.physicaldisk.smart_status>
+          <oid>1.3.6.1.4.1.232.3.2.5.1.1.57.{#SNMPINDEX}</oid>
+          <snmpObject>cpqDaPhyDrvSmartStatus.{#SNMPINDEX}</snmpObject>
+          <mib>CPQIDA-MIB</mib>
+          <discoveryRule>Physical Disk Discovery</discoveryRule>
+          <vendorDescription>Physical Drive S.M.A.R.T Status.The following values are defined:
+other(1)  The agent is unable to determine if the status of S.M.A.R.T  predictive failure monitoring for this drive.
+ok(2)  Indicates the drive is functioning properly.
+replaceDrive(3)  Indicates that the drive has a S.M.A.R.T predictive failure  error and should be replaced.</vendorDescription>
+          <alarmObject>{#DISK_LOCATION}</alarmObject>
+          <valueMap>CPQIDA-MIB::cpqDaPhyDrvSmartStatus</valueMap>
+        </system.hw.physicaldisk.smart_status>
 	    
 	     <system.hw.physicaldisk.serialnumber>
 	      <oid>1.3.6.1.4.1.232.3.2.5.1.1.51.{#SNMPINDEX}</oid>
@@ -321,7 +386,7 @@ predictiveFailure(4)  Indicates that the drive has a predictive failure error an
 	      <vendorDescription>Physical Drive Serial Number.
 This is the serial number assigned to the physical drive.
 This value is based upon the serial number as returned by the SCSI inquiry command
-but may have been modified due to spacelimitations.  This can be used for identification purposes.</vendorDescription>
+but may have been modified due to space limitations.  This can be used for identification purposes.</vendorDescription>
 	      <alarmObject>{#DISK_LOCATION}</alarmObject>
 	    </system.hw.physicaldisk.serialnumber>
 
@@ -352,17 +417,31 @@ but may have been modified due to spacelimitations.  This can be used for identi
                   <macro>{$HEALTH_WARN_STATUS}</macro>
                   <value>3</value>
               </macro>
-              
-			<macro>
+            <macro>
+                <macro>{$PSU_CRIT_STATUS}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$PSU_WARN_STATUS}</macro>
+                <value>3</value>
+            </macro>
+
+            <macro>
+                <macro>{$FAN_CRIT_STATUS}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_WARN_STATUS}</macro>
+                <value>3</value>
+            </macro>
+            <macro>
                   <macro>{$TEMP_CRIT:"Ambient"}</macro>
                   <value>35</value>
               </macro>
-              
               <macro>
                   <macro>{$TEMP_WARN:"Ambient"}</macro>
                   <value>30</value>
               </macro>
-              
               <macro>
                   <macro>{$DISK_ARRAY_CRIT_STATUS}</macro>
                   <value>4</value>
@@ -370,11 +449,6 @@ but may have been modified due to spacelimitations.  This can be used for identi
               <macro>
                   <macro>{$DISK_ARRAY_WARN_STATUS}</macro>
                   <value>3</value>
-              </macro>
-              
-              <macro>
-                  <macro>{$DISK_OK_STATUS}</macro>
-                  <value>2</value>
               </macro>
               <macro>
                   <macro>{$DISK_WARN_STATUS}</macro>
@@ -384,6 +458,10 @@ but may have been modified due to spacelimitations.  This can be used for identi
                   <macro>{$DISK_FAIL_STATUS}</macro>
                   <value>3</value>
               </macro>
+                <macro>
+                    <macro>{$DISK_SMART_FAIL_STATUS}</macro>
+                    <value>3</value>
+                </macro>
             </macros>
   	</template>
   
@@ -1025,25 +1103,45 @@ but may have been modified due to spacelimitations.  This can be used for identi
         </value_map>
         
      	 <value_map>
-            <name>CPQIDA-MIB::cpqDaPhyDrvStatus</name>
-            <mappings>
-                <mapping>
-                    <value>1</value>
-                    <newvalue>other</newvalue>
-                </mapping>
-                <mapping>
-                    <value>2</value>
-                    <newvalue>ok</newvalue>
-                </mapping>
-                <mapping>
-                    <value>3</value>
-                    <newvalue>failed</newvalue>
-                </mapping>
-                <mapping>
-                    <value>4</value>
-                    <newvalue>predictiveFailure</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
+        <name>CPQIDA-MIB::cpqDaPhyDrvStatus</name>
+        <mappings>
+            <mapping>
+                <value>1</value>
+                <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+                <value>2</value>
+                <newvalue>ok</newvalue>
+            </mapping>
+            <mapping>
+                <value>3</value>
+                <newvalue>failed</newvalue>
+            </mapping>
+            <mapping>
+                <value>4</value>
+                <newvalue>predictiveFailure</newvalue>
+            </mapping>
+        </mappings>
+    </value_map>
+
+    <value_map>
+        <name>CPQIDA-MIB::cpqDaPhyDrvSmartStatus</name>
+        <mappings>
+            <mapping>
+                <value>1</value>
+                <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+                <value>2</value>
+                <newvalue>ok</newvalue>
+            </mapping>
+            <mapping>
+                <value>3</value>
+                <newvalue>replaceDrive</newvalue>
+            </mapping>
+        </mappings>
+    </value_map>
+
+
     </value_maps>
   </root>

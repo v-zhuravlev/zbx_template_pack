@@ -12,6 +12,8 @@
          <template>Template Server HP iLO SNMPv2</template>
          <name>Template Server HP iLO SNMPv2</name>
          <description>Template Server HP iLO version: 0.13
+Overview: for HP iLO adapters that support SNMP get. Or via operating system, using SNMP HP subagent
+
 MIBs used:
 CPQHLTH-MIB
 CPQSINFO-MIB
@@ -29,10 +31,16 @@ CPQIDA-MIB</description>
                <name>Status</name>
             </application>
             <application>
+               <name>Power Supply</name>
+            </application>
+            <application>
+               <name>Fans</name>
+            </application>
+            <application>
                <name>Disk Arrays</name>
             </application>
             <application>
-               <name>Disks</name>
+               <name>Physical Disks</name>
             </application>
             <application>
                <name>Inventory</name>
@@ -474,7 +482,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}]</key>
                      <delay>180</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -516,9 +524,9 @@ Temperature readings of testpoint: Ambient</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Ambient"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Ambient"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Ambient"}-3</recovery_expression>
                      <name>Ambient: Температура выше нормы: &gt;{$TEMP_WARN:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -532,16 +540,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>Ambient: Температура очень высокая: &gt;{$TEMP_CRIT:"Ambient"}</name>
-                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
-                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
+                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
                      <name>Ambient: Температура очень высокая: &gt;{$TEMP_CRIT:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -556,9 +564,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Ambient"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+3</recovery_expression>
                      <name>Ambient: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -622,7 +630,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}]</key>
                      <delay>180</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -664,9 +672,9 @@ Temperature readings of testpoint: CPU-{#SNMPINDEX}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-3</recovery_expression>
                      <name>CPU-{#SNMPINDEX}: Температура выше нормы: &gt;{$TEMP_WARN:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -680,16 +688,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>CPU-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"}</name>
-                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
-                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
                      <name>CPU-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -704,9 +712,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+3</recovery_expression>
                      <name>CPU-{#SNMPINDEX}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -770,7 +778,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}]</key>
                      <delay>360</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -812,9 +820,9 @@ Temperature readings of testpoint: Memory-{#SNMPINDEX}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Memory"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Memory"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Memory"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Memory"}-3</recovery_expression>
                      <name>Memory-{#SNMPINDEX}: Температура выше нормы: &gt;{$TEMP_WARN:"Memory"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -828,16 +836,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>Memory-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"Memory"}</name>
-                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Memory"}</expression>
-                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Memory"}-3</recovery_expression>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Memory"}</expression>
+                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Memory"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Memory"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Memory"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Memory"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Memory"}-3</recovery_expression>
                      <name>Memory-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"Memory"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -852,9 +860,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Memory"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Memory"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Memory"}+3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Memory"}+3</recovery_expression>
                      <name>Memory-{#SNMPINDEX}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"Memory"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -918,7 +926,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}]</key>
                      <delay>360</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -960,9 +968,9 @@ Temperature readings of testpoint: PSU-{#SNMPINDEX}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"PSU"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"PSU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"PSU"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"PSU"}-3</recovery_expression>
                      <name>PSU-{#SNMPINDEX}: Температура выше нормы: &gt;{$TEMP_WARN:"PSU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -976,16 +984,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>PSU-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"PSU"}</name>
-                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"PSU"}</expression>
-                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"PSU"}-3</recovery_expression>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"PSU"}</expression>
+                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"PSU"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"PSU"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"PSU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"PSU"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"PSU"}-3</recovery_expression>
                      <name>PSU-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"PSU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1000,9 +1008,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"PSU"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"PSU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"PSU"}+3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"PSU"}+3</recovery_expression>
                      <name>PSU-{#SNMPINDEX}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"PSU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1066,7 +1074,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"]</key>
                      <delay>360</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1108,9 +1116,9 @@ Temperature readings of testpoint: I/O-{#SNMPINDEX}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_WARN:"I/O"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_WARN:"I/O"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_WARN:"I/O"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_WARN:"I/O"}-3</recovery_expression>
                      <name>I/O-{#SNMPINDEX}: Температура выше нормы: &gt;{$TEMP_WARN:"I/O"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1124,16 +1132,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>I/O-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"I/O"}</name>
-                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_CRIT:"I/O"}</expression>
-                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_CRIT:"I/O"}-3</recovery_expression>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_CRIT:"I/O"}</expression>
+                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_CRIT:"I/O"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_CRIT:"I/O"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].avg(5m)}&gt;{$TEMP_CRIT:"I/O"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_CRIT:"I/O"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].max(5m)}&lt;{$TEMP_CRIT:"I/O"}-3</recovery_expression>
                      <name>I/O-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"I/O"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1148,9 +1156,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].avg(5m)}&lt;{$TEMP_CRIT_LOW:"I/O"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].avg(5m)}&lt;{$TEMP_CRIT_LOW:"I/O"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O-{#SNMPINDEX}"].min(5m)}&gt;{$TEMP_CRIT_LOW:"I/O"}+3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius."I/O.{#SNMPINDEX}"].min(5m)}&gt;{$TEMP_CRIT_LOW:"I/O"}+3</recovery_expression>
                      <name>I/O-{#SNMPINDEX}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"I/O"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1214,7 +1222,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}]</key>
                      <delay>360</delay>
                      <history>30</history>
                      <trends>365</trends>
@@ -1256,9 +1264,9 @@ Temperature readings of testpoint: System-{#SNMPINDEX}</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Device"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Device"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Device"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Device"}-3</recovery_expression>
                      <name>System-{#SNMPINDEX}: Температура выше нормы: &gt;{$TEMP_WARN:"Device"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1272,16 +1280,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>System-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"Device"}</name>
-                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
-                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Device"}-3</recovery_expression>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
+                           <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Device"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Device"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Device"}-3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Device"}-3</recovery_expression>
                      <name>System-{#SNMPINDEX}: Температура очень высокая: &gt;{$TEMP_CRIT:"Device"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1296,9 +1304,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Device"}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Device"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Device"}+3</recovery_expression>
+                     <recovery_expression>{Template Server HP iLO SNMPv2:sensor.temp.value[cpqHeTemperatureCelsius.System.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Device"}+3</recovery_expression>
                      <name>System-{#SNMPINDEX}: Температура слишком низкая: &lt;{$TEMP_CRIT_LOW:"Device"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1309,6 +1317,267 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>PSU Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.9.3.1.5,{#CHASSIS_NUM},1.3.6.1.4.1.232.6.2.9.3.1.1,{#BAY_NUM},1.3.6.1.4.1.232.6.2.9.3.1.2]</snmp_oid>
+               <key>psu.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>CPQHLTH-MIB::cpqHeFltTolPowerSupplyStatus</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}: Статус блока питания</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.232.6.2.9.3.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.psu.status[cpqHeFltTolPowerSupplyCondition.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQHLTH-MIB
+The condition of the power supply. This value will be one of the following:
+other(1)  The status could not be determined or not present.
+ok(2)  The power supply is operating normally.
+degraded(3)  A temperature sensor, fan or other power supply component is  outside of normal operating range.
+failed(4)  A power supply component detects a condition that could  permanently damage the system.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Power Supply</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQSINFO-MIB::status</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.psu.status[cpqHeFltTolPowerSupplyCondition.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}: Статус блока питания: авария</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте блок питания</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.psu.status[cpqHeFltTolPowerSupplyCondition.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}: Статус блока питания: предупреждение</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте блок питания</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}: Статус блока питания: авария</name>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.psu.status[cpqHeFltTolPowerSupplyCondition.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>FAN Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.7.1.9]</snmp_oid>
+               <key>fan.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>CPQHLTH-MIB::cpqHeFltTolFanCondition</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Fan {#SNMPINDEX}: Статус вентилятора</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.232.6.2.6.7.1.9.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.fan.status[cpqHeFltTolFanCondition.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQHLTH-MIB
+The condition of the fan.
+This value will be one of the following:
+other(1)  Fan status detection is not supported by this system or driver.
+ok(2)  The fan is operating properly.
+degraded(2)  A redundant fan is not operating properly.
+failed(4)  A non-redundant fan is not operating properly.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Fans</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQSINFO-MIB::status</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.fan.status[cpqHeFltTolFanCondition.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Fan {#SNMPINDEX}: Статус вентилятора: сбой</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте вентилятор</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:sensor.fan.status[cpqHeFltTolFanCondition.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Fan {#SNMPINDEX}: Статус вентилятора: предупреждение</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте вентилятор</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Fan {#SNMPINDEX}: Статус вентилятора: сбой</name>
+                           <expression>{Template Server HP iLO SNMPv2:sensor.fan.status[cpqHeFltTolFanCondition.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -1359,7 +1628,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <history>7</history>
                      <trends>0</trends>
                      <status>0</status>
-                     <value_type>1</value_type>
+                     <value_type>3</value_type>
                      <allowed_hosts/>
                      <units/>
                      <delta>0</delta>
@@ -1552,11 +1821,11 @@ Array Controller Model. The type of controller card.</description>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}]</key>
-                     <delay>300</delay>
+                     <delay>180</delay>
                      <history>30</history>
                      <trends>0</trends>
                      <status>0</status>
-                     <value_type>1</value_type>
+                     <value_type>3</value_type>
                      <allowed_hosts/>
                      <units/>
                      <delta>0</delta>
@@ -1588,11 +1857,61 @@ predictiveFailure(4)  Indicates that the drive has a predictive failure error an
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
-                           <name>Disks</name>
+                           <name>Physical Disks</name>
                         </application>
                      </applications>
                      <valuemap>
                         <name>CPQIDA-MIB::cpqDaPhyDrvStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#DISK_LOCATION}: S.M.A.R.T. статус диска</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.57.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>30</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQIDA-MIB
+Physical Drive S.M.A.R.T Status.The following values are defined:
+other(1)  The agent is unable to determine if the status of S.M.A.R.T  predictive failure monitoring for this drive.
+ok(2)  Indicates the drive is functioning properly.
+replaceDrive(3)  Indicates that the drive has a S.M.A.R.T predictive failure  error and should be replaced.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQIDA-MIB::cpqDaPhyDrvSmartStatus</name>
                      </valuemap>
                      <logtimefmt/>
                      <application_prototypes/>
@@ -1634,11 +1953,11 @@ predictiveFailure(4)  Indicates that the drive has a predictive failure error an
 Physical Drive Serial Number.
 This is the serial number assigned to the physical drive.
 This value is based upon the serial number as returned by the SCSI inquiry command
-but may have been modified due to spacelimitations.  This can be used for identification purposes.</description>
+but may have been modified due to space limitations.  This can be used for identification purposes.</description>
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
-                           <name>Disks</name>
+                           <name>Physical Disks</name>
                         </application>
                      </applications>
                      <valuemap/>
@@ -1648,59 +1967,7 @@ but may have been modified due to spacelimitations.  This can be used for identi
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].str({$DISK_OK_STATUS})}=0 and 
-{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].str("")}=0</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#DISK_LOCATION}: Статус физического диска не норма</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.
-Проверьте диск</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>{#DISK_LOCATION}: Статус физического диска: сбой</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                        <dependency>
-                           <name>{#DISK_LOCATION}: Статус физического диска: предупреждение</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#DISK_LOCATION}: Статус физического диска: предупреждение</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.
-Проверьте диск</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>{#DISK_LOCATION}: Статус физического диска: сбой</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DISK_LOCATION}: Статус физического диска: сбой</name>
@@ -1716,6 +1983,69 @@ but may have been modified due to spacelimitations.  This can be used for identi
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_WARN_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#DISK_LOCATION}: Статус физического диска: предупреждение</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте диск</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#DISK_LOCATION}: Статус физического диска: сбой</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#DISK_LOCATION}: Статус S.M.A.R.T. физического диска: сбой</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Возможно требуется замена диска.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#DISK_LOCATION}: Статус физического диска: сбой</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.serialnumber[cpqDaPhyDrvSerialNum.{#SNMPINDEX}].diff()}=1 and {Template Server HP iLO SNMPv2:system.hw.physicaldisk.serialnumber[cpqDaPhyDrvSerialNum.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#DISK_LOCATION}: Возможно замена устройства (получен новый серийный номер)</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Изменился серийный номер устройства. Подтвердите и закройте.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
@@ -1728,6 +2058,22 @@ but may have been modified due to spacelimitations.  This can be used for identi
             </macro>
             <macro>
                <macro>{$HEALTH_WARN_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_CRIT_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_WARN_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_CRIT_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS}</macro>
                <value>3</value>
             </macro>
             <macro>
@@ -1747,15 +2093,15 @@ but may have been modified due to spacelimitations.  This can be used for identi
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$DISK_OK_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
                <macro>{$DISK_WARN_STATUS}</macro>
                <value>4</value>
             </macro>
             <macro>
                <macro>{$DISK_FAIL_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_SMART_FAIL_STATUS}</macro>
                <value>3</value>
             </macro>
             <macro>
@@ -2121,6 +2467,23 @@ but may have been modified due to spacelimitations.  This can be used for identi
             <mapping>
                <value>4</value>
                <newvalue>predictiveFailure</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CPQIDA-MIB::cpqDaPhyDrvSmartStatus</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>ok</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>replaceDrive</newvalue>
             </mapping>
          </mappings>
       </value_map>

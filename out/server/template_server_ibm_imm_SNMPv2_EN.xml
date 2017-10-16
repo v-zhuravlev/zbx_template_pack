@@ -12,8 +12,20 @@
          <template>Template Server IBM IMM SNMPv2</template>
          <name>Template Server IBM IMM SNMPv2</name>
          <description>Template Server IBM IMM version: 0.13
+Overview: for IMM2 and IMM1 IBM serverX hardware
+
 MIBs used:
-IMM-MIB</description>
+IMM-MIB
+Known Issues:
+description : Some IMMs (IMM1) do not return disks
+version : IMM1
+device : IBM x3250M3description : Some IMMs (IMM1) do not return fan status: fanHealthStatus
+version : IMM1
+device : IBM x3250M3description : IMM1 servers (M2, M3 generations) sysObjectID is NET-SNMP-MIB::netSnmpAgentOIDs.10
+version : IMM1
+device : IMM1 servers (M2,M3 generations)description : IMM1 servers (M2, M3 generations) only Ambient temperature sensor available
+version : IMM1
+device : IMM1 servers (M2,M3 generations)</description>
          <groups>
             <group>
                <name>Templates/Servers Hardware</name>
@@ -24,10 +36,16 @@ IMM-MIB</description>
                <name>Temperature</name>
             </application>
             <application>
+               <name>Power Supply</name>
+            </application>
+            <application>
+               <name>Fans</name>
+            </application>
+            <application>
                <name>Status</name>
             </application>
             <application>
-               <name>Disks</name>
+               <name>Physical Disks</name>
             </application>
             <application>
                <name>Inventory</name>
@@ -354,7 +372,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.1.2.1.3.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}]</key>
                      <delay>180</delay>
                      <history>30d</history>
                      <trends>365d</trends>
@@ -395,9 +413,9 @@ Temperature readings of testpoint: Ambient</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Ambient"}</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Ambient"}-3</recovery_expression>
+                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Ambient"}-3</recovery_expression>
                      <name>Ambient: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -411,16 +429,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>Ambient: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
-                           <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
-                           <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
+                           <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
+                           <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
+                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
                      <name>Ambient: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -435,9 +453,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Ambient"}</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Ambient"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+3</recovery_expression>
+                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+3</recovery_expression>
                      <name>Ambient: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Ambient"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -500,7 +518,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.1.2.1.3.{#SNMPINDEX}</snmp_oid>
-                     <key>sensor.temp.value[tempReading.CPU-{#SNMPINDEX}]</key>
+                     <key>sensor.temp.value[tempReading.CPU.{#SNMPINDEX}]</key>
                      <delay>180</delay>
                      <history>30d</history>
                      <trends>365d</trends>
@@ -541,9 +559,9 @@ Temperature readings of testpoint: CPU</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-3</recovery_expression>
+                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-3</recovery_expression>
                      <name>CPU: Temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -557,16 +575,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>CPU: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
-                           <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
-                           <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
+                           <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                           <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
+                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
                      <name>CPU: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -581,9 +599,9 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"CPU"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU-{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+3</recovery_expression>
+                     <recovery_expression>{Template Server IBM IMM SNMPv2:sensor.temp.value[tempReading.CPU.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+3</recovery_expression>
                      <name>CPU: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -591,6 +609,255 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <status>0</status>
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+               <jmx_endpoint/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>PSU Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#PSU_DESCR},1.3.6.1.4.1.2.3.51.3.1.11.2.1.2]</snmp_oid>
+               <key>psu.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description>IMM-MIB::powerFruName</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>{#PSU_DESCR}: Power supply status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.11.2.1.6.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.psu.status[powerHealthStatus.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14d</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IMM-MIB
+A description of the power module status.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Power Supply</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.psu.status[powerHealthStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#PSU_DESCR}: Power supply is not in normal state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the power supply unit for errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+               <jmx_endpoint/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>FAN Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#FAN_DESCR},1.3.6.1.4.1.2.3.51.3.1.3.2.1.2]</snmp_oid>
+               <key>fan.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description>IMM-MIB::fanDescr</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>{#FAN_DESCR}: Fan status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.3.2.1.10.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.fan.status[fanHealthStatus.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14d</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IMM-MIB
+A description of the fan component status.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Fans</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#FAN_DESCR}: Fan speed, %</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.3.2.1.3.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.fan.speed.percentage[fanSpeed.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>30d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>%</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IMM-MIB
+Fan  speed expressed in percent(%) of maximum RPM.
+An octet string expressed as 'ddd% of maximum' where:d is a decimal digit or blank space for a leading zero.
+If the fan is determined not to be running or the fan speed cannot be determined, the string will indicate 'Offline'.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Fans</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>5</type>
+                           <params>(\d{1,3}) *%( of maximum)?
+\1</params>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server IBM IMM SNMPv2:sensor.fan.status[fanHealthStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#FAN_DESCR}: Fan is not in normal state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the fan unit</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -634,12 +901,12 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>{#SNMPINDEX}: Physical Disk Status</name>
+                     <name>{#SNMPINDEX}: Physical disk status</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.12.2.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}]</key>
-                     <delay>300</delay>
+                     <delay>180</delay>
                      <history>30d</history>
                      <trends>0d</trends>
                      <status>0</status>
@@ -665,7 +932,50 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
-                           <name>Disks</name>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#SNMPINDEX}: Physical disk part number</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.2.3.51.3.1.12.2.1.2.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.part_number[diskFruName.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14d</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IMM-MIB
+disk module FRU name.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
                         </application>
                      </applications>
                      <valuemap/>
@@ -678,8 +988,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].str({$DISK_OK_STATUS})}=0 and 
-{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].str("")}=0</expression>
+                     <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].count(#1,{$DISK_OK_STATUS},ne)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SNMPINDEX}: Physical disk is not in OK state</name>
@@ -688,57 +997,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.
-Please check physical disk for warnings or errors</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>{#SNMPINDEX}: Physical disk failed</name>
-                           <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                        <dependency>
-                           <name>{#SNMPINDEX}: Physical disk is in warning state</name>
-                           <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].last(0)}={$DISK_WARN_STATUS}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#SNMPINDEX}: Physical disk is in warning state</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.
-Please check physical disk for warnings or errors</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>{#SNMPINDEX}: Physical disk failed</name>
-                           <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template Server IBM IMM SNMPv2:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].last(0)}={$DISK_FAIL_STATUS}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#SNMPINDEX}: Physical disk failed</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>4</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.
 Please check physical disk for warnings or errors</description>
                      <type>0</type>
@@ -776,6 +1034,14 @@ Please check physical disk for warnings or errors</description>
             </macro>
             <macro>
                <macro>{$DISK_OK_STATUS}</macro>
+               <value>Normal</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_OK_STATUS}</macro>
+               <value>Normal</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_OK_STATUS}</macro>
                <value>Normal</value>
             </macro>
             <macro>
