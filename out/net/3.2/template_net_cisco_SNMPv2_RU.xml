@@ -1143,7 +1143,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <history>14</history>
                      <trends>0</trends>
                      <status>0</status>
-                     <value_type>1</value_type>
+                     <value_type>3</value_type>
                      <allowed_hosts/>
                      <units/>
                      <delta>0</delta>
@@ -1181,7 +1181,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"critical"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"shutdown"}</expression>
+                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"critical"},eq)}=1 or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"shutdown"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SENSOR_INFO}: Статус блока питания: авария</name>
@@ -1198,7 +1198,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS:"warning"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_WARN_STATUS:"notFunctioning"}</expression>
+                     <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1 or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"notFunctioning"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#SENSOR_INFO}: Статус блока питания: предупреждение</name>
@@ -1214,7 +1214,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <dependencies>
                         <dependency>
                            <name>{#SENSOR_INFO}: Статус блока питания: авария</name>
-                           <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"critical"} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].last(0)}={$PSU_CRIT_STATUS:"shutdown"}</expression>
+                           <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"critical"},eq)}=1 or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"shutdown"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1268,7 +1268,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <history>14</history>
                      <trends>0</trends>
                      <status>0</status>
-                     <value_type>1</value_type>
+                     <value_type>3</value_type>
                      <allowed_hosts/>
                      <units/>
                      <delta>0</delta>
