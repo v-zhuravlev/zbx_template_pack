@@ -1,342 +1,340 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns="http://www.example.org/zbx_template_new/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/zbx_template_new/ ../../src/main/resources/templates/metrics.xsd">
-  <template>
-	  <classes>
-	  	<class>Inventory</class>
-	  	<class>Performance</class>
-	  	<class>Fault</class>
-	  	
-	  	<class>Interfaces</class>
-	  	<class>Interfaces EtherLike Extension</class>
-	  	<class>Network</class>
-        <class>SNMP Device</class>
-	  	
-	  	<class>SNMPv2</class>        
-	  </classes>
-	  <name>Template Net HP Enterprise Switch</name>
-	  <description>Template Net HP Enterprise Switch</description>
-	  <sysObjectID></sysObjectID>
-	  <documentation>
-	  	<overview></overview>
-		<known_devices>
-			  <device>
-				  <name>HP ProCurve J4900B Switch 2626</name>
-				  <version>ProCurve J4900B Switch 2626, revision H.10.31, ROM H.08.02 (/sw/code/build/fish(mkfs))</version>
-				  <oid>1.3.6.1.4.1.11.2.3.7.11.45</oid>
-			  </device>
-			  <device>
-				  <name>HP J9728A 2920-48G Switch</name>
-				  <version>HP J9728A 2920-48G Switch, revision WB.16.03.0003, ROM WB.16.03 (/ws/swbuildm/rel_tacoma_qaoff/code/build/anm(swbuildm_rel_tacoma_qaoff_rel_tacoma)) (Formerly ProCurve)"</version>
-				  <oid>1.3.6.1.4.1.11.2.3.7.11.154</oid>
-			  </device>
-		  </known_devices>
-		  <issues>
-		  </issues>
-  	  </documentation>
-	  <discoveryRules>
+	<template>
+		<classes>
+			<class>Inventory</class>
+			<class>Performance</class>
+			<class>Fault</class>
+			<class>Interfaces</class>
+			<class>Interfaces EtherLike Extension</class>
+			<class>Network</class>
+			<class>SNMP Device</class>
+			<class>SNMPv2</class>
+		</classes>
+		<name>Template Net HP Enterprise Switch</name>
+		<description>Template Net HP Enterprise Switch</description>
+		<sysObjectID></sysObjectID>
+		<documentation>
+			<overview></overview>
+			<known_devices>
+				<device>
+					<name>HP ProCurve J4900B Switch 2626</name>
+					<version>ProCurve J4900B Switch 2626, revision H.10.31, ROM H.08.02 (/sw/code/build/fish(mkfs))</version>
+					<oid>1.3.6.1.4.1.11.2.3.7.11.45</oid>
+				</device>
+				<device>
+					<name>HP J9728A 2920-48G Switch</name>
+					<version>HP J9728A 2920-48G Switch, revision WB.16.03.0003, ROM WB.16.03 (/ws/swbuildm/rel_tacoma_qaoff/code/build/anm(swbuildm_rel_tacoma_qaoff_rel_tacoma)) (Formerly ProCurve)"</version>
+					<oid>1.3.6.1.4.1.11.2.3.7.11.154</oid>
+				</device>
+			</known_devices>
+			<issues>
+			</issues>
+		</documentation>
+		<discoveryRules>
 
-		  <discoveryRule>
-			  <name>Temperature Discovery</name>
-			  <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.99.1.1.1.1,{#SENSOR_INFO},1.3.6.1.2.1.47.1.1.1.1.2,{#SENSOR_PRECISION},1.3.6.1.2.1.99.1.1.1.3]</snmp_oid>
-			  <key>temp.precision0.discovery</key>
-			  <description>ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter</description>
-			  <filter>
-				  <evaltype>1</evaltype>
-				  <formula/>
-				  <conditions>
-					  <condition>
-						  <macro>{#SNMPVALUE}</macro>
-						  <value>8</value><!-- celsius -->
-						  <operator>8</operator>
-						  <formulaid>B</formulaid>
-					  </condition>
-					  <condition>
-						  <macro>{#SENSOR_PRECISION}</macro>
-						  <value>0</value><!-- limit only to precision 0 (like 10) -->
-						  <operator>8</operator>
-						  <formulaid>B</formulaid>
-					  </condition>
-				  </conditions>
-			  </filter>
-			  <!-- An object using this data type represents the Entity Sensor
-              measurement data type associated with a physical sensor
-              value. The actual data units are determined by examining an
-              object of this type together with the associated
-              EntitySensorDataScale object.An object of this type SHOULD be defined together with
-              objects of type EntitySensorDataScale andEntitySensorPrecision.  Together, associated objects of
-              these three types are used to identify the semantics of an
-              object of type EntitySensorValue.Valid values are:
-                 other(1):        a measure other than those listed below
-                 unknown(2):      unknown measurement, or arbitrary,relative numbers
-                 voltsAC(3):      electric potential
-                 voltsDC(4):      electric potential
-                 amperes(5):      electric current
-                 watts(6):        power
-                 hertz(7):        frequency   celsius(8):
-                 temperature
-                 percentRH(9):    percent relative humidity
-                 rpm(10):         shaft revolutions per minute
-                 cmm(11),:        cubic meters per minute (airflow)
-                 truthvalue(12):  value takes { true(1), false(2) }
--->
-		  </discoveryRule>
-
-		  <discoveryRule>
-			  <name>Memory Discovery</name>
-			  <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.1]</snmp_oid>
-			  <key>memory.discovery</key>
-			  <description>Discovery of NETSWITCH-MIB::hpLocalMemTable, A table that contains information on all the local memory for each slot.</description>
-		  </discoveryRule>
-
-
-		  <discoveryRule>
-			  <name>FAN Discovery</name>
-			  <snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.2,{#ENT_DESCR},1.3.6.1.4.1.11.2.14.11.1.2.6.1.7,{#ENT_STATUS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.4]</snmp_oid>
-			  <key>fan.discovery</key>
-			  <description>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.2 - fans and are present</description>
-			  <filter>
-				  <evaltype>1</evaltype>
-				  <formula/>
-				  <conditions>
-					  <condition>
-						  <macro>{#ENT_CLASS}</macro>
-						  <value>.+8.3.2$</value>
-						  <operator>8</operator>
-						  <formulaid>A</formulaid>
-					  </condition>
-					  <!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
-					  <condition>
-						  <macro>{#ENT_STATUS}</macro>
-						  <value>(1|2|3|4)</value>
-						  <operator>8</operator>
-						  <formulaid>A</formulaid>
-					  </condition>
-				  </conditions>
-			  </filter>
-		  </discoveryRule>
-
-		<discoveryRule>
-			<name>PSU Discovery</name>
-			<snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.2,{#ENT_DESCR},1.3.6.1.4.1.11.2.14.11.1.2.6.1.7,{#ENT_STATUS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.4]</snmp_oid>
-			<key>psu.discovery</key>
-			<description>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.1 - power supplies and are present</description>
-			<filter>
-				<evaltype>1</evaltype>
-				<formula/>
-				<conditions>
-					<condition>
-						<macro>{#ENT_CLASS}</macro>
-						<value>.+8.3.1$</value>
-						<operator>8</operator>
-						<formulaid>A</formulaid>
-					</condition>
-					<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
-					<condition>
-						<macro>{#ENT_STATUS}</macro>
-						<value>(1|2|3|4)</value>
-						<operator>8</operator>
-						<formulaid>A</formulaid>
-					</condition>
-				</conditions>
-			</filter>
-	  	</discoveryRule>
-
-		  <discoveryRule>
-			  <name>Temp Status Discovery</name>
-			  <snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.2,{#ENT_DESCR},1.3.6.1.4.1.11.2.14.11.1.2.6.1.7,{#ENT_STATUS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.4]</snmp_oid>
-			  <key>temp.status.discovery</key>
-			  <description>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.3 - over temp status and are present</description>
-			  <filter>
-				  <evaltype>1</evaltype>
-				  <formula/>
-				  <conditions>
-					  <condition>
-						  <macro>{#ENT_CLASS}</macro>
-						  <value>.+8.3.3$</value>
-						  <operator>8</operator>
-						  <formulaid>A</formulaid>
-					  </condition>
-					  <!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
-					  <condition>
-						  <macro>{#ENT_STATUS}</macro>
-						  <value>(1|2|3|4)</value>
-						  <operator>8</operator>
-						  <formulaid>A</formulaid>
-					  </condition>
-				  </conditions>
-			  </filter>
-		  </discoveryRule>
-	  	
-  	   <discoveryRule>
-				<name>Entity Discovery</name>
-                <snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
-                <key>entity.discovery</key>
-                 <filter>
-                     <evaltype>0</evaltype>
-                     <formula/>
-                     <conditions>
+			<discoveryRule>
+				<name>Temperature Discovery</name>
+				<snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.99.1.1.1.1,{#SENSOR_INFO},1.3.6.1.2.1.47.1.1.1.1.2,{#SENSOR_PRECISION},1.3.6.1.2.1.99.1.1.1.3]</snmp_oid>
+				<key>temp.precision0.discovery</key>
+				<description>ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter</description>
+				<filter>
+					<evaltype>1</evaltype>
+					<formula/>
+					<conditions>
 						<condition>
-                             <macro>{#ENT_CLASS}</macro>
-                             <value>3</value> <!-- 3 - chassis  -->
-                             <operator>8</operator>
-                             <formulaid>A</formulaid>
-                         </condition>
-                     </conditions>
-                 </filter>                
-		</discoveryRule>
-  	
+							<macro>{#SNMPVALUE}</macro>
+							<value>8</value><!-- celsius -->
+							<operator>8</operator>
+							<formulaid>B</formulaid>
+						</condition>
+						<condition>
+							<macro>{#SENSOR_PRECISION}</macro>
+							<value>0</value><!-- limit only to precision 0 (like 10) -->
+							<operator>8</operator>
+							<formulaid>B</formulaid>
+						</condition>
+					</conditions>
+				</filter>
+				<!-- An object using this data type represents the Entity Sensor
+                measurement data type associated with a physical sensor
+                value. The actual data units are determined by examining an
+                object of this type together with the associated
+                EntitySensorDataScale object.An object of this type SHOULD be defined together with
+                objects of type EntitySensorDataScale andEntitySensorPrecision.  Together, associated objects of
+                these three types are used to identify the semantics of an
+                object of type EntitySensorValue.Valid values are:
+                   other(1):        a measure other than those listed below
+                   unknown(2):      unknown measurement, or arbitrary,relative numbers
+                   voltsAC(3):      electric potential
+                   voltsDC(4):      electric potential
+                   amperes(5):      electric current
+                   watts(6):        power
+                   hertz(7):        frequency   celsius(8):
+                   temperature
+                   percentRH(9):    percent relative humidity
+                   rpm(10):         shaft revolutions per minute
+                   cmm(11),:        cubic meters per minute (airflow)
+                   truthvalue(12):  value takes { true(1), false(2) }
+  -->
+			</discoveryRule>
 
-	  		  		  	
-	  </discoveryRules>
-	  <metrics>
-		  <system.cpu.util>
-			  <oid>1.3.6.1.4.1.11.2.14.11.5.1.9.6.1.0</oid>
-			  <snmpObject>hpSwitchCpuStat.0</snmpObject>
-			  <mib>STATISTICS-MIB</mib>
-			  <vendorDescription>The CPU utilization in percent(%).</vendorDescription>
-			  <ref>http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c02597344&amp;sp4ts.oid=51079</ref>
-		  </system.cpu.util>
-
-		  <vm.memory.used>
-			  <oid>1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.7.{#SNMPINDEX}</oid>
-			  <snmpObject>hpLocalMemAllocBytes.{#SNMPINDEX}</snmpObject>
-			  <mib>NETSWITCH-MIB</mib>
-			  <vendorDescription>The number of currently allocated bytes.</vendorDescription>
-			  <discoveryRule>Memory Discovery</discoveryRule>
-			  <alarmObject>#{#SNMPVALUE}</alarmObject>
-		  </vm.memory.used>
-		  <vm.memory.free>
-			  <oid>1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.6.{#SNMPINDEX}</oid>
-			  <snmpObject>hpLocalMemFreeBytes.{#SNMPINDEX}</snmpObject>
-			  <mib>NETSWITCH-MIB</mib>
-			  <vendorDescription>The number of available (unallocated) bytes.</vendorDescription>
-			  <discoveryRule>Memory Discovery</discoveryRule>
-			  <alarmObject>#{#SNMPVALUE}</alarmObject>
-		  </vm.memory.free>
-		  <vm.memory.pused>
-			  <snmpObject>vm.memory.pused.{#SNMPINDEX}</snmpObject>
-			  <calculated>true</calculated>
-			  <discoveryRule>Memory Discovery</discoveryRule>
-			  <alarmObject>#{#SNMPVALUE}</alarmObject>
-		  </vm.memory.pused>
-	    
-	    <!-- fault metrics -->
-		  <sensor.temp.value>
-			  <oid>1.3.6.1.2.1.99.1.1.1.4.{#SNMPINDEX}</oid>
-			  <snmpObject>entPhySensorValue.{#SNMPINDEX}</snmpObject>
-			  <mib>ENTITY-SENSORS-MIB</mib>
-			  <vendorDescription>The most recent measurement obtained by the agent for this sensor.
-To correctly interpret the value of this object, the associated entPhySensorType,
-entPhySensorScale, and entPhySensorPrecision objects must also be examined.</vendorDescription>
-			  <discoveryRule>Temperature Discovery</discoveryRule>
-			  <alarmObject>{#SENSOR_INFO}</alarmObject>
-		  </sensor.temp.value>
-<!--		  <sensor.temp.status>
-			  <oid>1.3.6.1.2.1.99.1.1.1.5.{#SNMPINDEX}</oid>
-			  <snmpObject>entPhySensorOperStatus.{#SNMPINDEX}</snmpObject>
-			  <mib>ENTITY-SENSORS-MIB</mib>
-			  <vendorDescription>The operational status of the sensor {#SENSOR_INFO}</vendorDescription>
-			  <discoveryRule>Temperature Discovery</discoveryRule>
-			  <alarmObject>{#SENSOR_INFO}</alarmObject>
-			  <valueMap>ENTITY-SENSORS-MIB::EntitySensorStatus</valueMap>
-		  </sensor.temp.status>-->
-
-		  <sensor.temp.status>
-			  <oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
-			  <snmpObject>hpicfSensorStatus.{#SNMPINDEX}</snmpObject>
-			  <mib>HP-ICF-CHASSIS</mib>
-			  <vendorDescription>Actual status indicated by the sensor: {#ENT_DESCR}</vendorDescription>
-			  <discoveryRule>Temp Status Discovery</discoveryRule>
-			  <alarmObject>{#ENT_DESCR}</alarmObject>
-			  <valueMap>HP-ICF-CHASSIS::hpicfSensorStatus</valueMap>
-		  </sensor.temp.status>
-	    
- 	    <sensor.fan.status>
-	    	  <oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>hpicfSensorStatus.{#SNMPINDEX}</snmpObject>
-		      <mib>HP-ICF-CHASSIS</mib>
-			  <vendorDescription>Actual status indicated by the sensor: {#ENT_DESCR}</vendorDescription>
-		      <discoveryRule>FAN Discovery</discoveryRule>
-		      <alarmObject>{#ENT_DESCR}</alarmObject>
-		      <valueMap>HP-ICF-CHASSIS::hpicfSensorStatus</valueMap>
-	    </sensor.fan.status>
-
-		  <sensor.psu.status>
-	    	  <oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
-		      <snmpObject>hpicfSensorStatus.{#SNMPINDEX}</snmpObject>
-		      <mib>HP-ICF-CHASSIS</mib>
-		      <vendorDescription>Actual status indicated by the sensor: {#ENT_DESCR}</vendorDescription>
-		      <discoveryRule>PSU Discovery</discoveryRule>
-		      <alarmObject>{#ENT_DESCR}</alarmObject>
-			  <valueMap>HP-ICF-CHASSIS::hpicfSensorStatus</valueMap>
-	    </sensor.psu.status>
-	     
-
-		<!-- inventory -->
- 	    <system.hw.model>
-			<oid>1.3.6.1.2.1.47.1.1.1.1.2.{#SNMPINDEX}</oid>
-	        <snmpObject>entPhysicalDescr.{#SNMPINDEX}</snmpObject>
-		  	<mib>ENTITY-MIB</mib>
-		  	<alarmObject>{#ENT_NAME}</alarmObject>
-	      	<discoveryRule>Entity Discovery</discoveryRule>
-	    </system.hw.model>
-	    
-	    <system.hw.serialnumber>
-	    	<oid>1.3.6.1.4.1.11.2.36.1.1.2.9.0</oid>
-	        <snmpObject>hpHttpMgSerialNumber.0</snmpObject>
-		  	<mib>SEMI-MIB</mib>
-	    </system.hw.serialnumber>
-	    
-	    <system.hw.firmware>
-			<oid>1.3.6.1.4.1.11.2.14.11.5.1.1.3.0</oid>
-			<snmpObject>1.3.6.1.4.1.11.2.14.11.5.1.1.3.0</snmpObject>
-			<mib>NETSWITCH-MIB</mib>
-			<vendorDescription>Contains the operating code version number (also known as software or firmware).
-For example, a software version such as A.08.01 is described as follows:
-A    the function set available in your router
-08   the common release number
-01   updates to the current common release</vendorDescription>
-	    </system.hw.firmware>
-
-		  <system.hw.version>
-			  <oid>1.3.6.1.2.1.47.1.1.1.1.8.{#SNMPINDEX}</oid>
-			  <snmpObject>entPhysicalHardwareRev.{#SNMPINDEX}</snmpObject>
-			  <mib>ENTITY-MIB</mib>
-			  <alarmObject>{#ENT_NAME}</alarmObject>
-			  <discoveryRule>Entity Discovery</discoveryRule>
-		  </system.hw.version>
+			<discoveryRule>
+				<name>Memory Discovery</name>
+				<snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.1]</snmp_oid>
+				<key>memory.discovery</key>
+				<description>Discovery of NETSWITCH-MIB::hpLocalMemTable, A table that contains information on all the local memory for each slot.</description>
+			</discoveryRule>
 
 
-	    
-	   </metrics>
-	   <macros>
-            <macro>
-                  <macro>{$FAN_CRIT_STATUS:"bad"}</macro>
-                  <value>2</value>
-            </macro>
-            <macro>
-                  <macro>{$FAN_WARN_STATUS:"warning"}</macro>
-                  <value>3</value>
-            </macro>
-            <macro>
-                  <macro>{$PSU_CRIT_STATUS:"bad"}</macro>
-                  <value>2</value>
-            </macro>
-            <macro>
-                  <macro>{$PSU_WARN_STATUS:"warning"}</macro>
-                  <value>3</value>
-            </macro>
-		   <macro>
-			   <macro>{$TEMP_WARN_STATUS}</macro>
-			   <value>3</value> <!-- 3 - warning-->
-		   </macro>
-		   <macro>
-			   <macro>{$TEMP_CRIT_STATUS}</macro>
-			   <value>2</value> <!-- 2 bad-->
-		   </macro>
-	   </macros>
-	  <templates/>
-  </template>
+			<discoveryRule>
+				<name>FAN Discovery</name>
+				<snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.2,{#ENT_DESCR},1.3.6.1.4.1.11.2.14.11.1.2.6.1.7,{#ENT_STATUS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.4]</snmp_oid>
+				<key>fan.discovery</key>
+				<description>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.2 - fans and are present</description>
+				<filter>
+					<evaltype>1</evaltype>
+					<formula/>
+					<conditions>
+						<condition>
+							<macro>{#ENT_CLASS}</macro>
+							<value>.+8.3.2$</value>
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+						<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
+						<condition>
+							<macro>{#ENT_STATUS}</macro>
+							<value>(1|2|3|4)</value>
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+					</conditions>
+				</filter>
+			</discoveryRule>
+
+			<discoveryRule>
+				<name>PSU Discovery</name>
+				<snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.2,{#ENT_DESCR},1.3.6.1.4.1.11.2.14.11.1.2.6.1.7,{#ENT_STATUS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.4]</snmp_oid>
+				<key>psu.discovery</key>
+				<description>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.1 - power supplies and are present</description>
+				<filter>
+					<evaltype>1</evaltype>
+					<formula/>
+					<conditions>
+						<condition>
+							<macro>{#ENT_CLASS}</macro>
+							<value>.+8.3.1$</value>
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+						<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
+						<condition>
+							<macro>{#ENT_STATUS}</macro>
+							<value>(1|2|3|4)</value>
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+					</conditions>
+				</filter>
+			</discoveryRule>
+
+			<discoveryRule>
+				<name>Temp Status Discovery</name>
+				<snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.2,{#ENT_DESCR},1.3.6.1.4.1.11.2.14.11.1.2.6.1.7,{#ENT_STATUS},1.3.6.1.4.1.11.2.14.11.1.2.6.1.4]</snmp_oid>
+				<key>temp.status.discovery</key>
+				<description>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.3 - over temp status and are present</description>
+				<filter>
+					<evaltype>1</evaltype>
+					<formula/>
+					<conditions>
+						<condition>
+							<macro>{#ENT_CLASS}</macro>
+							<value>.+8.3.3$</value>
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+						<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
+						<condition>
+							<macro>{#ENT_STATUS}</macro>
+							<value>(1|2|3|4)</value>
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+					</conditions>
+				</filter>
+			</discoveryRule>
+
+			<discoveryRule>
+				<name>Entity Discovery</name>
+				<snmp_oid>discovery[{#ENT_CLASS},1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]</snmp_oid>
+				<key>entity.discovery</key>
+				<filter>
+					<evaltype>0</evaltype>
+					<formula/>
+					<conditions>
+						<condition>
+							<macro>{#ENT_CLASS}</macro>
+							<value>3</value> <!-- 3 - chassis  -->
+							<operator>8</operator>
+							<formulaid>A</formulaid>
+						</condition>
+					</conditions>
+				</filter>
+			</discoveryRule>
+
+
+
+		</discoveryRules>
+		<metrics>
+			<system.cpu.util>
+				<oid>1.3.6.1.4.1.11.2.14.11.5.1.9.6.1.0</oid>
+				<snmpObject>hpSwitchCpuStat.0</snmpObject>
+				<mib>STATISTICS-MIB</mib>
+				<vendorDescription>The CPU utilization in percent(%).</vendorDescription>
+				<ref>http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c02597344&amp;sp4ts.oid=51079</ref>
+			</system.cpu.util>
+
+			<vm.memory.used>
+				<oid>1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.7.{#SNMPINDEX}</oid>
+				<snmpObject>hpLocalMemAllocBytes.{#SNMPINDEX}</snmpObject>
+				<mib>NETSWITCH-MIB</mib>
+				<vendorDescription>The number of currently allocated bytes.</vendorDescription>
+				<discoveryRule>Memory Discovery</discoveryRule>
+				<alarmObject>#{#SNMPVALUE}</alarmObject>
+			</vm.memory.used>
+			<vm.memory.free>
+				<oid>1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.6.{#SNMPINDEX}</oid>
+				<snmpObject>hpLocalMemFreeBytes.{#SNMPINDEX}</snmpObject>
+				<mib>NETSWITCH-MIB</mib>
+				<vendorDescription>The number of available (unallocated) bytes.</vendorDescription>
+				<discoveryRule>Memory Discovery</discoveryRule>
+				<alarmObject>#{#SNMPVALUE}</alarmObject>
+			</vm.memory.free>
+			<vm.memory.pused>
+				<snmpObject>vm.memory.pused.{#SNMPINDEX}</snmpObject>
+				<calculated>true</calculated>
+				<discoveryRule>Memory Discovery</discoveryRule>
+				<alarmObject>#{#SNMPVALUE}</alarmObject>
+			</vm.memory.pused>
+
+			<!-- fault metrics -->
+			<sensor.temp.value>
+				<oid>1.3.6.1.2.1.99.1.1.1.4.{#SNMPINDEX}</oid>
+				<snmpObject>entPhySensorValue.{#SNMPINDEX}</snmpObject>
+				<mib>ENTITY-SENSORS-MIB</mib>
+				<vendorDescription>The most recent measurement obtained by the agent for this sensor.
+					To correctly interpret the value of this object, the associated entPhySensorType,
+					entPhySensorScale, and entPhySensorPrecision objects must also be examined.</vendorDescription>
+				<discoveryRule>Temperature Discovery</discoveryRule>
+				<alarmObject>{#SENSOR_INFO}</alarmObject>
+			</sensor.temp.value>
+			<!--		  <sensor.temp.status>
+                          <oid>1.3.6.1.2.1.99.1.1.1.5.{#SNMPINDEX}</oid>
+                          <snmpObject>entPhySensorOperStatus.{#SNMPINDEX}</snmpObject>
+                          <mib>ENTITY-SENSORS-MIB</mib>
+                          <vendorDescription>The operational status of the sensor {#SENSOR_INFO}</vendorDescription>
+                          <discoveryRule>Temperature Discovery</discoveryRule>
+                          <alarmObject>{#SENSOR_INFO}</alarmObject>
+                          <valueMap>ENTITY-SENSORS-MIB::EntitySensorStatus</valueMap>
+                      </sensor.temp.status>-->
+
+			<sensor.temp.status>
+				<oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
+				<snmpObject>hpicfSensorStatus.{#SNMPINDEX}</snmpObject>
+				<mib>HP-ICF-CHASSIS</mib>
+				<vendorDescription>Actual status indicated by the sensor: {#ENT_DESCR}</vendorDescription>
+				<discoveryRule>Temp Status Discovery</discoveryRule>
+				<alarmObject>{#ENT_DESCR}</alarmObject>
+				<valueMap>HP-ICF-CHASSIS::hpicfSensorStatus</valueMap>
+			</sensor.temp.status>
+
+			<sensor.fan.status>
+				<oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
+				<snmpObject>hpicfSensorStatus.{#SNMPINDEX}</snmpObject>
+				<mib>HP-ICF-CHASSIS</mib>
+				<vendorDescription>Actual status indicated by the sensor: {#ENT_DESCR}</vendorDescription>
+				<discoveryRule>FAN Discovery</discoveryRule>
+				<alarmObject>{#ENT_DESCR}</alarmObject>
+				<valueMap>HP-ICF-CHASSIS::hpicfSensorStatus</valueMap>
+			</sensor.fan.status>
+
+			<sensor.psu.status>
+				<oid>1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}</oid>
+				<snmpObject>hpicfSensorStatus.{#SNMPINDEX}</snmpObject>
+				<mib>HP-ICF-CHASSIS</mib>
+				<vendorDescription>Actual status indicated by the sensor: {#ENT_DESCR}</vendorDescription>
+				<discoveryRule>PSU Discovery</discoveryRule>
+				<alarmObject>{#ENT_DESCR}</alarmObject>
+				<valueMap>HP-ICF-CHASSIS::hpicfSensorStatus</valueMap>
+			</sensor.psu.status>
+
+
+			<!-- inventory -->
+			<system.hw.model>
+				<oid>1.3.6.1.2.1.47.1.1.1.1.2.{#SNMPINDEX}</oid>
+				<snmpObject>entPhysicalDescr.{#SNMPINDEX}</snmpObject>
+				<mib>ENTITY-MIB</mib>
+				<alarmObject>{#ENT_NAME}</alarmObject>
+				<discoveryRule>Entity Discovery</discoveryRule>
+			</system.hw.model>
+
+			<system.hw.serialnumber>
+				<oid>1.3.6.1.4.1.11.2.36.1.1.2.9.0</oid>
+				<snmpObject>hpHttpMgSerialNumber.0</snmpObject>
+				<mib>SEMI-MIB</mib>
+			</system.hw.serialnumber>
+
+			<system.hw.firmware>
+				<oid>1.3.6.1.4.1.11.2.14.11.5.1.1.3.0</oid>
+				<snmpObject>1.3.6.1.4.1.11.2.14.11.5.1.1.3.0</snmpObject>
+				<mib>NETSWITCH-MIB</mib>
+				<vendorDescription>Contains the operating code version number (also known as software or firmware).
+					For example, a software version such as A.08.01 is described as follows:
+					A    the function set available in your router
+					08   the common release number
+					01   updates to the current common release</vendorDescription>
+			</system.hw.firmware>
+
+			<system.hw.version>
+				<oid>1.3.6.1.2.1.47.1.1.1.1.8.{#SNMPINDEX}</oid>
+				<snmpObject>entPhysicalHardwareRev.{#SNMPINDEX}</snmpObject>
+				<mib>ENTITY-MIB</mib>
+				<alarmObject>{#ENT_NAME}</alarmObject>
+				<discoveryRule>Entity Discovery</discoveryRule>
+			</system.hw.version>
+
+
+
+		</metrics>
+		<macros>
+			<macro>
+				<macro>{$FAN_CRIT_STATUS:"bad"}</macro>
+				<value>2</value>
+			</macro>
+			<macro>
+				<macro>{$FAN_WARN_STATUS:"warning"}</macro>
+				<value>3</value>
+			</macro>
+			<macro>
+				<macro>{$PSU_CRIT_STATUS:"bad"}</macro>
+				<value>2</value>
+			</macro>
+			<macro>
+				<macro>{$PSU_WARN_STATUS:"warning"}</macro>
+				<value>3</value>
+			</macro>
+			<macro>
+				<macro>{$TEMP_WARN_STATUS}</macro>
+				<value>3</value> <!-- 3 - warning-->
+			</macro>
+			<macro>
+				<macro>{$TEMP_CRIT_STATUS}</macro>
+				<value>2</value> <!-- 2 bad-->
+			</macro>
+		</macros>
+		<templates/>
+	</template>
 
 	<value_maps>
 		<value_map>
@@ -367,6 +365,6 @@ A    the function set available in your router
 					<newvalue>notPresent</newvalue>
 				</mapping>
 			</mappings>
-		</value_map>        
-    </value_maps>  
+		</value_map>
+	</value_maps>
 </root>
