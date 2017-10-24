@@ -22,5 +22,6 @@ Server class:
 - HP iLO different generations  
 - IBM/Lenovo IMM1/IMM2  
 - ~~DELL servers~~  
-SAN class:  
+SAN/NAS class:  
 - NetApp devices  
+- Fujitsu Eternus DX100,DX200  
