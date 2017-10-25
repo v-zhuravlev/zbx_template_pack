@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://www.example.org/zbx_template_new/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/zbx_template_new/ ../../src/main/resources/templates/metrics.xsd">
+    <template>
+        <classes>
+            <class>Fault</class>
+            <class>Inventory</class>
+            <class>Server</class>
+            <class>SNMP Device</class>
+            <class>SNMPv2</class>
+        </classes>
+        <name>Template Server Dell iDRAC</name>
+        <description>Template Server iDRAC</description>
+        <sysObjectID>.1.3.6.1.4.1.674.10892.5</sysObjectID>
+        <documentation>
+            <overview>for Dell servers with iDRAC controllers
+                http://www.dell.com/support/manuals/us/en/19/dell-openmanage-server-administrator-v8.3/snmp_idrac8/idrac-mib?guid=guid-e686536d-bc8e-4e09-8e8b-de8eb052efee
+                Supported systems: http://www.dell.com/support/manuals/us/en/04/dell-openmanage-server-administrator-v8.3/snmp_idrac8/supported-systems?guid=guid-f72b75ba-e686-4e8a-b8c5-ca11c7c21381</overview>
+            <known_devices>
+                <device>
+                    <name>iDRAC7, PowerEdge R620</name>
+                    <oid>.1.3.6.1.4.1.674.10892.5</oid>
+                </device>
+                <device>
+                    <name>iDRAC8, PowerEdge R730xd</name>
+                    <oid>.1.3.6.1.4.1.674.10892.5</oid>
+                </device>
+                <device>
+                    <name>iDRAC8, PowerEdge R720</name>
+                    <oid>.1.3.6.1.4.1.674.10892.5</oid>
+                </device>
+            </known_devices>
+        </documentation>
+        <discoveryRules>
+            <discoveryRule>
+                <name>Temperature CPU Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.700.20.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.674.10892.5.4.700.20.1.8]</snmp_oid>
+                <key>temp.cpu.discovery</key>
+                <description>Scanning table of Temperature Probe Table IDRAC-MIB-SMIv2::temperatureProbeTable</description>
+                <filter>
+                    <evaltype>0</evaltype>
+                    <formula/>
+                    <conditions>
+                        <condition>
+                            <macro>{#SENSOR_LOCALE}</macro>
+                            <value>.*CPU.*</value><!-- cpu -->
+                            <operator>8</operator>
+                            <formulaid>A</formulaid>
+                        </condition>
+                    </conditions>
+                </filter>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>Temperature Ambient Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.700.20.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.674.10892.5.4.700.20.1.8]</snmp_oid>
+                <key>temp.ambient.discovery</key>
+                <description>Scanning table of Temperature Probe Table IDRAC-MIB-SMIv2::temperatureProbeTable</description>
+                <filter>
+                    <evaltype>0</evaltype>
+                    <formula/>
+                    <conditions>
+                        <condition>
+                            <macro>{#SENSOR_LOCALE}</macro>
+                            <value>.*Inlet Temp.*</value><!-- ambient, inlet temp -->
+                            <operator>8</operator>
+                            <formulaid>A</formulaid>
+                        </condition>
+                    </conditions>
+                </filter>
+            </discoveryRule>
+
+
+            <discoveryRule>
+                <name>PSU Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.600.12.1.5,{#PSU_DESCR},1.3.6.1.4.1.674.10892.5.4.600.12.1.8]</snmp_oid>
+                <key>psu.discovery</key>
+                <description>IDRAC-MIB-SMIv2::powerSupplyTable</description>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>FAN Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.700.12.1.5,{#FAN_DESCR},1.3.6.1.4.1.674.10892.5.4.700.12.1.8,{#TYPE},1.3.6.1.4.1.674.10892.5.4.700.12.1.7]</snmp_oid>
+                <key>fan.discovery</key>
+                <description>IDRAC-MIB-SMIv2::coolingDeviceTable</description>
+                <filter>
+                    <evaltype>0</evaltype>
+                    <formula/>
+                    <conditions>
+                        <condition>
+                            <macro>{#TYPE}</macro>
+                            <value>3</value>  <!-- fan -->
+                            <operator>8</operator>
+                            <formulaid>A</formulaid>
+                        </condition>
+                    </conditions>
+                </filter>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>Physical Disk Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.1,{#DISK_NAME},1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.2]</snmp_oid>
+                <key>physicaldisk.discovery</key>
+                <description>IDRAC-MIB-SMIv2::physicalDiskTable</description>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>Array Controller Discovery</name>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.38,{#CNTLR_NAME},1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.79]</snmp_oid>
+                <key>physicaldisk.arr.discovery</key>
+                <description>IDRAC-MIB-SMIv2::controllerTable</description>
+            </discoveryRule>
+
+
+        </discoveryRules>
+        <metrics>
+            <sensor.temp.value>
+                <oid>1.3.6.1.4.1.674.10892.5.4.700.20.1.6.{#SNMPINDEX}</oid>
+                <snmpObject>temperatureProbeReading.CPU.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Temperature CPU Discovery</discoveryRule>
+                <alarmObject>{#SENSOR_LOCALE}</alarmObject>
+                <alarmObjectType>CPU</alarmObjectType>
+                <valueMap>IDRAC-MIB-SMIv2::StatusProbeEnum</valueMap>
+                <vendorDescription>0700.0020.0001.0006 This attribute defines the reading for a temperature probe of type other than temperatureProbeTypeIsDiscrete.  When the value for temperatureProbeType is other than temperatureProbeTypeIsDiscrete,the value returned for this attribute is the temperature that the probeis reading in tenths of degrees Centigrade. When the value for temperatureProbeType is temperatureProbeTypeIsDiscrete, a value is not returned for this attribute.</vendorDescription>
+                <preprocessing>
+                    <step>
+                        <type>multiplier</type>
+                        <params>0.1</params>
+                    </step>
+                </preprocessing>
+            </sensor.temp.value>
+
+            <sensor.temp.status>
+                <oid>1.3.6.1.4.1.674.10892.5.4.700.20.1.5.{#SNMPINDEX}</oid>
+                <snmpObject>temperatureProbeStatus.CPU.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Temperature CPU Discovery</discoveryRule>
+                <alarmObject>{#SENSOR_LOCALE}</alarmObject>
+                <alarmObjectType>CPU</alarmObjectType>
+                <vendorDescription>0700.0020.0001.0005 This attribute defines the probe status of the temperature probe.</vendorDescription>
+                <valueMap>IDRAC-MIB-SMIv2::StatusProbeEnum</valueMap>
+            </sensor.temp.status>
+
+            <sensor.temp.value>
+                <oid>1.3.6.1.4.1.674.10892.5.4.700.20.1.6.{#SNMPINDEX}</oid>
+                <snmpObject>temperatureProbeReading.Ambient.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Temperature Ambient Discovery</discoveryRule>
+                <alarmObject>{#SENSOR_LOCALE}</alarmObject>
+                <alarmObjectType>Ambient</alarmObjectType>
+                <valueMap>IDRAC-MIB-SMIv2::StatusProbeEnum</valueMap>
+                <vendorDescription>0700.0020.0001.0006 This attribute defines the reading for a temperature probe of type other than temperatureProbeTypeIsDiscrete.  When the value for temperatureProbeType is other than temperatureProbeTypeIsDiscrete,the value returned for this attribute is the temperature that the probeis reading in tenths of degrees Centigrade. When the value for temperatureProbeType is temperatureProbeTypeIsDiscrete, a value is not returned for this attribute.</vendorDescription>
+                <preprocessing>
+                    <step>
+                        <type>multiplier</type>
+                        <params>0.1</params>
+                    </step>
+                </preprocessing>
+            </sensor.temp.value>
+
+            <sensor.temp.status>
+                <oid>1.3.6.1.4.1.674.10892.5.4.700.20.1.5.{#SNMPINDEX}</oid>
+                <snmpObject>temperatureProbeStatus.Ambient.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Temperature Ambient Discovery</discoveryRule>
+                <alarmObject>{#SENSOR_LOCALE}</alarmObject>
+                <alarmObjectType>Ambient</alarmObjectType>
+                <vendorDescription>0700.0020.0001.0005 This attribute defines the probe status of the temperature probe.</vendorDescription>
+                <valueMap>IDRAC-MIB-SMIv2::StatusProbeEnum</valueMap>
+            </sensor.temp.status>
+
+
+            <system.status>
+                <oid>1.3.6.1.4.1.674.10892.5.2.1.0</oid>
+                <snmpObject>globalSystemStatus.0</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <vendorDescription>This attribute defines the overall rollup status of all components in the system being monitored by the remote access card. Includes system, storage, IO devices, iDRAC, CPU, memory, etc.</vendorDescription>
+                <valueMap>IDRAC-MIB-SMIv2::ObjectStatusEnum</valueMap>
+            </system.status>
+
+            <sensor.psu.status>
+                <oid>1.3.6.1.4.1.674.10892.5.4.600.12.1.5.{#SNMPINDEX}</oid>
+                <snmpObject>powerSupplyStatus.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>PSU Discovery</discoveryRule>
+                <vendorDescription>0600.0012.0001.0005 This attribute defines the status of the power supply.</vendorDescription>
+                <valueMap>IDRAC-MIB-SMIv2::ObjectStatusEnum</valueMap>
+                <alarmObject>{#PSU_DESCR}</alarmObject>
+            </sensor.psu.status>
+
+            <sensor.fan.status>
+                <oid>1.3.6.1.4.1.674.10892.5.4.700.12.1.5.{#SNMPINDEX}</oid>
+                <snmpObject>coolingDeviceStatus.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>FAN Discovery</discoveryRule>
+                <vendorDescription>0700.0012.0001.0005 This attribute defines the probe status of the cooling device.</vendorDescription>
+                <valueMap>IDRAC-MIB-SMIv2::StatusProbeEnum</valueMap>
+                <alarmObject>{#FAN_DESCR}</alarmObject>
+            </sensor.fan.status>
+
+            <sensor.fan.speed>
+                <oid>1.3.6.1.4.1.674.10892.5.4.700.12.1.6.{#SNMPINDEX}</oid>
+                <snmpObject>coolingDeviceReading.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>FAN Discovery</discoveryRule>
+                <vendorDescription>0700.0012.0001.0006 This attribute defines the reading for a cooling device
+                    of subtype other than coolingDeviceSubTypeIsDiscrete.  When the value
+                    for coolingDeviceSubType is other than coolingDeviceSubTypeIsDiscrete, the
+                    value returned for this attribute is the speed in RPM or the OFF/ON value
+                    of the cooling device.  When the value for coolingDeviceSubType is
+                    coolingDeviceSubTypeIsDiscrete, a value is not returned for this attribute.</vendorDescription>
+                <alarmObject>{#FAN_DESCR}</alarmObject>
+            </sensor.fan.speed>
+
+
+            <system.hw.diskarray.status>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.38.{#SNMPINDEX}</oid>
+                <snmpObject>controllerComponentStatus.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Array Controller Discovery</discoveryRule>
+                <vendorDescription>The status of the controller itself without the propagation of any contained component status.
+                    Possible values:
+                    1: Other
+                    2: Unknown
+                    3: OK
+                    4: Non-critical
+                    5: Critical
+                    6: Non-recoverable
+                </vendorDescription>
+                <alarmObject>{#CNTLR_NAME}</alarmObject>
+                <valueMap>IDRAC-MIB-SMIv2::ObjectStatusEnum</valueMap>
+            </system.hw.diskarray.status>
+
+            <system.hw.diskarray.model>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.2.{#SNMPINDEX}</oid>
+                <snmpObject>controllerName.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Array Controller Discovery</discoveryRule>
+                <vendorDescription>The controller's name as represented in Storage Management.</vendorDescription>
+                <alarmObject>{#CNTLR_NAME}</alarmObject>
+            </system.hw.diskarray.model>
+
+            <system.hw.physicaldisk.status>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.24.{#SNMPINDEX}</oid>
+                <snmpObject>physicalDiskComponentStatus.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Physical Disk Discovery</discoveryRule>
+                <vendorDescription>The status of the physical disk itself without the propagation of any contained component status.
+                    Possible values:
+                    1: Other
+                    2: Unknown
+                    3: OK
+                    4: Non-critical
+                    5: Critical
+                    6: Non-recoverable</vendorDescription>
+                <alarmObject>{#DISK_NAME}</alarmObject>
+                <valueMap>IDRAC-MIB-SMIv2::physicalDiskComponentStatus</valueMap>
+            </system.hw.physicaldisk.status>
+
+            <system.hw.physicaldisk.serialnumber>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.7.{#SNMPINDEX}</oid>
+                <snmpObject>physicalDiskSerialNo.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Physical Disk Discovery</discoveryRule>
+                <vendorDescription>The physical disk's unique identification number from the manufacturer.</vendorDescription>
+                <alarmObject>{#DISK_NAME}</alarmObject>
+            </system.hw.physicaldisk.serialnumber>
+
+            <system.hw.physicaldisk.smart_status>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.31.{#SNMPINDEX}</oid>
+                <snmpObject>physicalDiskSmartAlertIndication.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Physical Disk Discovery</discoveryRule>
+                <vendorDescription>Indicates whether the physical disk has received a predictive failure alert.</vendorDescription>
+                <alarmObject>{#DISK_NAME}</alarmObject>
+                <valueMap>IDRAC-MIB-SMIv2::BooleanType</valueMap>
+            </system.hw.physicaldisk.smart_status>
+
+            <system.hw.physicaldisk.model>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.6.{#SNMPINDEX}</oid>
+                <snmpObject>physicalDiskProductID.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Physical Disk Discovery</discoveryRule>
+                <vendorDescription>The model number of the physical disk.</vendorDescription>
+                <alarmObject>{#DISK_NAME}</alarmObject>
+            </system.hw.physicaldisk.model>
+
+            <system.hw.physicaldisk.part_number>
+                <oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.27.{#SNMPINDEX}</oid>
+                <snmpObject>physicalDiskPartNumber.{#SNMPINDEX}</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <discoveryRule>Physical Disk Discovery</discoveryRule>
+                <vendorDescription>The part number of the disk.</vendorDescription>
+                <alarmObject>{#DISK_NAME}</alarmObject>
+            </system.hw.physicaldisk.part_number>
+
+
+            <!-- inventory -->
+            <system.hw.model>
+                <oid>1.3.6.1.4.1.674.10892.5.1.3.12</oid>
+                <snmpObject>systemModelName</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <vendorDescription>This attribute defines the model name of the system.</vendorDescription>
+            </system.hw.model>
+
+            <system.sw.os>
+                <oid>1.3.6.1.4.1.674.10892.5.1.3.6.0</oid>
+                <snmpObject>systemOSName</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <vendorDescription>This attribute defines the name of the operating system that the hostis running.</vendorDescription>
+            </system.sw.os>
+
+            <system.hw.serialnumber>
+                <vendorDocumentation>Note: Dell Service Tag = Serial Number</vendorDocumentation>
+                <oid>1.3.6.1.4.1.674.10892.5.1.3.2.0</oid>
+                <snmpObject>systemServiceTag</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <vendorDescription>This attribute defines the service tag of the system.</vendorDescription>
+            </system.hw.serialnumber>
+
+            <system.hw.firmware>
+                <oid>1.3.6.1.4.1.674.10892.5.1.1.8.0</oid>
+                <snmpObject>racFirmwareVersion</snmpObject>
+                <mib>IDRAC-MIB-SMIv2</mib>
+                <vendorDescription>This attribute defines the firmware version of a remote access card.</vendorDescription>
+            </system.hw.firmware>
+
+        </metrics>
+
+
+        <macros>
+            <macro>
+                <macro>{$TEMP_WARN:"CPU"}</macro>
+                <value>70</value>
+            </macro>
+            <macro>
+                <macro>{$TEMP_WARN:"Ambient"}</macro>
+                <value>30</value>
+            </macro>
+
+            <macro>
+                <macro>{$TEMP_CRIT:"CPU"}</macro>
+                <value>75</value>
+            </macro>
+            <macro>
+                <macro>{$TEMP_CRIT:"Ambient"}</macro>
+                <value>35</value>
+            </macro>
+
+            <macro>
+                <macro>{$DISK_ARRAY_WARN_STATUS:"nonCritical"}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$DISK_ARRAY_CRIT_STATUS:"critical"}</macro>
+                <value>5</value>
+            </macro>
+            <macro>
+                <macro>{$DISK_ARRAY_FAIL_STATUS:"nonRecoverable"}</macro>
+                <value>6</value>
+            </macro>
+            <macro>
+                <macro>{$DISK_WARN_STATUS:"nonCritical"}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$DISK_FAIL_STATUS:"critical"}</macro>
+                <value>5</value>
+            </macro>
+            <macro>
+                <macro>{$DISK_FAIL_STATUS:"nonRecoverable"}</macro>
+                <value>6</value>
+            </macro>
+            <macro>
+                <macro>{$DISK_SMART_FAIL_STATUS}</macro>
+                <value>1</value>
+            </macro>
+            <macro>
+                <macro>{$HEALTH_DISASTER_STATUS}</macro>
+                <value>6</value>
+            </macro>
+            <macro>
+                <macro>{$HEALTH_CRIT_STATUS}</macro>
+                <value>5</value>
+            </macro>
+            <macro>
+                <macro>{$HEALTH_WARN_STATUS}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$TEMP_WARN_STATUS}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$TEMP_CRIT_STATUS}</macro>
+                <value>5</value>
+            </macro>
+            <macro>
+                <macro>{$TEMP_DISASTER_STATUS}</macro>
+                <value>6</value>
+            </macro>
+
+            <macro>
+                <macro>{$FAN_WARN_STATUS:"nonCriticalUpper"}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_WARN_STATUS:"nonCriticalLower"}</macro>
+                <value>7</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_CRIT_STATUS:"criticalUpper"}</macro>
+                <value>5</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_CRIT_STATUS:"nonRecoverableUpper"}</macro>
+                <value>6</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_CRIT_STATUS:"criticalLower"}</macro>
+                <value>8</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_CRIT_STATUS:"nonRecoverableLower"}</macro>
+                <value>9</value>
+            </macro>
+            <macro>
+                <macro>{$FAN_CRIT_STATUS:"failed"}</macro>
+                <value>10</value>
+            </macro>
+            <macro>
+                <macro>{$PSU_WARN_STATUS:"nonCritical"}</macro>
+                <value>4</value>
+            </macro>
+            <macro>
+                <macro>{$PSU_CRIT_STATUS:"critical"}</macro>
+                <value>5</value>
+            </macro>
+            <macro>
+                <macro>{$PSU_CRIT_STATUS:"nonRecoverable"}</macro>
+                <value>6</value>
+            </macro>
+        </macros>
+    </template>
+
+
+    <value_maps>
+        <value_map>
+            <name>IDRAC-MIB-SMIv2::ObjectStatusEnum</name>
+            <mappings>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>other</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>unknown</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>ok</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>nonCritical</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>critical</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>nonRecoverable</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>IDRAC-MIB-SMIv2::StatusProbeEnum</name>
+            <mappings>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>other</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>unknown</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>ok</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>nonCriticalUpper</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>criticalUpper</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>nonRecoverableUpper</newvalue>
+                </mapping>
+                <mapping>
+                    <value>7</value>
+                    <newvalue>nonCriticalLower</newvalue>
+                </mapping>
+                <mapping>
+                    <value>8</value>
+                    <newvalue>criticalLower</newvalue>
+                </mapping>
+                <mapping>
+                    <value>9</value>
+                    <newvalue>nonRecoverableLower</newvalue>
+                </mapping>
+                <mapping>
+                    <value>10</value>
+                    <newvalue>failed</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>IDRAC-MIB-SMIv2::physicalDiskComponentStatus</name>
+            <mappings>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>other</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>unknown</newvalue>
+                </mapping>
+                <mapping>
+                    <value>3</value>
+                    <newvalue>ok</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>nonCritical</newvalue>
+                </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>critical</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>nonRecoverable</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+
+        <value_map>
+            <name>IDRAC-MIB-SMIv2::BooleanType</name> <!-- raid -->
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>ok</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>failed</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
+
+</root>
