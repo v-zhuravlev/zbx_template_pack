@@ -1644,7 +1644,7 @@ and any associated logical drives,physical drives, and array accelerators.</desc
                      <history>30d</history>
                      <trends>0d</trends>
                      <status>0</status>
-                     <value_type>1</value_type>
+                     <value_type>3</value_type>
                      <allowed_hosts/>
                      <units/>
                      <snmpv3_contextname/>
@@ -1682,47 +1682,7 @@ Array Controller Model. The type of controller card.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: сбой</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>5</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.
-Проверьте устройство</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies/>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_WARN_STATUS}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: предупреждение</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.
-Проверьте устройство</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: авария</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
-                           <recovery_expression/>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_CRIT_STATUS}</expression>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CRIT_STATUS},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: авария</name>
@@ -1735,10 +1695,27 @@ Array Controller Model. The type of controller card.</description>
 Проверьте устройство</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_WARN_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: предупреждение</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте устройство</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: сбой</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].last(0)}={$DISK_ARRAY_DISASTER_STATUS}</expression>
+                           <name>{#CNTLR_LOCATION}: Статус контроллера дискового массива: авария</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.status[cpqDaCntlrCondition.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CRIT_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2409,6 +2386,174 @@ but may have been modified due to space limitations.  This can be used for ident
             <mapping>
                <value>44</value>
                <newvalue>sa-p812</newvalue>
+            </mapping>
+            <mapping>
+               <value>45</value>
+               <newvalue>sw-1210m</newvalue>
+            </mapping>
+            <mapping>
+               <value>46</value>
+               <newvalue>sa-p220i</newvalue>
+            </mapping>
+            <mapping>
+               <value>47</value>
+               <newvalue>sa-p222</newvalue>
+            </mapping>
+            <mapping>
+               <value>48</value>
+               <newvalue>sa-p420</newvalue>
+            </mapping>
+            <mapping>
+               <value>49</value>
+               <newvalue>sa-p420i</newvalue>
+            </mapping>
+            <mapping>
+               <value>50</value>
+               <newvalue>sa-p421</newvalue>
+            </mapping>
+            <mapping>
+               <value>51</value>
+               <newvalue>sa-b320i</newvalue>
+            </mapping>
+            <mapping>
+               <value>52</value>
+               <newvalue>sa-p822</newvalue>
+            </mapping>
+            <mapping>
+               <value>53</value>
+               <newvalue>sa-p721m</newvalue>
+            </mapping>
+            <mapping>
+               <value>54</value>
+               <newvalue>sa-b120i</newvalue>
+            </mapping>
+            <mapping>
+               <value>55</value>
+               <newvalue>hps-1224</newvalue>
+            </mapping>
+            <mapping>
+               <value>56</value>
+               <newvalue>hps-1228</newvalue>
+            </mapping>
+            <mapping>
+               <value>57</value>
+               <newvalue>hps-1228m</newvalue>
+            </mapping>
+            <mapping>
+               <value>58</value>
+               <newvalue>sa-p822se</newvalue>
+            </mapping>
+            <mapping>
+               <value>59</value>
+               <newvalue>hps-1224e</newvalue>
+            </mapping>
+            <mapping>
+               <value>60</value>
+               <newvalue>hps-1228e</newvalue>
+            </mapping>
+            <mapping>
+               <value>61</value>
+               <newvalue>hps-1228em</newvalue>
+            </mapping>
+            <mapping>
+               <value>62</value>
+               <newvalue>sa-p230i</newvalue>
+            </mapping>
+            <mapping>
+               <value>63</value>
+               <newvalue>sa-p430i</newvalue>
+            </mapping>
+            <mapping>
+               <value>64</value>
+               <newvalue>sa-p430</newvalue>
+            </mapping>
+            <mapping>
+               <value>65</value>
+               <newvalue>sa-p431</newvalue>
+            </mapping>
+            <mapping>
+               <value>66</value>
+               <newvalue>sa-p731m</newvalue>
+            </mapping>
+            <mapping>
+               <value>67</value>
+               <newvalue>sa-p830i</newvalue>
+            </mapping>
+            <mapping>
+               <value>68</value>
+               <newvalue>sa-p830</newvalue>
+            </mapping>
+            <mapping>
+               <value>69</value>
+               <newvalue>sa-p831</newvalue>
+            </mapping>
+            <mapping>
+               <value>70</value>
+               <newvalue>sa-p530</newvalue>
+            </mapping>
+            <mapping>
+               <value>71</value>
+               <newvalue>sa-p531</newvalue>
+            </mapping>
+            <mapping>
+               <value>72</value>
+               <newvalue>sa-p244br</newvalue>
+            </mapping>
+            <mapping>
+               <value>73</value>
+               <newvalue>sa-p246br</newvalue>
+            </mapping>
+            <mapping>
+               <value>74</value>
+               <newvalue>sa-p440</newvalue>
+            </mapping>
+            <mapping>
+               <value>75</value>
+               <newvalue>sa-p440ar</newvalue>
+            </mapping>
+            <mapping>
+               <value>76</value>
+               <newvalue>sa-p441</newvalue>
+            </mapping>
+            <mapping>
+               <value>77</value>
+               <newvalue>sa-p741m</newvalue>
+            </mapping>
+            <mapping>
+               <value>78</value>
+               <newvalue>sa-p840</newvalue>
+            </mapping>
+            <mapping>
+               <value>79</value>
+               <newvalue>sa-p841</newvalue>
+            </mapping>
+            <mapping>
+               <value>80</value>
+               <newvalue>sh-h240ar</newvalue>
+            </mapping>
+            <mapping>
+               <value>81</value>
+               <newvalue>sh-h244br</newvalue>
+            </mapping>
+            <mapping>
+               <value>82</value>
+               <newvalue>sh-h240</newvalue>
+            </mapping>
+            <mapping>
+               <value>83</value>
+               <newvalue>sh-h241</newvalue>
+            </mapping>
+            <mapping>
+               <value>84</value>
+               <newvalue>sa-b140i</newvalue>
+            </mapping>
+            <mapping>
+               <value>85</value>
+               <newvalue>sh-generic</newvalue>
+            </mapping>
+            <mapping>
+               <value>88</value>
+               <newvalue>sa-p840ar</newvalue>
             </mapping>
          </mappings>
       </value_map>
