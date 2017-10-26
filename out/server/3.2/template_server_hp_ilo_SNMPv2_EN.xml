@@ -43,6 +43,9 @@ CPQIDA-MIB</description>
                <name>Physical Disks</name>
             </application>
             <application>
+               <name>Virtual Disks</name>
+            </application>
+            <application>
                <name>Inventory</name>
             </application>
          </applications>
@@ -2325,7 +2328,7 @@ solidState(3)  The physical drive media is composed of solid state electronics.<
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#DISK_LOCATION}: Physical disk size</name>
+                     <name>{#DISK_LOCATION}: Disk size</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -2418,6 +2421,34 @@ Please check physical disk for warnings or errors</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_OK_STATUS},ne)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#DISK_LOCATION}: Physical disk is not in OK state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check physical disk for warnings or errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#DISK_LOCATION}: Physical disk failed</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                        <dependency>
+                           <name>{#DISK_LOCATION}: Physical disk is in warning state</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_WARN_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
                      <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDrive"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
@@ -2454,6 +2485,383 @@ Disk probably requires replacement.</description>
 Disk serial number has changed. Ack to close</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>Virtual Disk Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.232.3.2.3.1.1.2,{#DISK_NAME},1.3.6.1.4.1.232.3.2.3.1.1.14]</snmp_oid>
+               <key>virtualdisk.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>CPQIDA-MIB::cpqDaLogDrvTable</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Disk {#SNMPINDEX}({#DISK_NAME}): Status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.3.1.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>Logical Drive Status.
+
+The logical drive can be in one of the following states:
+
+Ok (2)
+Indicates that the logical drive is in normal operation mode.
+
+Failed (3)
+Indicates that more physical drives have failed than the
+fault tolerance mode of the logical drive can handle without
+data loss.
+
+Unconfigured (4)
+Indicates that the logical drive is not configured.
+
+Recovering (5)
+Indicates that the logical drive is using Interim Recovery Mode.
+In Interim Recovery Mode, at least one physical drive has
+failed, but the logical drive's fault tolerance mode lets the
+drive continue to operate with no data loss.
+
+Ready Rebuild (6)
+Indicates that the logical drive is ready for Automatic Data
+Recovery.  The physical drive that failed has been replaced,
+but the logical drive is still operating in Interim Recovery
+Mode.
+
+Rebuilding (7)
+Indicates that the logical drive is currently doing Automatic
+Data Recovery.  During Automatic Data Recovery, fault tolerance
+algorithms restore data to the replacement drive.
+
+Wrong Drive (8)
+Indicates that the wrong physical drive was replaced after a
+physical drive failure.
+
+Bad Connect (9)
+Indicates that a physical drive is not responding.
+
+Overheating (10)
+Indicates that the drive array enclosure that contains the
+logical drive is overheating.  The drive array is still
+functioning, but should be shutdown.
+
+Shutdown (11)
+Indicates that the drive array enclosure that contains the
+logical drive has overheated.  The logical drive is no longer
+functioning.
+
+Expanding (12)
+Indicates that the logical drive is currently undergoing a
+transformation (expansion, shrinkage or movement). During
+transformation, fault tolerance algorithms redistribute logical
+drive data according to the transformation operation selected.
+
+Not Available (13)
+Indicates that the logical drive is currently unavailable.
+If a logical drive is expanding and the new configuration
+frees additional disk space, this free space can be
+configured into another logical volume.  If this is done,
+the new volume will be set to not available.
+
+Queued For Expansion (14)
+Indicates that the logical drive is ready for transformation
+(expansion, shrinkage or movement). The logical drive is in the
+queue for transformation.
+
+Multi-path Access Degraded (15)
+Indicates that previously all disk drives of this logical
+drive had more than one I/O path to the controller, but now
+one or few of them have only one I/O path.
+
+Erasing (16)
+Indicates that the logical drive is currently being erased.
+
+Predictive Spare Rebuild Ready (17)
+Indicates that the logical drive is ready to perform a predictive
+spare rebuild. The logical drive is in the queue for rebuild.
+
+Rapid Parity Initialization In Progress (18)
+Indicates that the logical drive is currently undergoing rapid
+parity initialization (RPI). The logical drive is unavailable to the
+operating system during RPI and will be made available once RPI
+has completed.
+
+Rapid Parity Initialization Pending (19)
+Indicates that the logical drive is currently pending rapid
+parity initialization and will be unavailable.
+
+No Access - Encrypted - Missing Key (20)
+Indicates that the logical drive is currently encrypted and cannot
+be accessed because the array controller has not yet received the
+encryption key from iLO nor was it found in the controller's CSP
+NVRAM.
+
+Unencrypted to Encrypted Transformation in Progress (21)
+Indicates that the logical drive is currently being transformed from
+unencrypted to encrypted and the volume is online. Data will be
+written unencrypted if the write is directed to an LBA range on the
+logical drive that has not yet been migrated.
+
+New Logical Drive Key Rekey in Progress (22)
+Indicates that the logical drive is currently encrypted and all data
+is currently being rekeyed with a new logical drive key using the
+background capacity expansion transformation task. The logical drive
+is online.
+
+No Access - Encrypted with Controller Encryption Not Enabled (23)
+Indicates that the logical drive is currently encrypted and cannot
+be accessed because the array controller does not have encryption
+enabled.
+
+Unencrypted To Encrypted Transformation Not Started (24)
+Indicates that the logical drive has received a request to transform
+from unencrypted to encrypted but this process has not yet started.
+The unencrypted logical drive is currently online.
+
+New Logical Drive Key Rekey Request Received (25)
+Indicates that the logical drive is encrypted and has received
+a request to rekey all data with a new logical drive encryption key.
+The logical drive is online.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQIDA-MIB::cpqDaLogDrvStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk {#SNMPINDEX}({#DISK_NAME}): Layout type</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.3.1.1.3.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.layout[cpqDaLogDrvFaultTol.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>Logical Drive Fault Tolerance.
+
+This shows the fault tolerance mode of the logical drive.
+The following values are valid for the Logical Drive Fault
+Tolerance:
+
+None (2)
+Fault tolerance is not enabled.  If a physical drive reports
+an error, the data cannot be recovered by the drive array
+controller.
+
+Mirroring - RAID 1/RAID 1+0 (3)
+For each physical drive, there is a second physical drive
+containing identical data. If a drive fails, the data can be
+retrieved from the mirror drive.
+
+Data Guard - RAID 4 (4)
+One of the physical drives is used as a data guard drive and
+contains the exclusive OR of the data on the remaining drives.
+If a failure is detected, the drive array controller rebuilds
+the data using the data guard information plus information
+from the other drives.
+
+Distributed Data Guard - RAID 5 (5)
+Distributed Data Guarding, sometimes referred to as RAID 5,
+is similar to Data Guarding, but instead of storing the parity
+information on one drive, the information is distributed across
+all of the drives.  If a failure is detected, the drive array
+controller rebuilds the data using the data guard information
+from all the drives.
+
+Advanced Data Guarding - RAID 6 (7)
+Advanced Data Guarding (RAID ADG) is the fault tolerance method
+that provides the highest level of data protection.  It
+'stripes' data and parity across all the physical drives in the
+configuration to ensure the uninterrupted availability of
+uncorrupted data.  This fault-tolerance method is similar to
+distributed data guard (RAID 5) in that parity data is
+distributed across all drives in the array, except in RAID ADG
+the capacity of multiple drives is used to store parity data.
+Assuming the capacity of 2 drives is used for parity data,
+this allows continued operation despite simultaneous failure of
+any 2 drives in the array, whereas RAID 4 and RAID 5 can only
+sustain failure of a single drive.
+
+RAID 50 (8)
+Distributed data guarding (RAID 5) with multiple parity groups.
+
+RAID 60 (9)
+Advanced data guarding (RAID 6) with multiple parity groups.
+
+RAID 1 ADM (10) - Advanced Data Mirroring -
+For each physical drive, there are two or more physical drives
+containing identical data. If a drive fails, the data can be
+retrieved from any of the mirrored drives.
+
+RAID 10 ADM (11) - Advanced Data Mirroring with Striping -
+For each physical drive, there are two or more physical drives
+containing identical data in addition to data being striped across
+multiple drives. If a drive fails, the data can be retrieved from
+any of the mirrored drives.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQIDA-MIB::cpqDaLogDrvFaultTol</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk {#SNMPINDEX}({#DISK_NAME}): Disk size</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>1</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.3.1.1.9.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.size[cpqDaLogDrvSize.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>B</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>1048576</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>Logical Drive Size.
+This is the size of the logical drive in megabytes.  This value
+is calculated using the value 1,048,576 (2^20) as a megabyte.
+Drive manufacturers sometimes use the number 1,000,000 as a
+megabyte when giving drive capacities so this value may
+differ from the advertised size of a drive.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_OK_STATUS},ne)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk is not in OK state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check virtualdisk for warnings or errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
@@ -2542,6 +2950,14 @@ Disk serial number has changed. Ack to close</description>
             <macro>
                <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"notPresent"}</macro>
                <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$VDISK_CRIT_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$VDISK_OK_STATUS}</macro>
+               <value>2</value>
             </macro>
             <macro>
                <macro>{$DISK_WARN_STATUS}</macro>
@@ -3202,6 +3618,156 @@ Device serial number has changed. Ack to close</description>
             <mapping>
                <value>3</value>
                <newvalue>solidState</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CPQIDA-MIB::cpqDaLogDrvFaultTol</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>none</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>RAID-1/RAID-10</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>RAID-4</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>RAID-5</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>RAID-6</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>RAID-50</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>RAID-60</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>RAID-1 ADM</newvalue>
+            </mapping>
+            <mapping>
+               <value>11</value>
+               <newvalue>RAID-10 ADM</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CPQIDA-MIB::cpqDaLogDrvStatus</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>ok</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>failed</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>unconfigured</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>recovering</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>readyForRebuild</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>rebuilding</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>wrongDrive</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>badConnect</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>overheating</newvalue>
+            </mapping>
+            <mapping>
+               <value>11</value>
+               <newvalue>shutdown</newvalue>
+            </mapping>
+            <mapping>
+               <value>12</value>
+               <newvalue>expanding</newvalue>
+            </mapping>
+            <mapping>
+               <value>13</value>
+               <newvalue>notAvailable</newvalue>
+            </mapping>
+            <mapping>
+               <value>14</value>
+               <newvalue>queuedForExpansion</newvalue>
+            </mapping>
+            <mapping>
+               <value>15</value>
+               <newvalue>multipathAccessDegraded</newvalue>
+            </mapping>
+            <mapping>
+               <value>16</value>
+               <newvalue>erasing</newvalue>
+            </mapping>
+            <mapping>
+               <value>17</value>
+               <newvalue>predictiveSpareRebuildReady</newvalue>
+            </mapping>
+            <mapping>
+               <value>18</value>
+               <newvalue>rapidParityInitInProgress</newvalue>
+            </mapping>
+            <mapping>
+               <value>19</value>
+               <newvalue>rapidParityInitPending</newvalue>
+            </mapping>
+            <mapping>
+               <value>20</value>
+               <newvalue>noAccessEncryptedNoCntlrKey</newvalue>
+            </mapping>
+            <mapping>
+               <value>21</value>
+               <newvalue>unencryptedToEncryptedInProgress</newvalue>
+            </mapping>
+            <mapping>
+               <value>22</value>
+               <newvalue>newLogDrvKeyRekeyInProgress</newvalue>
+            </mapping>
+            <mapping>
+               <value>23</value>
+               <newvalue>noAccessEncryptedCntlrEncryptnNotEnbld</newvalue>
+            </mapping>
+            <mapping>
+               <value>24</value>
+               <newvalue>unencryptedToEncryptedNotStarted</newvalue>
+            </mapping>
+            <mapping>
+               <value>25</value>
+               <newvalue>newLogDrvKeyRekeyRequestReceived</newvalue>
             </mapping>
          </mappings>
       </value_map>

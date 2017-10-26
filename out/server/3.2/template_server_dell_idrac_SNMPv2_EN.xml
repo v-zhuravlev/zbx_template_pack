@@ -43,6 +43,9 @@ IDRAC-MIB-SMIv2</description>
                <name>Physical Disks</name>
             </application>
             <application>
+               <name>Virtual Disks</name>
+            </application>
+            <application>
                <name>Inventory</name>
             </application>
          </applications>
@@ -1315,7 +1318,7 @@ The media type of the physical disk. Possible Values:
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#DISK_NAME}: Physical disk size</name>
+                     <name>{#DISK_NAME}: Disk size</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -1362,7 +1365,7 @@ The size of the physical disk in megabytes.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1</expression>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DISK_NAME}: Physical disk failed</name>
@@ -1379,7 +1382,7 @@ Please check physical disk for warnings or errors</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_WARN_STATUS:"nonCritical"},eq)}=1</expression>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_WARN_STATUS:"nonCritical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$VDISK_WARN_STATUS:"degraded"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DISK_NAME}: Physical disk is in warning state</name>
@@ -1395,7 +1398,7 @@ Please check physical disk for warnings or errors</description>
                      <dependencies>
                         <dependency>
                            <name>{#DISK_NAME}: Physical disk failed</name>
-                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1</expression>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1435,7 +1438,395 @@ Disk probably requires replacement.</description>
                      <dependencies>
                         <dependency>
                            <name>{#DISK_NAME}: Physical disk failed</name>
-                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1</expression>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1 or {Template Server Dell iDRAC SNMPv2:system.hw.physicaldisk.status[physicalDiskComponentStatus.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>Virtual Disk Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.1,{#DISK_NAME},1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.2]</snmp_oid>
+               <key>virtualdisk.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>IDRAC-MIB-SMIv2::virtualDiskTable</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Layout type</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.13.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.layout[virtualDiskLayout.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The virtual disk's RAID type.
+Possible values:
+1: Not one of the following
+2: RAID-0
+3: RAID-1
+4: RAID-5
+5: RAID-6
+6: RAID-10
+7: RAID-50
+8: RAID-60
+9: Concatenated RAID 1
+10: Concatenated RAID 5</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IDRAC-MIB-SMIv2::virtualDiskLayout</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Current state</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.30.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.state[virtualDiskOperationalState.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The state of the virtual disk when there are progressive operations ongoing.
+Possible values:
+1: There is no active operation running.
+2: The virtual disk configuration has changed. The physical disks included in the virtual disk are being modified to support the new configuration.
+3: A Consistency Check (CC) is being performed on the virtual disk.
+4: The virtual disk is being initialized.
+5: BackGround Initialization (BGI) is being performed on the virtual disk.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IDRAC-MIB-SMIv2::virtualDiskOperationalState</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Read policy</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.11.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.readpolicy[virtualDiskReadPolicy.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The read policy used by the controller for read operations on this virtual disk.
+Possible values:
+1: No Read Ahead.
+2: Read Ahead.
+3: Adaptive Read Ahead.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Write policy</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.10.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.writepolicy[virtualDiskWritePolicy.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The write policy used by the controller for write operations on this virtual disk.
+Possible values:
+1: Write Through.
+2: Write Back.
+3: Force Write Back.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IDRAC-MIB-SMIv2::virtualDiskWritePolicy</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Disk size</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>1</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.6.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.size[virtualDiskSizeInMB.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>B</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>1048576</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The size of the virtual disk in megabytes.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}]</key>
+                     <delay>180</delay>
+                     <history>14</history>
+                     <trends>365</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The current state of this virtual disk (which includes any member physical disks.)
+Possible states:
+1: The current state could not be determined.
+2: The virtual disk is operating normally or optimally.
+3: The virtual disk has encountered a failure. The data on disk is lost or is about to be lost.
+4: The virtual disk encounterd a failure with one or all of the constituent redundant physical disks.
+The data on the virtual disk might no longer be fault tolerant.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Virtual Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IDRAC-MIB-SMIv2::virtualDiskState</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check virtual disk for warnings or errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_WARN_STATUS:"degraded"},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Disk #{SNMPVALUE}({#DISK_NAME}): Virtual vdisk is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check virtual disk for warnings or errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Disk #{SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1845,6 +2236,14 @@ Please check the device for faults</description>
                <value>1</value>
             </macro>
             <macro>
+               <macro>{$VDISK_FAIL_STATUS:"failed"}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$VDISK_WARN_STATUS:"degraded"}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
                <macro>{$HEALTH_DISASTER_STATUS}</macro>
                <value>6</value>
             </macro>
@@ -2202,6 +2601,131 @@ Firmware version has changed. Ack to close</description>
             <mapping>
                <value>7</value>
                <newvalue>Below threshold</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::virtualDiskLayout</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>RAID-0</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>RAID-1</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>RAID-5</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>RAID-6</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>RAID-10</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>RAID-50</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>RAID-60</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>Concatenated RAID 1</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>Concatenated RAID 5</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::virtualDiskOperationalState</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Not applicable</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Reconstructing</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Resynching</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Initializing</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Background init</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::virtualDiskWritePolicy</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Write Through</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Write Back</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Force Write Back</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::virtualDiskReadPolicy</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>No Read Ahead</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Read Ahead</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Adaptive Read Ahead</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::virtualDiskState</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Online</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Failed</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Degraded</newvalue>
             </mapping>
          </mappings>
       </value_map>
