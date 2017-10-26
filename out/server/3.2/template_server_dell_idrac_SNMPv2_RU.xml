@@ -98,7 +98,7 @@ This attribute defines the overall rollup status of all components in the system
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
-               <snmp_oid>1.3.6.1.4.1.674.10892.5.1.3.12</snmp_oid>
+               <snmp_oid>1.3.6.1.4.1.674.10892.5.1.3.12.0</snmp_oid>
                <key>system.hw.model</key>
                <delay>3600</delay>
                <history>14</history>
@@ -1264,6 +1264,101 @@ The part number of the disk.</description>
                      <logtimefmt/>
                      <application_prototypes/>
                   </item_prototype>
+                  <item_prototype>
+                     <name>{#DISK_NAME}: Тип диска</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.35.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.media_type[physicalDiskMediaType.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The media type of the physical disk. Possible Values:
+1: The media type could not be determined.
+2: Hard Disk Drive (HDD).
+3: Solid State Drive (SSD).</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IDRAC-MIB-SMIv2::physicalDiskMediaType</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#DISK_NAME}: Размер диска</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>1</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.11.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.size[physicalDiskCapacityInMB.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>B</units>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>1048576</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+The size of the physical disk in megabytes.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
@@ -1556,6 +1651,141 @@ The controller's name as represented in Storage Management.</description>
                <graph_prototypes/>
                <host_prototypes/>
             </discovery_rule>
+            <discovery_rule>
+               <name>Array Controller Cache Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#BATTERY_NUM},1.3.6.1.4.1.674.10892.5.5.1.20.130.15.1.1]</snmp_oid>
+               <key>array.cache.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <delay_flex/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30</lifetime>
+               <description>IDRAC-MIB-SMIv2::batteryTable</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <multiplier>0</multiplier>
+                     <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.130.15.1.4.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>7</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <delta>0</delta>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <formula>0</formula>
+                     <delay_flex/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <data_type>0</data_type>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: IDRAC-MIB-SMIv2
+
+Current state of battery.
+Possible values:
+1: The current state could not be determined.
+2: The battery is operating normally.
+3: The battery has failed and needs to be replaced.
+4: The battery temperature is high or charge level is depleting.
+5: The battery is missing or not detected.
+6: The battery is undergoing the re-charge phase.
+7: The battery voltage or charge level is below the threshold.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Disk Arrays</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>IDRAC-MIB-SMIv2::batteryState</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <application_prototypes/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива: предупреждение</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте устройство</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS},ne)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива не норма</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.
+Проверьте устройство</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива: предупреждение</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+            </discovery_rule>
          </discovery_rules>
          <macros>
             <macro>
@@ -1585,6 +1815,18 @@ The controller's name as represented in Storage Management.</description>
             <macro>
                <macro>{$DISK_ARRAY_FAIL_STATUS:"nonRecoverable"}</macro>
                <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS}</macro>
+               <value>2</value>
             </macro>
             <macro>
                <macro>{$DISK_WARN_STATUS:"nonCritical"}</macro>
@@ -1910,6 +2152,56 @@ The controller's name as represented in Storage Management.</description>
             <mapping>
                <value>1</value>
                <newvalue>failed</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::physicalDiskMediaType</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>HDD</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>SSD</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>IDRAC-MIB-SMIv2::batteryState</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Ready</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Failed</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Degraded</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Missing</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>Charging</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>Below threshold</newvalue>
             </mapping>
          </mappings>
       </value_map>
