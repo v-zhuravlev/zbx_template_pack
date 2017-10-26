@@ -1727,6 +1727,287 @@ Please check the device for faults</description>
                <jmx_endpoint/>
             </discovery_rule>
             <discovery_rule>
+               <name>Array Controller Cache Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#CACHE_STATUS},1.3.6.1.4.1.232.3.2.2.2.1.2,{#CACHE_CNTRL_INDEX},1.3.6.1.4.1.232.3.2.2.2.1.1]</snmp_oid>
+               <key>array.cache.discovery</key>
+               <delay>3600</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description>Scanning table of Array controllers: CPQIDA-MIB::cpqDaAccelTable</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.2.2.1.2.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>1w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQIDA-MIB
+Cache Module/Operations Status.This describes the status of the cache module and/or cache operations.
+Note that for some controller models, a cache module board that physically attaches to the controller or chipset may not be an available option.
+For these configurations, the Instrument Agent will continue to populate variables that are related to read caching operations.
+The status can be:
+Other (1)  Indicates that the instrument agent does not recognize the  status of the cache module.  You may need to upgrade  the instrument agent.
+
+Invalid (2)  Indicates that a cache module board has not been  installed in this system or is present but not configured.
+
+Enabled (3)  Indicates that cache operations are currently configured  and enabled for at least one logical drive.
+
+Temporarily Disabled (4)  Indicates that cache operations have been temporarily  disabled.
+View the cache module board error code object to determine why the write cache operations have been  temporarily disabled.
+
+Permanently Disabled (5)  Indicates that cache operations have been permanently  disabled.
+View the cache module board error code object  to determine why the write cache operations have been disabled.
+
+Cache Module Flash Memory Not Attached (6)  Indicates that the flash memory component of the flash backed cache module is not attached.
+This status will be set when the flash memory is not attached and the Supercap is attached. This value is only used on flash backed cache modules that support removable flash memory.
+
+Cache Module Degraded Failsafe Speed (7)  Indicates that the cache module board is currently degraded and  operating at a failsafe speed.
+View variables   cpqDaCacheMemoryDataWidth and cpqDaCacheMemoryTransferRate to  obtain the cache module board's current memory data width and  memory transfer rate.
+
+Cache Module Critical Failure (8)  Indicates that the cache module board has encountered a critical  failure.  The controller is currently operating in Zero Memory Raid  mode.
+
+Read Cache Could Not Be Mapped (9)  Indicates that the read cache memory in a split cache configuration could not be mapped by the operating system and as a result is not available.
+This status may be caused by virtual space limitations in certain operating systems and is only applicable to B-Series controllers.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Disk Arrays</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQIDA-MIB::cpqDaAccelStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller battery status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.2.2.1.6.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}]</key>
+                     <delay>300</delay>
+                     <history>1w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQIDA-MIB
+Cache Module Board Backup Power Status. This monitors the status of each backup power source on the board.
+The backup power source can only recharge when the system has power applied. The type of backup power source used is indicated by cpqDaAccelBackupPowerSource.
+The following values are valid:
+Other (1)  Indicates that the instrument agent does not recognize  backup power status.  You may need to update your software.
+
+Ok (2)  The backup power source is fully charged.
+
+Recharging (3)  The array controller has one or more cache module backup power  sources that are recharging.
+Cache module operations such as Battery/Flash Backed Write Cache, Expansion, Extension and Migration are temporarily suspended until the backup power source is fully charged.
+Cache module operations will automatically resume  when charging is complete.
+
+Failed (4)  The battery pack is below the sufficient voltage level and  has not recharged in 36 hours.
+Your Cache Module board  needs to be serviced.
+
+Degraded (5)  The battery is still operating, however, one of the batteries  in the pack has failed to recharge properly.
+Your Cache  Module board should be serviced as soon as possible.
+
+NotPresent (6)  A backup power source is not present on the cache module board. Some controllers do not have backup power sources.
+
+Capacitor Failed (7)  The flash backed cache module capacitor is below the sufficient voltage level and has not recharged in 10 minutes.  Your Cache Module board needs to be serviced.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Disk Arrays</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQIDA-MIB::cpqDaAccelBattery</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in critical state!</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in critical state!</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_OK_STATUS:"enabled"},ne)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is not in optimal state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in warning state</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                        <dependency>
+                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in critical state!</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"failed"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"capacitorFailed"},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller battery is in critical state!</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"degraded"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"notPresent"},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller battery is in warning state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller battery is in critical state!</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"failed"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.battery.status[cpqDaAccelBattery.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"capacitorFailed"},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+               <jmx_endpoint/>
+            </discovery_rule>
+            <discovery_rule>
                <name>Physical Disk Discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
@@ -1902,6 +2183,154 @@ but may have been modified due to space limitations.  This can be used for ident
                      <application_prototypes/>
                      <master_item_prototype/>
                   </item_prototype>
+                  <item_prototype>
+                     <name>{#DISK_LOCATION}: Physical disk model name</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.3.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.model[cpqDaPhyDrvModel.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14d</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQIDA-MIB
+Physical Drive Model.This is a text description of the physical drive.
+The text that appears depends upon who manufactured the drive and the drive type.
+If a drive fails, note the model to identify the type of drive necessary for replacement.
+If a model number is not present, you may not have properly initialized the drive array to which the physical drive is attached for monitoring.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#DISK_LOCATION}: Physical disk media type</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.69.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.media_type[cpqDaPhyDrvMediaType.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14d</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQIDA-MIB
+Drive Array Physical Drive Media Type.The following values are defined:
+other(1)  The instrument agent is unable to determine the physical drive’s media type.
+rotatingPlatters(2)  The physical drive media is composed of rotating platters.
+solidState(3)  The physical drive media is composed of solid state electronics.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>CPQIDA-MIB::cpqDaPhyDrvMediaType</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#DISK_LOCATION}: Physical disk size</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.232.3.2.5.1.1.45.{#SNMPINDEX}</snmp_oid>
+                     <key>system.hw.physicaldisk.size[cpqDaPhyDrvMediaType.{#SNMPINDEX}]</key>
+                     <delay>3600</delay>
+                     <history>14d</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>B</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: CPQIDA-MIB
+Physical Drive Size in MB.
+This is the size of the physical drive in megabytes.
+This value is calculated using the value 1,048,576 (2^20) as a megabyte.
+Drive manufacturers sometimes use the number 1,000,000 as a megabyte when giving drive capacities so this value may differ
+from the advertised size of a drive. This field is only applicable for controllers which support SCSI drives,
+and therefore is not supported by the IDA or IDA-2 controllers. The field will contain 0xFFFFFFFF if the drive capacity cannot be calculated
+or if the controller does not support SCSI drives.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Physical Disks</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>1</type>
+                           <params>1048576</params>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
@@ -1945,7 +2374,7 @@ Please check physical disk for warnings or errors</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS},eq)}=1</expression>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDrive"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DISK_LOCATION}: Physical disk S.M.A.R.T. failed</name>
@@ -2033,6 +2462,46 @@ Disk serial number has changed. Ack to close</description>
                <value>3</value>
             </macro>
             <macro>
+               <macro>{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"}</macro>
+               <value>8</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"}</macro>
+               <value>7</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"}</macro>
+               <value>9</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_OK_STATUS:"enabled"}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"failed"}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"capacitorFailed"}</macro>
+               <value>7</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"degraded"}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"notPresent"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
                <macro>{$DISK_WARN_STATUS}</macro>
                <value>4</value>
             </macro>
@@ -2041,8 +2510,12 @@ Disk serial number has changed. Ack to close</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$DISK_SMART_FAIL_STATUS}</macro>
+               <macro>{$DISK_SMART_FAIL_STATUS:"replaceDrive"}</macro>
                <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"}</macro>
+               <value>4</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT}</macro>
@@ -2592,6 +3065,101 @@ Device serial number has changed. Ack to close</description>
             <mapping>
                <value>3</value>
                <newvalue>replaceDrive</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>replaceDriveSSDWearOut</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CPQIDA-MIB::cpqDaAccelStatus</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>invalid</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>enabled</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>tmpDisabled</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>permDisabled</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>cacheModFlashMemNotAttached</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>cacheModDegradedFailsafeSpeed</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>cacheModCriticalFailure</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>cacheReadCacheNotMapped</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CPQIDA-MIB::cpqDaAccelBattery</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Ok</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Recharging</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Failed</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Degraded</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>Not Present</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>Capacitor failed</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CPQIDA-MIB::cpqDaPhyDrvMediaType</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>rotatingPlatters</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>solidState</newvalue>
             </mapping>
          </mappings>
       </value_map>
