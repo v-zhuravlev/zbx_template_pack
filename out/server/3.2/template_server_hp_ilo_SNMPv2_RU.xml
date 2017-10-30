@@ -2421,34 +2421,6 @@ or if the controller does not support SCSI drives.</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_OK_STATUS},ne)}=1</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>{#DISK_LOCATION}: Статус физического диска не норма</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.
-Проверьте диск</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>{#DISK_LOCATION}: Статус физического диска: сбой</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_FAIL_STATUS},eq)}=1</expression>
-                           <recovery_expression/>
-                        </dependency>
-                        <dependency>
-                           <name>{#DISK_LOCATION}: Статус физического диска: предупреждение</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.status[cpqDaPhyDrvStatus.{#SNMPINDEX}].count(#1,{$DISK_WARN_STATUS},eq)}=1</expression>
-                           <recovery_expression/>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
                      <expression>{Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDrive"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.physicaldisk.smart_status[cpqDaPhyDrvSmartStatus.{#SNMPINDEX}].count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
