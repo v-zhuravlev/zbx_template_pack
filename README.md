@@ -52,6 +52,7 @@ Currently `net` and `servers` templates are ready to be tested.  See [`out/net/R
 |HP Enterprise Switch|-|-|Template Net HP Enterprise Switch|STATISTICS-MIB,NETSWITCH-MIB,HP-ICF-CHASSIS,ENTITY-MIB,SEMI-MIB||
 |TP-LINK|T2600G-28TS v2.0|-|1.3.6.1.4.1.11863.5.33|Template Net TP-LINK|TPLINK-SYSMONITOR-MIB,TPLINK-SYSINFO-MIB|http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files|
 |Netgear Fastpath|M5300-28G|-||Template Net Netgear Fastpath|FASTPATH-SWITCHING-MIB,FASTPATH-BOXSERVICES-PRIVATE-MIB||
+|Arista|DCS-7050Q-16|EOS||Template Net Arista|HOST-RESOURCES-MIB,ENTITY-MIB,ENTITY-SENSOR-MIB|https://www.arista.com/en/support/product-documentation/arista-snmp-mibs|
 
 ### `server` Devices List  
 |Vendor|Known Models|OS|Known SNMP ObjectID|Template name|MIBS used|Reference|  
