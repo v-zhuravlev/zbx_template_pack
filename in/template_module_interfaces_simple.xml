@@ -3,11 +3,9 @@
   <template>
 	  <classes>
 	  	<class>IF-MIB_Simple</class>
-	  	
 	  	<class>SNMPv1</class>
 	  	<class>SNMPv2</class>
-		  <class>Module</class>
-
+        <class>Module</class>
 	  </classes>
 	  <name>Template Module Interfaces Simple</name>
 	  <description>Template Interfaces Simple (no ifXTable)</description>
@@ -16,19 +14,28 @@
 	  	  	<discoveryRule>
 				<name>Network Interfaces Discovery</name>
 				<!-- {#IFNAME} = {#IFDESCR} in Interfaces Simple. Since {#IFNAME} - is used in triggers and so on and ifName is not available in Simple(no ifXTable). -->
-		        <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.2.2.1.2,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]</snmp_oid>
+		        <snmp_oid>discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.2.2.1.2,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]</snmp_oid>
 		        <key>net.if.discovery</key>
-		        <description>Discovering interfaces from IF-MIB. Interfaces with down(2) Administrative Status are not discovered.</description>
+                <description>Discovering interfaces from IF-MIB. Interfaces are not discovered:
+                    - with down(2) Administrative status
+                    - with notPresent(6) Operational status
+                    - loopbacks</description>
 				<filter>
                         <evaltype>1</evaltype>
                         <formula/>
                         <conditions>
-                            <condition>
-                                <macro>{#IFADMINSTATUS}</macro>
-                                <value>(1|3)</value> <!--  ignore interfaces with admin status of down(2) -->
-                                <operator>8</operator>
-                                <formulaid>B</formulaid>
-                            </condition>
+							<condition>
+								<macro>{#IFADMINSTATUS}</macro>
+								<value>(1|3)</value> <!--  ignore interfaces with admin status of down(2) -->
+								<operator>8</operator>
+								<formulaid>B</formulaid><!-- (1-up, 2-down, 3-testing, 4-unknown, 5-dormant, 6-notPresent, 7-lowerLayerDown)-->
+							</condition>
+							<condition>
+								<macro>{#IFOPERSTATUS}</macro>
+								<value>(1|2|3|4|5|7)</value> <!--  ignore notPresent(6) -->
+								<operator>8</operator>
+								<formulaid>C</formulaid>
+							</condition>
                             <condition>
                                 <macro>{#IFNAME}</macro>
                                 <value>@Network interfaces for discovery</value> <!-- should filter out loopbacks and nulls -->
