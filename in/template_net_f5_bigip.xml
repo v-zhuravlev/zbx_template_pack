@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://www.example.org/zbx_template_new/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/zbx_template_new/ ../../src/main/resources/templates/metrics.xsd">
+
+
+
+
+    <template>
+        <classes>
+            <class>Performance</class>
+            <class>Fault</class>
+            <class>Inventory</class>
+
+            <class>Interfaces</class>
+            <class>Interfaces EtherLike Extension</class>
+            <class>Network</class>
+            <class>SNMP Device</class>
+
+            <class>SNMPv2</class>
+        </classes>
+        <name>Template Net F5 BIG-IP</name>
+        <description>Template Net F5 BIG-IP</description>
+        <sysObjectID>{sysobjectid}</sysObjectID>
+        <documentation>
+            <overview>https://support.f5.com/csp/article/K13322
+                MIB file	Definition
+                F5-BIGIP-APM-MIB.txt	Defines APM objects, such as access and connectivity statistics, pool statistics, and general APM information
+                F5-BIGIP-COMMON-MIB.txt	Defines common information for which all other BIG-IP MIB files reference, as well as the F5-specific SNMP traps.
+                F5-BIGIP-GLOBAL-MIB.txt	Defines GTM objects, such as wide IPs, virtual servers, pools, links, servers, and datacenters. You can reset statistics for any of these objects.
+                F5-BIGIP-LOCAL-MIB.txt	Defines LTM objects, such as virtual servers, pools, nodes, profiles, SNATs, health monitors, and iRules. You can reset statistics for any of these objects.
+                F5-BIGIP-SYSTEM-MIB.txt	Defines BIG-IP system information, such as global statistic data, network information, and platform information.
+                F5-BIGIP-WAM-MIB.txt1	Defines WebAccelerator traffic objects, such as WebAccelerator specific statistic data, connection stats, or build information.
+                F5-BIGIP-EM-MIB.txt2	Defines Enterprise Manager objects, such as Device Lists, Device Groups and Images available on the system. You can reset statistics for any of these objects.
+                SNMP monitoring: https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-concepts-11-1-0/tmos_snmp.html#1037650
+            </overview>
+            <issues>
+            </issues>
+        </documentation>
+        <discoveryRules>
+            <discoveryRule>
+                <name>Temperature Chassis Discovery</name>
+                <key>temp.chassis.disc</key>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.3375.2.1.3.2.3.2.1.2]</snmp_oid>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>Temperature Blade Discovery</name>
+                <key>temp.blade.discovery</key>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.3375.2.1.3.2.4.2.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.3375.2.1.3.2.4.2.1.3]</snmp_oid>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>Temperature CPU Discovery</name>
+                <key>temp.cpu.discovery</key>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.3375.2.1.3.6.2.1.2,{#SENSOR_NAME},1.3.6.1.4.1.3375.2.1.3.6.2.1.4]</snmp_oid>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>FAN Discovery</name>
+                <key>fan.discovery</key>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.3375.2.1.3.2.1.2.1.2]</snmp_oid>
+            </discoveryRule>
+
+            <discoveryRule>
+                <name>PSU Discovery</name>
+                <key>psu.discovery</key>
+                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.3375.2.1.3.2.2.2.1.2]</snmp_oid>
+            </discoveryRule>
+        </discoveryRules>
+        <metrics>
+            <!-- PERF metrics -->
+            <system.cpu.util>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.20.29.0</oid>
+                <snmpObject>sysMultiHostCpuUsageRatio1m.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <vendorDescription>This is average usage ratio of CPU for the associated host in the last one minute. It is
+                    calculated by
+                    (sum of deltas for user, niced, system)/(sum of deltas of user, niced, system, idle, irq, softirq, and
+                    iowait),
+                    where each delta is the difference for each stat over the last 1-minute interval;
+                    user: sysMultiHostCpuUser1m;
+                    niced: sysMultiHostCpuNiced1m;
+                    stolen: sysMultiHostCpuStolen1m;
+                    system: sysMultiHostCpuSystem1m;
+                    idle: sysMultiHostCpuIdle1m;
+                    irq: sysMultiHostCpuIrq1m;
+                    iowait: sysMultiHostCpuIowait1m</vendorDescription>
+            </system.cpu.util>
+
+            <vm.memory.used>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.20.3.0</oid>
+                <snmpObject>sysGlobalHostMemUsed.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <vendorDescription>The host memory in bytes currently in use for the system.</vendorDescription>
+            </vm.memory.used>
+            <vm.memory.total>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.20.2.0</oid>
+                <snmpObject>sysGlobalHostMemTotal.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <vendorDescription> The total host memory in bytes for the system.</vendorDescription>
+            </vm.memory.total>
+            <vm.memory.pused>
+                <snmpObject>sysGlobalHostMemTotal.pused</snmpObject>
+                <calculated>true</calculated>
+            </vm.memory.pused>
+
+            <!-- FAULT metrics -->
+            <sensor.temp.value>
+                <oid>1.3.6.1.4.1.3375.2.1.3.2.3.2.1.2.{#SNMPINDEX}</oid>
+                <snmpObject>sysChassisTempTemperature.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>Temperature Chassis Discovery</discoveryRule>
+                <vendorDescription>The chassis temperature (in Celsius) of the indexed sensor on the system.,
+                    This is only supported for the platform where
+                    the sensor data is available.</vendorDescription>
+                <alarmObject>#{#SNMPINDEX}</alarmObject>
+            </sensor.temp.value>
+            <sensor.temp.value>
+                <oid>1.3.6.1.4.1.3375.2.1.3.2.4.2.1.2.{#SNMPINDEX}</oid>
+                <snmpObject>sysBladeTempTemperature.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>Temperature Blade Discovery</discoveryRule>
+                <vendorDescription>The blade temperature (in Celsius) of the indexed sensor on the system.,
+                    This is only supported for the platform where
+                    the sensor data is available.</vendorDescription>
+                <alarmObject>{#SENSOR_DESCR}</alarmObject>
+            </sensor.temp.value>
+            <sensor.temp.value>
+                <oid>1.3.6.1.4.1.3375.2.1.3.6.2.1.2.{#SNMPINDEX}</oid>
+                <snmpObject>sysCpuSensorTemperature.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>Temperature CPU Discovery</discoveryRule>
+                <vendorDescription>The temperature of the indexed CPU on the system.
+                    This is only supported for the platform where
+                    the sensor data is available.</vendorDescription>
+                <alarmObject>{#SENSOR_NAME}</alarmObject>
+                <alarmObjectType>CPU</alarmObjectType>
+            </sensor.temp.value>
+            <sensor.fan.speed>
+                <oid>1.3.6.1.4.1.3375.2.1.3.6.2.1.3.{#SNMPINDEX}</oid>
+                <snmpObject>sysCpuSensorFanSpeed.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>Temperature CPU Discovery</discoveryRule>
+                <vendorDescription>The fan speed (in RPM) of the indexed CPU on the system.,
+                    This is only supported for the platform where
+                    the sensor data is available.</vendorDescription>
+                <alarmObject>{#SENSOR_NAME}</alarmObject>
+                <alarmObjectType>CPU</alarmObjectType>
+            </sensor.fan.speed>
+
+            <sensor.fan.status>
+                <oid>1.3.6.1.4.1.3375.2.1.3.2.1.2.1.2.{#SNMPINDEX}</oid>
+                <snmpObject>sysChassisFanStatus.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>FAN Discovery</discoveryRule>
+                <vendorDescription>The status of the indexed chassis fan on the system.,This is only supported for the
+                    platform where the sensor data is available.</vendorDescription>
+                <alarmObject>#{#SNMPINDEX}</alarmObject>
+                <valueMap>F5-BIGIP-SYSTEM-MIB::sysChassisFanStatus</valueMap>
+            </sensor.fan.status>
+
+            <sensor.fan.speed>
+                <oid>1.3.6.1.4.1.3375.2.1.3.2.1.2.1.3.{#SNMPINDEX}</oid>
+                <snmpObject>sysChassisFanSpeed.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>FAN Discovery</discoveryRule>
+                <vendorDescription>The actual speed of the indexed chassis fan on the system.
+                    This is only supported for the platform where the actual
+                    fan speed data is available.
+                    '0' means fan speed is unavailable while the associated chassis status is good.</vendorDescription>
+                <alarmObject>#{#SNMPINDEX}</alarmObject>
+            </sensor.fan.speed>
+            <sensor.psu.status>
+                <oid>1.3.6.1.4.1.3375.2.1.3.2.2.2.1.2.{#SNMPINDEX}</oid>
+                <snmpObject>sysChassisPowerSupplyStatus.{#SNMPINDEX}</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <discoveryRule>PSU Discovery</discoveryRule>
+                <vendorDescription>The status of the indexed power supply on the system.,This is only supported for the
+                    platform where the sensor data is available.</vendorDescription>
+                <alarmObject>#{#SNMPINDEX}</alarmObject>
+                <valueMap>F5-BIGIP-SYSTEM-MIB::sysChassisPowerSupplyStatus</valueMap>
+            </sensor.psu.status>
+
+
+            <system.hw.model>
+                <oid>1.3.6.1.4.1.3375.2.1.3.3.1.0</oid>
+                <snmpObject>sysGeneralHwName.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <vendorDescription>The name of the system hardware model.</vendorDescription>
+            </system.hw.model>
+            <system.hw.serialnumber>
+                <oid>1.3.6.1.4.1.3375.2.1.3.3.3.0</oid>
+                <snmpObject>sysGeneralChassisSerialNum.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <vendorDescription>The system serial number.</vendorDescription>
+            </system.hw.serialnumber>
+
+
+            <!-- custom metrics(experimental) -->
+            <metric>
+                <documentation></documentation>
+                <name>HTTP Requests per second</name>
+                <group>HTTP Requests</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.56.0</oid>
+                <snmpObject>sysStatHttpRequests.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The total number of HTTP requests to the system.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+            
+            <metric>
+                <documentation></documentation>
+                <name>Client accepts per second</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.12.6.0</oid>
+                <snmpObject>sysTcpStatAccepts.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The number of connections accepted.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client connections</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.8.0</oid>
+                <snmpObject>sysStatClientCurConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The current connections from client-side to the system.</description>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client connections (SSL)</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.9.2.0</oid>
+                <snmpObject>sysClientsslStatCurConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The current number of concurrent connections with established SSL sessions being maintained by the filter.</description>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client connects per second</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.7.0</oid>
+                <snmpObject>sysStatClientTotConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The total connections from client-side to the system.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client SSL connections per second (compat)</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.9.9.0</oid>
+                <snmpObject>sysClientsslStatTotCompatConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The current number of concurrent compat connections with established SSL sessions being maintained by the filter.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client SSL connections per second (native)</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.9.6.0</oid>
+                <snmpObject>sysClientsslStatTotNativeConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The total number of concurrent native connections with established SSL sessions being maintained by the filter.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server connections</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.15.0</oid>
+                <snmpObject>sysStatServerCurConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The current connections from server-side to the system.</description>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server connections (SSL)</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.10.2.0</oid>
+                <snmpObject>sysServersslStatCurConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The current number of concurrent connections with established SSL sessions being maintained by the filter.</description>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server connects per second</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.14.0</oid>
+                <snmpObject>sysStatServerTotConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The total connections from server-side to the system.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server SSL connections per second (compat)</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.10.9.0</oid>
+                <snmpObject>sysServersslStatTotCompatConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The total number of concurrent compat connections with established SSL sessions being maintained by the filter.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server SSL connections per second (native)</name>
+                <group>Connections</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.10.6.0</oid>
+                <snmpObject>sysServersslStatTotNativeConns.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <description>The total number of concurrent native connections with established SSL sessions being maintained by the filter.</description>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params/>
+                    </step>
+                </preprocessing>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client bits in</name>
+                <group>Throughput rates</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.3.0</oid>
+                <snmpObject>sysStatClientBytesIn.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params></params>
+                    </step>
+                    <step>
+                        <type>multiplier</type>
+                        <params>8</params>
+                    </step>
+                </preprocessing>
+                <units>bps</units>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client bits out</name>
+                <group>Throughput rates</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.5.0</oid>
+                <snmpObject>sysStatClientBytesOut.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params></params>
+                    </step>
+                    <step>
+                        <type>multiplier</type>
+                        <params>8</params>
+                    </step>
+                </preprocessing>
+                <units>bps</units>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client packets in</name>
+                <group>Throughput rates</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.2.0</oid>
+                <snmpObject>sysStatClientPktsIn.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params></params>
+                    </step>
+                </preprocessing>
+                <units>pkts/s</units>
+                <description>The number of packets received by the system from client-side.</description>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Client packets out</name>
+                <group>Throughput rates</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.4.0</oid>
+                <snmpObject>sysStatClientPktsOut.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params></params>
+                    </step>
+                </preprocessing>
+                <units>pkts/s</units>
+                <description>The number of packets sent to client-side from the system.</description>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server bits in</name>
+                <group>Throughput rates</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.10.0</oid>
+                <snmpObject>sysStatServerBytesIn.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params></params>
+                    </step>
+                    <step>
+                        <type>multiplier</type>
+                        <params>8</params>
+                    </step>
+                </preprocessing>
+                <units>bps</units>
+            </metric>
+
+            <metric>
+                <documentation></documentation>
+                <name>Server bits out</name>
+                <group>Throughput rates</group>
+                <oid>1.3.6.1.4.1.3375.2.1.1.2.1.12.0</oid>
+                <snmpObject>sysStatServerBytesOut.0</snmpObject>
+                <mib>F5-BIGIP-SYSTEM-MIB</mib>
+                <itemType>snmp</itemType>
+                <valueType>3</valueType>
+                <history>7</history>
+                <trends>365</trends>
+                <update>300</update>
+                <preprocessing>
+                    <step>
+                        <type>delta_per_second</type>
+                        <params></params>
+                    </step>
+                    <step>
+                        <type>multiplier</type>
+                        <params>8</params>
+                    </step>
+                </preprocessing>
+                <units>bps</units>
+            </metric>
+
+
+
+
+
+
+        </metrics>
+        <macros>
+            <macro>
+                <macro>{$FAN_CRIT_STATUS}</macro>
+                <value>0</value>
+            </macro>
+            <macro>
+                <macro>{$PSU_CRIT_STATUS}</macro>
+                <value>0</value>
+            </macro>
+        </macros>
+
+        <templates/>
+    </template>
+    <value_maps>
+        <value_map>
+            <name>F5-BIGIP-SYSTEM-MIB::sysChassisPowerSupplyStatus</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>bad</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>good</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>notPresent</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>F5-BIGIP-SYSTEM-MIB::sysChassisFanStatus</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>bad</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>good</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>notPresent</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
+</root>
