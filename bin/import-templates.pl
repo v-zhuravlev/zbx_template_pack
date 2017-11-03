@@ -54,7 +54,7 @@ my $temp_dir = $ARGV[0] or die "Please provide directory with templates as first
 	die "No templates found in directory $temp_dir!\n" if @dir_files == 0;
 
 $zbx->login();	
-    foreach my $file (@dir_files) {
+    foreach my $file (sort { $a cmp $b } (@dir_files)) {
             print $file."\n";
             $zbx->import_configuration_from_file("$temp_dir/$file");
     }
