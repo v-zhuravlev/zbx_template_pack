@@ -34,7 +34,7 @@ GetOptions(
 
 $zbx = ZabbixAPI->new( { api_url=>$api_url, username => $username, password => $password } );
 
-$zbx->login();
+
 
 
 my $temp_dir = $ARGV[0] or die "Please provide directory with templates as first ARG\n";
@@ -49,11 +49,13 @@ my $temp_dir = $ARGV[0] or die "Please provide directory with templates as first
     }
     
     closedir $dir;
+	
 
+	die "No templates found in directory $temp_dir!\n" if @dir_files == 0;
+
+$zbx->login();	
     foreach my $file (@dir_files) {
             print $file."\n";
             $zbx->import_configuration_from_file("$temp_dir/$file");
     }
-
-
 $zbx->logout();
