@@ -3,6 +3,8 @@
 use warnings;
 use strict;
 
+binmode(STDOUT,':utf8');
+binmode(STDERR,':utf8');
 use FindBin qw($Bin);
 use lib "$Bin/ZabbixAPI";
 
