@@ -1,4 +1,5 @@
 # Zabbix Templates Pack
+[![Build Status](https://travis-ci.org/v-zhuravlev/zbx_template_pack.svg?branch=travis)](https://travis-ci.org/v-zhuravlev/zbx_template_pack)  
 The idea behind this template pack is to provide single template class for each device type and just define SNMP oids required to collect common metrics like `CPU utilization`, `Memory`, `Temperature` and so on to generate new template for new vendor.  
 
 
