@@ -8,20 +8,38 @@ or (tcpdump/wireshark .pcap dump of this snmpwalk)
 
 Devices wanted list:  
 
-Network class:  
--	Alcatel-Lucent (not TimOS) devices  
-- Dell switches  
--	Netgear switches  
--	Zyxel MES switches  
--	Ubiquiti Airfiber  
-- Intel/Qlogic Infiniband  
--	ZTE Switches  
--	F5 BIG-IP load balancers  
-- Arista FC  
+Network class:
+* Switches
+  *	Alcatel-Lucent (not TimOS) devices  
+  * Dell switches  
+  *	Netgear switches  
+  *	Zyxel MES switches  
+  *	Ubiquiti Airfiber  
+  * Intel/Qlogic Infiniband  
+  *	ZTE Switches  
+  * Arista FC
+* Firwalls:
+  * Fortigate
+  * Sophos
+  * Checkpoint
+  * Barracuda
+  * Cisco
+  * SonicWall
+  * Palo Alto
+* Other:
+  * F5 BIG-IP load balancers
+    
+
 Server class:  
-- HP iLO different generations  
-- IBM/Lenovo IMM1/IMM2  
-- ~~DELL servers~~  
+* HP iLO different generations  
+* IBM/Lenovo IMM1/IMM2  
+* ~~DELL servers~~  
+
 SAN/NAS class:  
-- NetApp devices  
-- Fujitsu Eternus DX100,DX200  
+* NetApp devices  
+* Fujitsu Eternus DX100,DX200
+* Dell Equallogic
+* EMC Storage
+* Hitachi Data Systems 
+
+and more..
