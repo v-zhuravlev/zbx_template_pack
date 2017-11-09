@@ -9,7 +9,7 @@ or (tcpdump/wireshark .pcap dump of this snmpwalk)
 Devices wanted list:  
 
 Network class:
-* Switches
+* Switches/Routers
   *	Alcatel-Lucent (not TimOS) devices  
   * Dell switches  
   *	Netgear switches  
@@ -18,7 +18,7 @@ Network class:
   * Intel/Qlogic Infiniband  
   *	ZTE Switches  
   * Arista FC
-* Firwalls:
+* Firewalls:
   * Fortigate
   * Sophos
   * Checkpoint
