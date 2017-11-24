@@ -113,7 +113,7 @@ cd zbx_template_pack/bin
 
 
 ```
-[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --lang EN ../out/module/3.2        
+[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --filter EN ../out/module/3.2        
 template_module_host_resources_SNMPv1_EN.xml  
 template_module_host_resources_SNMPv2_EN.xml  
 template_module_system_snmp_SNMPv1_EN.xml  
@@ -122,7 +122,7 @@ template_module_system_snmp_SNMPv2_EN.xml
 
 
 ```
-[user@host tmon bin]$ perl import-templates.pl -u Admin -p mypass --lang EN ../out/net/3.2  
+[user@host tmon bin]$ perl import-templates.pl -u Admin -p mypass --filter EN ../out/net/3.2  
 template_net_cisco_SNMPv1_EN.xml  
 template_net_cisco_SNMPv2_EN.xml  
 template_net_dlink_des_SNMPv1_EN.xml  
