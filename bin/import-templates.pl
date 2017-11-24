@@ -22,7 +22,7 @@ my $result;
 my $lang = "EN";
 
 GetOptions(
-    "api_url=s" =>  \$api_url,
+    "api_url|url=s" =>  \$api_url,
     "password|p=s"       => \$password,
     "username|u=s"      =>   \$username,
     "lang=s"      =>   \$lang,
