@@ -2979,7 +2979,7 @@ Please check virtualdisk for warnings or errors</description>
    <graphs/>
    <triggers>
       <trigger>
-         <expression>{Template Server HP iLO SNMPv2:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
+         <expression>{Template Server HP iLO SNMPv2:system.status[cpqSiMibCondition.0].count(#1,{$HEALTH_CRIT_STATUS},eq)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>System status is in critical state</name>
@@ -2996,7 +2996,7 @@ Please check the device for errors</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Server HP iLO SNMPv2:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_WARN_STATUS}</expression>
+         <expression>{Template Server HP iLO SNMPv2:system.status[cpqSiMibCondition.0].count(#1,{$HEALTH_WARN_STATUS},eq)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>System status is in warning state</name>
@@ -3012,7 +3012,7 @@ Please check the device for warnings</description>
          <dependencies>
             <dependency>
                <name>System status is in critical state</name>
-               <expression>{Template Server HP iLO SNMPv2:system.status[cpqSiMibCondition.0].last(0)}={$HEALTH_CRIT_STATUS}</expression>
+               <expression>{Template Server HP iLO SNMPv2:system.status[cpqSiMibCondition.0].count(#1,{$HEALTH_CRIT_STATUS},eq)}=1</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
