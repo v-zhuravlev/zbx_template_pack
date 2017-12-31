@@ -540,8 +540,8 @@ An estimate of the interface's current bandwidth in units of 1,000,000 bits per 
                <trigger_prototypes>
                   <trigger_prototype>
                      <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                      <name>Interface {#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -575,7 +575,7 @@ An estimate of the interface's current bandwidth in units of 1,000,000 bits per 
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                           <recovery_expression/>
+                           <recovery_expression>{Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
@@ -600,7 +600,7 @@ and {Template Module Interfaces Windows SNMPv2:net.if.out.errors[ifOutErrors.{#S
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                           <recovery_expression/>
+                           <recovery_expression>{Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
@@ -635,7 +635,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                           <recovery_expression/>
+                           <recovery_expression>{Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>

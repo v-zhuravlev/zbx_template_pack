@@ -538,8 +538,8 @@ For a sub-layer which has no concept of bandwidth, this object should be zero.</
                <trigger_prototypes>
                   <trigger_prototype>
                      <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                      <name>Interface {#IFDESCR}: Интерфейс недоступен</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -573,7 +573,7 @@ For a sub-layer which has no concept of bandwidth, this object should be zero.</
                         <dependency>
                            <name>Interface {#IFDESCR}: Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                           <recovery_expression/>
+                           <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
@@ -598,7 +598,7 @@ and {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SN
                         <dependency>
                            <name>Interface {#IFDESCR}: Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                           <recovery_expression/>
+                           <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
@@ -633,7 +633,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                         <dependency>
                            <name>Interface {#IFDESCR}: Интерфейс недоступен</name>
                            <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)</expression>
-                           <recovery_expression/>
+                           <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
