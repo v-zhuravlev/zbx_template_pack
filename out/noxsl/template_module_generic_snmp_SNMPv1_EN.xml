@@ -427,7 +427,13 @@ The device uptime is less than 10 minutes</description>
 SNMP is not available for polling. Please check device connectivity and SNMP settings.</description>
          <type>0</type>
          <manual_close>0</manual_close>
-         <dependencies/>
+         <dependencies>
+            <dependency>
+               <name>Unavailable by ICMP ping</name>
+               <expression>{Template Module Generic SNMPv1:icmpping.max(#3)}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
          <tags/>
       </trigger>
    </triggers>
