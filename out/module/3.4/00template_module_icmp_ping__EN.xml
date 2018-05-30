@@ -194,7 +194,7 @@ Last three attempts returned timeout.  Please check device connectivity.</descri
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -216,18 +216,18 @@ Last three attempts returned timeout.  Please check device connectivity.</descri
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>Unavailable by ICMP ping</name>
-               <expression>{Template Module ICMP Ping:icmpping.max(#3)}=0</expression>
+               <name>High ICMP ping loss</name>
+               <expression>{Template Module ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN} and {Template Module ICMP Ping:icmppingloss.min(5m)}&lt;100</expression>
                <recovery_expression/>
             </dependency>
             <dependency>
-               <name>High ICMP ping loss</name>
-               <expression>{Template Module ICMP Ping:icmppingloss.min(5m)}&gt;{$ICMP_LOSS_WARN} and {Template Module ICMP Ping:icmppingloss.min(5m)}&lt;100</expression>
+               <name>Unavailable by ICMP ping</name>
+               <expression>{Template Module ICMP Ping:icmpping.max(#3)}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
