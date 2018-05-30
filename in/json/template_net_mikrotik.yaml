@@ -1,0 +1,157 @@
+---
+templates:
+- name: Template Net Mikrotik
+  description: Template Net Mikrotik
+  classes:
+  - NETWORK
+  - INTERFACES
+  - SNMP_DEVICE
+  - SNMP_V2
+  documentation:
+    issues:
+      - description: Doesn't have ifHighSpeed filled. fixed in more recent versions
+        version: RotuerOS 6.28 or lower
+      - description: Doesn't have any temperature sensors
+        version: RotuerOS 6.38.5
+        device: Mikrotik 941-2nD, Mikrotik 951G-2HnD
+  discoveryRules:
+  - name: CPU Discovery
+    oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+    key: hrProcessorLoad.discovery
+    description: HOST-RESOURCES-MIB::hrProcessorTable discovery
+    metrics:
+    - prototype: system.cpu.util
+      snmpObject: hrProcessorLoad.{#SNMPINDEX}
+      oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
+      mib: HOST-RESOURCES-MIB
+      vendorDescription: The average, over the last minute, of the percentage of time
+        that this processor was not idle.Implementations may approximate this one
+        minute smoothing period if necessary.
+      alarmObject: "#{#SNMPINDEX}"
+  - name: Temperature Discovery CPU
+    oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.11]
+    key: mtxrHlProcessorTemperature.discovery
+    description: "MIKROTIK-MIB::mtxrHlProcessorTemperature\nSince temperature
+      of CPU is not available on all Mikrotik hardware, this is done to avoid unsupported
+      items."
+    metrics:
+    - prototype: sensor.temp.value
+      type: SNMP
+      vendorDocumentation: Discovery is used since this metric is not present on all
+        Mikrotik devices. Do not place {#SNMPINDEX} in location, it's redundant
+      oid: 1.3.6.1.4.1.14988.1.1.3.11.{#SNMPINDEX}
+      snmpObject: mtxrHlProcessorTemperature.{#SNMPINDEX}
+      mib: MIKROTIK-MIB
+      vendorDescription: "(mtxrHlProcessorTemperature) Processor temperature in Celsius
+        (degrees C). Might be missing in entry models (RB750, RB450G..)"
+      alarmObject: CPU
+      alarmObjectType: CPU
+      preprocessing:
+      - type: MULTIPLIER
+        params: '0.1'
+  - name: Storage Discovery
+    oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]
+    key: storage.discovery
+    description: HOST-RESOURCES-MIB::hrStorage discovery with storage filter
+    filter:
+      evalType: OR
+      conditions:
+      - macro: "{#STORAGE_TYPE}"
+        value: ".+4$"
+        formulaid: B
+      - macro: "{#STORAGE_TYPE}"
+        value: ".+hrStorageFixedDisk"
+        formulaid: A
+    metrics: 
+      - prototype: vfs.fs.used
+        snmpObject: "hrStorageSize.{#SNMPINDEX}"
+        oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
+        mib: HOST-RESOURCES-MIB
+        vendorDescription: The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.
+        preprocessing:
+          - type: MULTIPLIER
+            params: '1024'
+        alarmObject: "Disk-{#SNMPINDEX}"
+      - prototype: vfs.fs.total
+        snmpObject: "hrStorageSize.{#SNMPINDEX}"
+        oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
+        mib: HOST-RESOURCES-MIB
+        vendorDescription: |
+         The size of the storage represented by this entry, in
+         units of hrStorageAllocationUnits. This object is
+         writable to allow remote configuration of the size of
+         the storage area in those cases where such an
+         operation makes sense and is possible on the
+         underlying system. For example, the amount of main
+         memory allocated to a buffer pool might be modified or
+         the amount of disk space allocated to virtual memory
+         might be modified.
+        preprocessing:
+          - type: MULTIPLIER
+            params: '1024'
+        alarmObject: "Disk-{#SNMPINDEX}"        
+      - prototype: vfs.fs.pused
+        snmpObject: "hrStorageSize.{#SNMPINDEX}"
+        alarmObject: "Disk-{#SNMPINDEX}"
+        type: CALCULATED
+  metrics:
+  - prototype: vm.memory.used
+    oid: 1.3.6.1.2.1.25.2.3.1.6.65536
+    snmpObject: hrStorageUsed.Memory
+    mib: HOST-RESOURCES-MIB
+    vendorDescription: The amount of the storage represented by this entry that is
+      allocated, in units of hrStorageAllocationUnits.
+    preprocessing:
+    - type: MULTIPLIER
+      params: '1024'
+  - prototype: vm.memory.total
+    oid: 1.3.6.1.2.1.25.2.3.1.5.65536
+    snmpObject: hrStorageSize.Memory
+    mib: HOST-RESOURCES-MIB
+    vendorDescription: |
+     The size of the storage represented by this entry, in
+     units of hrStorageAllocationUnits. This object is
+     writable to allow remote configuration of the size of
+     the storage area in those cases where such an
+     operation makes sense and is possible on the
+     underlying system. For example, the amount of main
+     memory allocated to a buffer pool might be modified or
+     the amount of disk space allocated to virtual memory
+     might be modified.
+    preprocessing:
+    - type: MULTIPLIER
+      params: '1024'
+  - prototype: vm.memory.pused
+    snmpObject: memoryUsedPercentage.Memory
+    type: CALCULATED
+  - prototype: sensor.temp.value
+    type: SNMP
+    oid: 1.3.6.1.4.1.14988.1.1.3.10.0
+    snmpObject: mtxrHlTemperature
+    mib: MIKROTIK-MIB
+    vendorDescription: "(mtxrHlTemperature) Device temperature in Celsius (degrees
+      C). Might be missing in entry models (RB750, RB450G..)"
+    ref: http://wiki.mikrotik.com/wiki/Manual:SNMP
+    alarmObject: Device
+    alarmObjectType: Device
+    preprocessing:
+    - type: MULTIPLIER
+      params: '0.1'
+  - prototype: system.sw.os
+    oid: 1.3.6.1.4.1.14988.1.1.4.4.0
+    snmpObject: mtxrLicVersion.0
+    mib: MIKROTIK-MIB
+    vendorDescription: Software version
+  - prototype: system.hw.model
+    oid: 1.3.6.1.2.1.1.1.0
+    snmpObject: sysDescr.0
+  - prototype: system.hw.serialnumber
+    oid: 1.3.6.1.4.1.14988.1.1.7.3.0
+    snmpObject: mtxrSerialNumber.0
+    mib: MIKROTIK-MIB
+    vendorDescription: RouterBOARD serial number
+  - prototype: system.hw.firmware
+    oid: 1.3.6.1.4.1.14988.1.1.7.4.0
+    snmpObject: mtxrFirmwareVersion.0
+    mib: MIKROTIK-MIB
+    vendorDescription: Current firmware version
