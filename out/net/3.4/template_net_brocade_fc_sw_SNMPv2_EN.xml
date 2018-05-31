@@ -13,7 +13,6 @@
          <name>Template Net Brocade FC SNMPv2</name>
          <description>Template Net Brocade FC version: 0.15&#13;
 Overview: https://community.brocade.com/dtscp75322/attachments/dtscp75322/fibre/25235/1/FOS_MIB_Reference_v740.pdf&#13;
-&#13;
 MIBs used:&#13;
 SW-MIB&#13;
 Known Issues:&#13;
@@ -33,19 +32,19 @@ device : all</description>
                <name>Memory</name>
             </application>
             <application>
-               <name>Temperature</name>
+               <name>Status</name>
             </application>
             <application>
-               <name>Status</name>
+               <name>Inventory</name>
+            </application>
+            <application>
+               <name>Temperature</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
                <name>Fans</name>
-            </application>
-            <application>
-               <name>Inventory</name>
             </application>
          </applications>
          <items>
@@ -163,7 +162,7 @@ Memory utilization in %</description>
                <port/>
                <description>MIB: SW-MIB&#13;
 The current operational status of the switch.The states are as follow:&#13;
-online(1) means the switch is accessible by an external  Fibre Channel port&#13;
+online(1) means the switch is accessible by an external Fibre Channel port&#13;
 offline(2) means the switch is not accessible&#13;
 testing(3) means the switch is in a built-in test mode and is not accessible by an external Fibre Channel port&#13;
 faulty(4) means the switch is not operational.</description>
@@ -296,7 +295,6 @@ faulty(4) means the switch is not operational.</description>
                      <condition>
                         <macro>{#SENSOR_TYPE}</macro>
                         <value>1</value>
-                        <!-- 1 - temperature, 2 fan, 3 power-supply -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -489,7 +487,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <condition>
                         <macro>{#SENSOR_TYPE}</macro>
                         <value>3</value>
-                        <!-- 1 - temperature, 2 fan, 3 power-supply -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -620,7 +617,6 @@ Please check the power supply unit for errors</description>
                      <condition>
                         <macro>{#SENSOR_TYPE}</macro>
                         <value>2</value>
-                        <!-- 1 - temperature, 2 fan, 3 power-supply -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -702,7 +698,6 @@ Please check the power supply unit for errors</description>
                      <privatekey/>
                      <port/>
                      <description>MIB: SW-MIB&#13;
-&#13;
 The current value (reading) of the sensor.&#13;
 The value, -2147483648, represents an unknown quantity.&#13;
 The fan value will be in RPM(revolution per minute)</description>
@@ -770,12 +765,16 @@ Please check the fan unit</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>75</value>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>65</value>
+               <macro>{$FAN_CRIT_STATUS}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_OK_STATUS}</macro>
+               <value>4</value>
             </macro>
             <macro>
                <macro>{$HEALTH_CRIT_STATUS}</macro>
@@ -790,15 +789,11 @@ Please check the fan unit</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN_STATUS}</macro>
-               <value>5</value>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
                <macro>{$PSU_CRIT_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_CRIT_STATUS}</macro>
                <value>2</value>
             </macro>
             <macro>
@@ -806,36 +801,44 @@ Please check the fan unit</description>
                <value>4</value>
             </macro>
             <macro>
-               <macro>{$FAN_OK_STATUS}</macro>
-               <value>4</value>
+               <macro>{$TEMP_CRIT:"AMBIENT"}</macro>
+               <value>35</value>
             </macro>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
+               <macro>{$TEMP_CRIT:"CPU"}</macro>
+               <value>75</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT_LOW}</macro>
                <value>5</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>75</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
+               <macro>{$TEMP_WARN:"AMBIENT"}</macro>
+               <value>30</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN:"CPU"}</macro>
+               <value>70</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>65</value>
             </macro>
          </macros>
          <templates>
             <template>
-               <name>Template Module Interfaces SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
             <template>
-               <name>Template Module Generic SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
