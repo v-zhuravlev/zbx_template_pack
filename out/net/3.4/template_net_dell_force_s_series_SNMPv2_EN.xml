@@ -27,13 +27,13 @@ F10-S-SERIES-CHASSIS-MIB</description>
                <name>Memory</name>
             </application>
             <application>
-               <name>Temperature</name>
-            </application>
-            <application>
                <name>Power Supply</name>
             </application>
             <application>
                <name>Fans</name>
+            </application>
+            <application>
+               <name>Temperature</name>
             </application>
             <application>
                <name>Inventory</name>
@@ -842,19 +842,23 @@ Device serial number has changed. Ack to close</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>65</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>55</value>
-            </macro>
-            <macro>
-               <macro>{$PSU_CRIT_STATUS}</macro>
-               <value>2</value>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_OK_STATUS}</macro>
+               <value>1</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_CRIT_STATUS}</macro>
                <value>2</value>
             </macro>
             <macro>
@@ -862,39 +866,43 @@ Device serial number has changed. Ack to close</description>
                <value>1</value>
             </macro>
             <macro>
-               <macro>{$FAN_OK_STATUS}</macro>
-               <value>1</value>
+               <macro>{$TEMP_CRIT:"AMBIENT"}</macro>
+               <value>35</value>
             </macro>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
+               <macro>{$TEMP_CRIT:"CPU"}</macro>
+               <value>75</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT_LOW}</macro>
                <value>5</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>65</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
+               <macro>{$TEMP_WARN:"AMBIENT"}</macro>
+               <value>30</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN:"CPU"}</macro>
+               <value>70</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>55</value>
             </macro>
          </macros>
          <templates>
-            <template>
-               <name>Template Module Interfaces SNMPv2</name>
-            </template>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Generic SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
