@@ -7,6 +7,7 @@ templates:
       - Interfaces EtherLike Extension
       - NETWORK
       - SNMPv2
+    #<!-- https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx -->
     discoveryRules:
       - 
         name: "CPU and Memory and Flash Discovery"
@@ -25,6 +26,14 @@ templates:
           mib: "F10-S-SERIES-CHASSIS-MIB"
           vendorDescription: "Total memory usage in percentage."
           alarmObject: "#{#SNMPINDEX}"
+          # <!--could not be found on the real device. 	    <vfs.fs.pused>
+          #         <oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.6.{#SNMPINDEX}</oid>
+          #         <snmpObject>chStackUnitFlashUsageUtil.{#SNMPINDEX}</snmpObject>
+          #         <mib>F10-S-SERIES-CHASSIS-MIB</mib>
+          #         <vendorDescription>Total flash usage in percentage.</vendorDescription>
+          #         <discoveryRule>CPU and Memory and Flash Discovery</discoveryRule>
+          #         <alarmObject>#{#SNMPINDEX}</alarmObject>
+          # </vfs.fs.pused> -->
       - 
         name: "PSU Discovery"
         snmp_oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6027.3.10.1.2.3.1.1]"
