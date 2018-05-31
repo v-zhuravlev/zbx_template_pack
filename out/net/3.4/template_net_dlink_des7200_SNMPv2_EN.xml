@@ -14,10 +14,10 @@
          <description>Template D-Link DES 7200 version: 0.15&#13;
 MIBs used:&#13;
 MY-PROCESS-MIB&#13;
-MY-MEMORY-MIB&#13;
-MY-SYSTEM-MIB&#13;
 SNMPv2-MIB&#13;
-ENTITY-MIB</description>
+MY-MEMORY-MIB&#13;
+ENTITY-MIB&#13;
+MY-SYSTEM-MIB</description>
          <groups>
             <group>
                <name>Templates/Network Devices</name>
@@ -28,19 +28,19 @@ ENTITY-MIB</description>
                <name>CPU</name>
             </application>
             <application>
+               <name>Inventory</name>
+            </application>
+            <application>
                <name>Memory</name>
             </application>
             <application>
                <name>Temperature</name>
             </application>
             <application>
-               <name>Fans</name>
-            </application>
-            <application>
                <name>Power Supply</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Fans</name>
             </application>
          </applications>
          <items>
@@ -115,7 +115,7 @@ CPU utilization in %</description>
                <privatekey/>
                <port/>
                <description>MIB: SNMPv2-MIB&#13;
-A textual description of the entity.  This value should&#13;
+A textual description of the entity. This value should&#13;
 include the full name and version identification of the system's hardware type, software operating-system, and&#13;
 networking software.</description>
                <inventory_link>29</inventory_link>
@@ -728,48 +728,56 @@ Please check the fan unit</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>75</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>65</value>
-            </macro>
-            <macro>
-               <macro>{$PSU_CRIT_STATUS}</macro>
-               <value>5</value>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>
                <value>5</value>
             </macro>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
+               <macro>{$PSU_CRIT_STATUS}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT:"AMBIENT"}</macro>
+               <value>35</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT:"CPU"}</macro>
+               <value>75</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT_LOW}</macro>
                <value>5</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>75</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
+               <macro>{$TEMP_WARN:"AMBIENT"}</macro>
+               <value>30</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN:"CPU"}</macro>
+               <value>70</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>65</value>
             </macro>
          </macros>
          <templates>
             <template>
-               <name>Template Module Interfaces SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
             <template>
-               <name>Template Module Generic SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
