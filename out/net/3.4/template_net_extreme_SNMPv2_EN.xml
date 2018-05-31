@@ -26,19 +26,19 @@ ENTITY-MIB</description>
                <name>CPU</name>
             </application>
             <application>
-               <name>Memory</name>
+               <name>Temperature</name>
             </application>
             <application>
-               <name>Temperature</name>
+               <name>Inventory</name>
+            </application>
+            <application>
+               <name>Memory</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
                <name>Fans</name>
-            </application>
-            <application>
-               <name>Inventory</name>
             </application>
          </applications>
          <items>
@@ -856,6 +856,30 @@ Please check the fan unit</description>
          <httptests/>
          <macros>
             <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_CRIT_STATUS}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_CRIT_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_STATUS}</macro>
+               <value>1</value>
+            </macro>
+            <macro>
                <macro>{$TEMP_CRIT}</macro>
                <value>65</value>
             </macro>
@@ -863,48 +887,16 @@ Please check the fan unit</description>
                <macro>{$TEMP_WARN}</macro>
                <value>55</value>
             </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_STATUS}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$PSU_CRIT_STATUS}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_CRIT_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
          </macros>
          <templates>
-            <template>
-               <name>Template Module Interfaces SNMPv2</name>
-            </template>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Generic SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
@@ -1089,12 +1081,10 @@ Firmware version has changed. Ack to close</description>
             <mapping>
                <value>1</value>
                <newvalue>alarm</newvalue>
-               <!-- true -->
             </mapping>
             <mapping>
                <value>2</value>
                <newvalue>normal</newvalue>
-               <!-- false -->
             </mapping>
          </mappings>
       </value_map>
