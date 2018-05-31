@@ -1,0 +1,126 @@
+templates:
+  - 
+    name: "Template Module HOST-RESOURCES-MIB"
+    description: "HOST-RESOURCES-MIB: CPU, Memory and Storage"
+    classes:
+     - SNMPv1
+     - SNMPv2
+    discoveryRules:
+      - name: CPU Discovery
+        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+        key: hrProcessorLoad.discovery
+        description: HOST-RESOURCES-MIB::hrProcessorTable discovery
+        metrics:
+          - prototype: system.cpu.util
+            oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
+            snmpObject: hrProcessorLoad.{#SNMPINDEX}
+            mib: HOST-RESOURCES-MIB
+            alarmObject: "#{#SNMPINDEX}"
+            vendorDescription: |
+             The average, over the last minute, of the percentage of time that this processor was not idle.
+             Implementations may approximate this one minute smoothing period if necessary.
+      - name: "Memory Discovery"
+        oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
+        key: "memory.discovery"
+        description: "HOST-RESOURCES-MIB::hrStorage discovery with memory filter"
+        filter: 
+          evalType: OR
+          conditions: 
+          - 
+            macro: "{#STORAGE_TYPE}"
+            value: ".+2$"
+            operator: 8
+            formulaid: B
+          - 
+            macro: "{#STORAGE_TYPE}"
+            value: ".+hrStorageRam"
+            operator: 8
+            formulaid: A
+        metrics:
+          - prototype: "vm.memory.units"
+            oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
+            snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one. Otherwise this number will typically be one."
+            alarmObject: "#{#SNMPINDEX}"
+          - prototype: "vm.memory.units.used"
+            oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
+            snmpObject: "hrStorageUsed.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
+            alarmObject: "#{#SNMPINDEX}"
+          - prototype: "vm.memory.units.total"
+            oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
+            snmpObject: "hrStorageSize.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified."
+            alarmObject: "#{#SNMPINDEX}"
+          - prototype: "vm.memory.used"
+            snmpObject: "memoryUsed.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "#{#SNMPINDEX}"
+          - prototype: "vm.memory.total"
+            snmpObject: "memoryTotal.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "#{#SNMPINDEX}"
+          - prototype: "vm.memory.pused"
+            snmpObject: "memoryUsedPercentage.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "#{#SNMPINDEX}"
+      - name: "Storage Discovery"
+        oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
+        key: "storage.discovery"
+        description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
+        filter: 
+          evalType: OR
+          conditions: 
+          - 
+            macro: "{#STORAGE_TYPE}"
+            value: ".+(4|9)"
+            # OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9
+            operator: 8
+            formulaid: B
+          - 
+            macro: "{#STORAGE_TYPE}"
+            value: ".+(hrStorageFixedDisk|hrStorageFlashMemory)"
+            operator: 8
+            formulaid: A
+        metrics:
+          - prototype: vfs.fs.units
+            oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
+            snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
+            alarmObject: "{#SNMPVALUE}"
+ 
+          - prototype: vfs.fs.units.used
+            oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
+            snmpObject: "hrStorageUsed.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
+            alarmObject: "{#SNMPVALUE}"
+    
+          - prototype: vfs.fs.units.total
+            oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
+            snmpObject: "hrStorageSize.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
+            alarmObject: "{#SNMPVALUE}"
+    
+          - prototype: vfs.fs.used
+            snmpObject: "storageUsed.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "{#SNMPVALUE}"
+    
+          - prototype: vfs.fs.total
+            snmpObject: "storageTotal.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "{#SNMPVALUE}"
+    
+          - prototype: vfs.fs.pused
+            snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "{#SNMPVALUE}"
+    
+    
+
