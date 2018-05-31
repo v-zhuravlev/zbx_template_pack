@@ -1,0 +1,88 @@
+{"templates": [
+    {
+        "name": "Template Module EtherLike-MIB",
+        "description": "Template EtherLike-MIB (duplex control only)",
+        "classes": [
+            "SNMP_V2","SNMP_V1"
+        ],
+        "discoveryRules": [
+            {
+                "name": "EtherLike-MIB Discovery",
+                "oid": "discovery[{#SNMPVALUE},1.3.6.1.2.1.10.7.2.1.19,{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2]",
+                "key":"net.if.duplex.discovery",
+                "description":"Discovering interfaces from IF-MIB and EtherLike-MIB. Interfaces with up(1) Operational Status are discovered.",
+                "filter":{
+                    "evalType":"AND",
+                    "conditions":[
+                        {
+                            "macro":"{#IFOPERSTATUS}",
+                            "value":"1",
+                            "operator":"8",
+                            "formulaid":"A"
+                        },
+                        {
+                            "macro":"{#SNMPVALUE}",
+                            "value":"(2|3)",
+                            "operator":"8",
+                            "formulaid":"B"
+                        }
+                    ]
+
+                },
+                "metrics": [
+                    {
+                        //"documentation":"net.if.duplex",
+                        "id":"net.if.duplex",
+                        "name": "Duplex status",
+                        "oid": "1.3.6.1.2.1.10.7.2.1.19.{#SNMPINDEX}",
+                        "snmpObject": "dot3StatsDuplexStatus.{#SNMPINDEX}",
+                        "mib": "EtherLike-MIB",
+                        "alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+                        "valueMap":"EtherLike-MIB::dot3StatsDuplexStatus",
+                        "ref":"[IEEE 802.3 Std.], 30.3.1.1.32,aDuplexStatus.",
+                        "vendorDescription": "The current mode of operation of the MAC\nentity.  'unknown' indicates that the current\nduplex mode could not be determined.\n\nManagement control of the duplex mode is\naccomplished through the MAU MIB.  When\nan interface does not support autonegotiation,\nor when autonegotiation is not enabled, the\nduplex mode is controlled using\nifMauDefaultType.  When autonegotiation is\nsupported and enabled, duplex mode is controlled\nusing ifMauAutoNegAdvertisedBits.  In either\ncase, the currently operating duplex mode is\nreflected both in this object and in ifMauType.\n\nNote that this object provides redundant\ninformation with ifMauType.  Normally, redundant\nobjects are discouraged.  However, in this\ninstance, it allows a management application to\ndetermine the duplex status of an interface\nwithout having to know every possible value of\nifMauType.  This was felt to be sufficiently\nvaluable to justify the redundancy.",
+                        "group":"Network_Interfaces",
+                        "history":"1w",
+                        "trends":"0d",
+                        "value_type":"INTEGER",
+                        "triggers":[
+                            {
+                                "prototype":"none",
+                                "id":"if.halfduplex",
+                                "expression":"{TEMPLATE_NAME:METRIC.last()}=2",
+                                "manual_close":"YES",
+                                "name":"In half-duplex mode",
+                                "priority":"2",
+                                "description":"Please check autonegotiation settings and cabling"
+                            }
+                        ]
+
+
+                    }
+                ]
+
+            }
+        ]
+
+    }
+],
+    "value_maps": [
+        {
+            "name": "EtherLike-MIB::dot3StatsDuplexStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "halfDuplex"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "fullDuplex"
+                }
+            ]
+        }
+    ]
+}
