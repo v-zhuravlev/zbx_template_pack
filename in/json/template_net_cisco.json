@@ -1,0 +1,560 @@
+{
+    "templates": [
+        {
+            "classes": [
+                "SNMPv2",
+                "MODULE"
+            ],
+            "name": "Template Module Cisco CISCO-MEMORY-POOL-MIB",
+            "description": "Template Cisco CISCO-MEMORY-POOL-MIB",
+            "discoveryRules": [
+                {
+                    "name": "Memory Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.9.9.48.1.1.1.2]",
+                    "key": "memory.discovery",
+                    "description": "Discovery of ciscoMemoryPoolTable, a table of memory pool monitoring entries.\r\nhttp://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15216-contiguous-memory.html",
+                    "metrics": [
+                        {
+                            "prototype": "vm.memory.used",
+                            "oid": "1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}",
+                            "snmpObject": "ciscoMemoryPoolUsed.{#SNMPINDEX}",
+                            "mib": "CISCO-MEMORY-POOL-MIB",
+                            "ref": "http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15216-contiguous-memory.html",
+                            "vendorDescription": "Indicates the number of bytes from the memory pool that are currently in use by applications on the managed device.",
+                            "alarmObject": "{#SNMPVALUE}"
+                        },
+                        {
+                            "prototype": "vm.memory.free",
+                            "oid": "1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}",
+                            "snmpObject": "ciscoMemoryPoolFree.{#SNMPINDEX}",
+                            "mib": "CISCO-MEMORY-POOL-MIB",
+                            "ref": "http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15216-contiguous-memory.html",
+                            "vendorDescription": "Indicates the number of bytes from the memory pool that are currently unused on the managed device. Note that the sum of ciscoMemoryPoolUsed and ciscoMemoryPoolFree is the total amount of memory in the pool",
+                            "alarmObject": "{#SNMPVALUE}"
+                        },
+                        {
+                            "prototype": "vm.memory.pused",
+                            "snmpObject": "vm.memory.pused.{#SNMPINDEX}",
+                            "type": "CALCULATED",
+                            "alarmObject": "{#SNMPVALUE}"
+                        }
+                    ]
+                }
+            ],
+            "metrics": []
+        },
+        {
+            "classes": [
+                "SNMPv2",
+                "MODULE"
+            ],
+            "name": "Template Module Cisco CISCO-PROCESS-MIB",
+            "description": "Template Cisco CISCO-PROCESS-MIB",
+            "discoveryRules": [
+                {
+                    "name": "CPU Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.9.9.109.1.1.1.1.5]",
+                    "key": "cpu.discovery",
+                    "description": "If your IOS device has several CPUs, you must use CISCO-PROCESS-MIB and its object cpmCPUTotal5minRev from the table called cpmCPUTotalTable ,\r\nindexed with cpmCPUTotalIndex .\r\nThis table allows CISCO-PROCESS-MIB to keep CPU statistics for different physical entities in the router,\r\nlike different CPU chips, group of CPUs, or CPUs in different modules/cards.\r\nIn case of a single CPU, cpmCPUTotalTable has only one entry.",
+                    "metrics": [
+                        {
+                            "prototype": "system.cpu.util",
+                            "oid": "1.3.6.1.4.1.9.9.109.1.1.1.1.8.{#SNMPINDEX}",
+                            "snmpObject": "cpmCPUTotal5minRev.{#SNMPINDEX}",
+                            "mib": "CISCO-PROCESS-MIB",
+                            "ref": "http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15215-collect-cpu-util-snmp.html",
+                            "vendorDescription": "The cpmCPUTotal5minRev MIB object provides a more accurate view of the performance of the router over time than the MIB objects cpmCPUTotal1minRev and cpmCPUTotal5secRev . These MIB objects are not accurate because they look at CPU at one minute and five second intervals, respectively. These MIBs enable you to monitor the trends and plan the capacity of your network. The recommended baseline rising threshold for cpmCPUTotal5minRev is 90 percent. Depending on the platform, some routers that run at 90 percent, for example, 2500s, can exhibit performance degradation versus a high-end router, for example, the 7500 series, which can operate fine.",
+                            "alarmObject": "#{#SNMPINDEX}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "classes": [
+                "SNMPv2",
+                "MODULE"
+            ],
+            "name": "Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5",
+            "description": "Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5",
+            "discoveryRules": [
+                {
+                    "name": "CPU Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.9.9.109.1.1.1.1.5]",
+                    "key": "cpu.discovery",
+                    "description": "If your IOS device has several CPUs, you must use CISCO-PROCESS-MIB and its object cpmCPUTotal5minRev from the table called cpmCPUTotalTable ,\r\nindexed with cpmCPUTotalIndex .\r\nThis table allows CISCO-PROCESS-MIB to keep CPU statistics for different physical entities in the router,\r\nlike different CPU chips, group of CPUs, or CPUs in different modules/cards.\r\nIn case of a single CPU, cpmCPUTotalTable has only one entry.",
+                    "metrics": [
+                        {
+                            "prototype": "system.cpu.util",
+                            "oid": "1.3.6.1.4.1.9.9.109.1.1.1.1.5.{#SNMPINDEX}",
+                            "snmpObject": "cpmCPUTotal5min.{#SNMPINDEX}",
+                            "mib": "CISCO-PROCESS-MIB",
+                            "ref": "http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15215-collect-cpu-util-snmp.html",
+                            "vendorDescription": "The overall CPU busy percentage in the last 5 minute\r\nperiod. This object deprecates the avgBusy5 object from\r\nthe OLD-CISCO-SYSTEM-MIB. This object is deprecated\r\nby cpmCPUTotal5minRev which has the changed range\r\nof value (0..100)",
+                            "alarmObject": "{#SNMPVALUE}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "classes": [
+                "SNMPv2",
+                "MODULE"
+            ],
+            "name": "Template Module Cisco OLD-CISCO-CPU-MIB",
+            "description": "Template Cisco OLD-CISCO-CPU-MIB",
+            "metrics": [
+                {
+                    "prototype": "system.cpu.util",
+                    "oid": "1.3.6.1.4.1.9.2.1.58",
+                    "snmpObject": "avgBusy5",
+                    "mib": "OLD-CISCO-CPU-MIB",
+                    "ref": "http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15215-collect-cpu-util-snmp.html",
+                    "vendorDescription": "5 minute exponentially-decayed moving average of the CPU busy percentage."
+                }
+            ]
+        },
+        {
+            "classes": [
+                "SNMPv2",
+                "MODULE"
+            ],
+            "name": "Template Module Cisco Inventory",
+            "description": "Template Cisco Inventory",
+            "discoveryRules": [
+                {
+                    "name": "Entity Serial Numbers Discovery",
+                    "snmp_oid": "discovery[{#ENT_CLASS},1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7,{#ENT_SN},1.3.6.1.2.1.47.1.1.1.1.11]",
+                    "key": "entity_sn.discovery",
+                    "filter": {
+                        "evalType": "AND",
+                        "conditions": [
+                            {
+                                "macro": "{#ENT_SN}",
+                                "value": ".+",
+                                "operator": "8",
+                                "formulaid": "B"
+                            },
+                            {
+                                "macro": "{#ENT_CLASS}",
+                                "value": "[^3]",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.serialnumber",
+                            "oid": "1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}",
+                            "snmpObject": "entPhysicalSerialNum.{#SNMPINDEX}",
+                            "mib": "ENTITY-MIB",
+                            "alarmObject": "{#ENT_NAME}"
+                        }
+                    ]
+                }
+            ],
+            "metrics": [
+                {
+                    "prototype": "system.hw.model",
+                    "oid": "1.3.6.1.2.1.47.1.1.1.1.13.1",
+                    "snmpObject": "entPhysicalModelName.1",
+                    "mib": "ENTITY-MIB"
+                },
+                {
+                    "prototype": "system.hw.serialnumber",
+                    "oid": "1.3.6.1.2.1.47.1.1.1.1.11.1",
+                    "snmpObject": "entPhysicalSerialNum.1",
+                    "mib": "ENTITY-MIB"
+                },
+                {
+                    "prototype": "system.sw.os",
+                    //"@zbx_ver": "3.4",
+                    "oid": "1.3.6.1.2.1.1.1.0",
+                    "snmpObject": "sysDescr.0",
+                    "mib": "SNMPv2-MIB",
+                    "preprocessing": [
+                        {
+                            "type": "REGEX",
+                            "params": "Version (.+), RELEASE\r\n\\1"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "classes": [
+                "SNMPv2",
+                "MODULE"
+            ],
+            "name": "Template Module Cisco CISCO-ENVMON-MIB",
+            "description": "Template Cisco CISCO-ENVMON-MIB",
+            "discoveryRules": [
+                {
+                    "name": "Temperature Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.9.9.13.1.3.1.2]",
+                    "key": "temperature.discovery",
+                    "description": "Discovery of ciscoEnvMonTemperatureTable (ciscoEnvMonTemperatureDescr), a table of ambient temperature status\r\nmaintained by the environmental monitor.",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.9.9.13.1.3.1.3.{#SNMPINDEX}",
+                            "snmpObject": "ciscoEnvMonTemperatureValue.{#SNMPINDEX}",
+                            "mib": "CISCO-ENVMON-MIB",
+                            "vendorDescription": "The current measurement of the test point being instrumented.",
+                            "alarmObject": "{#SNMPVALUE}",
+                            "triggers": [
+                                {
+                                    "prototype": "tempWarn.combined"
+                                },
+                                {
+                                    "prototype": "tempCrit.combined",
+                                    "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_CRIT:\"__ALARM_OBJECT_TYPE__\"}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_CRIT_STATUS}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_DISASTER_STATUS}"
+                                },
+                                {
+                                    "prototype": "tempLow"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "sensor.temp.status",
+                            "oid": "1.3.6.1.4.1.9.9.13.1.3.1.6.{#SNMPINDEX}",
+                            "snmpObject": "ciscoEnvMonTemperatureState.{#SNMPINDEX}",
+                            "mib": "CISCO-ENVMON-MIB",
+                            "vendorDescription": "The current state of the test point being instrumented.",
+                            "alarmObject": "{#SNMPVALUE}",
+                            "valueMap": "CISCO-ENVMON-MIB::CiscoEnvMonState"
+                        }
+                    ]
+                },
+                {
+                    "name": "PSU Discovery",
+                    "snmp_oid": "discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.5.1.2]",
+                    "key": "psu.discovery",
+                    "description": "The table of power supply status maintained by the environmental monitor card.",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.psu.status",
+                            "oid": "1.3.6.1.4.1.9.9.13.1.5.1.3.{#SNMPINDEX}",
+                            "snmpObject": "ciscoEnvMonSupplyState.{#SNMPINDEX}",
+                            "mib": "CISCO-ENVMON-MIB",
+                            "alarmObject": "{#SENSOR_INFO}",
+                            "valueMap": "CISCO-ENVMON-MIB::CiscoEnvMonState",
+                            "triggers": [
+                                {
+                                    "prototype": "psu.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"critical\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"shutdown\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "psu.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"warning\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"notFunctioning\"},eq)}=1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "FAN Discovery",
+                    "snmp_oid": "discovery[{#SENSOR_INFO},1.3.6.1.4.1.9.9.13.1.4.1.2]",
+                    "key": "fan.discovery",
+                    "description": "The table of fan status maintained by the environmental monitor.",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.fan.status",
+                            "oid": "1.3.6.1.4.1.9.9.13.1.4.1.3.{#SNMPINDEX}",
+                            "snmpObject": "ciscoEnvMonFanState.{#SNMPINDEX}",
+                            "mib": "CISCO-ENVMON-MIB",
+                            "alarmObject": "{#SENSOR_INFO}",
+                            "valueMap": "CISCO-ENVMON-MIB::CiscoEnvMonState",
+                            "triggers": [
+                                {
+                                    "prototype": "fan.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"critical\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"shutdown\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "fan.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"warning\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"notFunctioning\"},eq)}=1"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$TEMP_CRIT:\"CPU\"}",
+                    "value": "75"
+                },
+                {
+                    "macro": "{$TEMP_WARN:\"CPU\"}",
+                    "value": "70"
+                },
+                {
+                    "macro": "{$TEMP_WARN_STATUS}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$TEMP_CRIT_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$TEMP_DISASTER_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$PSU_CRIT_STATUS:\"critical\"}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$PSU_CRIT_STATUS:\"shutdown\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$PSU_WARN_STATUS:\"warning\"}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$PSU_WARN_STATUS:\"notFunctioning\"}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"critical\"}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"shutdown\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$FAN_WARN_STATUS:\"warning\"}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$FAN_WARN_STATUS:\"notFunctioning\"}",
+                    "value": "6"
+                }
+            ]
+        },
+        {
+            "classes": [
+                "PERFORMANCE",
+                "FAULT",
+                "INVENTORY",
+                "INTERFACES",
+                "Interfaces EtherLike Extension",
+                "NETWORK",
+                "SNMP_DEVICE",
+                "SNMPv2"
+            ],
+            "name": "Template Net Cisco IOS",
+            "description": "Template Cisco IOS Software releases 12.2(3.5) or later",
+            "documentation": {
+                "issues": [
+                    {
+                        "description": "no if(in|out)(Errors|Discards) are available for vlan ifType",
+                        "version": "IOS for example: 12.1(22)EA11, 15.4(3)M2",
+                        "device": "C2911, C7600"
+                    }
+                ]
+            },
+            // "metrics": {
+            //   { "prototype": "system.cpu.util",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.used",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.free",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.pused",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.temp.value",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.temp.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.psu.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.fan.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "system.hw.model",
+            //     "imported": "true"
+            //   },
+            //   "system.hw.serialnumber": [
+            //     {
+            //       "imported": "true"
+            //     },
+            //     {
+            //       "imported": "true"
+            //     }
+            //   ],
+            //   { "prototype": "system.sw.os",
+            //     //"@zbx_ver": "3.4",
+            //     "imported": "true"
+            //   }
+            // },
+            "templates": [
+                "Template Module Cisco Inventory SNMPvX",
+                "Template Module Cisco CISCO-ENVMON-MIB SNMPvX",
+                "Template Module Cisco CISCO-PROCESS-MIB SNMPvX",
+                "Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPvX"
+            ]
+        },
+        {
+            "classes": [
+                "PERFORMANCE",
+                "FAULT",
+                "INVENTORY",
+                "INTERFACES",
+                "NETWORK",
+                "SNMP_DEVICE",
+                "SNMPv2"
+            ],
+            "name": "Template Net Cisco IOS versions 12.0_3_T-12.2_3.5",
+            "description": "Cisco IOS Software releases later to 12.0(3)T and prior to 12.2(3.5)",
+            // "metrics": [
+            //   { "prototype": "system.cpu.util",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.used",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.free",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.pused",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.temp.value",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.temp.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.psu.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.fan.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "system.hw.model",
+            //     "imported": "true"
+            //   },
+            //   "system.hw.serialnumber": [
+            //     {
+            //       "imported": "true"
+            //     },
+            //     {
+            //       "imported": "true"
+            //     }
+            //   ],
+            //   { "prototype": "system.sw.os",
+            //     //"@zbx_ver": "3.4",
+            //     "imported": "true"
+            //   }
+            // ],
+            "templates": [
+                "Template Module Cisco Inventory SNMPvX",
+                "Template Module Cisco CISCO-ENVMON-MIB SNMPvX",
+                "Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPvX",
+                "Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPvX"
+            ]
+        },
+        {
+            "classes": [
+                "PERFORMANCE",
+                "FAULT",
+                "INVENTORY",
+                "NETWORK",
+                "SNMP_DEVICE",
+                "SNMPv2"
+            ],
+            "name": "Template Net Cisco IOS prior to 12.0_3_T",
+            "description": "Cisco IOS Software releases prior to 12.0(3)T",
+            // "metrics": {
+            //   { "prototype": "system.cpu.util",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.used",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.free",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "vm.memory.pused",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.temp.value",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.temp.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.psu.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "sensor.fan.status",
+            //     "imported": "true"
+            //   },
+            //   { "prototype": "system.hw.model",
+            //     "imported": "true"
+            //   },
+            //   "system.hw.serialnumber": [
+            //     {
+            //       "imported": "true"
+            //     },
+            //     {
+            //       "imported": "true"
+            //     }
+            //   ],
+            //   { "prototype": "system.sw.os",
+            //     //"@zbx_ver": "3.4",
+            //     "imported": "true"
+            //   }
+            // },
+            "templates": [
+                "Template Module Cisco Inventory SNMPvX",
+                "Template Module Cisco CISCO-ENVMON-MIB SNMPvX",
+                "Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPvX",
+                "Template Module Cisco OLD-CISCO-CPU-MIB SNMPvX"
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "CISCO-ENVMON-MIB::CiscoEnvMonState",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "normal"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "warning"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "critical"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "shutdown"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "notPresent"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "notFunctioning"
+                }
+            ]
+        }
+    ]
+}
