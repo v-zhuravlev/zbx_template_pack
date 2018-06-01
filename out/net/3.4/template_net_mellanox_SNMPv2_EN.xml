@@ -23,16 +23,16 @@ ENTITY-MIB</description>
          </groups>
          <applications>
             <application>
-               <name>Temperature</name>
+               <name>Fans</name>
             </application>
             <application>
-               <name>Fans</name>
+               <name>Inventory</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Temperature</name>
             </application>
          </applications>
          <items/>
@@ -658,36 +658,20 @@ Please check the power supply unit for errors</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$PSU_CRIT_STATUS}</macro>
-               <value>2</value>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS}</macro>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN_STATUS}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
                <macro>{$MEMORY_UTIL_MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
+               <macro>{$PSU_CRIT_STATUS}</macro>
+               <value>2</value>
             </macro>
             <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
@@ -697,16 +681,32 @@ Please check the power supply unit for errors</description>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
          </macros>
          <templates>
+            <template>
+               <name>Template Module Generic SNMPv2</name>
+            </template>
             <template>
                <name>Template Module HOST-RESOURCES-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Interfaces SNMPv2</name>
-            </template>
-            <template>
-               <name>Template Module Generic SNMPv2</name>
             </template>
          </templates>
          <screens/>

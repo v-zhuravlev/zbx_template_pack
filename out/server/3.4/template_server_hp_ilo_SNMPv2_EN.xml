@@ -25,28 +25,28 @@ CPQIDA-MIB</description>
          </groups>
          <applications>
             <application>
-               <name>Temperature</name>
-            </application>
-            <application>
-               <name>Status</name>
-            </application>
-            <application>
-               <name>Power Supply</name>
+               <name>Disk Arrays</name>
             </application>
             <application>
                <name>Fans</name>
             </application>
             <application>
-               <name>Disk Arrays</name>
+               <name>Inventory</name>
             </application>
             <application>
                <name>Physical Disks</name>
             </application>
             <application>
-               <name>Virtual Disks</name>
+               <name>Power Supply</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Status</name>
+            </application>
+            <application>
+               <name>Temperature</name>
+            </application>
+            <application>
+               <name>Virtual Disks</name>
             </application>
          </applications>
          <items>
@@ -1953,13 +1953,13 @@ Please check the device for faults</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in warning state</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"},eq)}=1</expression>
+                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in critical state!</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                         <dependency>
-                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in critical state!</name>
-                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"},eq)}=1</expression>
+                           <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in warning state</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"},eq)}=1 or {Template Server HP iLO SNMPv2:system.hw.diskarray.cache.status[cpqDaAccelStatus.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2801,6 +2801,78 @@ Please check virtualdisk for warnings or errors</description>
          <httptests/>
          <macros>
             <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"capacitorFailed"}</macro>
+               <value>7</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"failed"}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"degraded"}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"notPresent"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"}</macro>
+               <value>8</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_OK_STATUS:"enabled"}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"}</macro>
+               <value>7</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"}</macro>
+               <value>9</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_CRIT_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_ARRAY_WARN_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_FAIL_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_SMART_FAIL_STATUS:"replaceDrive"}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$DISK_WARN_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_CRIT_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
                <macro>{$HEALTH_CRIT_STATUS}</macro>
                <value>4</value>
             </macro>
@@ -2817,68 +2889,32 @@ Please check virtualdisk for warnings or errors</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$FAN_CRIT_STATUS}</macro>
-               <value>4</value>
+               <macro>{$STORAGE_UTIL_CRIT}</macro>
+               <value>90</value>
             </macro>
             <macro>
-               <macro>{$FAN_WARN_STATUS}</macro>
-               <value>3</value>
+               <macro>{$STORAGE_UTIL_WARN}</macro>
+               <value>80</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT:"Ambient"}</macro>
                <value>35</value>
             </macro>
             <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
                <macro>{$TEMP_WARN:"Ambient"}</macro>
                <value>30</value>
             </macro>
             <macro>
-               <macro>{$DISK_ARRAY_CRIT_STATUS}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_WARN_STATUS}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"}</macro>
-               <value>8</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"}</macro>
-               <value>7</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"}</macro>
-               <value>9</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"}</macro>
-               <value>6</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_OK_STATUS:"enabled"}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"failed"}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"capacitorFailed"}</macro>
-               <value>7</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"degraded"}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"notPresent"}</macro>
-               <value>6</value>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
             </macro>
             <macro>
                <macro>{$VDISK_CRIT_STATUS}</macro>
@@ -2887,42 +2923,6 @@ Please check virtualdisk for warnings or errors</description>
             <macro>
                <macro>{$VDISK_OK_STATUS}</macro>
                <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_WARN_STATUS}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_FAIL_STATUS}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_SMART_FAIL_STATUS:"replaceDrive"}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
             </macro>
          </macros>
          <templates>

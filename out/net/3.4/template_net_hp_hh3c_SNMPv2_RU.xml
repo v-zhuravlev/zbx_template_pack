@@ -32,19 +32,19 @@ device : HP 1910-48</description>
                <name>CPU</name>
             </application>
             <application>
-               <name>Memory</name>
-            </application>
-            <application>
-               <name>Temperature</name>
-            </application>
-            <application>
                <name>Fans</name>
+            </application>
+            <application>
+               <name>Inventory</name>
+            </application>
+            <application>
+               <name>Memory</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Temperature</name>
             </application>
          </applications>
          <items/>
@@ -963,11 +963,23 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
          <httptests/>
          <macros>
             <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
                <macro>{$FAN_CRIT_STATUS:"fanError"}</macro>
                <value>41</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS:"hardwareFaulty"}</macro>
+               <value>91</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$PSU_CRIT_STATUS:"hardwareFaulty"}</macro>
                <value>91</value>
             </macro>
             <macro>
@@ -979,16 +991,16 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                <value>61</value>
             </macro>
             <macro>
-               <macro>{$PSU_CRIT_STATUS:"hardwareFaulty"}</macro>
-               <value>91</value>
-            </macro>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$STORAGE_UTIL_CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
+               <macro>{$STORAGE_UTIL_WARN}</macro>
+               <value>80</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT}</macro>
@@ -998,28 +1010,16 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                <macro>{$TEMP_WARN}</macro>
                <value>50</value>
             </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
          </macros>
          <templates>
-            <template>
-               <name>Template Module Interfaces SNMPv2</name>
-            </template>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Generic SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
