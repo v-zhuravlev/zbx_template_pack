@@ -1,0 +1,138 @@
+templates:
+  - name: Template Net Dell Force S-Series
+    description: Template Dell Force S-Series
+    classes:
+      - INTERFACES
+      - SNMP_DEVICE
+      - Interfaces EtherLike Extension
+      - NETWORK
+      - SNMPv2
+    #<!-- https://www.force10networks.com/csportal20/KnowledgeBase/Documentation.aspx -->
+    discoveryRules:
+      - 
+        name: "CPU and Memory and Flash Discovery"
+        snmp_oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6027.3.10.1.2.9.1.1]"
+        key: "module.discovery"
+        metrics:
+        - prototype: system.cpu.util
+          oid: "1.3.6.1.4.1.6027.3.10.1.2.9.1.3.{#SNMPINDEX}"
+          snmpObject: "chStackUnitCpuUtil1Min.{#SNMPINDEX}"
+          mib: "F10-S-SERIES-CHASSIS-MIB"
+          vendorDescription: "CPU utilization in percentage for last 1 minute."
+          alarmObject: "#{#SNMPINDEX}"
+        - prototype: vm.memory.pused
+          oid: "1.3.6.1.4.1.6027.3.10.1.2.9.1.5.{#SNMPINDEX}"
+          snmpObject: "chStackUnitMemUsageUtil.{#SNMPINDEX}"
+          mib: "F10-S-SERIES-CHASSIS-MIB"
+          vendorDescription: "Total memory usage in percentage."
+          alarmObject: "#{#SNMPINDEX}"
+          # <!--could not be found on the real device. 	    <vfs.fs.pused>
+          #         <oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.6.{#SNMPINDEX}</oid>
+          #         <snmpObject>chStackUnitFlashUsageUtil.{#SNMPINDEX}</snmpObject>
+          #         <mib>F10-S-SERIES-CHASSIS-MIB</mib>
+          #         <vendorDescription>Total flash usage in percentage.</vendorDescription>
+          #         <discoveryRule>CPU and Memory and Flash Discovery</discoveryRule>
+          #         <alarmObject>#{#SNMPINDEX}</alarmObject>
+          # </vfs.fs.pused> -->
+      - 
+        name: "PSU Discovery"
+        snmp_oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6027.3.10.1.2.3.1.1]"
+        key: "psu.discovery"
+        description: "A list of power supply residents in the S-series chassis."
+        metrics:
+          - prototype: sensor.psu.status
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.3.1.2.{#SNMPINDEX}"
+            snmpObject: "chSysPowerSupplyOperStatus.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "PSU {#SNMPVALUE}"
+            valueMap: "F10-S-SERIES-CHASSIS-MIB::chSysPowerSupplyOperStatus"
+            vendorDescription: "The status of the power supply {#SNMPVALUE}"
+            triggers:
+              - prototype: psu.crit
+              - prototype: psu.notok
+      - 
+        name: "FAN Discovery"
+        snmp_oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6027.3.10.1.2.4.1.1]"
+        key: "fan.discovery"
+        metrics:
+          - prototype: sensor.fan.status
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.4.1.2.{#SNMPINDEX}"
+            snmpObject: "chSysFanTrayOperStatus.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "Fan {#SNMPVALUE}"
+            valueMap: "F10-S-SERIES-CHASSIS-MIB::chSysFanTrayOperStatus"
+            vendorDescription: "The status of the fan tray {#SNMPVALUE}."
+            triggers:
+              - prototype: fan.crit
+              - prototype: fan.notok
+      - 
+        name: "Stack Unit Discovery"
+        snmp_oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6027.3.10.1.2.2.1.2]"
+        key: "stack.discovery"
+        metrics:
+          - prototype: sensor.temp.value
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.14.{#SNMPINDEX}"
+            snmpObject: "chStackUnitTemp.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "Device {#SNMPVALUE}"
+            vendorDescription: "The temperature of the unit."
+          - prototype: system.hw.model
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.7.{#SNMPINDEX}"
+            snmpObject: "chStackUnitModelID.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "#{#SNMPVALUE}"
+            vendorDescription: "The plugged-in model ID for this unit."
+          - prototype: system.hw.serialnumber
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.12.{#SNMPINDEX}"
+            snmpObject: "chStackUnitSerialNumber.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "#{#SNMPVALUE}"
+            vendorDescription: "The unit's serial number."
+          - prototype: system.hw.version
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.21.{#SNMPINDEX}"
+            snmpObject: "chStackUnitProductRev.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "#{#SNMPVALUE}"
+            vendorDescription: "The unit manufacturer's product revision"
+          - prototype: system.sw.os
+            oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.10.{#SNMPINDEX}"
+            snmpObject: "chStackUnitCodeVersion.{#SNMPINDEX}"
+            mib: "F10-S-SERIES-CHASSIS-MIB"
+            alarmObject: "#{#SNMPVALUE}"
+            vendorDescription: "Current code version of this unit."
+    macros:
+      - macro: "{$TEMP_CRIT}"
+        value: "65"
+      - macro: "{$TEMP_WARN}"
+        value: "55"
+      - macro: "{$PSU_CRIT_STATUS}"
+        value: "2"
+      - macro: "{$FAN_CRIT_STATUS}"
+        value: "2"
+      - macro: "{$PSU_OK_STATUS}"
+        value: "1"
+      - macro: "{$FAN_OK_STATUS}"
+        value: "1"
+value_maps: 
+   - name: "F10-S-SERIES-CHASSIS-MIB::extremeFanOperational"
+     mappings: 
+      - value: "1"
+        newvalue: "true - on"
+      - value: "2"
+        newvalue: "false - off"
+   - name: "F10-S-SERIES-CHASSIS-MIB::chSysFanTrayOperStatus"
+     mappings: 
+      - value: "1"
+        newvalue: up
+      - value: "2"
+        newvalue: down
+      - value: "3"
+        newvalue: absent
+   - name: "F10-S-SERIES-CHASSIS-MIB::chSysPowerSupplyOperStatus"
+     mappings: 
+      - value: "1"
+        newvalue: up
+      - value: "2"
+        newvalue: down
+      - value: "3"
+        newvalue: absent        
