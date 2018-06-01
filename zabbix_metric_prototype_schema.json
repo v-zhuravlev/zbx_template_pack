@@ -1,0 +1,166 @@
+{
+  "$id": "http://zabbix.com/template_gen_metric_prototype.json",
+  "type": "array",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "items": {
+    "$id": "http://zabbix.com/template_gen_metric_prototype.json/items",
+    "type": "object",
+    "properties": {
+      "prototype": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/prototype",
+        "type": "string",
+        "title": "The Prototype Schema ",
+        "default": "",
+        "examples": [
+          "net.if.status"
+        ]
+      },
+      "name": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/name",
+        "type": "string",
+        "title": "The Name Schema ",
+        "default": "",
+        "examples": [
+          "Operational status"
+        ]
+      },
+      "description": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/description",
+        "type": "string",
+        "title": "The Description Schema ",
+        "default": "",
+        "examples": [
+          "Used memory in Bytes"
+        ]
+      },
+      "group": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/group",
+        "type": "string",
+        "title": "The Group Schema ",
+        "default": "",
+        "examples": [
+          "Network_Interfaces"
+        ]
+      },
+      "delay": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/delay",
+        "type": "string",
+        "title": "The Delay Schema ",
+        "default": "",
+        "examples": [
+          "1m"
+        ]
+      },
+      "history": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/history",
+        "type": "string",
+        "title": "The History Schema ",
+        "default": "",
+        "examples": [
+          "2w"
+        ]
+      },
+      "trends": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/trends",
+        "type": "string",
+        "title": "The Trends Schema ",
+        "default": "",
+        "examples": [
+          "0d"
+        ]
+      },
+      "valueType": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/valueType",
+        "type": "string",
+        "title": "The Valuetype Schema ",
+        "default": "",
+        "examples": [
+          "INTEGER"
+        ]
+      },
+      "triggers": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers",
+        "type": "array",
+        "items": {
+          "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items",
+          "type": "object",
+          "properties": {
+            "documentation": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/documentation",
+              "type": "string",
+              "title": "The Documentation Schema ",
+              "default": "",
+              "examples": [
+                "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled."
+              ]
+            },
+            "id": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/id",
+              "type": "string",
+              "title": "The Id Schema ",
+              "default": "",
+              "examples": [
+                "if.down"
+              ]
+            },
+            "expression": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/expression",
+              "type": "string",
+              "title": "The Expression Schema ",
+              "default": "",
+              "examples": [
+                "{$IFCONTROL:\"{#IFNAME}\"}=1 and ({TEMPLATE_NAME:METRIC.last()}=2 and {TEMPLATE_NAME:METRIC.diff()}=1)"
+              ]
+            },
+            "recovery_expression": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/recovery_expression",
+              "type": "string",
+              "title": "The Recovery_expression Schema ",
+              "default": "",
+              "examples": [
+                "{TEMPLATE_NAME:METRIC.last()}<>2"
+              ]
+            },
+            "manual_close": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/manual_close",
+              "type": "string",
+              "title": "The Manual_close Schema ",
+              "default": "",
+              "examples": [
+                "NO"
+              ]
+            },
+            "name": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/name",
+              "type": "string",
+              "title": "The Name Schema ",
+              "default": "",
+              "examples": [
+                "Link down"
+              ]
+            },
+            "description": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/description",
+              "type": "string",
+              "title": "The Description Schema ",
+              "default": "",
+              "examples": [
+                "Interface is down"
+              ]
+            },
+            "priority": {
+              "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/priority",
+              "type": "integer",
+              "title": "The Priority Schema ",
+              "default": 0,
+              "examples": [
+                3
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
