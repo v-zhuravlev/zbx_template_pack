@@ -890,13 +890,13 @@ CISCO-ENVMON-MIB</description>
          </groups>
          <applications>
             <application>
-               <name>Temperature</name>
+               <name>Fans</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
-               <name>Fans</name>
+               <name>Temperature</name>
             </application>
          </applications>
          <items/>
@@ -1352,24 +1352,20 @@ This trigger uses temperature sensor values as well as temperature sensor status
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$TEMP_CRIT:"CPU"}</macro>
-               <value>75</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN:"CPU"}</macro>
-               <value>70</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_STATUS}</macro>
+               <macro>{$FAN_CRIT_STATUS:"critical"}</macro>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$TEMP_DISASTER_STATUS}</macro>
+               <macro>{$FAN_CRIT_STATUS:"shutdown"}</macro>
                <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS:"notFunctioning"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS:"warning"}</macro>
+               <value>2</value>
             </macro>
             <macro>
                <macro>{$PSU_CRIT_STATUS:"critical"}</macro>
@@ -1380,28 +1376,32 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <value>4</value>
             </macro>
             <macro>
-               <macro>{$PSU_WARN_STATUS:"warning"}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
                <macro>{$PSU_WARN_STATUS:"notFunctioning"}</macro>
                <value>6</value>
             </macro>
             <macro>
-               <macro>{$FAN_CRIT_STATUS:"critical"}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_CRIT_STATUS:"shutdown"}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_WARN_STATUS:"warning"}</macro>
+               <macro>{$PSU_WARN_STATUS:"warning"}</macro>
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$FAN_WARN_STATUS:"notFunctioning"}</macro>
-               <value>6</value>
+               <macro>{$TEMP_CRIT:"CPU"}</macro>
+               <value>75</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_DISASTER_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN:"CPU"}</macro>
+               <value>70</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>2</value>
             </macro>
          </macros>
          <templates/>
@@ -1433,18 +1433,6 @@ device : C2911, C7600</description>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
                <value>90</value>
             </macro>
@@ -1452,28 +1440,40 @@ device : C2911, C7600</description>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
          </macros>
          <templates>
             <template>
-               <name>Template Module Cisco Inventory SNMPv2</name>
-            </template>
-            <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
-            </template>
-            <template>
-               <name>Template Module Cisco CISCO-PROCESS-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2</name>
             </template>
             <template>
-               <name>Template Module Interfaces SNMPv2</name>
+               <name>Template Module Cisco CISCO-PROCESS-MIB SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Cisco Inventory SNMPv2</name>
             </template>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Generic SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
@@ -1500,18 +1500,6 @@ device : C2911, C7600</description>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
                <value>90</value>
             </macro>
@@ -1519,11 +1507,20 @@ device : C2911, C7600</description>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
          </macros>
          <templates>
-            <template>
-               <name>Template Module Cisco Inventory SNMPv2</name>
-            </template>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
             </template>
@@ -1534,10 +1531,13 @@ device : C2911, C7600</description>
                <name>Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2</name>
             </template>
             <template>
-               <name>Template Module Interfaces SNMPv2</name>
+               <name>Template Module Cisco Inventory SNMPv2</name>
             </template>
             <template>
                <name>Template Module Generic SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
@@ -1564,18 +1564,6 @@ device : C2911, C7600</description>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
                <value>90</value>
             </macro>
@@ -1583,16 +1571,28 @@ device : C2911, C7600</description>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
          </macros>
          <templates>
-            <template>
-               <name>Template Module Cisco Inventory SNMPv2</name>
-            </template>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Cisco Inventory SNMPv2</name>
             </template>
             <template>
                <name>Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2</name>

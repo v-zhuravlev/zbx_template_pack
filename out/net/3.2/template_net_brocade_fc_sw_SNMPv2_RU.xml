@@ -30,22 +30,22 @@ device : all</description>
                <name>CPU</name>
             </application>
             <application>
+               <name>Fans</name>
+            </application>
+            <application>
+               <name>Inventory</name>
+            </application>
+            <application>
                <name>Memory</name>
-            </application>
-            <application>
-               <name>Temperature</name>
-            </application>
-            <application>
-               <name>Status</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
-               <name>Fans</name>
+               <name>Status</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Temperature</name>
             </application>
          </applications>
          <items>
@@ -789,12 +789,16 @@ The fan value will be in RPM(revolution per minute)</description>
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>75</value>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>65</value>
+               <macro>{$FAN_CRIT_STATUS}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_OK_STATUS}</macro>
+               <value>4</value>
             </macro>
             <macro>
                <macro>{$HEALTH_CRIT_STATUS}</macro>
@@ -809,36 +813,16 @@ The fan value will be in RPM(revolution per minute)</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN_STATUS}</macro>
-               <value>5</value>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
                <macro>{$PSU_CRIT_STATUS}</macro>
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$FAN_CRIT_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
                <macro>{$PSU_OK_STATUS}</macro>
                <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_OK_STATUS}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
             </macro>
             <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
@@ -848,13 +832,29 @@ The fan value will be in RPM(revolution per minute)</description>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>75</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>65</value>
+            </macro>
          </macros>
          <templates>
             <template>
-               <name>Template Module Interfaces SNMPv2</name>
+               <name>Template Module Generic SNMPv2</name>
             </template>
             <template>
-               <name>Template Module Generic SNMPv2</name>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>

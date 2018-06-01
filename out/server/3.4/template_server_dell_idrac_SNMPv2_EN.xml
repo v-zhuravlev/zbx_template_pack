@@ -25,28 +25,28 @@ IDRAC-MIB-SMIv2</description>
          </groups>
          <applications>
             <application>
-               <name>Temperature</name>
-            </application>
-            <application>
-               <name>Status</name>
-            </application>
-            <application>
-               <name>Power Supply</name>
+               <name>Disk Arrays</name>
             </application>
             <application>
                <name>Fans</name>
             </application>
             <application>
-               <name>Disk Arrays</name>
+               <name>Inventory</name>
             </application>
             <application>
                <name>Physical Disks</name>
             </application>
             <application>
-               <name>Virtual Disks</name>
+               <name>Power Supply</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Status</name>
+            </application>
+            <application>
+               <name>Temperature</name>
+            </application>
+            <application>
+               <name>Virtual Disks</name>
             </application>
          </applications>
          <items>
@@ -2145,23 +2145,15 @@ Please check the device for faults</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$TEMP_WARN:"CPU"}</macro>
-               <value>70</value>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}</macro>
+               <value>3</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN:"Ambient"}</macro>
-               <value>30</value>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS}</macro>
+               <value>2</value>
             </macro>
             <macro>
-               <macro>{$TEMP_CRIT:"CPU"}</macro>
-               <value>75</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT:"Ambient"}</macro>
-               <value>35</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_WARN_STATUS:"nonCritical"}</macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS}</macro>
                <value>4</value>
             </macro>
             <macro>
@@ -2173,19 +2165,7 @@ Please check the device for faults</description>
                <value>6</value>
             </macro>
             <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$DISK_WARN_STATUS:"nonCritical"}</macro>
+               <macro>{$DISK_ARRAY_WARN_STATUS:"nonCritical"}</macro>
                <value>4</value>
             </macro>
             <macro>
@@ -2201,67 +2181,47 @@ Please check the device for faults</description>
                <value>1</value>
             </macro>
             <macro>
-               <macro>{$VDISK_FAIL_STATUS:"failed"}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$VDISK_WARN_STATUS:"degraded"}</macro>
+               <macro>{$DISK_WARN_STATUS:"nonCritical"}</macro>
                <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$HEALTH_DISASTER_STATUS}</macro>
-               <value>6</value>
-            </macro>
-            <macro>
-               <macro>{$HEALTH_CRIT_STATUS}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$HEALTH_WARN_STATUS}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN_STATUS}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_STATUS}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_DISASTER_STATUS}</macro>
-               <value>6</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_WARN_STATUS:"nonCriticalUpper"}</macro>
-               <value>4</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_WARN_STATUS:"nonCriticalLower"}</macro>
-               <value>7</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_CRIT_STATUS:"criticalUpper"}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$FAN_CRIT_STATUS:"nonRecoverableUpper"}</macro>
-               <value>6</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS:"criticalLower"}</macro>
                <value>8</value>
             </macro>
             <macro>
-               <macro>{$FAN_CRIT_STATUS:"nonRecoverableLower"}</macro>
-               <value>9</value>
+               <macro>{$FAN_CRIT_STATUS:"criticalUpper"}</macro>
+               <value>5</value>
             </macro>
             <macro>
                <macro>{$FAN_CRIT_STATUS:"failed"}</macro>
                <value>10</value>
             </macro>
             <macro>
-               <macro>{$PSU_WARN_STATUS:"nonCritical"}</macro>
+               <macro>{$FAN_CRIT_STATUS:"nonRecoverableLower"}</macro>
+               <value>9</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_CRIT_STATUS:"nonRecoverableUpper"}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS:"nonCriticalLower"}</macro>
+               <value>7</value>
+            </macro>
+            <macro>
+               <macro>{$FAN_WARN_STATUS:"nonCriticalUpper"}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$HEALTH_CRIT_STATUS}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$HEALTH_DISASTER_STATUS}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$HEALTH_WARN_STATUS}</macro>
                <value>4</value>
             </macro>
             <macro>
@@ -2273,16 +2233,8 @@ Please check the device for faults</description>
                <value>6</value>
             </macro>
             <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
+               <macro>{$PSU_WARN_STATUS:"nonCritical"}</macro>
+               <value>4</value>
             </macro>
             <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
@@ -2291,6 +2243,54 @@ Please check the device for faults</description>
             <macro>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT:"Ambient"}</macro>
+               <value>35</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT:"CPU"}</macro>
+               <value>75</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_STATUS}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_DISASTER_STATUS}</macro>
+               <value>6</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN:"Ambient"}</macro>
+               <value>30</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN:"CPU"}</macro>
+               <value>70</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>4</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
+            <macro>
+               <macro>{$VDISK_FAIL_STATUS:"failed"}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$VDISK_WARN_STATUS:"degraded"}</macro>
+               <value>4</value>
             </macro>
          </macros>
          <templates>
@@ -2359,13 +2359,13 @@ Please check the device for warnings</description>
          <manual_close>0</manual_close>
          <dependencies>
             <dependency>
-               <name>System status is in critical state</name>
-               <expression>{Template Server Dell iDRAC SNMPv2:system.status[globalSystemStatus.0].count(#1,{$HEALTH_CRIT_STATUS},eq)}=1</expression>
+               <name>System is in unrecoverable state!</name>
+               <expression>{Template Server Dell iDRAC SNMPv2:system.status[globalSystemStatus.0].count(#1,{$HEALTH_DISASTER_STATUS},eq)}=1</expression>
                <recovery_expression/>
             </dependency>
             <dependency>
-               <name>System is in unrecoverable state!</name>
-               <expression>{Template Server Dell iDRAC SNMPv2:system.status[globalSystemStatus.0].count(#1,{$HEALTH_DISASTER_STATUS},eq)}=1</expression>
+               <name>System status is in critical state</name>
+               <expression>{Template Server Dell iDRAC SNMPv2:system.status[globalSystemStatus.0].count(#1,{$HEALTH_CRIT_STATUS},eq)}=1</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>

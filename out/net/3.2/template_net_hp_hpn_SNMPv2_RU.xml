@@ -29,19 +29,19 @@ SEMI-MIB</description>
                <name>CPU</name>
             </application>
             <application>
-               <name>Memory</name>
-            </application>
-            <application>
-               <name>Temperature</name>
-            </application>
-            <application>
                <name>Fans</name>
+            </application>
+            <application>
+               <name>Inventory</name>
+            </application>
+            <application>
+               <name>Memory</name>
             </application>
             <application>
                <name>Power Supply</name>
             </application>
             <application>
-               <name>Inventory</name>
+               <name>Temperature</name>
             </application>
          </applications>
          <items>
@@ -1078,12 +1078,20 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
          </discovery_rules>
          <macros>
             <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
                <macro>{$FAN_CRIT_STATUS:"bad"}</macro>
                <value>2</value>
             </macro>
             <macro>
                <macro>{$FAN_WARN_STATUS:"warning"}</macro>
                <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
             </macro>
             <macro>
                <macro>{$PSU_CRIT_STATUS:"bad"}</macro>
@@ -1094,34 +1102,6 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$TEMP_WARN_STATUS}</macro>
-               <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_STATUS}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
                <macro>{$STORAGE_UTIL_CRIT}</macro>
                <value>90</value>
             </macro>
@@ -1129,16 +1109,36 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                <macro>{$STORAGE_UTIL_WARN}</macro>
                <value>80</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_STATUS}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN_STATUS}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
          </macros>
          <templates>
-            <template>
-               <name>Template Module Interfaces SNMPv2</name>
-            </template>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
             </template>
             <template>
                <name>Template Module Generic SNMPv2</name>
+            </template>
+            <template>
+               <name>Template Module Interfaces SNMPv2</name>
             </template>
          </templates>
          <screens/>
