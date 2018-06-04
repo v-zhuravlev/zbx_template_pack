@@ -1758,7 +1758,7 @@ The data on the virtual disk might no longer be fault tolerant.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Disk {#SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
@@ -1791,7 +1791,7 @@ Please check virtual disk for warnings or errors</description>
                      <dependencies>
                         <dependency>
                            <name>Disk {#SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
-                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2300,7 +2300,7 @@ Please check the device for faults</description>
                <value>50</value>
             </macro>
             <macro>
-               <macro>{$VDISK_FAIL_STATUS:"failed"}</macro>
+               <macro>{$VDISK_CRIT_STATUS:"failed"}</macro>
                <value>3</value>
             </macro>
             <macro>
