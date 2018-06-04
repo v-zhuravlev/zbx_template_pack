@@ -13,17 +13,19 @@
          <name>Template Server IBM IMM SNMPv1</name>
          <description>Template Server IBM IMM version: 0.15&#13;
 Overview: for IMM2 and IMM1 IBM serverX hardware&#13;
-&#13;
 MIBs used:&#13;
 IMM-MIB&#13;
 Known Issues:&#13;
 description : Some IMMs (IMM1) do not return disks&#13;
 version : IMM1&#13;
-device : IBM x3250M3description : Some IMMs (IMM1) do not return fan status: fanHealthStatus&#13;
+device : IBM x3250M3&#13;
+description : Some IMMs (IMM1) do not return fan status: fanHealthStatus&#13;
 version : IMM1&#13;
-device : IBM x3250M3description : IMM1 servers (M2, M3 generations) sysObjectID is NET-SNMP-MIB::netSnmpAgentOIDs.10&#13;
+device : IBM x3250M3&#13;
+description : IMM1 servers (M2, M3 generations) sysObjectID is NET-SNMP-MIB::netSnmpAgentOIDs.10&#13;
 version : IMM1&#13;
-device : IMM1 servers (M2,M3 generations)description : IMM1 servers (M2, M3 generations) only Ambient temperature sensor available&#13;
+device : IMM1 servers (M2,M3 generations)&#13;
+description : IMM1 servers (M2, M3 generations) only Ambient temperature sensor available&#13;
 version : IMM1&#13;
 device : IMM1 servers (M2,M3 generations)</description>
          <groups>
@@ -212,7 +214,6 @@ Machine serial number VPD information</description>
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>(DIMM|PSU|PCH|RAID|RR|PCI).*</value>
-                        <!-- ambient descr, like 'Ambient Temp'-->
                         <operator>8</operator>
                         <formulaid>B</formulaid>
                      </condition>
@@ -358,7 +359,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>Ambient.*</value>
-                        <!-- ambient descr, like 'Ambient Temp'-->
                         <operator>8</operator>
                         <formulaid>B</formulaid>
                      </condition>
@@ -504,7 +504,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>CPU [0-9]* Temp</value>
-                        <!-- CPU descr, -->
                         <operator>8</operator>
                         <formulaid>B</formulaid>
                      </condition>
@@ -822,7 +821,7 @@ A description of the fan component status.</description>
                      <privatekey/>
                      <port/>
                      <description>MIB: IMM-MIB&#13;
-Fan  speed expressed in percent(%) of maximum RPM.&#13;
+Fan speed expressed in percent(%) of maximum RPM.&#13;
 An octet string expressed as 'ddd% of maximum' where:d is a decimal digit or blank space for a leading zero.&#13;
 If the fan is determined not to be running or the fan speed cannot be determined, the string will indicate 'Offline'.</description>
                      <inventory_link>0</inventory_link>
@@ -1035,14 +1034,6 @@ Please check physical disk for warnings or errors</description>
             <macro>
                <macro>{$PSU_OK_STATUS}</macro>
                <value>Normal</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT:"Ambient"}</macro>

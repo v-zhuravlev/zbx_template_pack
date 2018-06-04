@@ -1,0 +1,319 @@
+{
+    "templates": [
+        {
+            "classes": [
+                "FAULT",
+                "INVENTORY",
+                "SERVER",
+                "SNMP_DEVICE",
+                "SNMPv1",
+                "SNMPv2"
+            ],
+            "name": "Template Server IBM IMM",
+            "description": "Template Server IBM IMM",
+            "documentation": {
+                "overview": "for IMM2 and IMM1 IBM serverX hardware",
+                "known_devices": [
+                    {
+                        "name": "IBM System x3550 M2 with IMM1",
+                        "oid": "1.3.6.1.4.1.8072.3.2.10"
+                    },
+                    {
+                        "name": "IBM x3250M3 with IMM1"
+                    },
+                    {
+                        "name": "IBM x3550M5 with IMM2",
+                        "oid": "1.3.6.1.4.1.2.3.51.3"
+                    },
+                    {
+                        "name": "System x3550 M3 with IMM1"
+                    }
+                ],
+                "issues": [
+                    {
+                        "description": "Some IMMs (IMM1) do not return disks",
+                        "version": "IMM1",
+                        "device": "IBM x3250M3"
+                    },
+                    {
+                        "description": "Some IMMs (IMM1) do not return fan status: fanHealthStatus",
+                        "version": "IMM1",
+                        "device": "IBM x3250M3"
+                    },
+                    {
+                        "description": "IMM1 servers (M2, M3 generations) sysObjectID is NET-SNMP-MIB::netSnmpAgentOIDs.10",
+                        "version": "IMM1",
+                        "device": "IMM1 servers (M2,M3 generations)"
+                    },
+                    {
+                        "description": "IMM1 servers (M2, M3 generations) only Ambient temperature sensor available",
+                        "version": "IMM1",
+                        "device": "IMM1 servers (M2,M3 generations)"
+                    }
+                ]
+            },
+            "discoveryRules": [
+                {
+                    "name": "Temperature Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2.3.51.3.1.1.2.1.2]",
+                    "key": "tempDescr.discovery",
+                    "description": "Scanning IMM-MIB::tempTable",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SNMPVALUE}",
+                                "value": "(DIMM|PSU|PCH|RAID|RR|PCI).*",
+                                "operator": "8",
+                                "formulaid": "B"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.2.3.51.3.1.1.2.1.3.{#SNMPINDEX}",
+                            "snmpObject": "tempReading.{#SNMPINDEX}",
+                            "mib": "IMM-MIB",
+                            "alarmObject": "{#SNMPVALUE}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery Ambient",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2.3.51.3.1.1.2.1.2]",
+                    "key": "tempDescr.discovery.ambient",
+                    "description": "Scanning IMM-MIB::tempTable with Ambient filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SNMPVALUE}",
+                                "value": "Ambient.*",
+                                "operator": "8",
+                                "formulaid": "B"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.2.3.51.3.1.1.2.1.3.{#SNMPINDEX}",
+                            "snmpObject": "tempReading.Ambient.{#SNMPINDEX}",
+                            "mib": "IMM-MIB",
+                            "alarmObject": "Ambient",
+                            "alarmObjectType": "Ambient"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery CPU",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2.3.51.3.1.1.2.1.2]",
+                    "key": "tempDescr.discovery.cpu",
+                    "description": "Scanning IMM-MIB::tempTable with CPU filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SNMPVALUE}",
+                                "value": "CPU [0-9]* Temp",
+                                "operator": "8",
+                                "formulaid": "B"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.2.3.51.3.1.1.2.1.3.{#SNMPINDEX}",
+                            "snmpObject": "tempReading.CPU.{#SNMPINDEX}",
+                            "mib": "IMM-MIB",
+                            "alarmObject": "CPU",
+                            "alarmObjectType": "CPU"
+                        }
+                    ]
+                },
+                {
+                    "name": "PSU Discovery",
+                    "snmp_oid": "discovery[{#PSU_DESCR},1.3.6.1.4.1.2.3.51.3.1.11.2.1.2]",
+                    "key": "psu.discovery",
+                    "description": "IMM-MIB::powerFruName",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.psu.status",
+                            "oid": "1.3.6.1.4.1.2.3.51.3.1.11.2.1.6.{#SNMPINDEX}",
+                            "snmpObject": "powerHealthStatus.{#SNMPINDEX}",
+                            "mib": "IMM-MIB",
+                            "alarmObject": "{#PSU_DESCR}",
+                            "vendorDescription": "A description of the power module status.",
+                            "valueType": "CHAR",
+                            "triggers": [
+                                {
+                                    "prototype": "psu.notok"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "FAN Discovery",
+                    "snmp_oid": "discovery[{#FAN_DESCR},1.3.6.1.4.1.2.3.51.3.1.3.2.1.2]",
+                    "key": "fan.discovery",
+                    "description": "IMM-MIB::fanDescr",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.fan.status",
+                            "oid": "1.3.6.1.4.1.2.3.51.3.1.3.2.1.10.{#SNMPINDEX}",
+                            "snmpObject": "fanHealthStatus.{#SNMPINDEX}",
+                            "mib": "IMM-MIB",
+                            "alarmObject": "{#FAN_DESCR}",
+                            "vendorDescription": "A description of the fan component status.",
+                            "valueType": "CHAR",
+                            "triggers": [
+                                {
+                                    "prototype": "fan.notok"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "sensor.fan.speed.percentage",
+                            //"@zbx_ver": "3.4",
+                            "vendorDocumentation": "3.4 and onwards. uses regex parsing",
+                            "oid": "1.3.6.1.4.1.2.3.51.3.1.3.2.1.3.{#SNMPINDEX}",
+                            "snmpObject": "fanSpeed.{#SNMPINDEX}",
+                            "mib": "IMM-MIB",
+                            "alarmObject": "{#FAN_DESCR}",
+                            "vendorDescription": "Fan speed expressed in percent(%) of maximum RPM.\r\nAn octet string expressed as 'ddd% of maximum' where:d is a decimal digit or blank space for a leading zero.\r\nIf the fan is determined not to be running or the fan speed cannot be determined, the string will indicate 'Offline'.",
+                            "preprocessing": [
+                                {
+                                    "type": "REGEX",
+                                    "params": "(\\d{1,3}) *%( of maximum)?\r\n\\1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Physical Disk Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2.3.51.3.1.12.2.1.1]",
+                    "key": "physicalDisk.discovery",
+                    "metrics": [
+                         {
+                             "prototype": "system.hw.physicaldisk.status",
+                             "oid": "1.3.6.1.4.1.2.3.51.3.1.12.2.1.3.{#SNMPINDEX}",
+                             "snmpObject": "diskHealthStatus.{#SNMPINDEX}",
+                             "mib": "IMM-MIB",
+                             "alarmObject": "{#SNMPINDEX}",
+                             "valueType": "CHAR",
+                             "triggers":[
+                                 {"prototype":"disk.notok"}
+                             ]
+                         },
+                         {
+                             "prototype": "system.hw.physicaldisk.part_number",
+                             "oid": "1.3.6.1.4.1.2.3.51.3.1.12.2.1.2.{#SNMPINDEX}",
+                             "snmpObject": "diskFruName.{#SNMPINDEX}",
+                             "mib": "IMM-MIB",
+                             "alarmObject": "{#SNMPINDEX}",
+                             "valueType": "CHAR",
+                             "vendorDescription": "disk module FRU name."
+                         }
+                    ]
+                }
+            ],
+            "metrics": [
+                {
+                    "prototype": "system.status",
+                    "oid": "1.3.6.1.4.1.2.3.51.3.1.4.1.0",
+                    "snmpObject": "systemHealthStat.0",
+                    "mib": "IMM-MIB",
+                    "vendorDescription": "Indicates status of system health for the system in which the IMM resides. Value of 'nonRecoverable' indicates a severe error has occurred and the system may not be functioning. A value of 'critical' indicates that a error has occurred but the system is currently functioning properly. A value of 'nonCritical' indicates that a condition has occurred that may change the state of the system in the future but currently the system is working properly. A value of 'normal' indicates that the system is operating normally.",
+                    "valueMap": "IMM-MIB::systemHealthStat",
+                    "triggers": [
+                        {
+                            "prototype": "health.disaster"
+                        },
+                        {
+                            "prototype": "health.crit"
+                        },
+
+
+                        {
+                            "prototype": "health.warn"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.hw.model",
+                    "oid": "1.3.6.1.4.1.2.3.51.3.1.5.2.1.5.0",
+                    "snmpObject": "machineLevelProductName.0",
+                    "mib": "IMM-MIB"
+                },
+                {
+                    "prototype": "system.hw.serialnumber",
+                    "oid": "1.3.6.1.4.1.2.3.51.3.1.5.2.1.3.0",
+                    "snmpObject": "machineLevelSerialNumber.0",
+                    "mib": "IMM-MIB",
+                    "vendorDescription": "Machine serial number VPD information"
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$HEALTH_CRIT_STATUS}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$HEALTH_DISASTER_STATUS}",
+                    "value": "0"
+                },
+                {
+                    "macro": "{$HEALTH_WARN_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$TEMP_CRIT:\"Ambient\"}",
+                    "value": "35"
+                },
+                {
+                    "macro": "{$TEMP_WARN:\"Ambient\"}",
+                    "value": "30"
+                },
+                {
+                    "macro": "{$DISK_OK_STATUS}",
+                    "value": "Normal"
+                },
+                {
+                    "macro": "{$PSU_OK_STATUS}",
+                    "value": "Normal"
+                },
+                {
+                    "macro": "{$FAN_OK_STATUS}",
+                    "value": "Normal"
+                }
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "IMM-MIB::systemHealthStat",
+            "mappings": [
+                {
+                    "value": "0",
+                    "newvalue": "nonRecoverable"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "critical"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "nonCritical"
+                },
+                {
+                    "value": "255",
+                    "newvalue": "normal"
+                }
+            ]
+        }
+    ]
+}
