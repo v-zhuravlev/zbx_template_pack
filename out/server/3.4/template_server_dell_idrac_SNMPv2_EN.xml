@@ -2105,7 +2105,13 @@ Possible values:&#13;
 Please check the device for faults</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
-                     <dependencies/>
+                     <dependencies>
+                        <dependency>
+                           <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
@@ -2124,11 +2130,33 @@ Please check the device for faults</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
+                           <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                        <dependency>
                            <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in warning state</name>
                            <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -2140,7 +2168,7 @@ Please check the device for faults</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}</macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS}</macro>
                <value>3</value>
             </macro>
             <macro>
