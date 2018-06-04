@@ -1,0 +1,1318 @@
+{
+    "templates": [
+        {
+            "classes": [
+                "FAULT",
+                "INVENTORY",
+                "SERVER",
+                "SNMP_DEVICE",
+                "SNMPv2"
+            ],
+            "name": "Template Server HP iLO",
+            "description": "Template Server HP iLO",
+            "documentation": {
+                "overview": "for HP iLO adapters that support SNMP get. Or via operating system, using SNMP HP subagent",
+                "known_devices": [
+                    {
+                        "name": "iLo4, HP Proliant G9",
+                        "oid": "1.3.6.1.4.1.232.9.4.10"
+                    }
+                ]
+            },
+            "discoveryRules": [
+                {
+                    "name": "Temperature Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "(4|8|9|12|13)",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "{#SNMPINDEX}",
+                            "alarmObjectType": "{#SNMPINDEX}"
+                            //"updateMultiplier": "2"
+                        },
+                        {
+                            "prototype": "sensor.temp.locale",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.3.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureLocale.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "vendorDescription": "This specifies the location of the temperature sensor present in the system.",
+                            "alarmObject": "{#SNMPINDEX}",
+                            "valueMap": "CPQHLTH-MIB::cpqHeTemperatureLocale"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery Ambient",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery.ambient",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with ambient(11) and 0.1 index filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SNMPINDEX}",
+                                "value": "0\\.1",
+                                "operator": "8",
+                                "formulaid": "B"
+                            },
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "11",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "vendorDocumentation": "Associated discovery limited to only single Ambient sensor on purpose.",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.Ambient.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "Ambient",
+                            "alarmObjectType": "Ambient"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery CPU",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery.cpu",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with cpu(6) filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "6",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.CPU.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "CPU-{#SNMPINDEX}",
+                            "alarmObjectType": "CPU"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery Memory",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery.memory",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with memory(7) filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "7",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "Memory-{#SNMPINDEX}",
+                            "alarmObjectType": "Memory"
+                            //"updateMultiplier": "2"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery PSU",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery.psu",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with powerSupply(10) filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "10",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "PSU-{#SNMPINDEX}",
+                            "alarmObjectType": "PSU"
+                            //"updateMultiplier": "2"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery I/O",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery.io",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with ioBoard(5) filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "5",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.\"I/O.{#SNMPINDEX}\"",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "I/O-{#SNMPINDEX}",
+                            "alarmObjectType": "I/O"
+                            //"updateMultiplier": "2"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Discovery System",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.8.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.232.6.2.6.8.1.3]",
+                    "key": "tempDescr.discovery.io",
+                    "description": "Scanning table of Temperature Sensor Entries: CPQHLTH-MIB::cpqHeTemperatureTable with system(3) filter",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": "3",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.8.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeTemperatureCelsius.System.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "alarmObject": "System-{#SNMPINDEX}",
+                            "alarmObjectType": "Device"
+                            //"updateMultiplier": "2"
+                        }
+                    ]
+                },
+                {
+                    "name": "PSU Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.9.3.1.5,{#CHASSIS_NUM},1.3.6.1.4.1.232.6.2.9.3.1.1,{#BAY_NUM},1.3.6.1.4.1.232.6.2.9.3.1.2]",
+                    "key": "psu.discovery",
+                    "description": "CPQHLTH-MIB::cpqHeFltTolPowerSupplyStatus",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.psu.status",
+                            "oid": "1.3.6.1.4.1.232.6.2.9.3.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeFltTolPowerSupplyCondition.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "vendorDescription": "The condition of the power supply. This value will be one of the following:\r\nother(1)  The status could not be determined or not present.\r\nok(2)  The power supply is operating normally.\r\ndegraded(3)  A temperature sensor, fan or other power supply component is  outside of normal operating range.\r\nfailed(4)  A power supply component detects a condition that could  permanently damage the system.",
+                            "valueMap": "CPQSINFO-MIB::status",
+                            "alarmObject": "Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}"
+                        }
+                    ]
+                },
+                {
+                    "name": "FAN Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.6.2.6.7.1.9]",
+                    "key": "fan.discovery",
+                    "description": "CPQHLTH-MIB::cpqHeFltTolFanCondition",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.fan.status",
+                            "oid": "1.3.6.1.4.1.232.6.2.6.7.1.9.{#SNMPINDEX}",
+                            "snmpObject": "cpqHeFltTolFanCondition.{#SNMPINDEX}",
+                            "mib": "CPQHLTH-MIB",
+                            "vendorDescription": "The condition of the fan.\r\nThis value will be one of the following:\r\nother(1)  Fan status detection is not supported by this system or driver.\r\nok(2)  The fan is operating properly.\r\ndegraded(2)  A redundant fan is not operating properly.\r\nfailed(4)  A non-redundant fan is not operating properly.",
+                            "valueMap": "CPQSINFO-MIB::status",
+                            "alarmObject": "Fan {#SNMPINDEX}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Array Controller Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.3.2.2.1.1.1,{#CNTLR_SLOT},1.3.6.1.4.1.232.3.2.2.1.1.5,{#CNTLR_LOCATION},1.3.6.1.4.1.232.3.2.2.1.1.20]",
+                    "key": "array.discovery",
+                    "description": "Scanning table of Array controllers: CPQIDA-MIB::cpqDaCntlrTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.diskarray.status",
+                            "oid": "1.3.6.1.4.1.232.3.2.2.1.1.6.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaCntlrCondition.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "This value represents the overall condition of this controller,\r\nand any associated logical drives,physical drives, and array accelerators.",
+                            "alarmObject": "{#CNTLR_LOCATION}",
+                            "valueMap": "CPQSINFO-MIB::status",
+                            "triggers":[
+                                {"prototype":"disk_array.crit"},
+                                {"prototype":"disk_array.warn"}
+                            ]
+                        },
+                        {
+                            "prototype": "system.hw.diskarray.model",
+                            "oid": "1.3.6.1.4.1.232.3.2.2.1.1.2.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaCntlrModel.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Array Controller Model. The type of controller card.",
+                            "alarmObject": "{#CNTLR_LOCATION}",
+                            "valueMap": "CPQIDA-MIB::cpqDaCntlrModel",
+                            "valueType":"INTEGER"
+                        }
+                    ]
+                },
+                {
+                    "name": "Array Controller Cache Discovery",
+                    "snmp_oid": "discovery[{#CACHE_STATUS},1.3.6.1.4.1.232.3.2.2.2.1.2,{#CACHE_CNTRL_INDEX},1.3.6.1.4.1.232.3.2.2.2.1.1]",
+                    "key": "array.cache.discovery",
+                    "description": "Scanning table of Array controllers: CPQIDA-MIB::cpqDaAccelTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.diskarray.cache.status",
+                            "oid": "1.3.6.1.4.1.232.3.2.2.2.1.2.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaAccelStatus.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Cache Module/Operations Status.This describes the status of the cache module and/or cache operations.\r\nNote that for some controller models, a cache module board that physically attaches to the controller or chipset may not be an available option.\r\nFor these configurations, the Instrument Agent will continue to populate variables that are related to read caching operations.\r\nThe status can be:\r\nOther (1)  Indicates that the instrument agent does not recognize the  status of the cache module.  You may need to upgrade  the instrument agent.\r\n\r\nInvalid (2)  Indicates that a cache module board has not been  installed in this system or is present but not configured.\r\n\r\nEnabled (3)  Indicates that cache operations are currently configured  and enabled for at least one logical drive.\r\n\r\nTemporarily Disabled (4)  Indicates that cache operations have been temporarily  disabled.\r\nView the cache module board error code object to determine why the write cache operations have been  temporarily disabled.\r\n\r\nPermanently Disabled (5)  Indicates that cache operations have been permanently  disabled.\r\nView the cache module board error code object  to determine why the write cache operations have been disabled.\r\n\r\nCache Module Flash Memory Not Attached (6)  Indicates that the flash memory component of the flash backed cache module is not attached.\r\nThis status will be set when the flash memory is not attached and the Supercap is attached. This value is only used on flash backed cache modules that support removable flash memory.\r\n\r\nCache Module Degraded Failsafe Speed (7)  Indicates that the cache module board is currently degraded and  operating at a failsafe speed.\r\nView variables   cpqDaCacheMemoryDataWidth and cpqDaCacheMemoryTransferRate to  obtain the cache module board's current memory data width and  memory transfer rate.\r\n\r\nCache Module Critical Failure (8)  Indicates that the cache module board has encountered a critical  failure.  The controller is currently operating in Zero Memory Raid  mode.\r\n\r\nRead Cache Could Not Be Mapped (9)  Indicates that the read cache memory in a split cache configuration could not be mapped by the operating system and as a result is not available.\r\nThis status may be caused by virtual space limitations in certain operating systems and is only applicable to B-Series controllers.",
+                            "alarmObject": "#{#CACHE_CNTRL_INDEX}",
+                            "valueMap": "CPQIDA-MIB::cpqDaAccelStatus",
+                            "triggers":[
+                                {
+                                  "prototype":"diskarray.cache.crit",
+                                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:\"cacheModCriticalFailure\"},eq)}=1"
+                                },
+                                {
+                                    "prototype":"diskarray.cache.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:\"invalid\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:\"cacheModDegradedFailsafeSpeed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:\"cacheReadCacheNotMapped\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:\"cacheModFlashMemNotAttached\"},eq)}=1"
+                                },
+                            
+                                {
+                                    "prototype":"diskarray.cache.notok",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_OK_STATUS:\"enabled\"},ne)}=1"
+                                    
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "system.hw.diskarray.cache.battery.status",
+                            "oid": "1.3.6.1.4.1.232.3.2.2.2.1.6.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaAccelBattery.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Cache Module Board Backup Power Status. This monitors the status of each backup power source on the board.\r\nThe backup power source can only recharge when the system has power applied. The type of backup power source used is indicated by cpqDaAccelBackupPowerSource.\r\nThe following values are valid:\r\nOther (1)  Indicates that the instrument agent does not recognize  backup power status.  You may need to update your software.\r\n\r\nOk (2)  The backup power source is fully charged.\r\n\r\nRecharging (3)  The array controller has one or more cache module backup power  sources that are recharging.\r\nCache module operations such as Battery/Flash Backed Write Cache, Expansion, Extension and Migration are temporarily suspended until the backup power source is fully charged.\r\nCache module operations will automatically resume  when charging is complete.\r\n\r\nFailed (4)  The battery pack is below the sufficient voltage level and  has not recharged in 36 hours.\r\nYour Cache Module board  needs to be serviced.\r\n\r\nDegraded (5)  The battery is still operating, however, one of the batteries  in the pack has failed to recharge properly.\r\nYour Cache  Module board should be serviced as soon as possible.\r\n\r\nNotPresent (6)  A backup power source is not present on the cache module board. Some controllers do not have backup power sources.\r\n\r\nCapacitor Failed (7)  The flash backed cache module capacitor is below the sufficient voltage level and has not recharged in 10 minutes.  Your Cache Module board needs to be serviced.\r\n                ",
+                            "alarmObject": "#{#CACHE_CNTRL_INDEX}",
+                            "valueMap": "CPQIDA-MIB::cpqDaAccelBattery",
+                            "triggers":[
+                                {
+                                    "prototype":"diskarray.cache.battery.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:\"failed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:\"capacitorFailed\"},eq)}=1"
+                                },
+                                {
+                                    "prototype":"diskarray.cache.battery.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:\"degraded\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:\"notPresent\"},eq)}=1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Physical Disk Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.3.2.5.1.1.5,{#DISK_LOCATION},1.3.6.1.4.1.232.3.2.5.1.1.64]",
+                    "key": "physicalDisk.discovery",
+                    "description": "Scanning  table of physical drive entries CPQIDA-MIB::cpqDaPhyDrvTable.",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.physicaldisk.status",
+                            "oid": "1.3.6.1.4.1.232.3.2.5.1.1.6.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaPhyDrvStatus.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Physical Drive Status. This shows the status of the physical drive. The following values are valid for the physical drive status:\r\nother (1)  Indicates that the instrument agent does not recognize  the drive.\r\nYou may need to upgrade your instrument agent  and/or driver software.\r\nok (2)  Indicates the drive is functioning properly.\r\nfailed (3)  Indicates that the drive is no longer operating and  should be replaced.\r\npredictiveFailure(4)  Indicates that the drive has a predictive failure error and  should be replaced.",
+                            "alarmObject": "{#DISK_LOCATION}",
+                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvStatus"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.smart_status",
+                            "oid": "1.3.6.1.4.1.232.3.2.5.1.1.57.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaPhyDrvSmartStatus.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Physical Drive S.M.A.R.T Status.The following values are defined:\r\nother(1)  The agent is unable to determine if the status of S.M.A.R.T  predictive failure monitoring for this drive.\r\nok(2)  Indicates the drive is functioning properly.\r\nreplaceDrive(3)  Indicates that the drive has a S.M.A.R.T predictive failure  error and should be replaced.",
+                            "alarmObject": "{#DISK_LOCATION}",
+                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvSmartStatus"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.serialnumber",
+                            "oid": "1.3.6.1.4.1.232.3.2.5.1.1.51.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaPhyDrvSerialNum.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Physical Drive Serial Number.\r\nThis is the serial number assigned to the physical drive.\r\nThis value is based upon the serial number as returned by the SCSI inquiry command\r\nbut may have been modified due to space limitations.  This can be used for identification purposes.",
+                            "alarmObject": "{#DISK_LOCATION}"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.model",
+                            "oid": "1.3.6.1.4.1.232.3.2.5.1.1.3.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaPhyDrvModel.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Physical Drive Model.This is a text description of the physical drive.\r\nThe text that appears depends upon who manufactured the drive and the drive type.\r\nIf a drive fails, note the model to identify the type of drive necessary for replacement.\r\nIf a model number is not present, you may not have properly initialized the drive array to which the physical drive is attached for monitoring.",
+                            "alarmObject": "{#DISK_LOCATION}"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.media_type",
+                            "oid": "1.3.6.1.4.1.232.3.2.5.1.1.69.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaPhyDrvMediaType.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Drive Array Physical Drive Media Type.The following values are defined:\r\nother(1)  The instrument agent is unable to determine the physical drive’s media type.\r\nrotatingPlatters(2)  The physical drive media is composed of rotating platters.\r\nsolidState(3)  The physical drive media is composed of solid state electronics.",
+                            "alarmObject": "{#DISK_LOCATION}",
+                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvMediaType"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.size",
+                            "oid": "1.3.6.1.4.1.232.3.2.5.1.1.45.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaPhyDrvMediaType.{#SNMPINDEX}",
+                            "mib": "CPQIDA-MIB",
+                            "vendorDescription": "Physical Drive Size in MB.\r\nThis is the size of the physical drive in megabytes.\r\nThis value is calculated using the value 1,048,576 (2^20) as a megabyte.\r\nDrive manufacturers sometimes use the number 1,000,000 as a megabyte when giving drive capacities so this value may differ\r\nfrom the advertised size of a drive. This field is only applicable for controllers which support SCSI drives,\r\nand therefore is not supported by the IDA or IDA-2 controllers. The field will contain 0xFFFFFFFF if the drive capacity cannot be calculated\r\nor if the controller does not support SCSI drives.",
+                            "alarmObject": "{#DISK_LOCATION}",
+                            "preprocessing": [
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "1048576"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Virtual Disk Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.232.3.2.3.1.1.2,{#DISK_NAME},1.3.6.1.4.1.232.3.2.3.1.1.14]",
+                    "key": "virtualdisk.discovery",
+                    "description": "CPQIDA-MIB::cpqDaLogDrvTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.virtualdisk.status",
+                            "oid": "1.3.6.1.4.1.232.3.2.3.1.1.4.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaLogDrvStatus.{#SNMPINDEX}",
+                            "vendorDescription": "Logical Drive Status.\r\n\r\nThe logical drive can be in one of the following states:\r\n\r\nOk (2)\r\nIndicates that the logical drive is in normal operation mode.\r\n\r\nFailed (3)\r\nIndicates that more physical drives have failed than the\r\nfault tolerance mode of the logical drive can handle without\r\ndata loss.\r\n\r\nUnconfigured (4)\r\nIndicates that the logical drive is not configured.\r\n\r\nRecovering (5)\r\nIndicates that the logical drive is using Interim Recovery Mode.\r\nIn Interim Recovery Mode, at least one physical drive has\r\nfailed, but the logical drive's fault tolerance mode lets the\r\ndrive continue to operate with no data loss.\r\n\r\nReady Rebuild (6)\r\nIndicates that the logical drive is ready for Automatic Data\r\nRecovery.  The physical drive that failed has been replaced,\r\nbut the logical drive is still operating in Interim Recovery\r\nMode.\r\n\r\nRebuilding (7)\r\nIndicates that the logical drive is currently doing Automatic\r\nData Recovery.  During Automatic Data Recovery, fault tolerance\r\nalgorithms restore data to the replacement drive.\r\n\r\nWrong Drive (8)\r\nIndicates that the wrong physical drive was replaced after a\r\nphysical drive failure.\r\n\r\nBad Connect (9)\r\nIndicates that a physical drive is not responding.\r\n\r\nOverheating (10)\r\nIndicates that the drive array enclosure that contains the\r\nlogical drive is overheating.  The drive array is still\r\nfunctioning, but should be shutdown.\r\n\r\nShutdown (11)\r\nIndicates that the drive array enclosure that contains the\r\nlogical drive has overheated.  The logical drive is no longer\r\nfunctioning.\r\n\r\nExpanding (12)\r\nIndicates that the logical drive is currently undergoing a\r\ntransformation (expansion, shrinkage or movement). During\r\ntransformation, fault tolerance algorithms redistribute logical\r\ndrive data according to the transformation operation selected.\r\n\r\nNot Available (13)\r\nIndicates that the logical drive is currently unavailable.\r\nIf a logical drive is expanding and the new configuration\r\nfrees additional disk space, this free space can be\r\nconfigured into another logical volume.  If this is done,\r\nthe new volume will be set to not available.\r\n\r\nQueued For Expansion (14)\r\nIndicates that the logical drive is ready for transformation\r\n(expansion, shrinkage or movement). The logical drive is in the\r\nqueue for transformation.\r\n\r\nMulti-path Access Degraded (15)\r\nIndicates that previously all disk drives of this logical\r\ndrive had more than one I/O path to the controller, but now\r\none or few of them have only one I/O path.\r\n\r\nErasing (16)\r\nIndicates that the logical drive is currently being erased.\r\n\r\nPredictive Spare Rebuild Ready (17)\r\nIndicates that the logical drive is ready to perform a predictive\r\nspare rebuild. The logical drive is in the queue for rebuild.\r\n\r\nRapid Parity Initialization In Progress (18)\r\nIndicates that the logical drive is currently undergoing rapid\r\nparity initialization (RPI). The logical drive is unavailable to the\r\noperating system during RPI and will be made available once RPI\r\nhas completed.\r\n\r\nRapid Parity Initialization Pending (19)\r\nIndicates that the logical drive is currently pending rapid\r\nparity initialization and will be unavailable.\r\n\r\nNo Access - Encrypted - Missing Key (20)\r\nIndicates that the logical drive is currently encrypted and cannot\r\nbe accessed because the array controller has not yet received the\r\nencryption key from iLO nor was it found in the controller's CSP\r\nNVRAM.\r\n\r\nUnencrypted to Encrypted Transformation in Progress (21)\r\nIndicates that the logical drive is currently being transformed from\r\nunencrypted to encrypted and the volume is online. Data will be\r\nwritten unencrypted if the write is directed to an LBA range on the\r\nlogical drive that has not yet been migrated.\r\n\r\nNew Logical Drive Key Rekey in Progress (22)\r\nIndicates that the logical drive is currently encrypted and all data\r\nis currently being rekeyed with a new logical drive key using the\r\nbackground capacity expansion transformation task. The logical drive\r\nis online.\r\n\r\nNo Access - Encrypted with Controller Encryption Not Enabled (23)\r\nIndicates that the logical drive is currently encrypted and cannot\r\nbe accessed because the array controller does not have encryption\r\nenabled.\r\n\r\nUnencrypted To Encrypted Transformation Not Started (24)\r\nIndicates that the logical drive has received a request to transform\r\nfrom unencrypted to encrypted but this process has not yet started.\r\nThe unencrypted logical drive is currently online.\r\n\r\nNew Logical Drive Key Rekey Request Received (25)\r\nIndicates that the logical drive is encrypted and has received\r\na request to rekey all data with a new logical drive encryption key.\r\nThe logical drive is online.",
+                            "valueMap": "CPQIDA-MIB::cpqDaLogDrvStatus",
+                            "alarmObject": "Disk {#SNMPINDEX}({#DISK_NAME})",
+                            "triggers": [
+                                {
+                                    "prototype": "vdisk.crit"
+                                },
+                                {
+                                    "prototype": "vdisk.notok"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.layout",
+                            "oid": "1.3.6.1.4.1.232.3.2.3.1.1.3.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaLogDrvFaultTol.{#SNMPINDEX}",
+                            "vendorDescription": "Logical Drive Fault Tolerance.\r\n\r\nThis shows the fault tolerance mode of the logical drive.\r\nThe following values are valid for the Logical Drive Fault\r\nTolerance:\r\n\r\nNone (2)\r\nFault tolerance is not enabled.  If a physical drive reports\r\nan error, the data cannot be recovered by the drive array\r\ncontroller.\r\n\r\nMirroring - RAID 1/RAID 1+0 (3)\r\nFor each physical drive, there is a second physical drive\r\ncontaining identical data. If a drive fails, the data can be\r\nretrieved from the mirror drive.\r\n\r\nData Guard - RAID 4 (4)\r\nOne of the physical drives is used as a data guard drive and\r\ncontains the exclusive OR of the data on the remaining drives.\r\nIf a failure is detected, the drive array controller rebuilds\r\nthe data using the data guard information plus information\r\nfrom the other drives.\r\n\r\nDistributed Data Guard - RAID 5 (5)\r\nDistributed Data Guarding, sometimes referred to as RAID 5,\r\nis similar to Data Guarding, but instead of storing the parity\r\ninformation on one drive, the information is distributed across\r\nall of the drives.  If a failure is detected, the drive array\r\ncontroller rebuilds the data using the data guard information\r\nfrom all the drives.\r\n\r\nAdvanced Data Guarding - RAID 6 (7)\r\nAdvanced Data Guarding (RAID ADG) is the fault tolerance method\r\nthat provides the highest level of data protection.  It\r\n'stripes' data and parity across all the physical drives in the\r\nconfiguration to ensure the uninterrupted availability of\r\nuncorrupted data.  This fault-tolerance method is similar to\r\ndistributed data guard (RAID 5) in that parity data is\r\ndistributed across all drives in the array, except in RAID ADG\r\nthe capacity of multiple drives is used to store parity data.\r\nAssuming the capacity of 2 drives is used for parity data,\r\nthis allows continued operation despite simultaneous failure of\r\nany 2 drives in the array, whereas RAID 4 and RAID 5 can only\r\nsustain failure of a single drive.\r\n\r\nRAID 50 (8)\r\nDistributed data guarding (RAID 5) with multiple parity groups.\r\n\r\nRAID 60 (9)\r\nAdvanced data guarding (RAID 6) with multiple parity groups.\r\n\r\nRAID 1 ADM (10) - Advanced Data Mirroring -\r\nFor each physical drive, there are two or more physical drives\r\ncontaining identical data. If a drive fails, the data can be\r\nretrieved from any of the mirrored drives.\r\n\r\nRAID 10 ADM (11) - Advanced Data Mirroring with Striping -\r\nFor each physical drive, there are two or more physical drives\r\ncontaining identical data in addition to data being striped across\r\nmultiple drives. If a drive fails, the data can be retrieved from\r\nany of the mirrored drives.",
+                            "valueMap": "CPQIDA-MIB::cpqDaLogDrvFaultTol",
+                            "alarmObject": "Disk {#SNMPINDEX}({#DISK_NAME})"
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.size",
+                            "oid": "1.3.6.1.4.1.232.3.2.3.1.1.9.{#SNMPINDEX}",
+                            "snmpObject": "cpqDaLogDrvSize.{#SNMPINDEX}",
+                            "vendorDescription": "Logical Drive Size.\r\nThis is the size of the logical drive in megabytes.  This value\r\nis calculated using the value 1,048,576 (2^20) as a megabyte.\r\nDrive manufacturers sometimes use the number 1,000,000 as a\r\nmegabyte when giving drive capacities so this value may\r\ndiffer from the advertised size of a drive.",
+                            "alarmObject": "Disk {#SNMPINDEX}({#DISK_NAME})",
+                            "preprocessing": [
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "1048576"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "metrics": [
+                {
+                    "prototype": "sensor.temp.status",
+                    "oid": "1.3.6.1.4.1.232.6.2.6.1.0",
+                    "snmpObject": "cpqHeThermalCondition.0",
+                    "mib": "CPQHLTH-MIB",
+                    "vendorDescription": "This value specifies the overall condition of the system's thermal environment.\r\nThis value will be one of the following:\r\nother(1)  Temperature could not be determined.\r\nok(2)  The temperature sensor is within normal operating range.\r\ndegraded(3)  The temperature sensor is outside of normal operating range.\r\nfailed(4)  The temperature sensor detects a condition that could  permanently damage the system.",
+                    "alarmObject": "System",
+                    "valueMap": "CPQSINFO-MIB::status"
+                },
+                {
+                    "prototype": "system.status",
+                    "oid": "1.3.6.1.4.1.232.2.1.3.0",
+                    "snmpObject": "cpqSiMibCondition.0",
+                    "mib": "CPQSINFO-MIB",
+                    "vendorDescription": "The overall condition. This object represents the overall status of the server information represented by this MIB.",
+                    "valueMap": "CPQSINFO-MIB::status",
+                    "triggers": [
+                        {
+                            "prototype": "health.crit"
+                        },
+                        {
+                            "prototype": "health.warn"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.hw.model",
+                    "oid": "1.3.6.1.4.1.232.2.2.4.2.0",
+                    "snmpObject": "cpqSiProductName",
+                    "mib": "CPQSINFO-MIB",
+                    "vendorDescription": "The machine product name.The name of the machine used in this system."
+                },
+                {
+                    "prototype": "system.hw.serialnumber",
+                    "oid": "1.3.6.1.4.1.232.2.2.2.1.0",
+                    "snmpObject": "cpqSiSysSerialNum",
+                    "mib": "CPQSINFO-MIB",
+                    "vendorDescription": "The serial number of the physical system unit. The string will be empty if the system does not report the serial number function."
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$HEALTH_CRIT_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$HEALTH_WARN_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$PSU_CRIT_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$PSU_WARN_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$FAN_WARN_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$TEMP_CRIT:\"Ambient\"}",
+                    "value": "35"
+                },
+                {
+                    "macro": "{$TEMP_WARN:\"Ambient\"}",
+                    "value": "30"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CRIT_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_WARN_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_CRIT_STATUS:\"cacheModCriticalFailure\"}",
+                    "value": "8"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_WARN_STATUS:\"invalid\"}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_WARN_STATUS:\"cacheModDegradedFailsafeSpeed\"}",
+                    "value": "7"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_WARN_STATUS:\"cacheReadCacheNotMapped\"}",
+                    "value": "9"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_WARN_STATUS:\"cacheModFlashMemNotAttached\"}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_OK_STATUS:\"enabled\"}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:\"failed\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:\"capacitorFailed\"}",
+                    "value": "7"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:\"degraded\"}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:\"notPresent\"}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$VDISK_CRIT_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$VDISK_OK_STATUS}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$DISK_WARN_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$DISK_FAIL_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$DISK_SMART_FAIL_STATUS:\"replaceDrive\"}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$DISK_SMART_FAIL_STATUS:\"replaceDriveSSDWearOut\"}",
+                    "value": "4"
+                }
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "CPQSINFO-MIB::status",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "degraded"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "failed"
+                }
+            ]
+        },
+        {
+            "name": "CPQHLTH-MIB::cpqHeTemperatureLocale",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "system"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "systemBoard"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "ioBoard"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "cpu"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "memory"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "storage"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "removableMedia"
+                },
+                {
+                    "value": "10",
+                    "newvalue": "powerSupply"
+                },
+                {
+                    "value": "11",
+                    "newvalue": "ambient"
+                },
+                {
+                    "value": "12",
+                    "newvalue": "chassis"
+                },
+                {
+                    "value": "13",
+                    "newvalue": "bridgeCard"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaCntlrModel",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "ida"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "idaExpansion"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "ida-2"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "smart"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "smart-2e"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "smart-2p"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "smart-2sl"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "smart-3100es"
+                },
+                {
+                    "value": "10",
+                    "newvalue": "smart-3200"
+                },
+                {
+                    "value": "11",
+                    "newvalue": "smart-2dh"
+                },
+                {
+                    "value": "12",
+                    "newvalue": "smart-221"
+                },
+                {
+                    "value": "13",
+                    "newvalue": "sa-4250es"
+                },
+                {
+                    "value": "14",
+                    "newvalue": "sa-4200"
+                },
+                {
+                    "value": "15",
+                    "newvalue": "sa-integrated"
+                },
+                {
+                    "value": "16",
+                    "newvalue": "sa-431"
+                },
+                {
+                    "value": "17",
+                    "newvalue": "sa-5300"
+                },
+                {
+                    "value": "18",
+                    "newvalue": "raidLc2"
+                },
+                {
+                    "value": "19",
+                    "newvalue": "sa-5i"
+                },
+                {
+                    "value": "20",
+                    "newvalue": "sa-532"
+                },
+                {
+                    "value": "21",
+                    "newvalue": "sa-5312"
+                },
+                {
+                    "value": "22",
+                    "newvalue": "sa-641"
+                },
+                {
+                    "value": "23",
+                    "newvalue": "sa-642"
+                },
+                {
+                    "value": "24",
+                    "newvalue": "sa-6400"
+                },
+                {
+                    "value": "25",
+                    "newvalue": "sa-6400em"
+                },
+                {
+                    "value": "26",
+                    "newvalue": "sa-6i"
+                },
+                {
+                    "value": "27",
+                    "newvalue": "sa-generic"
+                },
+                {
+                    "value": "29",
+                    "newvalue": "sa-p600"
+                },
+                {
+                    "value": "30",
+                    "newvalue": "sa-p400"
+                },
+                {
+                    "value": "31",
+                    "newvalue": "sa-e200"
+                },
+                {
+                    "value": "32",
+                    "newvalue": "sa-e200i"
+                },
+                {
+                    "value": "33",
+                    "newvalue": "sa-p400i"
+                },
+                {
+                    "value": "34",
+                    "newvalue": "sa-p800"
+                },
+                {
+                    "value": "35",
+                    "newvalue": "sa-e500"
+                },
+                {
+                    "value": "36",
+                    "newvalue": "sa-p700m"
+                },
+                {
+                    "value": "37",
+                    "newvalue": "sa-p212"
+                },
+                {
+                    "value": "38",
+                    "newvalue": "sa-p410"
+                },
+                {
+                    "value": "39",
+                    "newvalue": "sa-p410i"
+                },
+                {
+                    "value": "40",
+                    "newvalue": "sa-p411"
+                },
+                {
+                    "value": "41",
+                    "newvalue": "sa-b110i"
+                },
+                {
+                    "value": "42",
+                    "newvalue": "sa-p712m"
+                },
+                {
+                    "value": "43",
+                    "newvalue": "sa-p711m"
+                },
+                {
+                    "value": "44",
+                    "newvalue": "sa-p812"
+                },
+                {
+                    "value": "45",
+                    "newvalue": "sw-1210m"
+                },
+                {
+                    "value": "46",
+                    "newvalue": "sa-p220i"
+                },
+                {
+                    "value": "47",
+                    "newvalue": "sa-p222"
+                },
+                {
+                    "value": "48",
+                    "newvalue": "sa-p420"
+                },
+                {
+                    "value": "49",
+                    "newvalue": "sa-p420i"
+                },
+                {
+                    "value": "50",
+                    "newvalue": "sa-p421"
+                },
+                {
+                    "value": "51",
+                    "newvalue": "sa-b320i"
+                },
+                {
+                    "value": "52",
+                    "newvalue": "sa-p822"
+                },
+                {
+                    "value": "53",
+                    "newvalue": "sa-p721m"
+                },
+                {
+                    "value": "54",
+                    "newvalue": "sa-b120i"
+                },
+                {
+                    "value": "55",
+                    "newvalue": "hps-1224"
+                },
+                {
+                    "value": "56",
+                    "newvalue": "hps-1228"
+                },
+                {
+                    "value": "57",
+                    "newvalue": "hps-1228m"
+                },
+                {
+                    "value": "58",
+                    "newvalue": "sa-p822se"
+                },
+                {
+                    "value": "59",
+                    "newvalue": "hps-1224e"
+                },
+                {
+                    "value": "60",
+                    "newvalue": "hps-1228e"
+                },
+                {
+                    "value": "61",
+                    "newvalue": "hps-1228em"
+                },
+                {
+                    "value": "62",
+                    "newvalue": "sa-p230i"
+                },
+                {
+                    "value": "63",
+                    "newvalue": "sa-p430i"
+                },
+                {
+                    "value": "64",
+                    "newvalue": "sa-p430"
+                },
+                {
+                    "value": "65",
+                    "newvalue": "sa-p431"
+                },
+                {
+                    "value": "66",
+                    "newvalue": "sa-p731m"
+                },
+                {
+                    "value": "67",
+                    "newvalue": "sa-p830i"
+                },
+                {
+                    "value": "68",
+                    "newvalue": "sa-p830"
+                },
+                {
+                    "value": "69",
+                    "newvalue": "sa-p831"
+                },
+                {
+                    "value": "70",
+                    "newvalue": "sa-p530"
+                },
+                {
+                    "value": "71",
+                    "newvalue": "sa-p531"
+                },
+                {
+                    "value": "72",
+                    "newvalue": "sa-p244br"
+                },
+                {
+                    "value": "73",
+                    "newvalue": "sa-p246br"
+                },
+                {
+                    "value": "74",
+                    "newvalue": "sa-p440"
+                },
+                {
+                    "value": "75",
+                    "newvalue": "sa-p440ar"
+                },
+                {
+                    "value": "76",
+                    "newvalue": "sa-p441"
+                },
+                {
+                    "value": "77",
+                    "newvalue": "sa-p741m"
+                },
+                {
+                    "value": "78",
+                    "newvalue": "sa-p840"
+                },
+                {
+                    "value": "79",
+                    "newvalue": "sa-p841"
+                },
+                {
+                    "value": "80",
+                    "newvalue": "sh-h240ar"
+                },
+                {
+                    "value": "81",
+                    "newvalue": "sh-h244br"
+                },
+                {
+                    "value": "82",
+                    "newvalue": "sh-h240"
+                },
+                {
+                    "value": "83",
+                    "newvalue": "sh-h241"
+                },
+                {
+                    "value": "84",
+                    "newvalue": "sa-b140i"
+                },
+                {
+                    "value": "85",
+                    "newvalue": "sh-generic"
+                },
+                {
+                    "value": "88",
+                    "newvalue": "sa-p840ar"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaPhyDrvStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "failed"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "predictiveFailure"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaPhyDrvSmartStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "replaceDrive"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "replaceDriveSSDWearOut"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaAccelStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "invalid"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "enabled"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "tmpDisabled"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "permDisabled"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "cacheModFlashMemNotAttached"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "cacheModDegradedFailsafeSpeed"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "cacheModCriticalFailure"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "cacheReadCacheNotMapped"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaAccelBattery",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Ok"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "Recharging"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "Failed"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "Degraded"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "Not Present"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "Capacitor failed"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaPhyDrvMediaType",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "rotatingPlatters"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "solidState"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaLogDrvFaultTol",
+            "mappings": [
+                {
+                    "value": "0",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "none"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "RAID-1/RAID-10"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "RAID-4"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "RAID-5"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "RAID-6"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "RAID-50"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "RAID-60"
+                },
+                {
+                    "value": "10",
+                    "newvalue": "RAID-1 ADM"
+                },
+                {
+                    "value": "11",
+                    "newvalue": "RAID-10 ADM"
+                }
+            ]
+        },
+        {
+            "name": "CPQIDA-MIB::cpqDaLogDrvStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "failed"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "unconfigured"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "recovering"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "readyForRebuild"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "rebuilding"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "wrongDrive"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "badConnect"
+                },
+                {
+                    "value": "10",
+                    "newvalue": "overheating"
+                },
+                {
+                    "value": "11",
+                    "newvalue": "shutdown"
+                },
+                {
+                    "value": "12",
+                    "newvalue": "expanding"
+                },
+                {
+                    "value": "13",
+                    "newvalue": "notAvailable"
+                },
+                {
+                    "value": "14",
+                    "newvalue": "queuedForExpansion"
+                },
+                {
+                    "value": "15",
+                    "newvalue": "multipathAccessDegraded"
+                },
+                {
+                    "value": "16",
+                    "newvalue": "erasing"
+                },
+                {
+                    "value": "17",
+                    "newvalue": "predictiveSpareRebuildReady"
+                },
+                {
+                    "value": "18",
+                    "newvalue": "rapidParityInitInProgress"
+                },
+                {
+                    "value": "19",
+                    "newvalue": "rapidParityInitPending"
+                },
+                {
+                    "value": "20",
+                    "newvalue": "noAccessEncryptedNoCntlrKey"
+                },
+                {
+                    "value": "21",
+                    "newvalue": "unencryptedToEncryptedInProgress"
+                },
+                {
+                    "value": "22",
+                    "newvalue": "newLogDrvKeyRekeyInProgress"
+                },
+                {
+                    "value": "23",
+                    "newvalue": "noAccessEncryptedCntlrEncryptnNotEnbld"
+                },
+                {
+                    "value": "24",
+                    "newvalue": "unencryptedToEncryptedNotStarted"
+                },
+                {
+                    "value": "25",
+                    "newvalue": "newLogDrvKeyRekeyRequestReceived"
+                }
+            ]
+        }
+    ]
+}
