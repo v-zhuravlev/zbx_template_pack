@@ -156,14 +156,13 @@
                             "vendorDescription": "0600.0012.0001.0005 This attribute defines the status of the power supply.",
                             "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
                             "alarmObject": "{#PSU_DESCR}",
-                            "triggers":[
+                            "triggers": [
                                 {
-                                    "prototype":"psu.crit",
+                                    "prototype": "psu.crit",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"critical\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"nonRecoverable\"},eq)}=1"
-
                                 },
                                 {
-                                    "prototype":"psu.warn",
+                                    "prototype": "psu.warn",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"nonCritical\"},eq)}=1"
                                 }
                             ]
@@ -195,15 +194,13 @@
                             "vendorDescription": "0700.0012.0001.0005 This attribute defines the probe status of the cooling device.",
                             "valueMap": "IDRAC-MIB-SMIv2::StatusProbeEnum",
                             "alarmObject": "{#FAN_DESCR}",
-                            "triggers":[
+                            "triggers": [
                                 {
-                                    "prototype":"fan.crit",
+                                    "prototype": "fan.crit",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"criticalUpper\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"nonRecoverableUpper\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"criticalLower\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"nonRecoverableLower\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"failed\"},eq)}=1"
                                 },
-
-
                                 {
-                                    "prototype":"fan.warn",
+                                    "prototype": "fan.warn",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"nonCriticalUpper\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"nonCriticalLower\"},eq)}=1"
                                 }
                             ]
@@ -231,7 +228,17 @@
                             "mib": "IDRAC-MIB-SMIv2",
                             "vendorDescription": "The status of the physical disk itself without the propagation of any contained component status.\r\nPossible values:\r\n1: Other\r\n2: Unknown\r\n3: OK\r\n4: Non-critical\r\n5: Critical\r\n6: Non-recoverable",
                             "alarmObject": "{#DISK_NAME}",
-                            "valueMap": "IDRAC-MIB-SMIv2::physicalDiskComponentStatus"
+                            "valueMap": "IDRAC-MIB-SMIv2::physicalDiskComponentStatus",
+                            "triggers": [
+                                {
+                                    "prototype": "disk.fail",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"critical\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"nonRecoverable\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "disk.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_WARN_STATUS:\"nonCritical\"},eq)}=1"
+                                }
+                            ]
                         },
                         {
                             "prototype": "system.hw.physicaldisk.serialnumber",
@@ -353,7 +360,17 @@
                             "mib": "IDRAC-MIB-SMIv2",
                             "vendorDescription": "The current state of this virtual disk (which includes any member physical disks.)\r\nPossible states:\r\n1: The current state could not be determined.\r\n2: The virtual disk is operating normally or optimally.\r\n3: The virtual disk has encountered a failure. The data on disk is lost or is about to be lost.\r\n4: The virtual disk encounterd a failure with one or all of the constituent redundant physical disks.\r\nThe data on the virtual disk might no longer be fault tolerant.",
                             "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})",
-                            "valueMap": "IDRAC-MIB-SMIv2::virtualDiskState"
+                            "valueMap": "IDRAC-MIB-SMIv2::virtualDiskState",
+                            "triggers": [
+                                {
+                                    "prototype": "vdisk.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_CRIT_STATUS:\"failed\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "vdisk.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_WARN_STATUS:\"degraded\"},eq)}=1"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -370,7 +387,21 @@
                             "mib": "IDRAC-MIB-SMIv2",
                             "vendorDescription": "The status of the controller itself without the propagation of any contained component status.\r\nPossible values:\r\n1: Other\r\n2: Unknown\r\n3: OK\r\n4: Non-critical\r\n5: Critical\r\n6: Non-recoverable\r\n                ",
                             "alarmObject": "{#CNTLR_NAME}",
-                            "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum"
+                            "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
+                            "triggers": [
+                                {
+                                    "prototype": "disk_array.fail",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_FAIL_STATUS:\"nonRecoverable\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "disk_array.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CRIT_STATUS:\"critical\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "disk_array.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_WARN_STATUS:\"nonCritical\"},eq)}=1"
+                                }
+                            ]
                         },
                         {
                             "prototype": "system.hw.diskarray.model",
@@ -395,7 +426,16 @@
                             "mib": "IDRAC-MIB-SMIv2",
                             "vendorDescription": "Current state of battery.\r\nPossible values:\r\n1: The current state could not be determined.\r\n2: The battery is operating normally.\r\n3: The battery has failed and needs to be replaced.\r\n4: The battery temperature is high or charge level is depleting.\r\n5: The battery is missing or not detected.\r\n6: The battery is undergoing the re-charge phase.\r\n7: The battery voltage or charge level is below the threshold.\r\n                ",
                             "alarmObject": "Battery {#BATTERY_NUM}",
-                            "valueMap": "IDRAC-MIB-SMIv2::batteryState"
+                            "valueMap": "IDRAC-MIB-SMIv2::batteryState",
+                            "triggers": [
+                                {
+                                    "prototype": "diskarray.cache.battery.warn"
+                                },
+                                {
+                                    "prototype": "diskarray.cache.battery.notok"
+                                },
+                                {"prototype":"diskarray.cache.battery.crit"}
+                            ]
                         }
                     ]
                 }
@@ -407,7 +447,18 @@
                     "snmpObject": "globalSystemStatus.0",
                     "mib": "IDRAC-MIB-SMIv2",
                     "vendorDescription": "This attribute defines the overall rollup status of all components in the system being monitored by the remote access card. Includes system, storage, IO devices, iDRAC, CPU, memory, etc.",
-                    "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum"
+                    "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
+                    "triggers": [
+                        {
+                            "prototype": "health.disaster"
+                        },
+                        {
+                            "prototype": "health.crit"
+                        },
+                        {
+                            "prototype": "health.warn"
+                        }
+                    ]
                 },
                 {
                     "prototype": "system.hw.model",
@@ -469,7 +520,7 @@
                     "value": "6"
                 },
                 {
-                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}",
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS}",
                     "value": "3"
                 },
                 {
@@ -497,7 +548,7 @@
                     "value": "1"
                 },
                 {
-                    "macro": "{$VDISK_FAIL_STATUS:\"failed\"}",
+                    "macro": "{$VDISK_CRIT_STATUS:\"failed\"}",
                     "value": "3"
                 },
                 {

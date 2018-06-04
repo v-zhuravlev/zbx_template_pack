@@ -43,8 +43,8 @@
                             "snmpObject": "cpqHeTemperatureCelsius.{#SNMPINDEX}",
                             "mib": "CPQHLTH-MIB",
                             "alarmObject": "{#SNMPINDEX}",
-                            "alarmObjectType": "{#SNMPINDEX}"
-                            //"updateMultiplier": "2"
+                            "alarmObjectType": "{#SNMPINDEX}",
+                            "delay":"6m"
                         },
                         {
                             "prototype": "sensor.temp.locale",
@@ -67,13 +67,13 @@
                         "conditions": [
                             {
                                 "macro": "{#SNMPINDEX}",
-                                "value": "0\\.1",
+                                "value": "0\\.1",//<!-- ambient intake index-->
                                 "operator": "8",
                                 "formulaid": "B"
                             },
                             {
                                 "macro": "{#SENSOR_LOCALE}",
-                                "value": "11",
+                                "value": "11",//<!-- ambient -->
                                 "operator": "8",
                                 "formulaid": "A"
                             }
@@ -101,7 +101,7 @@
                         "conditions": [
                             {
                                 "macro": "{#SENSOR_LOCALE}",
-                                "value": "6",
+                                "value": "6",//<!-- cpu -->
                                 "operator": "8",
                                 "formulaid": "A"
                             }
@@ -128,7 +128,7 @@
                         "conditions": [
                             {
                                 "macro": "{#SENSOR_LOCALE}",
-                                "value": "7",
+                                "value": "7",//<!-- memory -->
                                 "operator": "8",
                                 "formulaid": "A"
                             }
@@ -141,8 +141,8 @@
                             "snmpObject": "cpqHeTemperatureCelsius.Memory.{#SNMPINDEX}",
                             "mib": "CPQHLTH-MIB",
                             "alarmObject": "Memory-{#SNMPINDEX}",
-                            "alarmObjectType": "Memory"
-                            //"updateMultiplier": "2"
+                            "alarmObjectType": "Memory",
+                            "delay":"6m"
                         }
                     ]
                 },
@@ -156,7 +156,7 @@
                         "conditions": [
                             {
                                 "macro": "{#SENSOR_LOCALE}",
-                                "value": "10",
+                                "value": "10",//<!-- powerSupply -->
                                 "operator": "8",
                                 "formulaid": "A"
                             }
@@ -169,8 +169,8 @@
                             "snmpObject": "cpqHeTemperatureCelsius.PSU.{#SNMPINDEX}",
                             "mib": "CPQHLTH-MIB",
                             "alarmObject": "PSU-{#SNMPINDEX}",
-                            "alarmObjectType": "PSU"
-                            //"updateMultiplier": "2"
+                            "alarmObjectType": "PSU",
+                            "delay":"6m"
                         }
                     ]
                 },
@@ -184,7 +184,7 @@
                         "conditions": [
                             {
                                 "macro": "{#SENSOR_LOCALE}",
-                                "value": "5",
+                                "value": "5",//<!-- ioBoard -->
                                 "operator": "8",
                                 "formulaid": "A"
                             }
@@ -197,8 +197,8 @@
                             "snmpObject": "cpqHeTemperatureCelsius.\"I/O.{#SNMPINDEX}\"",
                             "mib": "CPQHLTH-MIB",
                             "alarmObject": "I/O-{#SNMPINDEX}",
-                            "alarmObjectType": "I/O"
-                            //"updateMultiplier": "2"
+                            "alarmObjectType": "I/O",
+                            "delay":"6m"
                         }
                     ]
                 },
@@ -225,8 +225,8 @@
                             "snmpObject": "cpqHeTemperatureCelsius.System.{#SNMPINDEX}",
                             "mib": "CPQHLTH-MIB",
                             "alarmObject": "System-{#SNMPINDEX}",
-                            "alarmObjectType": "Device"
-                            //"updateMultiplier": "2"
+                            "alarmObjectType": "Device",
+                            "delay":"6m"
                         }
                     ]
                 },
@@ -360,7 +360,15 @@
                             "mib": "CPQIDA-MIB",
                             "vendorDescription": "Physical Drive Status. This shows the status of the physical drive. The following values are valid for the physical drive status:\r\nother (1)  Indicates that the instrument agent does not recognize  the drive.\r\nYou may need to upgrade your instrument agent  and/or driver software.\r\nok (2)  Indicates the drive is functioning properly.\r\nfailed (3)  Indicates that the drive is no longer operating and  should be replaced.\r\npredictiveFailure(4)  Indicates that the drive has a predictive failure error and  should be replaced.",
                             "alarmObject": "{#DISK_LOCATION}",
-                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvStatus"
+                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvStatus",
+                            "triggers":[
+                                {
+                                    "prototype":"disk.fail"
+                                },
+                                {
+                                    "prototype":"disk.warn"
+                                }
+                            ]
                         },
                         {
                             "prototype": "system.hw.physicaldisk.smart_status",
@@ -369,7 +377,13 @@
                             "mib": "CPQIDA-MIB",
                             "vendorDescription": "Physical Drive S.M.A.R.T Status.The following values are defined:\r\nother(1)  The agent is unable to determine if the status of S.M.A.R.T  predictive failure monitoring for this drive.\r\nok(2)  Indicates the drive is functioning properly.\r\nreplaceDrive(3)  Indicates that the drive has a S.M.A.R.T predictive failure  error and should be replaced.",
                             "alarmObject": "{#DISK_LOCATION}",
-                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvSmartStatus"
+                            "valueMap": "CPQIDA-MIB::cpqDaPhyDrvSmartStatus",
+                            "triggers":[
+                                {
+                                    "prototype":"disk_smart.fail",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_SMART_FAIL_STATUS:\"replaceDrive\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_SMART_FAIL_STATUS:\"replaceDriveSSDWearOut\"},eq)}=1"
+                                }
+                            ]
                         },
                         {
                             "prototype": "system.hw.physicaldisk.serialnumber",
