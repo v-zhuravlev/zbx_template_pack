@@ -14,10 +14,9 @@
          <description>Template Net HP Comware (HH3C) version: 0.15&#13;
 Overview: http://certifiedgeek.weebly.com/blog/hp-comware-snmp-mib-for-cpu-memory-and-temperature&#13;
 http://www.h3c.com.hk/products___solutions/technology/system_management/configuration_example/200912/656451_57_0.htm&#13;
-&#13;
 MIBs used:&#13;
-HH3C-ENTITY-EXT-MIB&#13;
 ENTITY-MIB&#13;
+HH3C-ENTITY-EXT-MIB&#13;
 Known Issues:&#13;
 description : No temperature sensors. All entities of them return 0 for HH3C-ENTITY-EXT-MIB::hh3cEntityExtTemperature&#13;
 version : 1910-48 Switch Software Version 5.20.99, Release 1116 Copyright(c)2010-2016 Hewlett Packard Enterprise Development LP&#13;
@@ -81,14 +80,12 @@ device : HP 1910-48</description>
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>^(MODULE|Module) (LEVEL|level)1$</value>
-                        <!--  get Module level1 on smaller models -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>(Fabric|FABRIC) (.+) (Module|MODULE)</value>
-                        <!-- get things like HP 384 Gbps Fabric A7500 Module JD194B -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -325,21 +322,18 @@ percent of memory are used.</description>
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>^(MODULE|Module) (LEVEL|level)1$</value>
-                        <!--  get Module level1 on smaller models -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>(Fabric|FABRIC) (.+) (Module|MODULE)</value>
-                        <!-- get things like HP 384 Gbps Fabric A7500 Module JD194B -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
                      <condition>
                         <macro>{#SNMPVALUE}</macro>
                         <value>(T|t)emperature.*(s|S)ensor</value>
-                        <!--  get things like 'Temperature Sensor 1 on Board' -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -710,7 +704,6 @@ Please check the power supply unit for errors</description>
                      <condition>
                         <macro>{#ENT_CLASS}</macro>
                         <value>3</value>
-                        <!-- 3 - chassis  -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -1008,14 +1001,6 @@ Firmware version has changed. Ack to close</description>
             <macro>
                <macro>{$PSU_CRIT_STATUS:"rpsError"}</macro>
                <value>61</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT_LOW}</macro>
