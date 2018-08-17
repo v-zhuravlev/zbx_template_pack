@@ -2610,6 +2610,23 @@ differ from the advertised size of a drive.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
+                     <expression>{Template Server HP iLO SNMPv2:system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk failed</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>4</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Please check virtual disk for warnings or errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
                      <expression>{Template Server HP iLO SNMPv2:system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_OK_STATUS},ne)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
@@ -2623,7 +2640,13 @@ differ from the advertised size of a drive.</description>
 Please check virtual disk for warnings or errors</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
-                     <dependencies/>
+                     <dependencies>
+                        <dependency>
+                           <name>Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk failed</name>
+                           <expression>{Template Server HP iLO SNMPv2:system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>

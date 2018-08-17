@@ -1789,7 +1789,7 @@ The data on the virtual disk might no longer be fault tolerant.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Disk {#SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
@@ -1822,7 +1822,7 @@ Please check virtual disk for warnings or errors</description>
                      <dependencies>
                         <dependency>
                            <name>Disk {#SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
-                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2142,7 +2142,13 @@ Possible values:&#13;
 Please check the device for faults</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
-                     <dependencies/>
+                     <dependencies>
+                        <dependency>
+                           <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
@@ -2161,11 +2167,33 @@ Please check the device for faults</description>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
+                           <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                        <dependency>
                            <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in warning state</name>
                            <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Please check the device for faults</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -2175,7 +2203,7 @@ Please check the device for faults</description>
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}</macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS}</macro>
                <value>3</value>
             </macro>
             <macro>
@@ -2307,7 +2335,7 @@ Please check the device for faults</description>
                <value>50</value>
             </macro>
             <macro>
-               <macro>{$VDISK_FAIL_STATUS:"failed"}</macro>
+               <macro>{$VDISK_CRIT_STATUS:"failed"}</macro>
                <value>3</value>
             </macro>
             <macro>
