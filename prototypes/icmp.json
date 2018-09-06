@@ -1,0 +1,70 @@
+[
+	{
+		"id": "icmpping",
+		"zabbixKey": "icmpping",
+		"name": "ICMP ping",
+		"group": "Status",
+		"type":"SIMPLE_CHECK",
+		"history": "1w",
+		"update": "1m",
+		"valueType": "INTEGER",
+		"valueMap": "Service state",
+		"triggers": [
+			{
+				"prototype": "noping"
+			}
+		]
+	},
+	{
+		"id": "icmppingloss",
+		"name": "ICMP loss",
+		"zabbixKey": "icmppingloss",
+		"type":"SIMPLE_CHECK",
+		"group": "Status",
+		"history": "1w",
+		"update": "1m",
+		"valueType": "FLOAT",
+		"units": "%",
+		"triggers": [
+			{
+				"documentation": "{TEMPLATE_NAME:METRIC.min(5m)}<100 - go back to normal if 100% loss (So this problem is not visible if recovering from NOPING)",
+				"name": "High ICMP ping loss",
+				"id": "icmppingloss",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$ICMP_LOSS_WARN} and {TEMPLATE_NAME:METRIC.min(5m)}<100",
+				"priority": 2,
+				"translations":{
+					"RU":{
+						"name":"Потеря пакетов ICMP ping"
+					}
+				},
+				"dependsOn": [
+					"noping"
+				]
+			}
+		]
+	},
+	{
+		"id": "icmppingsec",
+		"name": "ICMP response time",
+		"zabbixKey": "icmppingsec",
+		"group": "Status",
+		"history": "1w",
+		"update": "1m",
+		"valueType": "FLOAT",
+		"type":"SIMPLE_CHECK",
+		"units": "s",
+		"triggers": [
+			{
+				"name": "High ICMP ping response time",
+				"id": "icmppingsec",
+				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$ICMP_RESPONSE_TIME_WARN}",
+				"priority": 2,
+				"dependsOn": [
+					"icmppingloss",
+					"noping"
+				]
+			}
+		]
+	}
+]
+

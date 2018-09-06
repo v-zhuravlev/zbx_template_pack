@@ -1,0 +1,32 @@
+{
+	"id":"system.hw.firmware",
+	"key":"system.hw.firmware",
+	"name":"Firmware version",
+	"valueType":"CHAR",
+	"group":"Inventory",
+	"delay":"1h",
+	"history":"2w",
+	"trends":"0",
+	"triggers":[
+		{
+			"id":"none",
+			"expression":"{TEMPLATE_NAME:METRIC.diff()}=1 and {TEMPLATE_NAME:METRIC.strlen()}>0",
+			"recoveryMode":"NONE",
+			"manualClose":"YES",
+			"name":"Firmware has changed",
+			"description":"Firmware version has changed. Ack to close",
+			"priority":1,
+			"translations":{
+				"RU":{
+					"name":"Версия прошивки изменилась",
+					"description":"Версия прошивки изменилась. Подтвердите и закройте."
+				}
+			}
+		}
+	],
+	"translations":{
+		"RU":{
+			"name":"Версия прошивки"
+		}
+	}
+}

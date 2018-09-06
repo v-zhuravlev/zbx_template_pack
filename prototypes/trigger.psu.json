@@ -1,0 +1,43 @@
+[
+    {
+        "id": "psu.crit",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS},eq)}=1",
+        "name": "Power supply is in critical state",
+        "priority": 3,
+        "description": "Please check the power supply unit for errors",
+        "translations":{
+            "RU":{
+                "name":"Статус блока питания: авария",
+                "description":"Проверьте блок питания"
+            }
+        }
+    },
+    {
+        "id": "psu.warn",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS},eq)}=1",
+        "name": "Power supply is in warning state",
+        "priority": 2,
+        "description": "Please check the power supply unit for errors",
+        "dependsOn":["psu.crit"],
+        "translations":{
+            "RU":{
+                "name":"Статус блока питания: предупреждение",
+                "description":"Проверьте блок питания"
+            }
+        }
+    },
+    {
+        "id": "psu.notok",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_OK_STATUS},ne)}=1",
+        "name": "Power supply is not in normal state",
+        "priority": 1,
+        "description": "Please check the power supply unit for errors",
+        "dependsOn":["psu.crit","psu.warn"],
+        "translations":{
+            "RU":{
+                "name":"Статус блока питания: не норма",
+                "description":"Проверьте блок питания"
+            }
+        }
+    }
+]
