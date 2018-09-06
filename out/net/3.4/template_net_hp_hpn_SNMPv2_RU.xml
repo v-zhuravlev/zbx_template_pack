@@ -13,12 +13,12 @@
          <name>Template Net HP Enterprise Switch SNMPv2</name>
          <description>Template Net HP Enterprise Switch version: 0.15&#13;
 MIBs used:&#13;
-STATISTICS-MIB&#13;
+SEMI-MIB&#13;
 NETSWITCH-MIB&#13;
-ENTITY-SENSORS-MIB&#13;
 HP-ICF-CHASSIS&#13;
+ENTITY-SENSORS-MIB&#13;
 ENTITY-MIB&#13;
-SEMI-MIB</description>
+STATISTICS-MIB</description>
          <groups>
             <group>
                <name>Templates/Network Devices</name>
@@ -208,14 +208,12 @@ A    the function set available in your router&#13;
                      <condition>
                         <macro>{#SENSOR_TYPE}</macro>
                         <value>8</value>
-                        <!-- celsius -->
                         <operator>8</operator>
                         <formulaid>B</formulaid>
                      </condition>
                      <condition>
                         <macro>{#SENSOR_PRECISION}</macro>
                         <value>0</value>
-                        <!-- limit only to precision 0 (like 10) -->
                         <operator>8</operator>
                         <formulaid>B</formulaid>
                      </condition>
@@ -281,7 +279,7 @@ entPhySensorScale, and entPhySensorPrecision objects must also be examined.</des
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -304,7 +302,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -321,7 +319,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -504,7 +502,7 @@ The number of available (unallocated) bytes.</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -582,7 +580,6 @@ The number of available (unallocated) bytes.</description>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
-                     <!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
                      <condition>
                         <macro>{#ENT_STATUS}</macro>
                         <value>(1|2|3|4)</value>
@@ -720,7 +717,6 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
-                     <!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
                      <condition>
                         <macro>{#ENT_STATUS}</macro>
                         <value>(1|2|3|4)</value>
@@ -858,7 +854,6 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
-                     <!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
                      <condition>
                         <macro>{#ENT_STATUS}</macro>
                         <value>(1|2|3|4)</value>
@@ -952,7 +947,6 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                      <condition>
                         <macro>{#ENT_CLASS}</macro>
                         <value>3</value>
-                        <!-- 3 - chassis  -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -1004,7 +998,7 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                      <master_item_prototype/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#ENT_NAME}: Версия ревизии</name>
+                     <name>{#ENT_NAME}: Версия аппаратной ревизии</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.47.1.1.1.1.8.{#SNMPINDEX}</snmp_oid>
@@ -1077,14 +1071,6 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
             <macro>
                <macro>{$PSU_WARN_STATUS:"warning"}</macro>
                <value>3</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT_LOW}</macro>
@@ -1166,7 +1152,7 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>

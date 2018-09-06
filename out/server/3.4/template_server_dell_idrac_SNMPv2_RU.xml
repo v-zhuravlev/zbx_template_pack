@@ -15,7 +15,6 @@
 Overview: for Dell servers with iDRAC controllers&#13;
 http://www.dell.com/support/manuals/us/en/19/dell-openmanage-server-administrator-v8.3/snmp_idrac8/idrac-mib?guid=guid-e686536d-bc8e-4e09-8e8b-de8eb052efee&#13;
 Supported systems: http://www.dell.com/support/manuals/us/en/04/dell-openmanage-server-administrator-v8.3/snmp_idrac8/supported-systems?guid=guid-f72b75ba-e686-4e8a-b8c5-ca11c7c21381&#13;
-&#13;
 MIBs used:&#13;
 IDRAC-MIB-SMIv2</description>
          <groups>
@@ -295,7 +294,6 @@ This attribute defines the firmware version of a remote access card.</descriptio
                      <condition>
                         <macro>{#SENSOR_LOCALE}</macro>
                         <value>.*CPU.*</value>
-                        <!-- cpu -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -413,7 +411,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -444,7 +442,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -461,7 +459,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -503,7 +501,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <condition>
                         <macro>{#SENSOR_LOCALE}</macro>
                         <value>.*Inlet Temp.*</value>
-                        <!-- ambient, inlet temp -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -621,7 +618,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -652,7 +649,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -669,7 +666,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -835,7 +832,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <condition>
                         <macro>{#TYPE}</macro>
                         <value>3</value>
-                        <!-- fan -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -1565,7 +1561,7 @@ Possible values:&#13;
                      <master_item_prototype/>
                   </item_prototype>
                   <item_prototype>
-                     <name/>
+                     <name>Disk {#SNMPVALUE}({#DISK_NAME}): Read policy</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.11.{#SNMPINDEX}</snmp_oid>
@@ -1612,7 +1608,7 @@ Possible values:&#13;
                      <master_item_prototype/>
                   </item_prototype>
                   <item_prototype>
-                     <name/>
+                     <name>Disk {#SNMPVALUE}({#DISK_NAME}): Write policy</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.10.{#SNMPINDEX}</snmp_oid>
@@ -1762,7 +1758,7 @@ The data on the virtual disk might no longer be fault tolerant.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>Disk {#SNMPVALUE}({#DISK_NAME}): Статус виртуального диска: сбой</name>
@@ -1795,7 +1791,7 @@ The data on the virtual disk might no longer be fault tolerant.</description>
                      <dependencies>
                         <dependency>
                            <name>Disk {#SNMPVALUE}({#DISK_NAME}): Статус виртуального диска: сбой</name>
-                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_FAIL_STATUS:"failed"},eq)}=1</expression>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.virtualdisk.status[virtualDiskState.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2069,7 +2065,6 @@ The controller's name as represented in Storage Management.</description>
                      <privatekey/>
                      <port/>
                      <description>MIB: IDRAC-MIB-SMIv2&#13;
-&#13;
 Current state of battery.&#13;
 Possible values:&#13;
 1: The current state could not be determined.&#13;
@@ -2110,7 +2105,13 @@ Possible values:&#13;
 Проверьте устройство</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
-                     <dependencies/>
+                     <dependencies>
+                        <dependency>
+                           <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива: авария</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
@@ -2129,11 +2130,33 @@ Possible values:&#13;
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
+                           <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива: авария</name>
+                           <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                           <recovery_expression/>
+                        </dependency>
+                        <dependency>
                            <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива: предупреждение</name>
                            <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Server Dell iDRAC SNMPv2:system.hw.diskarray.cache.battery.status[batteryState.{#SNMPINDEX}].count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>Battery {#BATTERY_NUM}: Статус батарейки кэша контроллера дискового массива: авария</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+Проверьте устройство</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -2145,7 +2168,7 @@ Possible values:&#13;
          <httptests/>
          <macros>
             <macro>
-               <macro>{$DISK_ARRAY_CACHE_BATTERY_FAIL_STATUS}</macro>
+               <macro>{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS}</macro>
                <value>3</value>
             </macro>
             <macro>
@@ -2237,14 +2260,6 @@ Possible values:&#13;
                <value>4</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
-            <macro>
                <macro>{$TEMP_CRIT:"Ambient"}</macro>
                <value>35</value>
             </macro>
@@ -2285,7 +2300,7 @@ Possible values:&#13;
                <value>50</value>
             </macro>
             <macro>
-               <macro>{$VDISK_FAIL_STATUS:"failed"}</macro>
+               <macro>{$VDISK_CRIT_STATUS:"failed"}</macro>
                <value>3</value>
             </macro>
             <macro>
@@ -2512,7 +2527,6 @@ Possible values:&#13;
       </value_map>
       <value_map>
          <name>IDRAC-MIB-SMIv2::BooleanType</name>
-         <!-- raid -->
          <mappings>
             <mapping>
                <value>0</value>

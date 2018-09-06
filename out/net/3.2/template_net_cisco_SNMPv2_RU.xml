@@ -211,7 +211,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -255,7 +255,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                <host_prototypes/>
             </discovery_rule>
          </discovery_rules>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
@@ -372,7 +377,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -416,7 +421,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                <host_prototypes/>
             </discovery_rule>
          </discovery_rules>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
@@ -537,7 +547,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -581,7 +591,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                <host_prototypes/>
             </discovery_rule>
          </discovery_rules>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
@@ -649,7 +664,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
             </item>
          </items>
          <discovery_rules/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
       </template>
@@ -796,7 +816,6 @@ ENTITY-MIB</description>
                      <condition>
                         <macro>{#ENT_CLASS}</macro>
                         <value>[^3]</value>
-                        <!-- all other than chassis (chassis is not from LLD) -->
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
@@ -1041,7 +1060,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1072,7 +1091,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1089,7 +1108,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -1388,8 +1407,16 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <value>75</value>
             </macro>
             <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
+            </macro>
+            <macro>
                <macro>{$TEMP_CRIT_STATUS}</macro>
                <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT}</macro>
+               <value>60</value>
             </macro>
             <macro>
                <macro>{$TEMP_DISASTER_STATUS}</macro>
@@ -1403,6 +1430,10 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <macro>{$TEMP_WARN_STATUS}</macro>
                <value>2</value>
             </macro>
+            <macro>
+               <macro>{$TEMP_WARN}</macro>
+               <value>50</value>
+            </macro>
          </macros>
          <templates/>
          <screens/>
@@ -1413,7 +1444,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <description>Template Cisco IOS Software releases 12.2(3.5) or later version: 0.15&#13;
 Known Issues:&#13;
 description : no if(in|out)(Errors|Discards) are available for vlan ifType&#13;
-version : IOS for example: 	12.1(22)EA11, 15.4(3)M2&#13;
+version : IOS for example: 12.1(22)EA11, 15.4(3)M2&#13;
 device : C2911, C7600</description>
          <groups>
             <group>
@@ -1423,36 +1454,7 @@ device : C2911, C7600</description>
          <applications/>
          <items/>
          <discovery_rules/>
-         <macros>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-         </macros>
+         <macros/>
          <templates>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
@@ -1490,36 +1492,7 @@ device : C2911, C7600</description>
          <applications/>
          <items/>
          <discovery_rules/>
-         <macros>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-         </macros>
+         <macros/>
          <templates>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
@@ -1554,36 +1527,7 @@ device : C2911, C7600</description>
          <applications/>
          <items/>
          <discovery_rules/>
-         <macros>
-            <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT_LOW}</macro>
-               <value>5</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_CRIT}</macro>
-               <value>60</value>
-            </macro>
-            <macro>
-               <macro>{$TEMP_WARN}</macro>
-               <value>50</value>
-            </macro>
-         </macros>
+         <macros/>
          <templates>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
@@ -1649,7 +1593,7 @@ device : C2911, C7600</description>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
