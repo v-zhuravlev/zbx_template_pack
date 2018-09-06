@@ -1,0 +1,43 @@
+[
+    {
+        "id": "fan.crit",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS},eq)}=1",
+        "name": "Fan is in critical state",
+        "priority": 3,
+        "description": "Please check the fan unit",
+        "translations":{
+            "RU":{
+                "name":"Статус вентилятора: сбой",
+                "description":"Проверьте вентилятор"
+            }
+        }
+    },
+    {
+        "id": "fan.warn",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS},eq)}=1",
+        "name": "Fan is in warning state",
+        "priority": 2,
+        "description": "Please check the fan unit",
+        "dependsOn":["fan.crit"],
+        "translations":{
+            "RU":{
+                "name":"Статус вентилятора: предупреждение",
+                "description":"Проверьте вентилятор"
+            }
+        }
+    },
+    {
+        "id": "fan.notok",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_OK_STATUS},ne)}=1",
+        "name": "Fan is not in normal state",
+        "priority": 1,
+        "description": "Please check the fan unit",
+        "dependsOn":["fan.crit","fan.warn"],
+        "translations":{
+          "RU":{
+            "name":"Статус вентилятора: не норма",
+            "description":"Проверьте вентилятор"
+          }
+        }
+    }
+]

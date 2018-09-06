@@ -1,0 +1,275 @@
+{
+    "templates": [{
+        "classes": [
+            "PERFORMANCE",
+            "FAULT",
+            "INVENTORY",
+            "INTERFACES",
+            "Interfaces EtherLike Extension",
+            "NETWORK",
+            "SNMP_DEVICE",
+            "SNMPv2"
+        ],
+        "name": "Template Net Juniper",
+        "description": "Template Net Juniper",
+        /*
+            <!-- https://www.juniper.net/documentation/en_US/junos/topics/concept/standard-mib-overview.html
+        https://apps.juniper.net/mib-explorer/
+        PSU advanced monitoring https://www.juniper.net/documentation/en_US/junos/topics/concept/ex-series-junos-psu-mib.html
+        -->*/
+        "discoveryRules": [
+            {
+                "name": "CPU and Memory Discovery",
+                "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2636.3.1.13.1.5]",
+                "key": "jnxOperatingTable.discovery",
+                "description": "Scanning JUNIPER-MIB::jnxOperatingTable for CPU and Memory\r\nhttp://kb.juniper.net/InfoCenter/index?page=content&id=KB17526&actp=search. Filter limits results to Routing Engines",
+                "filter": {
+                    "evalType": "AND_OR",
+                    "conditions": [
+                        {
+                            "macro": "{#SNMPVALUE}",
+                            //<!-- <value>9\.[0-9]\.[0-9]\.[0-9]</value>  -->
+                            "value": "Routing Engine.*",
+                            "operator": "8",
+                            "formulaid": "A"
+                        }
+                    ]
+                },
+                "metrics": [
+                    {
+                        "prototype": "system.cpu.util",
+                        "oid": "1.3.6.1.4.1.2636.3.1.13.1.21.{#SNMPINDEX}",
+                        "snmpObject": "jnxOperating5MinLoadAvg.{#SNMPINDEX}",
+                        "mib": "JUNIPER-MIB",
+                        "ref": "http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX%20SNMP%20Monitoring%20Guide_v1.1.pdf",
+                        "vendorDescription": "The CPU Load Average over the last 5 minutes Here it will be shown as percentage valueZero if unavailable or inapplicable.",
+                        "alarmObject": "{#SNMPVALUE}"
+                    },
+                    {
+                        "prototype": "vm.memory.pused",
+                        "oid": "1.3.6.1.4.1.2636.3.1.13.1.11.{#SNMPINDEX}",
+                        "snmpObject": "jnxOperatingBuffer.{#SNMPINDEX}",
+                        "mib": "JUNIPER-MIB",
+                        "ref": "http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX%20SNMP%20Monitoring%20Guide_v1.1.pdf",
+                        "vendorDescription": "The buffer pool utilization in percentage of this subject.  Zero if unavailable or inapplicable.",
+                        "alarmObject": "{#SNMPVALUE}"
+                    }
+                ]
+            },
+            {
+                "name": "Temperature discovery",
+                "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2636.3.1.13.1.7,{#SENSOR_INFO},1.3.6.1.4.1.2636.3.1.13.1.5]",
+                "key": "jnxOperatingTable.discovery.temp",
+                "description": "Scanning JUNIPER-MIB::jnxOperatingTable for Temperature\r\nhttp://kb.juniper.net/InfoCenter/index?page=content&id=KB17526&actp=search. Filter limits results to Routing Engines",
+                "filter": {
+                    "evalType": "AND_OR",
+                    "conditions": [
+                        {
+                            "macro": "{#SNMPVALUE}",
+                            "value": "[^0]+",
+                            "operator": "8",
+                            "formulaid": "A"
+                        }
+                    ]
+
+                },
+                "metrics": [
+                    {
+                        "prototype": "sensor.temp.value",
+                        "oid": "1.3.6.1.4.1.2636.3.1.13.1.7.{#SNMPINDEX}",
+                        "snmpObject": "jnxOperatingTemp.{#SNMPINDEX}",
+                        "mib": "JUNIPER-MIB",
+                        "vendorDescription": "The temperature in Celsius (degrees C) of {#SENSOR_INFO}",
+                        "alarmObject": "{#SENSOR_INFO}"
+                    }
+                ]
+            },
+            {
+                "name": "FAN Discovery",
+                "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2636.3.1.13.1.5.4]", //<!-- .4.x.x.x are fans -->
+                "key": "jnxOperatingTable.discovery.fans",
+                "description": "Scanning JUNIPER-MIB::jnxOperatingTable for Fans",
+                "metrics": [
+                    {
+                        "prototype": "sensor.fan.status",
+                        "oid": "1.3.6.1.4.1.2636.3.1.13.1.6.4.{#SNMPINDEX}",
+                        "snmpObject": "jnxOperatingState.4.{#SNMPINDEX}",
+                        "mib": "JUNIPER-MIB",
+                        "alarmObject": "{#SNMPVALUE}",
+                        "valueMap": "JUNIPER-ALARM-MIB::jnxOperatingState",
+                        "triggers": [
+                            {
+                                "prototype": "fan.crit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "PSU Discovery",
+                "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.2636.3.1.13.1.5.2]", //<!-- .2.x.x.x are power supply-->
+                "key": "jnxOperatingTable.discovery.psu",
+                "description": "Scanning JUNIPER-MIB::jnxOperatingTable for Power Supplies",
+                /*
+        <!--                      <filter>
+                    <evaltype>0</evaltype>
+                    <formula/>
+                    <conditions>
+                        <condition>
+                            <macro>{#SNMPINDEX}</macro>
+                            <value>2\.[0-9]\.[0-9]\.[0-9]</value>
+                            <operator>8</operator>
+                            <formulaid>A</formulaid>
+                        </condition>
+                    </conditions>
+                </filter>  -->
+                <!-- https://forums.juniper.net/t5/Ethernet-Switching/SNMP-monitoring-for-power-supply/td-p/112934 -->*/
+                "metrics": [
+                    {
+                        "prototype": "sensor.psu.status",
+                        "oid": "1.3.6.1.4.1.2636.3.1.13.1.6.2.{#SNMPINDEX}",
+                        "snmpObject": "jnxOperatingState.2.{#SNMPINDEX}",
+                        "mib": "JUNIPER-MIB",
+                        "alarmObject": "{#SNMPVALUE}",
+                        "valueMap": "JUNIPER-ALARM-MIB::jnxOperatingState",
+                        "vendorDescription": "If they are using DC power supplies there is a a known issue on PR 1064039 where the fans do not detect the temperature correctly and fail to cool the power supply causing the shutdown to occur.\r\nThis is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK-MX104/m-p/289644#M14122",
+                        "triggers": [
+                            {
+                                "prototype": "psu.crit"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "metrics": [
+            {
+                "prototype": "system.status",
+                "oid": "1.3.6.1.4.1.2636.3.4.2.3.1.0",
+                "snmpObject": "jnxRedAlarmState.0",
+                "mib": "JUNIPER-ALARM-MIB",
+                "vendorDescription": "The red alarm indication on the craft interface panel.\r\nThe red alarm is on when there is some system\r\nfailure or power supply failure or the system\r\nis experiencing a hardware malfunction or some\r\nthreshold is being exceeded.\r\n\r\nThis red alarm state could be turned off by the\r\nACO/LT (Alarm Cut Off / Lamp Test) button on the\r\nfront panel module.",
+                "valueMap": "JUNIPER-ALARM-MIB::jnxRedAlarmState"
+            },
+            /*
+                        <!-- <system.status>
+                        <oid>1.3.6.1.4.1.2636.3.4.2.2.1.0</oid>
+                        <snmpObject>jnxYellowAlarmState.0</snmpObject>
+                        <mib>JUNIPER-ALARM-MIB</mib>
+                        <vendorDescription>The yellow alarm state on the craft interface panel.The yellow alarm is on when there is some system warning such as maintenance alert or significant temperature increase.
+                        This yellow alarm state could be turned off by the ACO/LT (Alarm Cut Off / Lamp Test) button on the front panel module.
+                </vendorDescription>
+                        <valueMap>JUNIPER-ALARM-MIB::jnxYellowAlarmState</valueMap>
+                        </system.status>     -->
+*/
+            {
+                "prototype": "system.hw.serialnumber",
+                "oid": "1.3.6.1.4.1.2636.3.1.3.0",
+                "snmpObject": "jnxBoxSerialNo.0",
+                "mib": "JUNIPER-MIB",
+                "vendorDescription": "The serial number of this subject, blank if unknown or unavailable."
+            },
+            {
+                "prototype": "system.hw.model",
+                "oid": "1.3.6.1.4.1.2636.3.1.2.0",
+                "snmpObject": "jnxBoxDescr.0",
+                "mib": "JUNIPER-MIB",
+                "vendorDescription": "The name, model, or detailed description of the box,indicating which product the box is about, for example 'M40'."
+            },
+            {
+                "prototype": "system.sw.os",
+                "zbx_ver": "3.4",
+                "oid": "1.3.6.1.2.1.1.1.0",
+                "snmpObject": "sysDescr.0",
+                "mib": "SNMPv2-MIB",
+                "preprocessing": [
+                    {
+                        "type": "REGEX",
+                        "params": "kernel (JUNOS [0-9a-zA-Z\\.]+)\r\n\\1"
+                    }
+                ]
+            }
+        ],
+        "macros": [
+            {
+                "macro": "{$TEMP_CRIT:\"Routing Engine\"}",
+                "value": "80"
+            },
+            {
+                "macro": "{$TEMP_WARN:\"Routing Engine\"}",
+                "value": "70"
+            },
+            {
+                "macro": "{$HEALTH_CRIT_STATUS}",
+                "value": "3"
+            },
+            {
+                "macro": "{$FAN_CRIT_STATUS}",
+                "value": "6"
+            },
+            {
+                "macro": "{$PSU_CRIT_STATUS}",
+                "value": "6"
+            }
+        ]}],
+    "value_maps": [
+        {
+            "name": "JUNIPER-ALARM-MIB::jnxRedAlarmState",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "off"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "on - RedAlarm"
+                }
+            ]
+        },
+        {
+            "name": "JUNIPER-ALARM-MIB::jnxOperatingState",
+            /*
+                <!-- 1- Unknown
+    2- Up and running
+    3- Ready to run, not running yet
+    4- Held in reset, not ready yet
+    5- Running at Full Speed (valid for fans only)
+    6- Down or off (for power supply)
+    7- Running as a standby (Backup) -->*/
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "running"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "ready"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "reset"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "runningAtFullSpeed"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "down or off"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "standby"
+                }
+            ]
+        }
+    ]
+}

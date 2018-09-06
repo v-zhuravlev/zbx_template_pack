@@ -1,0 +1,71 @@
+[
+    {
+        "name": "Overall system health status",
+        "translations": {
+            "RU": {
+                "name": "Общий статус системы"
+            }
+        },
+        "id": "system.status",
+        "group": "Status",
+        "delay": "30s",
+        "history": "2w",
+        "trends": "0d",
+        "triggers": [
+            {
+                "prototype":"health.crit"
+            }
+        ]
+
+    },
+
+    {
+        "id": "health.disaster",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_DISASTER_STATUS},eq)}=1",
+        "name":"System is in unrecoverable state!",
+        "priority":4,
+        "description": "Please check the device for faults",
+        "translations": {
+          "RU": {
+            "name": "Статус системы: сбой",
+            "description":"Проверьте устройство"
+          }
+        }
+    },
+    {
+        "id": "health.crit",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS},eq)}=1",
+        "name":"System status is in critical state",
+        "priority":4,
+        "description": "Please check the device for errors",
+        "dependsOn":["health.disaster"],
+        "translations": {
+            "RU": {
+                "name": "Статус системы: авария",
+                "description":"Проверьте устройство"
+            }
+        }
+    },
+    {
+        "id": "health.warn",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS},eq)}=1",
+        "name":"System status is in warning state",
+        "priority":2,
+        "description": "Please check the device for warnings",
+        "dependsOn":["health.disaster","health.crit"],
+        "translations": {
+            "RU": {
+                "name": "Статус системы: предупреждение",
+                "description":"Проверьте устройство"
+            }
+        }
+    },
+    {
+        "id": "health.notok",
+        "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_NOTOK_STATUS},ne)}=1",
+        "name": "System status is not in normal state",
+        "priority": 1,
+        "description": "Please check the device for errors",
+        "dependsOn":["health.disaster","health.crit","health.warn"]
+    }
+]

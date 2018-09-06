@@ -1,0 +1,341 @@
+[
+	{
+		"oid": "1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}",
+		"snmpObject": "ifOperStatus.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "The current operational state of the interface.\n- The testing(3) state indicates that no operational packet scan be passed\n- If ifAdminStatus is down(2) then ifOperStatus should be down(2)\n- If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic\n- It should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection)\n- It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state\n- It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.",
+		"valueMap": "IF-MIB::ifOperStatus",
+		"id": "net.if.status",
+		"name": "Operational status",
+		"description": "Used memory in Bytes",
+		"group": "Network_Interfaces",
+		"delay": "1m",
+		"history": "2w",
+		"trends": "0d",
+		"valueType": "INTEGER",
+		"triggers": [
+			{
+				"documentation": "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled.",
+				"id": "if.down",
+				"expression": "{$IFCONTROL:\"{#IFNAME}\"}=1 and ({TEMPLATE_NAME:METRIC.last()}=2 and {TEMPLATE_NAME:METRIC.diff()}=1)",
+				"recovery_expression": "{TEMPLATE_NAME:METRIC.last()}<>2",
+				"manual_close": "NO",
+				"name": "Link down",
+				"description": "Interface is down",
+				"priority": 3,
+				"translations":{
+					"RU": {
+						"name":"Интерфейс недоступен",
+						"description": "Интерфейс недоступен"
+					}
+				}
+			}
+		],
+		"translations":{
+			"RU": {
+				"name":"Текущий статус интерфейса"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifHCInOctets.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.31.1.1.1.6.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "The total number of octets received on the interface,including framing characters.  This object is a 64-bit version of ifInOctets. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.",
+		"preprocessing": [
+			{
+				"type": "DELTA_PER_SECOND"
+			},
+			{
+				"type": "MULTIPLIER",
+				"params": "8"
+			}
+		],
+		
+		"id": "net.if.in",
+		"name": "Bits received",
+		"group": "Network_Interfaces",
+		"valueType": "INTEGER",
+		"delay": "3m",
+		"history": "30d",
+		"units": "bps",
+		"triggers": [
+			{
+				"documentation": "- This trigger uses 3% hysteresis (WARNING: do not change {$IF_UTIL_MAX:\"{#IFNAME}\"} below or equal to 3%\n- Additionally added 'and net.if.speed[*].last()>0' in order to fix ZBX-12688",
+				"id": "if.util_high",
+				"expression": "({TEMPLATE_NAME:METRIC.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()} or\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()}) and\n{TEMPLATE_NAME:__net.if.speed__.last()}>0",
+				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
+				"manual_close": "YES",
+				"name": "High bandwidth usage >{$IF_UTIL_MAX:\"{#IFNAME}\"}%",
+				"priority": 2,
+				"dependsOn": [
+					"if.down"
+				],
+				"translations":{
+					"RU":{
+						"name":"Интерфейс сильно загружен >{$IF_UTIL_MAX:\"{#IFNAME}\"}%"
+					}
+				}
+			}
+		],
+		"graphs": [
+			{
+				"name": "Network traffic",
+				"graphItems": [
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "net.if.in",
+						"yaxisside": "LEFT"
+					},
+					{
+						"drawtype": "BOLD_LINE",
+						"name": "net.if.out",
+						"yaxisside": "LEFT"
+					},
+					{
+						"drawtype": "LINE",
+						"name": "net.if.out.errors",
+						"yaxisside": "RIGHT"
+					},
+					{
+						"drawtype": "LINE",
+						"name": "net.if.in.errors",
+						"yaxisside": "RIGHT"
+					},
+					{
+						"drawtype": "LINE",
+						"name": "net.if.out.discards",
+						"yaxisside": "RIGHT"
+					},
+					{
+						"drawtype": "LINE",
+						"name": "net.if.in.discards",
+						"yaxisside": "RIGHT"
+					}
+				]
+			}
+		],
+		"translations":{
+			"RU": {
+				"name":"Бит получено"
+			}
+		}
+
+	},
+	{
+		"snmpObject": "ifHCOutOctets.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.31.1.1.1.10.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "The total number of octets transmitted out of the interface, including framing characters.  This object is a 64-bit version of ifOutOctets.Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.",
+		"preprocessing": [
+			{
+				"type": "DELTA_PER_SECOND"
+			},
+			{
+				"type": "MULTIPLIER",
+				"params": "8"
+			}
+		],
+
+		"id": "net.if.out",
+		"name": "Bits sent",
+		"group": "Network_Interfaces",
+		"delay": "3m",
+		"history": "30d",
+		"valueType": "INTEGER",
+		"units": "bps",
+		"translations":{
+			"RU": {
+				"name":"Бит отправлено"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifInErrors.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.2.2.1.14.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.",
+		"preprocessing": [
+			{
+				"type": "DELTA_PER_SECOND"
+			}
+		],
+
+		"id": "net.if.in.errors",
+		"name": "Inbound packets with errors",
+		"group": "Network_Interfaces",
+		"delay": "5m",
+		"history": "1w",
+		"valueType": "INTEGER",
+		"triggers": [
+			{
+				"documentation": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} (see ZBX-13128)",
+				"id": "if.errors",
+				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}\nor {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}",
+				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8",
+				"manual_close": "YES",
+				"name": "High error rate",
+				"priority": 2,
+				"description": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} threshold",
+				"dependsOn": [
+					"if.down"
+				],
+				"translations":{
+					"RU": {
+						"name":"Большое количество ошибок интерфейса",
+						"description":"Восстановление когда ниже 80% от значения {$IF_ERRORS_WARN:\"{#IFNAME}\"}"
+					}
+				}
+
+			}
+		],
+		"translations":{
+			"RU": {
+				"name":"Входящих пакетов с ошибками"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifOutErrors.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.2.2.1.20.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "For packet-oriented interfaces, the number of outbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of outbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.",
+		"preprocessing": [
+			{
+				"type": "DELTA_PER_SECOND"
+			}
+		],
+
+		"id": "net.if.out.errors",
+		"name": "Outbound packets with errors",
+		"group": "Network_Interfaces",
+		"delay": "5m",
+		"history": "1w",
+		"valueType": "INTEGER",
+		"translations":{
+			"RU": {
+				"name":"Исходящих пакетов с ошибками"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifInDiscards.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.2.2.1.13.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "The number of inbound packets which were chosen to be discarded\neven though no errors had been detected to prevent their being deliverable to a higher-layer protocol.\nOne possible reason for discarding such a packet could be to free up buffer space.\nDiscontinuities in the value of this counter can occur at re-initialization of the management system,\nand at other times as indicated by the value of ifCounterDiscontinuityTime.",
+		"preprocessing": [
+			{
+				"type": "DELTA_PER_SECOND"
+			}
+		],
+
+		"id": "net.if.in.discards",
+		"name": "Inbound packets discarded",
+		"group": "Network_Interfaces",
+		"delay": "5m",
+		"history": "1w",
+		"valueType": "INTEGER",
+		"translations":{
+			"RU": {
+				"name":"Пакетов отброшено (входящих)"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifOutDiscards.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.2.2.1.19.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "The number of outbound packets which were chosen to be discarded\neven though no errors had been detected to prevent their being deliverable to a higher-layer protocol.\nOne possible reason for discarding such a packet could be to free up buffer space.\nDiscontinuities in the value of this counter can occur at re-initialization of the management system,\nand at other times as indicated by the value of ifCounterDiscontinuityTime.",
+		"preprocessing": [
+			{
+				"type": "DELTA_PER_SECOND"
+			}
+		],
+
+		"id": "net.if.out.discards",
+		"name": "Outbound packets discarded",
+		"group": "Network_Interfaces",
+		"delay": "5m",
+		"history": "1w",
+		"valueType": "INTEGER",
+		"translations":{
+			"RU": {
+				"name":"Пакетов отброшено (исходящих)"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifHighSpeed.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.31.1.1.1.15.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "An estimate of the interface's current bandwidth in units of 1,000,000 bits per second.  If this object reports a value of `n' then the speed of the interface is somewhere in the range of `n-500,000' to`n+499,999'.  For interfaces which do not vary in bandwidth or for those where no accurate estimation can be made, this object should contain the nominal bandwidth.  For a sub-layer which has no concept of bandwidth, this object should be zero.",
+		"preprocessing": [
+			{
+				"type": "MULTIPLIER",
+				"params": 1000000
+			}
+		],
+		"id": "net.if.speed",
+		"name": "Speed",
+		"group": "Network_Interfaces",
+		"delay": "5m",
+		"history": "1w",
+		"trends": "0d",
+		"valueType": "INTEGER",
+		"units": "bps",
+		"triggers": [
+			{
+				"documentation": "Might be problems with Mikrotik. Also checked:\n - That type is Ethernet\n- That interfaces is not in down status (issue on HP Procurve)",
+				"id": "if.speed.not_max",
+				"expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand (\n{TEMPLATE_NAME:__net.if.type__.last()}=6 or\n{TEMPLATE_NAME:__net.if.type__.last()}=7 or\n{TEMPLATE_NAME:__net.if.type__.last()}=11 or\n{TEMPLATE_NAME:__net.if.type__.last()}=62 or\n{TEMPLATE_NAME:__net.if.type__.last()}=69 or\n{TEMPLATE_NAME:__net.if.type__.last()}=117\n)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
+				"recoveryExpression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
+				"manual_close": "YES",
+				"name": "Ethernet has changed to lower speed than it was before",
+				"priority": 1,
+				"description": "This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.",
+				"dependsOn": [
+					"if.down"
+				],
+				"translations":{
+					"RU": {
+						"name":"Интерфейс перешел на более низкую скорость, чем был ранее"
+					}
+				}
+			}
+		],
+		"translations":{
+			"RU": {
+				"name":"Пропускная способность"
+			}
+		}
+	},
+	{
+		"snmpObject": "ifType.{#SNMPINDEX}",
+		"oid": "1.3.6.1.2.1.2.2.1.3.{#SNMPINDEX}",
+		"mib": "IF-MIB",
+		"alarmObject": "Interface {#IFNAME}({#IFALIAS})",
+		"vendorDescription": "The type of interface.\nAdditional values for ifType are assigned by the Internet Assigned NumbersAuthority (IANA),\nthrough updating the syntax of the IANAifType textual convention.",
+		"valueMap": "IF-MIB::ifType",
+		"id": "net.if.type",
+		"name": "Interface type",
+		"group": "Network_Interfaces",
+		"delay": "1h",
+		"history": "1w",
+		"trends": "0d",
+		"valueType": "INTEGER",
+		"translations":{
+			"RU": {
+				"name":"Тип интерфейса"
+			}
+		}
+
+	}
+]

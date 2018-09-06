@@ -1,0 +1,918 @@
+{
+    "templates": [
+        {
+            "classes": [
+                "FAULT",
+                "INVENTORY",
+                "SERVER",
+                "SNMP_DEVICE",
+                "SNMPv2"
+            ],
+            "name": "Template Server Dell iDRAC",
+            "description": "Template Server iDRAC",
+            "documentation": {
+                "overview": "for Dell servers with iDRAC controllers\r\nhttp://www.dell.com/support/manuals/us/en/19/dell-openmanage-server-administrator-v8.3/snmp_idrac8/idrac-mib?guid=guid-e686536d-bc8e-4e09-8e8b-de8eb052efee\r\nSupported systems: http://www.dell.com/support/manuals/us/en/04/dell-openmanage-server-administrator-v8.3/snmp_idrac8/supported-systems?guid=guid-f72b75ba-e686-4e8a-b8c5-ca11c7c21381",
+                "known_devices": [
+                    {
+                        "name": "iDRAC7, PowerEdge R620",
+                        "oid": "1.3.6.1.4.1.674.10892.5"
+                    },
+                    {
+                        "name": "iDRAC8, PowerEdge R730xd",
+                        "oid": "1.3.6.1.4.1.674.10892.5"
+                    },
+                    {
+                        "name": "iDRAC8, PowerEdge R720",
+                        "oid": "1.3.6.1.4.1.674.10892.5"
+                    }
+                ]
+            },
+            "discoveryRules": [
+                {
+                    "name": "Temperature CPU Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.700.20.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.674.10892.5.4.700.20.1.8]",
+                    "key": "temp.cpu.discovery",
+                    "description": "Scanning table of Temperature Probe Table IDRAC-MIB-SMIv2::temperatureProbeTable",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": ".*CPU.*",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.700.20.1.6.{#SNMPINDEX}",
+                            "snmpObject": "temperatureProbeReading.CPU.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "alarmObject": "{#SENSOR_LOCALE}",
+                            "alarmObjectType": "CPU",
+                            "valueMap": "IDRAC-MIB-SMIv2::StatusProbeEnum",
+                            "vendorDescription": "0700.0020.0001.0006 This attribute defines the reading for a temperature probe of type other than temperatureProbeTypeIsDiscrete.  When the value for temperatureProbeType is other than temperatureProbeTypeIsDiscrete,the value returned for this attribute is the temperature that the probeis reading in tenths of degrees Centigrade. When the value for temperatureProbeType is temperatureProbeTypeIsDiscrete, a value is not returned for this attribute.",
+                            "preprocessing": [
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.1"
+                                }
+                            ],
+                            "triggers": [
+                                {
+                                    "prototype": "tempWarn.combined"
+                                },
+                                {
+                                    "prototype": "tempCrit.combined",
+                                    "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_CRIT:\"__ALARM_OBJECT_TYPE__\"}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_CRIT_STATUS}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_DISASTER_STATUS}"
+                                },
+                                {
+                                    "prototype": "tempLow"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "sensor.temp.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.700.20.1.5.{#SNMPINDEX}",
+                            "snmpObject": "temperatureProbeStatus.CPU.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "alarmObject": "{#SENSOR_LOCALE}",
+                            "alarmObjectType": "CPU",
+                            "vendorDescription": "0700.0020.0001.0005 This attribute defines the probe status of the temperature probe.",
+                            "valueMap": "IDRAC-MIB-SMIv2::StatusProbeEnum"
+                        }
+                    ]
+                },
+                {
+                    "name": "Temperature Ambient Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.700.20.1.1,{#SENSOR_LOCALE},1.3.6.1.4.1.674.10892.5.4.700.20.1.8]",
+                    "key": "temp.ambient.discovery",
+                    "description": "Scanning table of Temperature Probe Table IDRAC-MIB-SMIv2::temperatureProbeTable",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#SENSOR_LOCALE}",
+                                "value": ".*Inlet Temp.*",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.temp.value",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.700.20.1.6.{#SNMPINDEX}",
+                            "snmpObject": "temperatureProbeReading.Ambient.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "alarmObject": "{#SENSOR_LOCALE}",
+                            "alarmObjectType": "Ambient",
+                            "valueMap": "IDRAC-MIB-SMIv2::StatusProbeEnum",
+                            "vendorDescription": "0700.0020.0001.0006 This attribute defines the reading for a temperature probe of type other than temperatureProbeTypeIsDiscrete.  When the value for temperatureProbeType is other than temperatureProbeTypeIsDiscrete,the value returned for this attribute is the temperature that the probeis reading in tenths of degrees Centigrade. When the value for temperatureProbeType is temperatureProbeTypeIsDiscrete, a value is not returned for this attribute.",
+                            "preprocessing": [
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.1"
+                                }
+                            ],
+                            "triggers": [
+                                {
+                                    "prototype": "tempWarn.combined"
+                                },
+                                {
+                                    "prototype": "tempCrit.combined",
+                                    "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_CRIT:\"__ALARM_OBJECT_TYPE__\"}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_CRIT_STATUS}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_DISASTER_STATUS}"
+                                },
+                                {
+                                    "prototype": "tempLow"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "sensor.temp.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.700.20.1.5.{#SNMPINDEX}",
+                            "snmpObject": "temperatureProbeStatus.Ambient.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "alarmObject": "{#SENSOR_LOCALE}",
+                            "alarmObjectType": "Ambient",
+                            "vendorDescription": "0700.0020.0001.0005 This attribute defines the probe status of the temperature probe.",
+                            "valueMap": "IDRAC-MIB-SMIv2::StatusProbeEnum"
+                        }
+                    ]
+                },
+                {
+                    "name": "PSU Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.600.12.1.5,{#PSU_DESCR},1.3.6.1.4.1.674.10892.5.4.600.12.1.8]",
+                    "key": "psu.discovery",
+                    "description": "IDRAC-MIB-SMIv2::powerSupplyTable",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.psu.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.600.12.1.5.{#SNMPINDEX}",
+                            "snmpObject": "powerSupplyStatus.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "0600.0012.0001.0005 This attribute defines the status of the power supply.",
+                            "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
+                            "alarmObject": "{#PSU_DESCR}",
+                            "triggers": [
+                                {
+                                    "prototype": "psu.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"critical\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"nonRecoverable\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "psu.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"nonCritical\"},eq)}=1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "FAN Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.4.700.12.1.5,{#FAN_DESCR},1.3.6.1.4.1.674.10892.5.4.700.12.1.8,{#TYPE},1.3.6.1.4.1.674.10892.5.4.700.12.1.7]",
+                    "key": "fan.discovery",
+                    "description": "IDRAC-MIB-SMIv2::coolingDeviceTable",
+                    "filter": {
+                        "evalType": "AND_OR",
+                        "conditions": [
+                            {
+                                "macro": "{#TYPE}",
+                                "value": "3",
+                                "operator": "8",
+                                "formulaid": "A"
+                            }
+                        ]
+                    },
+                    "metrics": [
+                        {
+                            "prototype": "sensor.fan.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.700.12.1.5.{#SNMPINDEX}",
+                            "snmpObject": "coolingDeviceStatus.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "0700.0012.0001.0005 This attribute defines the probe status of the cooling device.",
+                            "valueMap": "IDRAC-MIB-SMIv2::StatusProbeEnum",
+                            "alarmObject": "{#FAN_DESCR}",
+                            "triggers": [
+                                {
+                                    "prototype": "fan.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"criticalUpper\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"nonRecoverableUpper\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"criticalLower\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"nonRecoverableLower\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"failed\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "fan.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"nonCriticalUpper\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"nonCriticalLower\"},eq)}=1"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "sensor.fan.speed",
+                            "oid": "1.3.6.1.4.1.674.10892.5.4.700.12.1.6.{#SNMPINDEX}",
+                            "snmpObject": "coolingDeviceReading.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "0700.0012.0001.0006 This attribute defines the reading for a cooling device\r\nof subtype other than coolingDeviceSubTypeIsDiscrete.  When the value\r\nfor coolingDeviceSubType is other than coolingDeviceSubTypeIsDiscrete, the\r\nvalue returned for this attribute is the speed in RPM or the OFF/ON value\r\nof the cooling device.  When the value for coolingDeviceSubType is\r\ncoolingDeviceSubTypeIsDiscrete, a value is not returned for this attribute.",
+                            "alarmObject": "{#FAN_DESCR}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Physical Disk Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.1,{#DISK_NAME},1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.2]",
+                    "key": "physicaldisk.discovery",
+                    "description": "IDRAC-MIB-SMIv2::physicalDiskTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.physicaldisk.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.24.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskComponentStatus.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The status of the physical disk itself without the propagation of any contained component status.\r\nPossible values:\r\n1: Other\r\n2: Unknown\r\n3: OK\r\n4: Non-critical\r\n5: Critical\r\n6: Non-recoverable",
+                            "alarmObject": "{#DISK_NAME}",
+                            "valueMap": "IDRAC-MIB-SMIv2::physicalDiskComponentStatus",
+                            "triggers": [
+                                {
+                                    "prototype": "disk.fail",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"critical\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"nonRecoverable\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "disk.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_WARN_STATUS:\"nonCritical\"},eq)}=1"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.serialnumber",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.7.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskSerialNo.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The physical disk's unique identification number from the manufacturer.",
+                            "alarmObject": "{#DISK_NAME}"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.smart_status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.31.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskSmartAlertIndication.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "Indicates whether the physical disk has received a predictive failure alert.",
+                            "alarmObject": "{#DISK_NAME}",
+                            "valueMap": "IDRAC-MIB-SMIv2::BooleanType"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.model",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.6.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskProductID.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The model number of the physical disk.",
+                            "alarmObject": "{#DISK_NAME}"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.part_number",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.27.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskPartNumber.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The part number of the disk.",
+                            "alarmObject": "{#DISK_NAME}"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.media_type",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.35.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskMediaType.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The media type of the physical disk. Possible Values:\r\n1: The media type could not be determined.\r\n2: Hard Disk Drive (HDD).\r\n3: Solid State Drive (SSD).",
+                            "alarmObject": "{#DISK_NAME}",
+                            "valueMap": "IDRAC-MIB-SMIv2::physicalDiskMediaType"
+                        },
+                        {
+                            "prototype": "system.hw.physicaldisk.size",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.4.1.11.{#SNMPINDEX}",
+                            "snmpObject": "physicalDiskCapacityInMB.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The size of the physical disk in megabytes.",
+                            "alarmObject": "{#DISK_NAME}",
+                            "preprocessing": [
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "1048576"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Virtual Disk Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.1,{#DISK_NAME},1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.2]",
+                    "key": "virtualdisk.discovery",
+                    "description": "IDRAC-MIB-SMIv2::virtualDiskTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.virtualdisk.layout",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.13.{#SNMPINDEX}",
+                            "snmpObject": "virtualDiskLayout.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The virtual disk's RAID type.\r\nPossible values:\r\n1: Not one of the following\r\n2: RAID-0\r\n3: RAID-1\r\n4: RAID-5\r\n5: RAID-6\r\n6: RAID-10\r\n7: RAID-50\r\n8: RAID-60\r\n9: Concatenated RAID 1\r\n10: Concatenated RAID 5",
+                            "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})",
+                            "valueMap": "IDRAC-MIB-SMIv2::virtualDiskLayout"
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.state",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.30.{#SNMPINDEX}",
+                            "snmpObject": "virtualDiskOperationalState.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The state of the virtual disk when there are progressive operations ongoing.\r\nPossible values:\r\n1: There is no active operation running.\r\n2: The virtual disk configuration has changed. The physical disks included in the virtual disk are being modified to support the new configuration.\r\n3: A Consistency Check (CC) is being performed on the virtual disk.\r\n4: The virtual disk is being initialized.\r\n5: BackGround Initialization (BGI) is being performed on the virtual disk.",
+                            "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})",
+                            "valueMap": "IDRAC-MIB-SMIv2::virtualDiskOperationalState"
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.readpolicy",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.11.{#SNMPINDEX}",
+                            "snmpObject": "virtualDiskReadPolicy.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The read policy used by the controller for read operations on this virtual disk.\r\nPossible values:\r\n1: No Read Ahead.\r\n2: Read Ahead.\r\n3: Adaptive Read Ahead.",
+                            "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})"
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.writepolicy",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.10.{#SNMPINDEX}",
+                            "snmpObject": "virtualDiskWritePolicy.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The write policy used by the controller for write operations on this virtual disk.\r\nPossible values:\r\n1: Write Through.\r\n2: Write Back.\r\n3: Force Write Back.",
+                            "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})",
+                            "valueMap": "IDRAC-MIB-SMIv2::virtualDiskWritePolicy"
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.size",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.6.{#SNMPINDEX}",
+                            "snmpObject": "virtualDiskSizeInMB.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The size of the virtual disk in megabytes.",
+                            "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})",
+                            "preprocessing": [
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "1048576"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "system.hw.virtualdisk.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.140.1.1.4.{#SNMPINDEX}",
+                            "snmpObject": "virtualDiskState.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The current state of this virtual disk (which includes any member physical disks.)\r\nPossible states:\r\n1: The current state could not be determined.\r\n2: The virtual disk is operating normally or optimally.\r\n3: The virtual disk has encountered a failure. The data on disk is lost or is about to be lost.\r\n4: The virtual disk encounterd a failure with one or all of the constituent redundant physical disks.\r\nThe data on the virtual disk might no longer be fault tolerant.",
+                            "alarmObject": "Disk {#SNMPVALUE}({#DISK_NAME})",
+                            "valueMap": "IDRAC-MIB-SMIv2::virtualDiskState",
+                            "triggers": [
+                                {
+                                    "prototype": "vdisk.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_CRIT_STATUS:\"failed\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "vdisk.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_WARN_STATUS:\"degraded\"},eq)}=1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Array Controller Discovery",
+                    "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.38,{#CNTLR_NAME},1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.79]",
+                    "key": "physicaldisk.arr.discovery",
+                    "description": "IDRAC-MIB-SMIv2::controllerTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.diskarray.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.38.{#SNMPINDEX}",
+                            "snmpObject": "controllerComponentStatus.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The status of the controller itself without the propagation of any contained component status.\r\nPossible values:\r\n1: Other\r\n2: Unknown\r\n3: OK\r\n4: Non-critical\r\n5: Critical\r\n6: Non-recoverable\r\n                ",
+                            "alarmObject": "{#CNTLR_NAME}",
+                            "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
+                            "triggers": [
+                                {
+                                    "prototype": "disk_array.fail",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_FAIL_STATUS:\"nonRecoverable\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "disk_array.crit",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CRIT_STATUS:\"critical\"},eq)}=1"
+                                },
+                                {
+                                    "prototype": "disk_array.warn",
+                                    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_WARN_STATUS:\"nonCritical\"},eq)}=1"
+                                }
+                            ]
+                        },
+                        {
+                            "prototype": "system.hw.diskarray.model",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.1.1.2.{#SNMPINDEX}",
+                            "snmpObject": "controllerName.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "The controller's name as represented in Storage Management.",
+                            "alarmObject": "{#CNTLR_NAME}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Array Controller Cache Discovery",
+                    "snmp_oid": "discovery[{#BATTERY_NUM},1.3.6.1.4.1.674.10892.5.5.1.20.130.15.1.1]",
+                    "key": "array.cache.discovery",
+                    "description": "IDRAC-MIB-SMIv2::batteryTable",
+                    "metrics": [
+                        {
+                            "prototype": "system.hw.diskarray.cache.battery.status",
+                            "oid": "1.3.6.1.4.1.674.10892.5.5.1.20.130.15.1.4.{#SNMPINDEX}",
+                            "snmpObject": "batteryState.{#SNMPINDEX}",
+                            "mib": "IDRAC-MIB-SMIv2",
+                            "vendorDescription": "Current state of battery.\r\nPossible values:\r\n1: The current state could not be determined.\r\n2: The battery is operating normally.\r\n3: The battery has failed and needs to be replaced.\r\n4: The battery temperature is high or charge level is depleting.\r\n5: The battery is missing or not detected.\r\n6: The battery is undergoing the re-charge phase.\r\n7: The battery voltage or charge level is below the threshold.\r\n                ",
+                            "alarmObject": "Battery {#BATTERY_NUM}",
+                            "valueMap": "IDRAC-MIB-SMIv2::batteryState",
+                            "triggers": [
+                                {
+                                    "prototype": "diskarray.cache.battery.warn"
+                                },
+                                {
+                                    "prototype": "diskarray.cache.battery.notok"
+                                },
+                                {"prototype":"diskarray.cache.battery.crit"}
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "metrics": [
+                {
+                    "prototype": "system.status",
+                    "oid": "1.3.6.1.4.1.674.10892.5.2.1.0",
+                    "snmpObject": "globalSystemStatus.0",
+                    "mib": "IDRAC-MIB-SMIv2",
+                    "vendorDescription": "This attribute defines the overall rollup status of all components in the system being monitored by the remote access card. Includes system, storage, IO devices, iDRAC, CPU, memory, etc.",
+                    "valueMap": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
+                    "triggers": [
+                        {
+                            "prototype": "health.disaster"
+                        },
+                        {
+                            "prototype": "health.crit"
+                        },
+                        {
+                            "prototype": "health.warn"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.hw.model",
+                    "oid": "1.3.6.1.4.1.674.10892.5.1.3.12.0",
+                    "snmpObject": "systemModelName.0",
+                    "mib": "IDRAC-MIB-SMIv2",
+                    "vendorDescription": "This attribute defines the model name of the system."
+                },
+                {
+                    "prototype": "system.sw.os",
+                    "oid": "1.3.6.1.4.1.674.10892.5.1.3.6.0",
+                    "snmpObject": "systemOSName",
+                    "mib": "IDRAC-MIB-SMIv2",
+                    "vendorDescription": "This attribute defines the name of the operating system that the hostis running."
+                },
+                {
+                    "prototype": "system.hw.serialnumber",
+                    "vendorDocumentation": "Note: Dell Service Tag = Serial Number",
+                    "oid": "1.3.6.1.4.1.674.10892.5.1.3.2.0",
+                    "snmpObject": "systemServiceTag",
+                    "mib": "IDRAC-MIB-SMIv2",
+                    "vendorDescription": "This attribute defines the service tag of the system."
+                },
+                {
+                    "prototype": "system.hw.firmware",
+                    "oid": "1.3.6.1.4.1.674.10892.5.1.1.8.0",
+                    "snmpObject": "racFirmwareVersion",
+                    "mib": "IDRAC-MIB-SMIv2",
+                    "vendorDescription": "This attribute defines the firmware version of a remote access card."
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$TEMP_WARN:\"CPU\"}",
+                    "value": "70"
+                },
+                {
+                    "macro": "{$TEMP_WARN:\"Ambient\"}",
+                    "value": "30"
+                },
+                {
+                    "macro": "{$TEMP_CRIT:\"CPU\"}",
+                    "value": "75"
+                },
+                {
+                    "macro": "{$TEMP_CRIT:\"Ambient\"}",
+                    "value": "35"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_WARN_STATUS:\"nonCritical\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CRIT_STATUS:\"critical\"}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_FAIL_STATUS:\"nonRecoverable\"}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$DISK_WARN_STATUS:\"nonCritical\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$DISK_FAIL_STATUS:\"critical\"}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$DISK_FAIL_STATUS:\"nonRecoverable\"}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$DISK_SMART_FAIL_STATUS}",
+                    "value": "1"
+                },
+                {
+                    "macro": "{$VDISK_CRIT_STATUS:\"failed\"}",
+                    "value": "3"
+                },
+                {
+                    "macro": "{$VDISK_WARN_STATUS:\"degraded\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$HEALTH_DISASTER_STATUS}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$HEALTH_CRIT_STATUS}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$HEALTH_WARN_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$TEMP_WARN_STATUS}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$TEMP_CRIT_STATUS}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$TEMP_DISASTER_STATUS}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$FAN_WARN_STATUS:\"nonCriticalUpper\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$FAN_WARN_STATUS:\"nonCriticalLower\"}",
+                    "value": "7"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"criticalUpper\"}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"nonRecoverableUpper\"}",
+                    "value": "6"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"criticalLower\"}",
+                    "value": "8"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"nonRecoverableLower\"}",
+                    "value": "9"
+                },
+                {
+                    "macro": "{$FAN_CRIT_STATUS:\"failed\"}",
+                    "value": "10"
+                },
+                {
+                    "macro": "{$PSU_WARN_STATUS:\"nonCritical\"}",
+                    "value": "4"
+                },
+                {
+                    "macro": "{$PSU_CRIT_STATUS:\"critical\"}",
+                    "value": "5"
+                },
+                {
+                    "macro": "{$PSU_CRIT_STATUS:\"nonRecoverable\"}",
+                    "value": "6"
+                }
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "IDRAC-MIB-SMIv2::ObjectStatusEnum",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "nonCritical"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "critical"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "nonRecoverable"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::StatusProbeEnum",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "nonCriticalUpper"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "criticalUpper"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "nonRecoverableUpper"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "nonCriticalLower"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "criticalLower"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "nonRecoverableLower"
+                },
+                {
+                    "value": "10",
+                    "newvalue": "failed"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::physicalDiskComponentStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "nonCritical"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "critical"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "nonRecoverable"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::BooleanType",
+            "mappings": [
+                {
+                    "value": "0",
+                    "newvalue": "ok"
+                },
+                {
+                    "value": "1",
+                    "newvalue": "failed"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::physicalDiskMediaType",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Unknown"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "HDD"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "SSD"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::batteryState",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Unknown"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Ready"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "Failed"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "Degraded"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "Missing"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "Charging"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "Below threshold"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::virtualDiskLayout",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Other"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "RAID-0"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "RAID-1"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "RAID-5"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "RAID-6"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "RAID-10"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "RAID-50"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "RAID-60"
+                },
+                {
+                    "value": "9",
+                    "newvalue": "Concatenated RAID 1"
+                },
+                {
+                    "value": "10",
+                    "newvalue": "Concatenated RAID 5"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::virtualDiskOperationalState",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Not applicable"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Reconstructing"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "Resynching"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "Initializing"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "Background init"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::virtualDiskWritePolicy",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Write Through"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Write Back"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "Force Write Back"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::virtualDiskReadPolicy",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "No Read Ahead"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Read Ahead"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "Adaptive Read Ahead"
+                }
+            ]
+        },
+        {
+            "name": "IDRAC-MIB-SMIv2::virtualDiskState",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "Unknown"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Online"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "Failed"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "Degraded"
+                }
+            ]
+        }
+    ]
+}
