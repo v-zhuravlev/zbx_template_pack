@@ -1,0 +1,926 @@
+{
+  "templates": [
+    {
+      "classes": [
+        "FAULT",
+        "INVENTORY",
+        "SERVER",
+        "SNMP_DEVICE",
+        "SNMPv2"
+      ],
+      "name": "Template Server Cisco UCS",
+      "description": "Template Server Cisco UCS",
+      "documentation": {
+        "overview": "for Cisco UCS via Integrated Management Controller",
+        //ftp://ftp.cisco.com/pub/mibs/ucs-mibs/
+        "known_devices": [
+          {
+            "name": "Cisco UCS C240 M4SX",
+            "oid": ".1.3.6.1.4.1.9.1.2179"
+          }
+        ]
+      },
+      "discoveryRules": [
+        {
+          "name": "Temperature Discovery",
+          "snmp_oid": "discovery[{#SENSOR_LOCATION},1.3.6.1.4.1.9.9.719.1.9.44.1.2]",
+          "key": "temp.discovery",
+          "metrics": [
+            {
+              "prototype": "sensor.temp.value",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.4.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitMbTempStatsAmbientTemp.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#SENSOR_LOCATION}.Ambient",
+              "alarmObjectType": "Ambient"
+            },
+            {
+              "prototype": "sensor.temp.value",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.8.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitMbTempStatsFrontTemp.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#SENSOR_LOCATION}.Front",
+              "alarmObjectType": "Ambient",
+              "vendorDescription": "Cisco UCS compute:RackUnitMbTempStats:frontTemp managed object property"
+            },
+            {
+              "prototype": "sensor.temp.value",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.21.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitMbTempStatsRearTemp.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#SENSOR_LOCATION}.Rear",
+              "alarmObjectType": "Ambient",
+              "vendorDescription": "Cisco UCS compute:RackUnitMbTempStats:rearTemp managed object property"
+            },
+            {
+              "prototype": "sensor.temp.value",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.13.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitMbTempSltatsIoh1Temp.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#SENSOR_LOCATION}.IOH",
+              "alarmObjectType": "Ambient",
+              "vendorDescription": "Cisco UCS compute:RackUnitMbTempStats:ioh1Temp managed object property"
+            }
+          ]
+        },
+        {
+          "name": "Temperature CPU Discovery",
+          "snmp_oid": "discovery[{#SENSOR_LOCATION},1.3.6.1.4.1.9.9.719.1.41.2.1.2]",
+          "key": "temp.cpu.discovery",
+          "metrics": [
+            {
+              "prototype": "sensor.temp.value",
+              "oid": "1.3.6.1.4.1.9.9.719.1.41.2.1.10.{#SNMPINDEX}",
+              "snmpObject": "cucsProcessorEnvStatsTemperature.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-PROCESSOR-MIB",
+              "alarmObject": "{#SENSOR_LOCATION}",
+              "alarmObjectType": "CPU",
+              "vendorDescription": "Cisco UCS processor:EnvStats:temperature managed object property"
+            }
+          ]
+        },
+        {
+          "name": "PSU Discovery",
+          "snmp_oid": "discovery[{#PSU_LOCATION},1.3.6.1.4.1.9.9.719.1.15.56.1.2]",
+          "key": "psu.discovery",
+          "metrics": [
+            {
+              "prototype": "sensor.psu.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.15.56.1.7.{#SNMPINDEX}",
+              "snmpObject": "cucsEquipmentPsuOperState.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-EQUIPMENT-MIB",
+              "alarmObject": "{#PSU_LOCATION}",
+              "vendorDescription": "Cisco UCS equipment:Psu:operState managed object property",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
+              "triggers":[
+                {
+                  "prototype":"psu.crit",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                },
+                {
+                  "prototype":"psu.warn",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"degraded\"},eq)}=1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Unit Discovery",
+          "snmp_oid": "discovery[{#UNIT_LOCATION},1.3.6.1.4.1.9.9.719.1.9.35.1.2]",
+          "key": "unit.discovery",
+          "metrics": [
+            {
+              "prototype": "system.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.35.1.42.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitOperState.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#UNIT_LOCATION}",
+              "vendorDescription": "Cisco UCS compute:RackUnit:operState managed object property",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsLsOperState",
+              "triggers": [
+                {
+                  "prototype":"health.crit",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"computeFailed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"configFailure\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"unconfigFailure\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                },
+                {
+                  "prototype":"health.warn",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"testFailed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"thermalProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"powerProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"voltageProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"diagnosticsFailed\"},eq)}=1"
+                }
+              ]
+            },
+            {
+              "prototype": "system.hw.model",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.35.1.32.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitModel.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#UNIT_LOCATION}",
+              "vendorDescription": "Cisco UCS compute:RackUnit:model managed object property"
+            },
+            {
+              "prototype": "system.hw.serialnumber",
+              "oid": "1.3.6.1.4.1.9.9.719.1.9.35.1.47.{#SNMPINDEX}",
+              "snmpObject": "cucsComputeRackUnitSerial.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
+              "alarmObject": "{#UNIT_LOCATION}",
+              "vendorDescription": "Cisco UCS compute:RackUnit:serial managed object property"
+            }
+          ]
+        },
+        {
+          "name": "FAN Discovery",
+          "snmp_oid": "discovery[{#FAN_LOCATION},1.3.6.1.4.1.9.9.719.1.15.12.1.2]",
+          "key": "fan.discovery",
+          "metrics": [
+            {
+              "prototype": "sensor.fan.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.15.12.1.9.{#SNMPINDEX}",
+              "snmpObject": "cucsEquipmentFanOperState.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-EQUIPMENT-MIB",
+              "alarmObject": "{#FAN_LOCATION}",
+              "vendorDescription": "Cisco UCS equipment:Fan:operState managed object property",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
+              "triggers":[
+                {
+                  "prototype":"fan.crit",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                },
+                {
+                  "prototype":"fan.warn",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"degraded\"},eq)}=1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Physical Disk Discovery",
+          "snmp_oid": "discovery[{#DISK_LOCATION},1.3.6.1.4.1.9.9.719.1.45.4.1.2]",
+          "key": "physicalDisk.discovery",
+          "description": "Scanning table of physical drive entries CISCO-UNIFIED-COMPUTING-STORAGE-MIB::cucsStorageLocalDiskTable.",
+          "metrics": [
+            {
+              "prototype": "system.hw.physicaldisk.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.18.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalDiskDiskState.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "vendorDescription": "Cisco UCS storage:LocalDisk:diskState managed object property.",
+              "alarmObject": "{#DISK_LOCATION}",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStoragePDriveStatus",
+              "triggers": [
+                {
+                  "prototype": "disk.fail",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"failed\"},eq)}=1"
+                },
+                {
+                  "prototype": "disk.crit",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS:\"bad\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS:\"predictiveFailure\"},eq)}=1"
+                }
+              ]
+            },
+            {
+              "prototype": "system.hw.physicaldisk.model",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.12.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalDiskSerial.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "alarmObject": "{#DISK_LOCATION}",
+              "vendorDescription": "Cisco UCS storage:LocalDisk:serial managed object property. Actually returns part number code"
+            },
+            {
+              "prototype": "system.hw.physicaldisk.media_type",
+              "vendorDocumentation": "Actually returns 'HDD' or 'SSD'",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.7.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalDiskModel.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "alarmObject": "{#DISK_LOCATION}",
+              "vendorDescription": "Cisco UCS storage:LocalDisk:model managed object property. Actually returns 'HDD' or 'SSD'",
+              "valueType": "CHAR"
+            },
+            {
+              "prototype": "system.hw.physicaldisk.size",
+              "vendorDocumentation": "Actually returns 'HDD' or 'SSD'",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.13.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalDiskSize.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "alarmObject": "{#DISK_LOCATION}",
+              "vendorDescription": "Cisco UCS storage:LocalDisk:size managed object property. In MB.",
+              "preprocessing": [
+                {
+                  "type": "MULTIPLIER",
+                  "params": "1048576"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Virtual Disk Discovery",
+          "snmp_oid": "discovery[{#VDISK_LOCATION},1.3.6.1.4.1.9.9.719.1.45.8.1.2]",
+          "key": "virtualdisk.discovery",
+          "description": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB::cucsStorageLocalLunTable",
+          "metrics": [
+            {
+              "prototype": "system.hw.virtualdisk.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.8.1.10.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalLunPresence.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "vendorDescription": "Cisco UCS storage:LocalLun:presence managed object property",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentPresence",
+              "alarmObject": "{#VDISK_LOCATION}",
+              "triggers":[
+                {
+                  "prototype":"vdisk.notok",
+                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_OK_STATUS:\"equipped\"},ne)}=1"
+                }
+              ]
+            },
+            {
+              "prototype": "system.hw.virtualdisk.layout",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.8.1.14.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalLunType.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "vendorDescription": "Cisco UCS storage:LocalLun:type managed object property",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStorageLunType",
+              "alarmObject": "{#VDISK_LOCATION}"
+            },
+            {
+              "prototype": "system.hw.virtualdisk.size",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.8.1.13.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageLocalLunSize.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "vendorDescription": "Cisco UCS storage:LocalLun:size managed object property in MB.",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStorageLunType",
+              "alarmObject": "{#VDISK_LOCATION}",
+              "preprocessing": [
+                {
+                  "type": "MULTIPLIER",
+                  "params": "1048576"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Array Controller Discovery",
+          "snmp_oid": "discovery[{#DISKARRAY_LOCATION},1.3.6.1.4.1.9.9.719.1.45.1.1.2]",
+          "key": "array.discovery",
+          "description": "Scanning table of Array controllers: CISCO-UNIFIED-COMPUTING-STORAGE-MIB::cucsStorageControllerTable.",
+          "metrics": [
+            {
+              "prototype": "system.hw.diskarray.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.1.1.6.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageControllerOperState.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "alarmObject": "{#DISKARRAY_LOCATION}",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
+              "triggers":[
+                {
+                  "prototype":"disk_array.crit",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                },
+                {
+                  "prototype":"disk_array.warn",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_WARN_STATUS:\"degraded\"},eq)}=1"
+                },
+                {
+                  "prototype":"disk_array.notok",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_OK_STATUS:\"operable\"},ne)}=1"
+                }
+              ]
+            },
+            {
+              "prototype": "system.hw.diskarray.model",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.1.1.5.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageControllerModel.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "alarmObject": "{#DISKARRAY_LOCATION}"
+            }
+          ]
+        },
+        {
+          "name": "Array Controller Cache Discovery",
+          "snmp_oid": "discovery[{#DISKARRAY_CACHE_LOCATION},1.3.6.1.4.1.9.9.719.1.45.11.1.2]",
+          "key": "array.cache.discovery",
+          "description": "Scanning table of Array controllers: CISCO-UNIFIED-COMPUTING-STORAGE-MIB::cucsStorageControllerTable.",
+          "metrics": [
+            {
+              "prototype": "system.hw.diskarray.cache.battery.status",
+              "oid": "1.3.6.1.4.1.9.9.719.1.45.11.1.9.{#SNMPINDEX}",
+              "snmpObject": "cucsStorageRaidBatteryOperability.{#SNMPINDEX}",
+              "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
+              "alarmObject": "{#DISKARRAY_CACHE_LOCATION}",
+              "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
+              "triggers":[
+                {
+                  "prototype":"diskarray.cache.battery.crit"
+                },
+                {
+                  "prototype":"diskarray.cache.battery.notok"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "metrics": [],
+      "macros": [
+        {
+          "macro": "{$PSU_CRIT_STATUS:\"inoperable\"}",
+          "value": "2"
+        },
+        {
+          "macro": "{$PSU_WARN_STATUS:\"degraded\"}",
+          "value": "3"
+        },
+        {
+          "macro": "{$FAN_CRIT_STATUS:\"inoperable\"}",
+          "value": "2"
+        },
+        {
+          "macro": "{$FAN_WARN_STATUS:\"degraded\"}",
+          "value": "3"
+        },
+        {
+          "macro": "{$TEMP_CRIT:\"Ambient\"}",
+          "value": "35"
+        },
+        {
+          "macro": "{$TEMP_WARN:\"Ambient\"}",
+          "value": "30"
+        },
+        {
+          "macro": "{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS}",
+          "value": "1"
+        },
+        {
+          "macro": "{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS}",
+          "value": "2"
+        },
+        {
+          "macro": "{$DISK_ARRAY_CRIT_STATUS:\"inoperable\"}",
+          "value": "2"
+        },
+        {
+          "macro": "{$DISK_ARRAY_WARN_STATUS:\"degraded\"}",
+          "value": "3"
+        },
+        {
+          "macro": "{$DISK_ARRAY_OK_STATUS:\"operable\"}",
+          "value": "1"
+        },
+        {
+          "macro": "{$DISK_FAIL_STATUS:\"failed\"}",
+          "value": "9"
+        },
+        {
+          "macro": "{$DISK_CRIT_STATUS:\"predictiveFailure\"}",
+          "value": "11"
+        },
+        {
+          "macro": "{$DISK_CRIT_STATUS:\"bad\"}",
+          "value": "16"
+        },
+        {
+          "macro": "{$VDISK_OK_STATUS:\"equipped\"}",
+          "value": "10"
+        },
+        {
+          "macro": "{$HEALTH_CRIT_STATUS:\"computeFailed\"}",
+          "value": "30"
+        },
+        {
+          "macro": "{$HEALTH_CRIT_STATUS:\"configFailure\"}",
+          "value": "33"
+        },
+        {
+          "macro": "{$HEALTH_CRIT_STATUS:\"unconfigFailure\"}",
+          "value": "34"
+        },
+        {
+          "macro": "{$HEALTH_CRIT_STATUS:\"inoperable\"}",
+          "value": "60"
+        },
+        {
+          "macro": "{$HEALTH_WARN_STATUS:\"testFailed\"}",
+          "value": "35"
+        },
+        {
+          "macro": "{$HEALTH_WARN_STATUS:\"thermalProblem\"}",
+          "value": "60"
+        },
+        {
+          "macro": "{$HEALTH_WARN_STATUS:\"powerProblem\"}",
+          "value": "62"
+        },
+        {
+          "macro": "{$HEALTH_WARN_STATUS:\"voltageProblem\"}",
+          "value": "62"
+        },
+        {
+          "macro": "{$HEALTH_WARN_STATUS:\"diagnosticsFailed\"}",
+          "value": "204"
+        }
+      ]
+
+    }
+  ],
+  "value_maps": [
+    {
+      "name": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
+      "mappings": [
+        {
+          "value": "0",
+          "newvalue": "unknown"
+        },
+        {
+          "value": "1",
+          "newvalue": "operable"
+        },
+        {
+          "value": "2",
+          "newvalue": "inoperable"
+        },
+        {
+          "value": "3",
+          "newvalue": "degraded"
+        },
+        {
+          "value": "4",
+          "newvalue": "poweredOff"
+        },
+        {
+          "value": "5",
+          "newvalue": "powerProblem"
+        },
+        {
+          "value": "6",
+          "newvalue": "removed"
+        },
+        {
+          "value": "7",
+          "newvalue": "voltageProblem"
+        },
+        {
+          "value": "8",
+          "newvalue": "thermalProblem"
+        },
+        {
+          "value": "9",
+          "newvalue": "performanceProblem"
+        },
+        {
+          "value": "10",
+          "newvalue": "accessibilityProblem"
+        },
+        {
+          "value": "11",
+          "newvalue": "identityUnestablishable"
+        },
+        {
+          "value": "12",
+          "newvalue": "biosPostTimeout"
+        },
+        {
+          "value": "13",
+          "newvalue": "disabled"
+        },
+        {
+          "value": "14",
+          "newvalue": "malformedFru"
+        },
+        {
+          "value": "15",
+          "newvalue": "backplanePortProblem"
+        },
+        {
+          "value": "16",
+          "newvalue": "chassisIntrusion"
+        },
+        {
+          "value": "51",
+          "newvalue": "fabricConnProblem"
+        },
+        {
+          "value": "52",
+          "newvalue": "fabricUnsupportedConn"
+        },
+        {
+          "value": "81",
+          "newvalue": "config"
+        },
+        {
+          "value": "82",
+          "newvalue": "equipmentProblem"
+        },
+        {
+          "value": "83",
+          "newvalue": "decomissioning"
+        },
+        {
+          "value": "84",
+          "newvalue": "chassisLimitExceeded"
+        },
+        {
+          "value": "100",
+          "newvalue": "notSupported"
+        },
+        {
+          "value": "101",
+          "newvalue": "discovery"
+        },
+        {
+          "value": "102",
+          "newvalue": "discoveryFailed"
+        },
+        {
+          "value": "103",
+          "newvalue": "identify"
+        },
+        {
+          "value": "104",
+          "newvalue": "postFailure"
+        },
+        {
+          "value": "105",
+          "newvalue": "upgradeProblem"
+        },
+        {
+          "value": "106",
+          "newvalue": "peerCommProblem"
+        },
+        {
+          "value": "107",
+          "newvalue": "autoUpgrade"
+        },
+        {
+          "value": "108",
+          "newvalue": "linkActivateBlocked"
+        }
+      ]
+    },
+    {
+      "name": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsLsOperState",
+      "mappings": [
+        {
+          "value": "0",
+          "newvalue": "indeterminate"
+        },
+        {
+          "value": "1",
+          "newvalue": "unassociated"
+        },
+        {
+          "value": "10",
+          "newvalue": "ok"
+        },
+        {
+          "value": "11",
+          "newvalue": "discovery"
+        },
+        {
+          "value": "12",
+          "newvalue": "config"
+        },
+        {
+          "value": "13",
+          "newvalue": "unconfig"
+        },
+        {
+          "value": "14",
+          "newvalue": "powerOff"
+        },
+        {
+          "value": "15",
+          "newvalue": "restart"
+        },
+        {
+          "value": "20",
+          "newvalue": "maintenance"
+        },
+        {
+          "value": "21",
+          "newvalue": "test"
+        },
+        {
+          "value": "29",
+          "newvalue": "computeMismatch"
+        },
+        {
+          "value": "30",
+          "newvalue": "computeFailed"
+        },
+        {
+          "value": "31",
+          "newvalue": "degraded"
+        },
+        {
+          "value": "32",
+          "newvalue": "discoveryFailed"
+        },
+        {
+          "value": "33",
+          "newvalue": "configFailure"
+        },
+        {
+          "value": "34",
+          "newvalue": "unconfigFailed"
+        },
+        {
+          "value": "35",
+          "newvalue": "testFailed"
+        },
+        {
+          "value": "36",
+          "newvalue": "maintenanceFailed"
+        },
+        {
+          "value": "40",
+          "newvalue": "removed"
+        },
+        {
+          "value": "41",
+          "newvalue": "disabled"
+        },
+        {
+          "value": "50",
+          "newvalue": "inaccessible"
+        },
+        {
+          "value": "60",
+          "newvalue": "thermalProblem"
+        },
+        {
+          "value": "61",
+          "newvalue": "powerProblem"
+        },
+        {
+          "value": "62",
+          "newvalue": "voltageProblem"
+        },
+        {
+          "value": "63",
+          "newvalue": "inoperable"
+        },
+        {
+          "value": "101",
+          "newvalue": "decomissioning"
+        },
+        {
+          "value": "201",
+          "newvalue": "biosRestore"
+        },
+        {
+          "value": "202",
+          "newvalue": "cmosReset"
+        },
+        {
+          "value": "203",
+          "newvalue": "diagnostics"
+        },
+        {
+          "value": "204",
+          "newvalue": "diagnosticsFailed"
+        },
+        {
+          "value": "210",
+          "newvalue": "pendingReboot"
+        },
+        {
+          "value": "211",
+          "newvalue": "pendingReassociation"
+        },
+        {
+          "value": "212",
+          "newvalue": "svnicNotPresent"
+        }
+      ]
+    },
+    {
+      "name": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStoragePDriveStatus",
+      "mappings": [
+        {
+          "value": "0",
+          "newvalue": "unknown"
+        },
+        {
+          "value": "1",
+          "newvalue": "online"
+        },
+        {
+          "value": "2",
+          "newvalue": "unconfiguredGood"
+        },
+        {
+          "value": "3",
+          "newvalue": "globalHotSpare"
+        },
+        {
+          "value": "4",
+          "newvalue": "dedicatedHotSpare"
+        },
+        {
+          "value": "5",
+          "newvalue": "jbod"
+        },
+        {
+          "value": "6",
+          "newvalue": "offline"
+        },
+        {
+          "value": "7",
+          "newvalue": "rebuilding"
+        },
+        {
+          "value": "8",
+          "newvalue": "copyback"
+        },
+        {
+          "value": "9",
+          "newvalue": "failed"
+        },
+        {
+          "value": "10",
+          "newvalue": "unconfiguredBad"
+        },
+        {
+          "value": "11",
+          "newvalue": "predictiveFailure"
+        },
+        {
+          "value": "12",
+          "newvalue": "disabledForRemoval"
+        },
+        {
+          "value": "13",
+          "newvalue": "foreignConfiguration"
+        },
+        {
+          "value": "14",
+          "newvalue": "zeroing"
+        },
+        {
+          "value": "15",
+          "newvalue": "good"
+        },
+        {
+          "value": "16",
+          "newvalue": "bad"
+        },
+        {
+          "value": "17",
+          "newvalue": "lockedForeignConfiguration"
+        }
+      ]
+    },
+    {
+      "name": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStorageLunType",
+      "mappings": [
+        {
+          "value": "0",
+          "newvalue": "unspecified"
+        },
+        {
+          "value": "1",
+          "newvalue": "simple"
+        },
+        {
+          "value": "2",
+          "newvalue": "mirror"
+        },
+        {
+          "value": "3",
+          "newvalue": "stripe"
+        },
+        {
+          "value": "4",
+          "newvalue": "raid"
+        },
+        {
+          "value": "5",
+          "newvalue": "stripeParity"
+        },
+        {
+          "value": "6",
+          "newvalue": "stripeDualParity"
+        },
+        {
+          "value": "7",
+          "newvalue": "mirrorStripe"
+        },
+        {
+          "value": "8",
+          "newvalue": "stripeParityStripe"
+        },
+        {
+          "value": "9",
+          "newvalue": "stripeDualParityStripe"
+        }
+      ]
+    },
+    {
+      "name": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentPresence",
+      "mappings": [
+        {
+          "value": "0",
+          "newvalue": "unknown"
+        },
+        {
+          "value": "1",
+          "newvalue": "empty"
+        },
+        {
+          "value": "10",
+          "newvalue": "equipped"
+        },
+        {
+          "value": "11",
+          "newvalue": "missing"
+        },
+        {
+          "value": "12",
+          "newvalue": "mismatch"
+        },
+        {
+          "value": "13",
+          "newvalue": "equippedNotPrimary"
+        },
+        {
+          "value": "14",
+          "newvalue": "equippedSlave"
+        },
+        {
+          "value": "15",
+          "newvalue": "mismatchSlave"
+        },
+        {
+          "value": "16",
+          "newvalue": "missingSlave"
+        },
+        {
+          "value": "20",
+          "newvalue": "equippedIdentityUnestablishable"
+        },
+        {
+          "value": "21",
+          "newvalue": "mismatchIdentityUnestablishable"
+        },
+        {
+          "value": "22",
+          "newvalue": "equippedWithMalformedFru"
+        },
+        {
+          "value": "30",
+          "newvalue": "inaccessible"
+        },
+        {
+          "value": "40",
+          "newvalue": "unauthorized"
+        },
+        {
+          "value": "100",
+          "newvalue": "notSupported"
+        },
+        {
+          "value": "101",
+          "newvalue": "equippedUnsupported"
+        },
+        {
+          "value": "102",
+          "newvalue": "equippedDiscNotStarted"
+        },
+        {
+          "value": "103",
+          "newvalue": "equippedDiscInProgress"
+        },
+        {
+          "value": "104",
+          "newvalue": "equippedDiscError"
+        },
+        {
+          "value": "105",
+          "newvalue": "equippedDiscUnknown"
+        }
+      ]
+    }
+  ]
+}
