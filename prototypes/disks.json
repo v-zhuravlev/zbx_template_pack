@@ -262,12 +262,26 @@
     }
   },
   {
+    "id":"disk.crit",
+    "name":"Physical disk error",
+    "priority":"3",
+    "description":"Please check physical disk for warnings or errors",
+    "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS},eq)}=1",
+    "dependsOn":["disk.fail"],
+    "translations":{
+      "RU":{
+        "name":"Статус физического диска: авария",
+        "description":"Проверьте диск"
+      }
+    }
+  },
+  {
     "id":"disk.warn",
     "name":"Physical disk is in warning state",
     "priority":"2",
     "description":"Please check physical disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_WARN_STATUS},eq)}=1",
-    "dependsOn":["disk.fail"],
+    "dependsOn":["disk.fail","disk.crit"],
     "translations":{
       "RU":{
         "name":"Статус физического диска: предупреждение",
@@ -281,7 +295,7 @@
     "priority":"2",
     "description":"Please check physical disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_OK_STATUS},ne)}=1",
-    "dependsOn":["disk.fail","disk.warn"],
+    "dependsOn":["disk.fail","disk.crit","disk.warn"],
     "translations":{
       "RU":{
         "name":"Статус физического диска не норма",
