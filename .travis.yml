@@ -14,13 +14,10 @@ env:
 before_install:
   - cpanm --install JSON::XS
   - cpanm --install LWP
-  - curl -L https://github.com/docker/compose/releases/download/1.7.0/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
   - pushd tests/docker && docker-compose up -d
   - popd
   - pushd bin
-  - while ! perl check-api.pl --api_url='http://localhost/api_jsonrpc.php' -u Admin -p zabbix; do sleep 1; done
+  - while ! perl check-api.pl --api_url='http://localhost/api_jsonrpc.php' -u Admin -p zabbix; do sleep 5; done
   - popd
 
 install: true  
