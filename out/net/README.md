@@ -100,20 +100,17 @@ Most Templates' items and triggers are also provided with translation in Russian
 Import templates from `module` with RU or EN suffix depending on translation you need first.  
 Then import required templates from `net` directory.  
 
-You can also use script provided to mass import the templates like so:
-- in Centos:  
-`yum install perl-JSON-XS perl-libwww-perl perl-LWP-Protocol-https`
-- or in Debian:  
-`apt-get install libwww-perl libjson-xs-perl`
+You can also use script provided to mass import the templates like so:  
+`python -m pip install py-zabbix`
 
-- Then do:  
+Then do:  
 ```git clone --recursive https://github.com/v-zhuravlev/zbx_template_pack.git
 cd zbx_template_pack/bin
 ```
 
 
 ```
-[user@host bin]$ perl import-templates.pl -u Admin -p zabbix --filter EN ../out/module/3.2        
+[user@host bin]$ python import-templates.py -u Admin -p zabbix --filter EN ../out/module/3.2/EN        
 template_module_host_resources_SNMPv1_EN.xml  
 template_module_host_resources_SNMPv2_EN.xml  
 template_module_system_snmp_SNMPv1_EN.xml  
@@ -122,7 +119,7 @@ template_module_system_snmp_SNMPv2_EN.xml
 
 
 ```
-[user@host tmon bin]$ perl import-templates.pl -u Admin -p mypass --filter EN ../out/net/3.2  
+[user@host tmon bin]$ python import-templates.py -u Admin -p mypass --filter EN ../out/net/3.2/EN  
 template_net_cisco_SNMPv1_EN.xml  
 template_net_cisco_SNMPv2_EN.xml  
 template_net_dlink_des_SNMPv1_EN.xml  
