@@ -2,8 +2,11 @@
 import argparse
 import json
 import os
+import sys
 from zabbix.api import ZabbixAPI
+from pyzabbix.api import ZabbixAPIException
 import zabbix_cli
+
 
 def import_configuration_from_file(zapi, filename):
     """This imports configuration into ZabbixAPI from file"""
@@ -78,11 +81,16 @@ def import_configuration_from_file(zapi, filename):
     """
     params = json.loads(params_raw)
     params['source'] = contents
-    zapi.do_request('configuration.import', params)
+    try:
+        zapi.do_request('configuration.import', params)
+    except ZabbixAPIException as err:
+        #sys.exit(err[0]) #too long: https://github.com/adubkov/py-zabbix/blob/master/pyzabbix/api.py#L256
+        sys.exit("Failed to import the template.")
 
 
 def import_single_template(filename):
     """This imports single template"""
+
     print ("Importing {}...".format(filename))
     import_configuration_from_file(zapi, filename)
 
@@ -95,30 +103,36 @@ def import_dir_with_templates(dirname):
     for file in glob.glob(dirname+'/*'+args.filter_str+"*.xml"):
         templates.append(file)
     if len(templates) == 0:
-        print("No templates found in directory {} with filter: {}".format(
+        sys.exit("No templates found in directory '{}' with filter: {}".format(
             dirname, args.filter_str))
     templates.sort()
     for template in templates:
         import_single_template(template)
 
 
-
-
 template_parser = zabbix_cli.zabbix_default_args()
 parser = argparse.ArgumentParser(parents=[template_parser], add_help=False)
 parser.add_argument('--filter', '-f', dest='filter_str',
-                    help="Imports only files that contain filter specified in their filenames.",
+                    help="imports only files in directory that contain chars in the filenames.",
                     required=False, type=str, default='')
-parser.add_argument(dest='arg1', nargs=1, help='filename|dirname')
+parser.add_argument(dest='arg1', nargs=1,
+                    help='provide file or directory name', metavar='path')
 args = parser.parse_args()
 
-zapi = ZabbixAPI(url=args.api_url,
-                 user=args.username,
-                 password=args.password)
 
-if os.path.isdir(args.arg1[0]):
-    import_dir_with_templates(args.arg1[0])
-elif os.path.isfile(args.arg1[0]):
-    import_single_template(args.arg1[0])
+try:
+    zapi = ZabbixAPI(url=args.api_url,
+                     user=args.username,
+                     password=args.password)
+except ZabbixAPIException as err:
+    print (err[0])
+else:
+    path = args.arg1[0]
+    if os.path.isdir(path):
+        import_dir_with_templates(path)
+    elif os.path.isfile(path):
+        import_single_template(path)
+    else:
+        sys.exit("{0} is not a valid template or directory".format(path))
 
-zapi.do_request('user.logout')
+    zapi.do_request('user.logout')
