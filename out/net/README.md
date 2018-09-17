@@ -22,7 +22,7 @@ See root [README](https://github.com/v-zhuravlev/zbx_template_pack) for idea beh
 |Fault|Temperature|__sensor.temp.value__|Temperature|C|Y|SNMP|-|
 |Fault|Temperature|sensor.temp.status|Temperature status|-|N|SNMP|-|
 |Fault|Temperature|sensor.temp.locale|Temperature sensor location|-|N|SNMP|-|
-|Fault|Power Supply|sensor.psu.status|Power supply status|-|N|SNMP|-|
+|Fault|Power supply|sensor.psu.status|Power supply status|-|N|SNMP|-|
 |Fault|Fans|sensor.fan.status|Fan status|-|N|SNMP|-|
 |Fault|Fans|sensor.fan.speed|Fan speed|rpm|N|SNMP|-|
 |Fault|Status|system.status|Overall system health status|-|N|SNMP|-|
