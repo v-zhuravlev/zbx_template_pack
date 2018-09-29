@@ -49,6 +49,63 @@ templates:
       preprocessing:
       - type: MULTIPLIER
         params: '0.1'
+
+  - name: Wireless AP Discovery
+    oid: discovery[{#AP_SSID},1.3.6.1.4.1.14988.1.1.1.3.1.4]
+    key: wireless.ap.discovery
+    description: MIKROTIK-MIB::mtxrWlApTable discovery
+    metrics:
+    - name: Wireless AP band
+      id: wireless.ap.band
+      group: Wireless
+      type: SNMP
+      valueType: TEXT
+      snmpObject: mtxrWlApBand.{#SNMPINDEX}
+      oid: 1.3.6.1.4.1.14988.1.1.1.3.1.8.{#SNMPINDEX}
+      mib: MIKROTIK-MIB
+      alarmObject: "{#AP_SSID}"
+
+    - name: Wireless AP clients count
+      id: wireless.ap.clients.count
+      group: Wireless
+      type: SNMP
+      snmpObject: mtxrWlApClientCount.{#SNMPINDEX}
+      oid: 1.3.6.1.4.1.14988.1.1.1.3.1.6.{#SNMPINDEX}
+      mib: MIKROTIK-MIB
+      alarmObject: "{#AP_SSID}"
+
+    - name: Wireless AP current frequency used
+      id: wireless.ap.freq
+      group: Wireless
+      type: SNMP
+      snmpObject: mtxrWlApFreq.{#SNMPINDEX}
+      oid: 1.3.6.1.4.1.14988.1.1.1.3.1.7.{#SNMPINDEX}
+      mib: MIKROTIK-MIB
+      alarmObject: "{#AP_SSID}"
+      units: !MHz
+
+    - name: Wireless AP noise floor
+      id: wireless.ap.noise_floor
+      group: Wireless
+      type: SNMP
+      valueType: FLOAT
+      snmpObject: mtxrWlApNoiseFloor.{#SNMPINDEX}
+      oid: 1.3.6.1.4.1.14988.1.1.1.3.1.9.{#SNMPINDEX}
+      mib: MIKROTIK-MIB
+      alarmObject: "{#AP_SSID}"
+      units: dBm
+
+    - name: Wireless AP overall TX CCQ
+      id: wireless.ap.tx.ccq
+      group: Wireless
+      type: SNMP
+      snmpObject: mtxrWlApOverallTxCCQ.{#SNMPINDEX}
+      oid: 1.3.6.1.4.1.14988.1.1.1.3.1.10.{#SNMPINDEX}
+      mib: MIKROTIK-MIB
+      alarmObject: "{#AP_SSID}"
+      units: "%"
+
+
   - name: Storage Discovery
     oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]
     key: storage.discovery
