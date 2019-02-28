@@ -84,14 +84,14 @@ def import_configuration_from_file(zapi, filename):
     try:
         zapi.do_request('configuration.import', params)
     except ZabbixAPIException as err:
-        sys.exit(err[0]) #too long: https://github.com/adubkov/py-zabbix/blob/master/pyzabbix/api.py#L256
+        sys.exit(err.data) #too long: https://github.com/adubkov/py-zabbix/blob/master/pyzabbix/api.py#L256
         #sys.exit("Failed to import the template.")
 
 
 def import_single_template(filename):
     """This imports single template"""
 
-    print ("Importing {}...".format(filename))
+    print("Importing {}...".format(filename))
     import_configuration_from_file(zapi, filename)
 
 
@@ -125,7 +125,7 @@ try:
                      user=args.username,
                      password=args.password)
 except ZabbixAPIException as err:
-    print (err[0])
+    print(err.data)
 else:
     path = args.arg1[0]
     if os.path.isdir(path):
