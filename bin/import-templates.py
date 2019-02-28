@@ -5,7 +5,7 @@ import os
 import sys
 from zabbix.api import ZabbixAPI
 from pyzabbix.api import ZabbixAPIException
-import zabbix_cli
+from zabbix_cli import zabbix_default_args
 
 
 def import_configuration_from_file(zapi, filename):
@@ -26,24 +26,24 @@ def import_configuration_from_file(zapi, filename):
             "templates": {
                 "createMissing": true,
                 "updateExisting": true
-            },            
+            },
             "templateLinkage": {
                 "createMissing": true
-            },                    
+            },
             "templateScreens": {
                 "createMissing": true,
                 "updateExisting": true,
                 "deleteMissing": true
-            },   
+            },
             "applications": {
                 "createMissing": true,
                 "deleteMissing": true
-            },    
+            },
             "discoveryRules": {
                 "createMissing": true,
                 "updateExisting": true,
                 "deleteMissing": true
-            },            
+            },
             "items": {
                 "createMissing": true,
                 "updateExisting": true,
@@ -84,8 +84,7 @@ def import_configuration_from_file(zapi, filename):
     try:
         zapi.do_request('configuration.import', params)
     except ZabbixAPIException as err:
-        sys.exit(err.data) #too long: https://github.com/adubkov/py-zabbix/blob/master/pyzabbix/api.py#L256
-        #sys.exit("Failed to import the template.")
+        sys.exit(err.data)
 
 
 def import_single_template(filename):
@@ -96,11 +95,11 @@ def import_single_template(filename):
 
 
 def import_dir_with_templates(dirname):
-    """This imports all templates found in the directory"""
+    """This imports all templates found in the dir. .xml extension hardcoded"""
     import glob
 
     templates = []
-    for file in glob.glob(dirname+'/*'+args.filter_str+"*.xml"):
+    for file in glob.glob(dirname + '/*' + args.filter_str + "*.xml"):
         templates.append(file)
     if len(templates) == 0:
         sys.exit("No templates found in directory '{}' with filter: {}".format(
@@ -110,7 +109,7 @@ def import_dir_with_templates(dirname):
         import_single_template(template)
 
 
-template_parser = zabbix_cli.zabbix_default_args()
+template_parser = zabbix_default_args()
 parser = argparse.ArgumentParser(parents=[template_parser], add_help=False)
 parser.add_argument('--filter', '-f', dest='filter_str',
                     help="imports only files in directory that contain chars in the filenames.",
@@ -134,5 +133,4 @@ else:
         import_single_template(path)
     else:
         sys.exit("{0} is not a valid template or directory".format(path))
-
-    zapi.do_request('user.logout')
+    zapi.user.logout()
