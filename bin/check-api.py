@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 import sys
-from zabbix.api import ZabbixAPI
+from pyzabbix.api import ZabbixAPI
 from zabbix_cli import zabbix_arg_parse
 
 args = zabbix_arg_parse()

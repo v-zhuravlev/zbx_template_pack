@@ -3,8 +3,9 @@ import argparse
 import json
 import os
 import sys
-from zabbix.api import ZabbixAPI
-from pyzabbix.api import ZabbixAPIException
+import logging
+
+from pyzabbix.api import ZabbixAPIException, ZabbixAPI
 from zabbix_cli import zabbix_default_args
 
 
@@ -84,13 +85,14 @@ def import_configuration_from_file(zapi, filename):
     try:
         zapi.do_request('configuration.import', params)
     except ZabbixAPIException as err:
-        sys.exit(err.data)
+        logger.error(err.data)
+        sys.exit(1)
 
 
 def import_single_template(filename):
     """This imports single template"""
 
-    print("Importing {}...".format(filename))
+    logger.info("Importing {}...".format(filename))
     import_configuration_from_file(zapi, filename)
 
 
@@ -102,35 +104,49 @@ def import_dir_with_templates(dirname):
     for file in glob.glob(dirname + '/*' + args.filter_str + "*.xml"):
         templates.append(file)
     if len(templates) == 0:
-        sys.exit("No templates found in directory '{}' with filter: {}".format(
+        logger.error("No templates found in directory '{}' with filter: {}".format(
             dirname, args.filter_str))
+        sys.exit(1)
     templates.sort()
     for template in templates:
         import_single_template(template)
 
 
-template_parser = zabbix_default_args()
-parser = argparse.ArgumentParser(parents=[template_parser], add_help=False)
-parser.add_argument('--filter', '-f', dest='filter_str',
-                    help="imports only files in directory that contain chars in the filenames.",
-                    required=False, type=str, default='')
-parser.add_argument(dest='arg1', nargs=1,
-                    help='provide file or directory name', metavar='path')
-args = parser.parse_args()
+if __name__ == "__main__":
 
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.addHandler(logging.StreamHandler())
 
-try:
-    zapi = ZabbixAPI(url=args.api_url,
-                     user=args.username,
-                     password=args.password)
-except ZabbixAPIException as err:
-    print(err.data)
-else:
-    path = args.arg1[0]
-    if os.path.isdir(path):
-        import_dir_with_templates(path)
-    elif os.path.isfile(path):
-        import_single_template(path)
+    template_parser = zabbix_default_args()
+    parser = argparse.ArgumentParser(parents=[template_parser], add_help=False)
+    parser.add_argument('--trace',
+                        help='Trace Zabbix API calls',
+                        required=False, action='store_true', default=False)
+    parser.add_argument('--filter', '-f', dest='filter_str',
+                        help='imports only files in directory that contain chars in the filenames.',
+                        required=False, type=str, default='')
+    parser.add_argument(dest='arg1', nargs=1,
+                        help='provide file or directory name', metavar='path')
+    args = parser.parse_args()
+
+    if args.trace:
+        zapi_logger = logging.getLogger("pyzabbix.api")
+        zapi_logger.setLevel(logging.DEBUG)
+
+    try:
+        zapi = ZabbixAPI(url=args.api_url,
+                         user=args.username,
+                         password=args.password)
+    except ZabbixAPIException as err:
+        logger.error(err.data)
     else:
-        sys.exit("{0} is not a valid template or directory".format(path))
-    zapi.user.logout()
+        path = args.arg1[0]
+        if os.path.isdir(path):
+            import_dir_with_templates(path)
+        elif os.path.isfile(path):
+            import_single_template(path)
+        else:
+            logger.error("{0} is not a valid template or directory".format(path))
+            sys.exit(1)
+        zapi.user.logout()
