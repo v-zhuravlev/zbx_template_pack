@@ -681,7 +681,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <description>Since temperature of the chassis is not available on all Brocade/Foundry hardware, this LLD is here to avoid unsupported items.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Temperature</name>
+                     <name>Chassis #{#SNMPINDEX}: Temperature</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>1</multiplier>
@@ -730,10 +730,10 @@ For those non-applicable management module, it returns no-such-name.</descriptio
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
+                     <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:"Chassis"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
-                     <name>Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Chassis"}-3</recovery_expression>
+                     <name>Chassis #{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Chassis"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -745,18 +745,18 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
-                           <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
-                           <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+                           <name>Chassis #{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Chassis"}</name>
+                           <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Chassis"}</expression>
+                           <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Chassis"}-3</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+                     <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_CRIT:"Chassis"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
-                     <name>Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Chassis"}-3</recovery_expression>
+                     <name>Chassis #{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Chassis"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -770,10 +770,10 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+                     <expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}&lt;{$TEMP_CRIT_LOW:"Chassis"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
-                     <name>Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                     <recovery_expression>{Template Net Brocade_Foundry Nonstackable SNMPv2:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].min(5m)}&gt;{$TEMP_CRIT_LOW:"Chassis"}+3</recovery_expression>
+                     <name>Chassis #{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Chassis"}</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
