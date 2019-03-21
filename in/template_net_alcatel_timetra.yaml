@@ -105,6 +105,40 @@ templates:
             triggers: [{
               "prototype":"fan.crit"
             }]
+      - name: "PSU Discovery"
+        oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6527.3.1.2.2.1.5.1.6]"
+        key: "psu.discovery"
+        metrics:
+          - prototype: sensor.psu.status
+            oid: "1.3.6.1.4.1.6527.3.1.2.2.1.5.1.6.{#SNMPINDEX}"
+            snmpObject: "tmnxChassisPowerSupply1Status.{#SNMPINDEX}"
+            mib: "TIMETRA-SYSTEM-MIB"
+            vendorDescription: |
+             The overall status of an equipped power supply. 
+             For AC multiple powersupplies, this represents the overall status of the first power supplyin the tray (or shelf).
+             For any other type, this represents the overall status of the power supply.
+             If tmnxChassisPowerSupply1Status is'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
+             A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
+            alarmObject: "#{#SNMPINDEX}"
+            valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
+            triggers: [{
+              "prototype":"psu.crit"
+            }]
+          - prototype: sensor.psu.status
+            oid: "1.3.6.1.4.1.6527.3.1.2.2.1.5.1.7.{#SNMPINDEX}"
+            snmpObject: "tmnxChassisPowerSupply2Status.{#SNMPINDEX}"
+            mib: "TIMETRA-SYSTEM-MIB"
+            vendorDescription: |
+             The overall status of an equipped power supply.
+             For AC multiple powersupplies, this represents the overall status of the second power supplyin the tray (or shelf).
+             For any other type, this field is unused and set to 'deviceNotEquipped'.
+             If tmnxChassisPowerSupply2Status is 'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
+             A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
+            alarmObject: "#{#SNMPINDEX}"
+            valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
+            triggers: [{
+              "prototype":"psu.crit"
+            }]
       - name: "Entity Serial Numbers Discovery"
         oid: "discovery[{#ENT_NAME},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.8,{#ENT_CLASS},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.7,{#ENT_SN},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.5]"
         key: "entity_sn.discovery"
