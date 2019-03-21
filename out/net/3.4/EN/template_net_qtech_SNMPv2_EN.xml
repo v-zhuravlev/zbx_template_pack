@@ -25,10 +25,19 @@ ENTITY-MIB</description>
                <name>CPU</name>
             </application>
             <application>
+               <name>Fans</name>
+            </application>
+            <application>
                <name>Inventory</name>
             </application>
             <application>
                <name>Memory</name>
+            </application>
+            <application>
+               <name>Power supply</name>
+            </application>
+            <application>
+               <name>Temperature</name>
             </application>
          </applications>
          <items>
@@ -404,8 +413,251 @@ Total memory in Bytes</description>
                <jmx_endpoint/>
                <master_item/>
             </item>
+            <item>
+               <name>Temperature</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>1.3.6.1.4.1.27514.100.1.11.9.0</snmp_oid>
+               <key>sensor.temp.value[switchTemperature.0]</key>
+               <delay>3m</delay>
+               <history>30d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>°C</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>MIB: QTECH-MIB&#13;
+Temperature readings of testpoint: __ALARM_OBJECT__</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Temperature</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <master_item/>
+            </item>
          </items>
-         <discovery_rules/>
+         <discovery_rules>
+            <discovery_rule>
+               <name>PSU Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.27514.100.1.7.1.5]</snmp_oid>
+               <key>psu.discovery</key>
+               <delay>1h</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description/>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>{#SNMPINDEX}: Power supply status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.27514.100.1.7.1.5.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.psu.status[sysPowerStatus.{#SNMPINDEX}]</key>
+                     <delay>3m</delay>
+                     <history>2w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: QTECH-MIB</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Power supply</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>QTECH-MIB::sysPowerStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Net QTech QSW SNMPv2:sensor.psu.status[sysPowerStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#SNMPINDEX}: Power supply is in critical state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Please check the power supply unit for errors</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+               <jmx_endpoint/>
+            </discovery_rule>
+            <discovery_rule>
+               <name>FAN Discovery</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.27514.100.1.12.1.3]</snmp_oid>
+               <key>fan.discovery</key>
+               <delay>1h</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>0</evaltype>
+                  <formula/>
+                  <conditions/>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description/>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>{#SNMPINDEX}: Fan status</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.27514.100.1.12.1.3.{#SNMPINDEX}</snmp_oid>
+                     <key>sensor.fan.status[sysFanStatus.{#SNMPINDEX}]</key>
+                     <delay>3m</delay>
+                     <history>2w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: QTECH-MIB</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Fans</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>QTECH-MIB::sysFanStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <master_item_prototype/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Net QTech QSW SNMPv2:sensor.fan.status[sysFanStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#SNMPINDEX}: Fan is in critical state</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Please check the fan unit</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+               <jmx_endpoint/>
+            </discovery_rule>
+         </discovery_rules>
          <httptests/>
          <macros>
             <macro>
@@ -423,6 +675,10 @@ Total memory in Bytes</description>
             <macro>
                <macro>{$PSU_CRIT_STATUS}</macro>
                <value>1</value>
+            </macro>
+            <macro>
+               <macro>{$TEMP_CRIT_LOW}</macro>
+               <value>5</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT}</macro>
@@ -577,6 +833,62 @@ Device serial number has changed. Ack to close</description>
 Firmware version has changed. Ack to close</description>
          <type>0</type>
          <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].avg(5m)}&gt;{$TEMP_WARN:""}</expression>
+         <recovery_mode>1</recovery_mode>
+         <recovery_expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
+         <name>Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+               <expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+               <recovery_expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].avg(5m)}&gt;{$TEMP_CRIT:""}</expression>
+         <recovery_mode>1</recovery_mode>
+         <recovery_expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
+         <name>Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>4</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
+         <recovery_mode>1</recovery_mode>
+         <recovery_expression>{Template Net QTech QSW SNMPv2:sensor.temp.value[switchTemperature.0].min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
+         <name>Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>3</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
          <dependencies/>
          <tags/>
       </trigger>

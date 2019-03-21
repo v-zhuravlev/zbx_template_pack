@@ -12,19 +12,46 @@
                 "SNMPv2"
             ],
             "discoveryRules": [
-                /*
-                			<!-- 	<discoveryRule>
-                    <name>PSU Discovery</name>
-                    <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.27514.100.1.7.1.5]</snmp_oid>
-                    <key>psu.discovery</key>
-                </discoveryRule>
-
-                <discoveryRule>
-                    <name>FAN Discovery</name>
-                    <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.27514.100.1.12.1.3]</snmp_oid>
-                    <key>fan.discovery</key>
-                </discoveryRule> -->
-                */
+                { //n/a on 28xx
+                    "name": "PSU Discovery",
+                    "key": "psu.discovery",
+                    "oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.27514.100.1.7.1.5]",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.psu.status",
+                            "oid": "1.3.6.1.4.1.27514.100.1.7.1.5.{#SNMPINDEX}",
+                            "snmpObject": "sysPowerStatus.{#SNMPINDEX}",
+                            "mib": "QTECH-MIB",
+                            "alarmObject": "{#SNMPINDEX}",
+                            "valueMap":"QTECH-MIB::sysPowerStatus",
+                            "triggers": [
+                                {
+                                    "prototype": "psu.crit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { //n/a on 28xx
+                    "name": "FAN Discovery",
+                    "key": "fan.discovery",
+                    "oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.27514.100.1.12.1.3]",
+                    "metrics": [
+                        {
+                            "prototype": "sensor.fan.status",
+                            "oid": "1.3.6.1.4.1.27514.100.1.12.1.3.{#SNMPINDEX}",
+                            "snmpObject": "sysFanStatus.{#SNMPINDEX}",
+                            "mib": "QTECH-MIB",
+                            "alarmObject": "{#SNMPINDEX}",
+                            "valueMap":"QTECH-MIB::sysFanStatus",
+                            "triggers": [
+                                {
+                                    "prototype": "fan.crit"
+                                }
+                            ]
+                        }
+                    ]
+                }
             ],
             "name": "Template Net QTech QSW",
             "description": "Template Net QTech QSW",
@@ -81,35 +108,14 @@
                     "oid": "1.3.6.1.4.1.27514.100.1.3.0",
                     "snmpObject": "sysSoftwareVersion.0",
                     "mib": "QTECH-MIB"
+                },
+
+                {//n/a on 28xx
+                    "prototype": "sensor.temp.value",
+                    "oid": "1.3.6.1.4.1.27514.100.1.11.9.0",
+                    "snmpObject": "switchTemperature.0",
+                    "mib": "QTECH-MIB"
                 }
-                /*
-        <!-- 		<sensor.temp.value>
-                          <oid>1.3.6.1.4.1.27514.100.1.11.9.0</oid>
-                          <snmpObject>switchTemperature.0</snmpObject>
-                          <mib>QTECH-MIB</mib>
-                    </sensor.temp.value>
-                    n/a on 28xx
-
-                    <sensor.fan.status>
-                          <oid>1.3.6.1.4.1.27514.100.1.12.1.3.{#SNMPINDEX}</oid>
-                          <snmpObject>sysFanStatus.{#SNMPINDEX}</snmpObject>
-                          <mib>QTECH-MIB</mib>
-                          <vendorDescription>Whether the slot fan is normal or abnormal.</vendorDescription>
-                          <alarmObject>{#SNMPINDEX}</alarmObject>
-                          <discoveryRule>FAN Discovery</discoveryRule>
-                          <valueMap>QTECH-MIB::sysFanStatus</valueMap>
-                    </sensor.fan.status>
-
-                    <sensor.psu.status>
-                          <oid>1.3.6.1.4.1.27514.100.1.7.1.5.{#SNMPINDEX}</oid>
-                          <snmpObject>sysPowerStatus.{#SNMPINDEX}</snmpObject>
-                          <mib>QTECH-MIB</mib>
-                          <alarmObject>{#SNMPINDEX}</alarmObject>
-                          <discoveryRule>PSU Discovery</discoveryRule>
-                          <valueMap>QTECH-MIB::sysPowerStatus</valueMap>
-                    </sensor.psu.status>
-                    -->
-                */
             ],
             "macros": [
                 {
