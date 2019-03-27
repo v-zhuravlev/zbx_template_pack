@@ -1,0 +1,236 @@
+[
+	{
+		"id": "apache.get_stub_status",
+		"name": "Get Apache HTTP status",
+		"delay": "1m",
+		"zbxVer": "3.4",
+		"history": "1d",
+		"trends": "0",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"valueType": "TEXT",
+		"triggers": [{
+			"prototype": "trigger.http_get",
+			"name": "Failed to fetch Apache stub status page",
+			"url": "https://httpd.apache.org/docs/current/mod/mod_status.html"
+		}]
+	},
+	{
+		"id": "apache.bytes_per_second",
+		"key": "apache.bytes_per_second",
+		"name": "Bytes per second",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"units": "Bps",
+		"valueType": "FLOAT",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "BytesPerSec:\\s+([0-9\\.]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.conns_async_closing",
+		"key": "apache.conns_async_closing",
+		"name": "Connections async closing",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "ConnsAsyncClosing:\\s+([0-9]+)\r\n\\1"
+			}
+		],
+		"graphs": [
+			{
+				"name": "Current connections",
+				"graphItems": [
+					{
+						"name": "apache.conns_async_closing",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "apache.conns_async_keep_alive",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "apache.conns_async_writing",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "apache.conns_total",
+						"drawtype": "BOLD_LINE"
+					}
+				]
+			},
+			{
+				"name": "Requests per second",
+				"graphItems": [
+					{
+						"name": "apache.requests_rps",
+						"drawtype": "GRADIENT_LINE"
+					}
+				]
+			},
+			{
+				"name": "Workers",
+				"graphType": "STACKED",
+				"graphItems": [
+					{
+						"name": "apache.workers_busy",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "apache.workers_idle",
+						"drawtype": "LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "apache.conns_async_keep_alive",
+		"key": "apache.conns_async_keep_alive",
+		"name": "Connections async keep alive",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "ConnsAsyncKeepAlive:\\s+([0-9]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.conns_async_writing",
+		"key": "apache.conns_async_writing",
+		"name": "Connections async writing",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "ConnsAsyncWriting:\\s+([0-9]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.conns_total",
+		"key": "apache.conns_total",
+		"name": "Connections total",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "ConnsTotal:\\s+([0-9]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.requests_rps",
+		"key": "apache.requests_rps",
+		"name": "Requests per second",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"valueType": "FLOAT",
+		"units": "!rps",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "ReqPerSec:\\s+([0-9\\.]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.total_accesses",
+		"key": "apache.total_accesses",
+		"name": "Total accesses",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "Total Accesses:\\s+([0-9]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.uptime",
+		"key": "apache.uptime",
+		"name": "Uptime",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"units": "uptime",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "\\bUptime:\\s+([0-9.]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.version",
+		"key": "apache.version",
+		"name": "Version",
+		"type": "DEPENDENT_ITEM",
+		"valueType": "CHAR",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "ServerVersion:\\s+(.+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.workers_busy",
+		"key": "apache.workers_busy",
+		"name": "Workers busy",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "BusyWorkers:\\s+([0-9]+)\r\n\\1"
+			}
+		]
+	},
+	{
+		"id": "apache.workers_idle",
+		"key": "apache.workers_idle",
+		"name": "Workers idle",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "apache.get_stub_status",
+		"group": "Apache",
+		"alarmObject": "Apache",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "IdleWorkers:\\s+([0-9]+)\r\n\\1"
+			}
+		]
+	}
+
+]

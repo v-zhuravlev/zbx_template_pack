@@ -1,0 +1,59 @@
+{
+    "templates": [
+        {
+            "name": "Template App Nginx HTTP",
+            "zbxVer": "4.0",
+            "classes": [
+                "APP"
+            ],
+            "description": "Get metrics from stub status module using HTTP agent\nhttps://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
+            "documentation": {
+                "overview": "Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-http_stub_status_module'"
+            },
+            "metrics": [
+                {
+                    "prototype": "nginx.get_stub_status",
+                    "key": "nginx.get_stub_status",
+                    "type": "HTTP_AGENT",
+                    "zbxVer": "4.0",
+                    "url": "http://{HOST.CONN}:{$STUB_STATUS_PORT}/{$STUB_STATUS_PATH}",
+                    "status_codes": "",
+                    "follow_redirects": "0",
+                    "retrieve_mode": "BODY_AND_HEADERS"
+                },
+                {
+                    "prototype": "nginx.accepts_total"
+                },
+                {
+                    "prototype": "nginx.active_connections"
+                },
+                {
+                    "prototype": "nginx.handled_second"
+                },
+                {
+                    "prototype": "nginx.reading"
+                },
+                {
+                    "prototype": "nginx.requests_rps"
+                },
+                {
+                    "prototype": "nginx.waiting"
+                },
+                {
+                    "prototype": "nginx.writing"
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$STUB_STATUS_PATH}",
+                    "value": "basic_status"
+                },
+                {
+                    "macro": "{$STUB_STATUS_PORT}",
+                    "value": "80"
+                }
+            ]
+        }
+
+    ]
+}

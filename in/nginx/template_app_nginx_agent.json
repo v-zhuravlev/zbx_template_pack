@@ -1,0 +1,88 @@
+{
+    "templates": [
+        {
+            "name": "Template App Nginx Zabbix agent",
+            "zbxVer": "3.4",
+            "classes": [
+                "APP"
+            ],
+            "description": "Get metrics from stub status module using Zabbix agent\nhttps://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
+            "documentation": {
+                "overview": "Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-http_stub_status_module'"
+            },
+            "metrics": [
+                {
+                    "prototype": "nginx.get_stub_status",
+                    "key": "web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]",
+                    "type": "ZABBIX_AGENT",
+                    "delay": "1m",
+                    "zbxVer": "3.4",
+                    "alarmObject": "Nginx",
+                    "triggers": [
+                        {
+                            "prototype": "trigger.http_get",
+                            "name": "Failed to fetch nginx stub status page",
+                            "url": "https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
+                            "dependsOn": [
+                                "trigger.nginx.proc.not_running"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "prototype": "nginx.accepts_total"
+                },
+                {
+                    "prototype": "nginx.active_connections"
+                },
+                {
+                    "prototype": "nginx.handled_second"
+                },
+                {
+                    "prototype": "nginx.reading"
+                },
+                {
+                    "prototype": "nginx.requests_rps"
+                },
+                {
+                    "prototype": "nginx.waiting"
+                },
+                {
+                    "prototype": "nginx.writing"
+                },
+                {
+                    "id": "nginx.proc.num",
+                    "name": "Number of processes running",
+                    "key": "proc.num[nginx]",
+                    "type": "ZABBIX_AGENT",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx",
+                    "valueType": "INTEGER",
+                    "triggers": [
+                        {
+                            "id": "trigger.nginx.proc.not_running",
+                            "name": "not running",
+                            "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
+                            "priority": 3
+                        }
+                    ]
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$STUB_STATUS_HOST}",
+                    "value": "localhost"
+                },
+                {
+                    "macro": "{$STUB_STATUS_PATH}",
+                    "value": "basic_status"
+                },
+                {
+                    "macro": "{$STUB_STATUS_PORT}",
+                    "value": "80"
+                }
+            ]
+        }
+
+    ]
+}

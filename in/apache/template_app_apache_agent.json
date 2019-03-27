@@ -1,0 +1,98 @@
+{
+    "templates": [
+        {
+            "name": "Template App Apache Zabbix agent",
+            "zbxVer": "3.4",
+            "classes": [
+                "APP"
+            ],
+            "description": "Get metrics from mod_status module using Zabbix agent.\nhttps://httpd.apache.org/docs/current/mod/mod_status.html",
+            "metrics": [
+                {
+                    "prototype": "apache.get_stub_status",
+                    "type": "ZABBIX_AGENT",
+                    "zbxVer": "3.4",
+                    "key": "web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]",
+                    "triggers": [
+                        {
+                            "prototype": "trigger.http_get",
+                            "name": "Failed to fetch Apache stub status page",
+                            "url": "https://httpd.apache.org/docs/current/mod/mod_status.html",
+                            "dependsOn": ["trigger.apache.proc.not_running"]
+                        }
+                    ]
+                },
+                {
+                    "prototype": "apache.bytes_per_second"
+                },
+                {
+                    "prototype": "apache.conns_async_closing"
+                },
+                {
+                    "prototype": "apache.conns_async_keep_alive"
+                },
+                {
+                    "prototype": "apache.conns_async_writing"
+                },
+                {
+                    "prototype": "apache.conns_total"
+                },
+                {
+                    "prototype": "apache.requests_rps"
+                },
+                {
+                    "prototype": "apache.total_accesses"
+                },
+                {
+                    "prototype": "apache.uptime"
+                },
+                {
+                    "prototype": "apache.version"
+                },
+                {
+                    "prototype": "apache.workers_busy"
+                },
+                {
+                    "prototype": "apache.workers_idle"
+                },
+                {
+                    "id": "apache.proc.num",
+                    "name": "Number of processes running",
+                    "key": "proc.num[{$APACHE_PROC}]",
+                    "type": "ZABBIX_AGENT",
+                    "group": "Apache",
+                    "alarmObject": "Apache",
+                    "valueType": "INTEGER",
+                    "triggers": [
+                        {
+                            "id": "trigger.apache.proc.not_running",
+                            "name": "not running",
+                            "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
+                            "priority": 3
+                        }
+                    ]
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$STUB_STATUS_HOST}",
+                    "value": "localhost"
+                },
+                {
+                    "macro": "{$STUB_STATUS_PATH}",
+                    "value": "server-status?auto"
+                },
+                {
+                    "macro": "{$STUB_STATUS_PORT}",
+                    "value": "80"
+                },
+                {
+                    "macro": "{$APACHE_PROC}",
+                    "value": "apache2"
+                    //in RHEL it might be httpd
+                }
+            ]
+        }
+
+    ]
+}
