@@ -7,6 +7,7 @@ You can poll Nginx using Zabbix agent locally(Template App Nginx Zabbix agent) o
 
 see https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html
 
+
 ## Tuning
 
 Change those macros on host level if needed:
@@ -37,7 +38,7 @@ See in template
 - Nginx plus template
 
 ## References
-
+https://nginx.org/en/docs/http/ngx_http_stub_status_module.html
 https://github.com/strannick-ru/nginx-plus-zabbix  
 https://github.com/AlexGluck/ZBX_NGINX  
 https://github.com/adubkov/zbx_nginx_template  
