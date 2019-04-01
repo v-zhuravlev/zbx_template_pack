@@ -2,14 +2,36 @@
   "$id": "http://zabbix.com/template_gen_input_json.json",
   "type": "object",
   "definitions": {},
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "templates": {
       "$id": "/properties/templates",
       "type": "array",
       "items": {
+        "defaultSnippets": [
+          {
+            "label": "New SNMP template",
+            "description": "Add new network template SNMP device",
+            "body": {
+              "name": "Template Net $1",
+              "classes": [
+                "SNMP_DEVICE",
+                "INVENTORY",
+                "PERFORMANCE",
+                "FAULT",
+                "INTERFACES",
+                "NETWORK",
+                "SNMPv2",
+                "$2"
+              ]
+            }
+          }
+        ],
         "$id": "/properties/templates/items",
         "type": "object",
+        "required": [
+          "name"
+        ],
         "properties": {
           "macros": {
             "$id": "/properties/templates/items/properties/macros",
@@ -41,10 +63,17 @@
           },
           "name": {
             "$id": "/properties/templates/items/properties/name",
+            "description": "Template name",
             "type": "string",
-            "title": "The Name Schema ",
-            "default": "",
+            "title": "Template name",
+            "pattern": "^Template.+",
+            "default": "Template ",
             "examples": [
+              "Template App ...",
+              "Template Module ...",
+              "Template Net ...",
+              "Template Server ...",
+              "Template App Nginx Zabbix Agent",
               "Template Net D-Link DES_DGS Switch"
             ]
           },
@@ -60,16 +89,30 @@
           "classes": {
             "$id": "/properties/templates/items/properties/classes",
             "type": "array",
+            "description": "Classes are tags that modifiy the behaviour of generation. See also org.zabbix.template.generator.objects.TemplateClass",
             "items": {
               "$id": "/properties/templates/items/properties/classes/items",
               "type": "string",
-              "title": "The 0th Schema ",
-              "default": "",
-              "examples": [
+              "title": "Classes",
+              "enum": [
+                "PERFORMANCE",
+                "FAULT",
+                "GENERAL",
+                "INVENTORY",
+                "IF_MIB",
+                "ICMP",
+                "Interfaces EtherLike Extension",
+                "APP",
+                "OS",
+                "SERVER",
+                "NETWORK",
+                "MODULE",
+                "INTERFACES_SIMPLE",
                 "INTERFACES",
                 "SNMP_DEVICE",
-                "NETWORK",
-                "SNMP_V2"
+                "SNMPv1",
+                "SNMPv2",
+                "SNMPv3"
               ]
             }
           },
@@ -77,6 +120,9 @@
             "$id": "/properties/templates/items/properties/documentation",
             "type": "object",
             "properties": {
+              "overview": {
+                "type": "string"
+              },
               "issues": {
                 "$id": "/properties/templates/items/properties/documentation/properties/issues",
                 "type": "array",
@@ -131,6 +177,7 @@
                 "name": {
                   "$id": "/properties/templates/items/properties/discoveryRules/items/properties/name",
                   "type": "string",
+                  "pattern": "[Dd]iscovery$",
                   "title": "The Name Schema ",
                   "default": "",
                   "examples": [
@@ -140,7 +187,7 @@
                 "oid": {
                   "$id": "/properties/templates/items/properties/discoveryRules/items/properties/oid",
                   "type": "string",
-                  "title": "The Oid Schema ",
+                  "title": "The Oid Schema",
                   "default": "",
                   "examples": [
                     "discovery[{#SNMPVALUE},1.3.6.1.4.1.171.12.1.1.9.1.1]"
@@ -149,146 +196,34 @@
                 "key": {
                   "$id": "/properties/templates/items/properties/discoveryRules/items/properties/key",
                   "type": "string",
-                  "title": "The Key Schema ",
+                  "pattern": "\\.discovery$",
+                  "title": "The Key Schema",
                   "default": "",
                   "examples": [
                     "memory.discovery"
                   ]
                 },
                 "metrics": {
-                  "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics",
-                  "type": "array",
-                  "items": {
-                    "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items",
-                    "type": "object",
-                    "properties": {
-                      "prototype": {
-                        "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items/properties/prototype",
-                        "type": "string",
-                        "title": "The Prototype Schema ",
-                        "default": "",
-                        "examples": [
-                          "vm.memory.pused"
-                        ]
-                      },
-                      "oid": {
-                        "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items/properties/oid",
-                        "type": "string",
-                        "title": "The Oid Schema ",
-                        "default": "",
-                        "examples": [
-                          "1.3.6.1.4.1.171.12.1.1.9.1.4.{#SNMPINDEX}"
-                        ]
-                      },
-                      "snmpObject": {
-                        "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items/properties/snmpObject",
-                        "type": "string",
-                        "title": "The Snmpobject Schema ",
-                        "default": "",
-                        "examples": [
-                          "agentDRAMutilization.{#SNMPINDEX}"
-                        ]
-                      },
-                      "mib": {
-                        "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items/properties/mib",
-                        "type": "string",
-                        "title": "The Mib Schema ",
-                        "default": "",
-                        "examples": [
-                          "DLINK-AGENT-MIB"
-                        ]
-                      },
-                      "vendorDescription": {
-                        "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items/properties/vendorDescription",
-                        "type": "string",
-                        "title": "The Vendordescription Schema ",
-                        "default": "",
-                        "examples": [
-                          "The percentage of used DRAM memory of the total DRAM memory available.The value will be between 0%(idle) and 100%(very busy)"
-                        ]
-                      },
-                      "alarmObject": {
-                        "$id": "/properties/templates/items/properties/discoveryRules/items/properties/metrics/items/properties/alarmObject",
-                        "type": "string",
-                        "title": "The Alarmobject Schema ",
-                        "default": "",
-                        "examples": [
-                          "#{#SNMPVALUE}"
-                        ]
-                      }
-                    }
-                  }
+                  "$ref": "./zabbix_metric_prototype_schema.json"
+                },
+                "masterItem": {
+                  "type": "string"
+                },
+                "preprocessing": {
+                    "$ref": "./zabbix_metric_prototype_schema.json#/definitions/preprocessing"
+                },
+                "type": {
+                  "type": "string"
                 }
               }
             }
           },
+          "zbxVer":{
+            "$ref": "./zabbix_metric_prototype_schema.json#/definitions/zbxVer",
+            "description": "(optional) Please provide minimum Zabbix version required. Template will be filtered out for any versions below"
+          },
           "metrics": {
-            "$id": "/properties/templates/items/properties/metrics",
-            "type": "array",
-            "items": {
-              "$id": "/properties/templates/items/properties/metrics/items",
-              "type": "object",
-              "defaultSnippets": [
-                {
-                  "label": "New SNMP prototyped metric",
-                  "description": "Add new metric from existing prototype",
-                  "body": {
-                    "prototype": "$1",
-                    "oid": "$2",
-                    "snmpObject": "$3",
-                    "mib": "$4",
-                    "alarmObject": "$5"
-                  }
-                },
-              ],
-              "properties": {
-                "prototype": {
-                  "$id": "/properties/templates/items/properties/metrics/items/properties/prototype",
-                  "type": "string",
-                  "title": "The Prototype Schema ",
-                  "default": "",
-                  "examples": [
-                    "system.cpu.util"
-                  ]
-                },
-                "oid": {
-                  "$id": "/properties/templates/items/properties/metrics/items/properties/oid",
-                  "type": "string",
-                  "title": "The Oid Schema ",
-                  "default": "",
-                  "examples": [
-                    "1.3.6.1.4.1.171.12.1.1.6.2.0"
-                  ]
-                },
-                "snmpObject": {
-                  "$id": "/properties/templates/items/properties/metrics/items/properties/snmpObject",
-                  "type": "string",
-                  "title": "The Snmpobject Schema ",
-                  "default": "",
-                  "examples": [
-                    "agentCPUutilizationIn1min.0"
-                  ]
-                },
-                "mib": {
-                  "$id": "/properties/templates/items/properties/metrics/items/properties/mib",
-                  "type": "string",
-                  "title": "The Mib Schema ",
-                  "default": "",
-                  "examples": [
-                    "DLINK-AGENT-MIB"
-                  ]
-                },
-                "vendorDescription": {
-                  "$id": "/properties/templates/items/properties/metrics/items/properties/vendorDescription",
-                  "type": "string",
-                  "title": "The Vendordescription Schema ",
-                  "default": "",
-                  "examples": [
-                    "The unit of time is 1 minute. The value will be between 0% (idle) and 100%(very busy)."
-                  ]
-                }
-              }
-            }
+            "$ref": "./zabbix_metric_prototype_schema.json"
           }
         }
       }
