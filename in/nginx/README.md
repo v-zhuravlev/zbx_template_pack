@@ -8,10 +8,10 @@ You can poll Nginx using Zabbix agent locally(Template App Nginx Zabbix agent) o
 
 see https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html
 
-```
+```text
 Active connections: 1 
 server accepts handled requests
-3 3 3 
+3 3 3
 Reading: 0 Writing: 1 Waiting: 0
 ```
 
