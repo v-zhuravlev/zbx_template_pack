@@ -16,9 +16,9 @@ Change those macros on host level if needed:
 
 |Macro|Description|Default(agent)|Default(HTTP)|
 |---|----|---|---|
-|{$STUB_STATUS_HOST}| | localhost | n/a |
+|{$NGINX_STUB_STATUS_HOST}| | localhost | n/a |
 |{$NGINX_API_URL}| | basic_status | basic_status|
-|{$STUB_STATUS_PORT}| | 80 | 80 |
+|{$NGINX_STUB_STATUS_PORT}| | 80 | 80 |
 
 ## Items
 

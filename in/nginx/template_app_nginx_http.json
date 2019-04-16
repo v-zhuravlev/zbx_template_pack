@@ -16,40 +16,44 @@
                     "key": "nginx.get_stub_status",
                     "type": "HTTP_AGENT",
                     "zbxVer": "4.0",
-                    "url": "http://{HOST.CONN}:{$STUB_STATUS_PORT}/{$STUB_STATUS_PATH}",
+                    "url": "http://{HOST.CONN}:{$NGINX_STUB_STATUS_PORT}/{$NGINX_STUB_STATUS_PATH}",
                     "status_codes": "",
                     "follow_redirects": "0",
                     "retrieve_mode": "BODY_AND_HEADERS"
                 },
                 {
-                    "prototype": "nginx.accepts_total"
+                    "prototype": "nginx.requests.total"
                 },
                 {
-                    "prototype": "nginx.active_connections"
+                    "prototype": "nginx.requests.total.rate"
+                },
+
+                {
+                    "prototype": "nginx.connections.accepted.rate"
                 },
                 {
-                    "prototype": "nginx.handled_second"
+                    "prototype": "nginx.connections.handled.rate"
                 },
                 {
-                    "prototype": "nginx.reading"
+                    "prototype": "nginx.connections.active"
                 },
                 {
-                    "prototype": "nginx.requests_rps"
+                    "prototype": "nginx.connections.reading"
                 },
                 {
-                    "prototype": "nginx.waiting"
+                    "prototype": "nginx.connections.waiting"
                 },
                 {
-                    "prototype": "nginx.writing"
+                    "prototype": "nginx.connections.writing"
                 }
             ],
             "macros": [
                 {
-                    "macro": "{$STUB_STATUS_PATH}",
+                    "macro": "{$NGINX_STUB_STATUS_PATH}",
                     "value": "basic_status"
                 },
                 {
-                    "macro": "{$STUB_STATUS_PORT}",
+                    "macro": "{$NGINX_STUB_STATUS_PORT}",
                     "value": "80"
                 }
             ]

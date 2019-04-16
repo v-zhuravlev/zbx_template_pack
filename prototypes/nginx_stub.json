@@ -25,10 +25,11 @@
 	]
 	},
 	{
-		"id": "nginx.accepts_total",
-		"key": "nginx.accepts_total",
+		"id": "nginx.connections.accepted.rate",
+		"key": "nginx.connections.accepted.rate",
 		"type": "DEPENDENT_ITEM",
-		"name": "Accepted client connections",
+		"valueType": "FLOAT",
+		"name": "Accepted connections per second",
 		"group": "Nginx",
 		"alarmObject": "Nginx",
 		"masterItem": "nginx.get_stub_status",
@@ -37,13 +38,16 @@
 			{
 			  "type": "REGEX",
 			  "params": "server accepts handled requests\\s+([0-9]+) ([0-9]+) ([0-9]+)\r\n\\1"
+			},
+			{
+				"type": "CHANGE_PER_SECOND"
 			}
 		]
 	},
 	{
-		"id": "nginx.active_connections",
+		"id": "nginx.connections.active",
 		"name": "Active connections",
-		"key": "nginx.active_connections",
+		"key": "nginx.connections.active",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "nginx.get_stub_status",
 		"group": "Nginx",
@@ -60,23 +64,23 @@
 				"name": "Current connections",
 				"graphItems": [
 					{
-						"drawtype": "LINE",
-						"name": "nginx.active_connections",
+						"drawtype": "BOLD_LINE",
+						"name": "nginx.connections.active",
 						"yaxisside": "LEFT"
 					},
 					{
 						"drawtype": "LINE",
-						"name": "nginx.waiting",
+						"name": "nginx.connections.waiting",
 						"yaxisside": "LEFT"
 					},
 					{
 						"drawtype": "LINE",
-						"name": "nginx.writing",
+						"name": "nginx.connections.writing",
 						"yaxisside": "LEFT"
 					},
 					{
 						"drawtype": "LINE",
-						"name": "nginx.reading",
+						"name": "nginx.connections.reading",
 						"yaxisside": "LEFT"
 					}
 				]
@@ -85,7 +89,7 @@
 				"name": "Requests per second",
 				"graphItems": [
 					{
-						"name": "nginx.requests_rps",
+						"name": "nginx.requests.total.rate",
 						"drawtype": "GRADIENT_LINE"
 					}
 				]
@@ -93,8 +97,8 @@
 		]
 	},
 	{
-		"id": "nginx.handled_second",
-		"key": "nginx.handled_second",
+		"id": "nginx.connections.handled.rate",
+		"key": "nginx.connections.handled.rate",
 		"name": "Handled connections per second",
 		"type": "DEPENDENT_ITEM",
 		"valueType": "FLOAT",
@@ -113,24 +117,8 @@
 		]
 	},
 	{
-		"id": "nginx.reading",
-		"key": "nginx.reading",
-		"name": "Reading",
-		"type": "DEPENDENT_ITEM",
-		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
-		"description": "The current number of connections where nginx is reading the request header.",
-		"preprocessing": [
-			{
-				"type": "REGEX",
-				"params": "Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)\r\n\\1"
-			}
-		]
-	},
-	{
-		"id": "nginx.requests_rps",
-		"key": "nginx.requests_rps",
+		"id": "nginx.requests.total.rate",
+		"key": "nginx.requests.total.rate",
 		"name": "Client requests per second",
 		"type": "DEPENDENT_ITEM",
 		"valueType": "FLOAT",
@@ -150,8 +138,40 @@
 		]
 	},
 	{
-		"id": "nginx.waiting",
-		"key": "nginx.waiting",
+		"id": "nginx.requests.total",
+		"key": "nginx.requests.total",
+		"name": "Client requests total",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "nginx.get_stub_status",
+		"group": "Nginx",
+		"alarmObject": "Nginx",
+		"description": "The total number of client requests.",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "server accepts handled requests\\s+([0-9]+) ([0-9]+) ([0-9]+)\r\n\\3"
+			}
+		]
+	},
+	{
+		"id": "nginx.connections.reading",
+		"key": "nginx.connections.reading",
+		"name": "Reading",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "nginx.get_stub_status",
+		"group": "Nginx",
+		"alarmObject": "Nginx",
+		"description": "The current number of connections where nginx is reading the request header.",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)\r\n\\1"
+			}
+		]
+	},	
+	{
+		"id": "nginx.connections.waiting",
+		"key": "nginx.connections.waiting",
 		"name": "Waiting",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "nginx.get_stub_status",
@@ -166,8 +186,8 @@
 		]
 	},
 	{
-		"id": "nginx.writing",
-		"key": "nginx.writing",
+		"id": "nginx.connections.writing",
+		"key": "nginx.connections.writing",
 		"name": "Writing",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "nginx.get_stub_status",

@@ -6,14 +6,14 @@
             "classes": [
                 "APP"
             ],
-            "description": "Get metrics from stub status module using Zabbix agent\nhttps://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
+            "description": "Get metrics from stub status module using Zabbix agent running on Linux\nhttps://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
             "documentation": {
                 "overview": "Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-http_stub_status_module'"
             },
             "metrics": [
                 {
                     "prototype": "nginx.get_stub_status",
-                    "key": "web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]",
+                    "key": "web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}]",
                     "type": "ZABBIX_AGENT",
                     "delay": "1m",
                     "zbxVer": "3.4",
@@ -30,25 +30,28 @@
                     ]
                 },
                 {
-                    "prototype": "nginx.accepts_total"
+                    "prototype": "nginx.requests.total"
                 },
                 {
-                    "prototype": "nginx.active_connections"
+                    "prototype": "nginx.requests.total.rate"
                 },
                 {
-                    "prototype": "nginx.handled_second"
+                    "prototype": "nginx.connections.accepted.rate"
                 },
                 {
-                    "prototype": "nginx.reading"
+                    "prototype": "nginx.connections.handled.rate"
                 },
                 {
-                    "prototype": "nginx.requests_rps"
+                    "prototype": "nginx.connections.active"
                 },
                 {
-                    "prototype": "nginx.waiting"
+                    "prototype": "nginx.connections.reading"
                 },
                 {
-                    "prototype": "nginx.writing"
+                    "prototype": "nginx.connections.waiting"
+                },
+                {
+                    "prototype": "nginx.connections.writing"
                 },
                 {
                     "id": "nginx.proc.num",
@@ -63,24 +66,176 @@
                             "id": "trigger.nginx.proc.not_running",
                             "name": "not running",
                             "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
-                            "priority": 3
+                            "priority": 4
+                        }
+                    ]
+                },
+                {
+                    "id": "nginx.responses.1xx.rate",
+                    "type": "ZABBIX_AGENT_ACTIVE",
+                    "valueType": "FLOAT",
+                    "name": "Responses 1xx per second",
+                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s1\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                    "delay": "1m",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx",
+                    "description": "The number of responses with 1xx status code as found in /var/log/nginx/access.log",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND",
+                            "params": ""
+                        }
+                    ],
+                    "graphs": [
+                        {
+                            "name": "Responses",
+                            "graphType": "STACKED",
+                            "graphItems": [
+                                {
+                                    "name": "nginx.responses.1xx.rate"
+                                },
+                                {
+                                    "name": "nginx.responses.2xx.rate"
+                                },
+                                {
+                                    "name": "nginx.responses.3xx.rate"
+                                },
+                                {
+                                    "name": "nginx.responses.4xx.rate"
+                                },
+                                {
+                                    "name": "nginx.responses.5xx.rate"
+                                }
+                            ]
+
+                        }
+                    ]
+                },
+                {
+                    "id": "nginx.responses.2xx.rate",
+                    "type": "ZABBIX_AGENT_ACTIVE",
+                    "valueType": "FLOAT",
+                    "name": "Responses 2xx per second",
+                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s2\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                    "delay": "1m",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx",
+                    "description": "The number of responses with 2xx status code as found in /var/log/nginx/access.log",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND",
+                            "params": ""
+                        }
+                    ]
+                },
+                {
+                    "id": "nginx.responses.3xx.rate",
+                    "type": "ZABBIX_AGENT_ACTIVE",
+                    "valueType": "FLOAT",
+                    "name": "Responses 3xx per second",
+                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s3\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                    "delay": "1m",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx",
+                    "description": "The number of responses with 3xx status code as found in /var/log/nginx/access.log",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND",
+                            "params": ""
+                        }
+                    ]
+                },
+                {
+                    "id": "nginx.responses.4xx.rate",
+                    "type": "ZABBIX_AGENT_ACTIVE",
+                    "valueType": "FLOAT",
+                    "name": "Responses 4xx per second",
+                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s4\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                    "delay": "1m",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx",
+                    "description": "The number of responses with 4xx status code as found in /var/log/nginx/access.log",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND",
+                            "params": ""
+                        }
+                    ],
+                    "triggers": [
+                        {
+                            "documentation": "Recovers when below 80% of {$NGINX_4XX_RATE_WARN}",
+                            "id": "trigger.nginx.4xx.high_rate.warn",
+                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$NGINX_4XX_RATE_WARN}",
+                            "recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$NGINX_4XX_RATE_WARN}*0.8",
+                            "manual_close": "YES",
+                            "name": "High 4xx HTTP responses rate",
+                            "priority": 2,
+                            "description": "Recovers when below 80% of {$NGINX_4XX_RATE_WARN} threshold",
+                            "dependsOn": [
+                                "trigger.nginx.5xx.high_rate.crit",
+                                "trigger.nginx.proc.not_running"
+                            ]
+                        },
+                        {
+                            "documentation": "Recovers when below 80% of {$NGINX_5XX_RATE_CRIT}",
+                            "id": "trigger.nginx.5xx.high_rate.crit",
+                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$NGINX_5XX_RATE_CRIT}",
+                            "recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$NGINX_5XX_RATE_CRIT}*0.8",
+                            "manual_close": "YES",
+                            "name": "High 5xx HTTP responses rate",
+                            "priority": 4,
+                            "description": "Recovers when below 80% of {$NGINX_5XX_RATE_CRIT} threshold",
+                            "dependsOn": [
+                                "trigger.nginx.proc.not_running"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "nginx.responses.5xx.rate",
+                    "type": "ZABBIX_AGENT_ACTIVE",
+                    "valueType": "FLOAT",
+                    "name": "Responses 5xx per second",
+                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s5\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                    "delay": "1m",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx",
+                    "description": "The number of responses with 5xx status code as found in /var/log/nginx/access.log",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND",
+                            "params": ""
                         }
                     ]
                 }
+
             ],
             "macros": [
                 {
-                    "macro": "{$STUB_STATUS_HOST}",
+                    "macro": "{$NGINX_STUB_STATUS_HOST}",
                     "value": "localhost"
                 },
                 {
-                    "macro": "{$STUB_STATUS_PATH}",
+                    "macro": "{$NGINX_STUB_STATUS_PATH}",
                     "value": "basic_status"
                 },
                 {
-                    "macro": "{$STUB_STATUS_PORT}",
+                    "macro": "{$NGINX_STUB_STATUS_PORT}",
                     "value": "80"
-                }
+                },
+                {
+                    "macro": "{$NGINX_ACCESS_LOG}",
+                    "value": "/var/log/nginx/access.log"
+                },
+                {
+                    "macro": "{$NGINX_4XX_RATE_WARN}",
+                    "value": "2"
+                },
+                {
+                    "macro": "{$NGINX_5XX_RATE_CRIT}",
+                    "value": "2"
+                },
+
             ]
         }
 
