@@ -22,10 +22,7 @@
                         {
                             "prototype": "trigger.http_get",
                             "name": "Failed to fetch nginx stub status page",
-                            "url": "https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
-                            "dependsOn": [
-                                "trigger.nginx.proc.not_running"
-                            ]
+                            "url": "https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html"
                         }
                     ]
                 },
@@ -55,20 +52,27 @@
                 },
                 {
                     "id": "nginx.proc.num",
-                    "name": "Number of processes running",
+                    "prototype": "proc.num",
                     "key": "proc.num[nginx]",
-                    "type": "ZABBIX_AGENT",
                     "group": "Nginx",
-                    "alarmObject": "Nginx",
-                    "valueType": "INTEGER",
-                    "triggers": [
-                        {
-                            "id": "trigger.nginx.proc.not_running",
-                            "name": "not running",
-                            "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
-                            "priority": 4
-                        }
-                    ]
+                    "alarmObject": "Nginx"
+                },
+                {
+                    "id": "nginx.proc.mem",
+                    "prototype": "proc.mem",
+                    "key": "proc.mem[nginx]",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx"
+                },
+                {
+                    "id": "nginx.proc.cpu.util",
+                    "prototype": "proc.cpu.util",
+                    "key": "proc.cpu.util[nginx]",
+                    "group": "Nginx",
+                    "alarmObject": "Nginx"
+                },
+                {
+                    "prototype": "nginx.version"
                 }
                 // {
                 //     "id": "nginx.responses.1xx.rate",

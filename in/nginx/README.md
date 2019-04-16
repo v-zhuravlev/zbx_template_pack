@@ -32,6 +32,7 @@ See details in templates.
 |Item|Triggers|Graphs|in Template App Nginx HTTP|in Template App Nginx Agent|
 |---|---|---|---|---|
 |nginx.get_stub_status|x| |x|x|
+|nginx.version| | |x|x|
 |nginx.requests.total| | |x|x|
 |nginx.requests.total.rate| | |x|x|
 |nginx.connections.accepted.rate| | |x|x|
@@ -40,18 +41,22 @@ See details in templates.
 |nginx.connections.reading| |x|x|x|
 |nginx.connections.waiting| |x|x|x|
 |nginx.connections.writing| |x|x|x|
+|nginx.proc.num|x| | |x|
+|nginx.proc.mem| | | |x|
+|nginx.proc.cpu.util| | | |x|
 |nginx.responses.1xx.rate| |x| | |
 |nginx.responses.2xx.rate| |x| | |
 |nginx.responses.3xx.rate| |x| | |
 |nginx.responses.4xx.rate|x|x| | |
 |nginx.responses.5xx.rate|x|x| | |
-|nginx.proc.num|x| | |x|
+
 
 ## Triggers
 
 See in template
 
 ## Demo
+
 Available:
 ![image](https://user-images.githubusercontent.com/14870891/40243447-ee32cc5a-5ac8-11e8-9a9f-7bb101f088df.png)
 
@@ -61,7 +66,6 @@ Work in progress:
 ![image](https://user-images.githubusercontent.com/14870891/56141847-48acba00-5fa6-11e9-92d8-2ac13db6c391.png)
 
 ![image](https://user-images.githubusercontent.com/14870891/56146598-23707980-5faf-11e9-84f9-f00bbdf468fc.png)
-
 
 ## Next steps
 
@@ -76,10 +80,10 @@ Work in progress:
 |{$NGINX_5XX_RATE_CRIT}| | 2 | n/a |
 
 ## References
-https://nginx.org/en/docs/http/ngx_http_stub_status_module.html
+https://nginx.org/en/docs/http/ngx_http_stub_status_module.html  
 https://github.com/strannick-ru/nginx-plus-zabbix  
 https://github.com/AlexGluck/ZBX_NGINX  
 https://github.com/adubkov/zbx_nginx_template  
 https://github.com/goldenclone/nginx-sla  
-http://servermonitoringhq.com/blog/how_to_quickly_stress_test_a_web_server
+http://servermonitoringhq.com/blog/how_to_quickly_stress_test_a_web_server  
 https://github.com/lebinh/ngxtop

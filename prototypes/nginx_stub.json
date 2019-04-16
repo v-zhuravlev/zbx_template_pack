@@ -200,5 +200,27 @@
 				"params": "Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)\r\n\\2"
 			}
 		]
+	},
+	{
+		"id": "nginx.version",
+		"key": "nginx.version",
+		"name": "Version",
+		"valueType": "CHAR",
+		"type": "DEPENDENT_ITEM",
+		"masterItem": "nginx.get_stub_status",
+		"group": "Nginx",
+		"alarmObject": "Nginx",
+		"preprocessing": [
+			{
+				"type": "REGEX",
+				"params": "Server: nginx/(.+)\r\n\\1"
+			},
+			{
+				"type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+				"params": "1d"
+			}
+		]
+
+
 	}
 ]
