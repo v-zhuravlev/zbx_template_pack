@@ -69,145 +69,145 @@
                             "priority": 4
                         }
                     ]
-                },
-                {
-                    "id": "nginx.responses.1xx.rate",
-                    "type": "ZABBIX_AGENT_ACTIVE",
-                    "valueType": "FLOAT",
-                    "name": "Responses 1xx per second",
-                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s1\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
-                    "delay": "1m",
-                    "group": "Nginx",
-                    "alarmObject": "Nginx",
-                    "description": "The number of responses with 1xx status code as found in /var/log/nginx/access.log",
-                    "preprocessing": [
-                        {
-                            "type": "CHANGE_PER_SECOND",
-                            "params": ""
-                        }
-                    ],
-                    "graphs": [
-                        {
-                            "name": "Responses",
-                            "graphType": "STACKED",
-                            "graphItems": [
-                                {
-                                    "name": "nginx.responses.1xx.rate"
-                                },
-                                {
-                                    "name": "nginx.responses.2xx.rate"
-                                },
-                                {
-                                    "name": "nginx.responses.3xx.rate"
-                                },
-                                {
-                                    "name": "nginx.responses.4xx.rate"
-                                },
-                                {
-                                    "name": "nginx.responses.5xx.rate"
-                                }
-                            ]
-
-                        }
-                    ]
-                },
-                {
-                    "id": "nginx.responses.2xx.rate",
-                    "type": "ZABBIX_AGENT_ACTIVE",
-                    "valueType": "FLOAT",
-                    "name": "Responses 2xx per second",
-                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s2\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
-                    "delay": "1m",
-                    "group": "Nginx",
-                    "alarmObject": "Nginx",
-                    "description": "The number of responses with 2xx status code as found in /var/log/nginx/access.log",
-                    "preprocessing": [
-                        {
-                            "type": "CHANGE_PER_SECOND",
-                            "params": ""
-                        }
-                    ]
-                },
-                {
-                    "id": "nginx.responses.3xx.rate",
-                    "type": "ZABBIX_AGENT_ACTIVE",
-                    "valueType": "FLOAT",
-                    "name": "Responses 3xx per second",
-                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s3\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
-                    "delay": "1m",
-                    "group": "Nginx",
-                    "alarmObject": "Nginx",
-                    "description": "The number of responses with 3xx status code as found in /var/log/nginx/access.log",
-                    "preprocessing": [
-                        {
-                            "type": "CHANGE_PER_SECOND",
-                            "params": ""
-                        }
-                    ]
-                },
-                {
-                    "id": "nginx.responses.4xx.rate",
-                    "type": "ZABBIX_AGENT_ACTIVE",
-                    "valueType": "FLOAT",
-                    "name": "Responses 4xx per second",
-                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s4\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
-                    "delay": "1m",
-                    "group": "Nginx",
-                    "alarmObject": "Nginx",
-                    "description": "The number of responses with 4xx status code as found in /var/log/nginx/access.log",
-                    "preprocessing": [
-                        {
-                            "type": "CHANGE_PER_SECOND",
-                            "params": ""
-                        }
-                    ],
-                    "triggers": [
-                        {
-                            "documentation": "Recovers when below 80% of {$NGINX_4XX_RATE_WARN}",
-                            "id": "trigger.nginx.4xx.high_rate.warn",
-                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$NGINX_4XX_RATE_WARN}",
-                            "recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$NGINX_4XX_RATE_WARN}*0.8",
-                            "manual_close": "YES",
-                            "name": "High 4xx HTTP responses rate",
-                            "priority": 2,
-                            "description": "Recovers when below 80% of {$NGINX_4XX_RATE_WARN} threshold",
-                            "dependsOn": [
-                                "trigger.nginx.5xx.high_rate.crit",
-                                "trigger.nginx.proc.not_running"
-                            ]
-                        },
-                        {
-                            "documentation": "Recovers when below 80% of {$NGINX_5XX_RATE_CRIT}",
-                            "id": "trigger.nginx.5xx.high_rate.crit",
-                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$NGINX_5XX_RATE_CRIT}",
-                            "recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$NGINX_5XX_RATE_CRIT}*0.8",
-                            "manual_close": "YES",
-                            "name": "High 5xx HTTP responses rate",
-                            "priority": 4,
-                            "description": "Recovers when below 80% of {$NGINX_5XX_RATE_CRIT} threshold",
-                            "dependsOn": [
-                                "trigger.nginx.proc.not_running"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "id": "nginx.responses.5xx.rate",
-                    "type": "ZABBIX_AGENT_ACTIVE",
-                    "valueType": "FLOAT",
-                    "name": "Responses 5xx per second",
-                    "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s5\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
-                    "delay": "1m",
-                    "group": "Nginx",
-                    "alarmObject": "Nginx",
-                    "description": "The number of responses with 5xx status code as found in /var/log/nginx/access.log",
-                    "preprocessing": [
-                        {
-                            "type": "CHANGE_PER_SECOND",
-                            "params": ""
-                        }
-                    ]
                 }
+                // {
+                //     "id": "nginx.responses.1xx.rate",
+                //     "type": "ZABBIX_AGENT_ACTIVE",
+                //     "valueType": "FLOAT",
+                //     "name": "Responses 1xx per second",
+                //     "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s1\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                //     "delay": "1m",
+                //     "group": "Nginx",
+                //     "alarmObject": "Nginx",
+                //     "description": "The number of responses with 1xx status code as found in /var/log/nginx/access.log",
+                //     "preprocessing": [
+                //         {
+                //             "type": "CHANGE_PER_SECOND",
+                //             "params": ""
+                //         }
+                //     ],
+                //     "graphs": [
+                //         {
+                //             "name": "Responses",
+                //             "graphType": "STACKED",
+                //             "graphItems": [
+                //                 {
+                //                     "name": "nginx.responses.1xx.rate"
+                //                 },
+                //                 {
+                //                     "name": "nginx.responses.2xx.rate"
+                //                 },
+                //                 {
+                //                     "name": "nginx.responses.3xx.rate"
+                //                 },
+                //                 {
+                //                     "name": "nginx.responses.4xx.rate"
+                //                 },
+                //                 {
+                //                     "name": "nginx.responses.5xx.rate"
+                //                 }
+                //             ]
+
+                //         }
+                //     ]
+                // },
+                // {
+                //     "id": "nginx.responses.2xx.rate",
+                //     "type": "ZABBIX_AGENT_ACTIVE",
+                //     "valueType": "FLOAT",
+                //     "name": "Responses 2xx per second",
+                //     "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s2\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                //     "delay": "1m",
+                //     "group": "Nginx",
+                //     "alarmObject": "Nginx",
+                //     "description": "The number of responses with 2xx status code as found in /var/log/nginx/access.log",
+                //     "preprocessing": [
+                //         {
+                //             "type": "CHANGE_PER_SECOND",
+                //             "params": ""
+                //         }
+                //     ]
+                // },
+                // {
+                //     "id": "nginx.responses.3xx.rate",
+                //     "type": "ZABBIX_AGENT_ACTIVE",
+                //     "valueType": "FLOAT",
+                //     "name": "Responses 3xx per second",
+                //     "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s3\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                //     "delay": "1m",
+                //     "group": "Nginx",
+                //     "alarmObject": "Nginx",
+                //     "description": "The number of responses with 3xx status code as found in /var/log/nginx/access.log",
+                //     "preprocessing": [
+                //         {
+                //             "type": "CHANGE_PER_SECOND",
+                //             "params": ""
+                //         }
+                //     ]
+                // },
+                // {
+                //     "id": "nginx.responses.4xx.rate",
+                //     "type": "ZABBIX_AGENT_ACTIVE",
+                //     "valueType": "FLOAT",
+                //     "name": "Responses 4xx per second",
+                //     "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s4\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                //     "delay": "1m",
+                //     "group": "Nginx",
+                //     "alarmObject": "Nginx",
+                //     "description": "The number of responses with 4xx status code as found in /var/log/nginx/access.log",
+                //     "preprocessing": [
+                //         {
+                //             "type": "CHANGE_PER_SECOND",
+                //             "params": ""
+                //         }
+                //     ],
+                //     "triggers": [
+                //         {
+                //             "documentation": "Recovers when below 80% of {$NGINX_4XX_RATE_WARN}",
+                //             "id": "trigger.nginx.4xx.high_rate.warn",
+                //             "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$NGINX_4XX_RATE_WARN}",
+                //             "recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$NGINX_4XX_RATE_WARN}*0.8",
+                //             "manual_close": "YES",
+                //             "name": "High 4xx HTTP responses rate",
+                //             "priority": 2,
+                //             "description": "Recovers when below 80% of {$NGINX_4XX_RATE_WARN} threshold",
+                //             "dependsOn": [
+                //                 "trigger.nginx.5xx.high_rate.crit",
+                //                 "trigger.nginx.proc.not_running"
+                //             ]
+                //         },
+                //         {
+                //             "documentation": "Recovers when below 80% of {$NGINX_5XX_RATE_CRIT}",
+                //             "id": "trigger.nginx.5xx.high_rate.crit",
+                //             "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$NGINX_5XX_RATE_CRIT}",
+                //             "recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$NGINX_5XX_RATE_CRIT}*0.8",
+                //             "manual_close": "YES",
+                //             "name": "High 5xx HTTP responses rate",
+                //             "priority": 4,
+                //             "description": "Recovers when below 80% of {$NGINX_5XX_RATE_CRIT} threshold",
+                //             "dependsOn": [
+                //                 "trigger.nginx.proc.not_running"
+                //             ]
+                //         }
+                //     ]
+                // },
+                // {
+                //     "id": "nginx.responses.5xx.rate",
+                //     "type": "ZABBIX_AGENT_ACTIVE",
+                //     "valueType": "FLOAT",
+                //     "name": "Responses 5xx per second",
+                //     "key": "log.count[{$NGINX_ACCESS_LOG},.+\\s5\\d\\d\\s\\d+\\s.+,,10000,skip,5]",
+                //     "delay": "1m",
+                //     "group": "Nginx",
+                //     "alarmObject": "Nginx",
+                //     "description": "The number of responses with 5xx status code as found in /var/log/nginx/access.log",
+                //     "preprocessing": [
+                //         {
+                //             "type": "CHANGE_PER_SECOND",
+                //             "params": ""
+                //         }
+                //     ]
+                // }
 
             ],
             "macros": [
@@ -222,19 +222,19 @@
                 {
                     "macro": "{$NGINX_STUB_STATUS_PORT}",
                     "value": "80"
-                },
-                {
-                    "macro": "{$NGINX_ACCESS_LOG}",
-                    "value": "/var/log/nginx/access.log"
-                },
-                {
-                    "macro": "{$NGINX_4XX_RATE_WARN}",
-                    "value": "2"
-                },
-                {
-                    "macro": "{$NGINX_5XX_RATE_CRIT}",
-                    "value": "2"
-                },
+                }
+                // {
+                //     "macro": "{$NGINX_ACCESS_LOG}",
+                //     "value": "/var/log/nginx/access.log"
+                // },
+                // {
+                //     "macro": "{$NGINX_4XX_RATE_WARN}",
+                //     "value": "2"
+                // },
+                // {
+                //     "macro": "{$NGINX_5XX_RATE_CRIT}",
+                //     "value": "2"
+                // }
 
             ]
         }
