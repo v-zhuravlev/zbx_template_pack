@@ -13,7 +13,7 @@
                     "key": "apache.get_stub_status",
                     "type": "HTTP_AGENT",
                     "zbxVer": "4.0",
-                    "url": "http://{HOST.CONN}:{$STUB_STATUS_PORT}/{$STUB_STATUS_PATH}",
+                    "url": "http://{HOST.CONN}:{$APACHE_STATUS_PORT}/{$APACHE_STATUS_PATH}",
                     "status_codes": "",
                     "follow_redirects": "0",
                     "retrieve_mode": "BODY_AND_HEADERS"
@@ -22,22 +22,22 @@
                     "prototype": "apache.bytes_per_second"
                 },
                 {
-                    "prototype": "apache.conns_async_closing"
+                    "prototype": "apache.connections.async_closing"
                 },
                 {
-                    "prototype": "apache.conns_async_keep_alive"
+                    "prototype": "apache.connections.async_keep_alive"
                 },
                 {
-                    "prototype": "apache.conns_async_writing"
+                    "prototype": "apache.connections.async_writing"
                 },
                 {
-                    "prototype": "apache.conns_total"
+                    "prototype": "apache.connections.total"
                 },
                 {
-                    "prototype": "apache.requests_rps"
+                    "prototype": "apache.requests.total.rate"
                 },
                 {
-                    "prototype": "apache.total_accesses"
+                    "prototype": "apache.requests.total"
                 },
                 {
                     "prototype": "apache.uptime"
@@ -46,19 +46,19 @@
                     "prototype": "apache.version"
                 },
                 {
-                    "prototype": "apache.workers_busy"
+                    "prototype": "apache.workers.busy"
                 },
                 {
-                    "prototype": "apache.workers_idle"
+                    "prototype": "apache.workers.idle"
                 }
             ],
             "macros": [
                 {
-                    "macro": "{$STUB_STATUS_PATH}",
+                    "macro": "{$APACHE_STATUS_PATH}",
                     "value": "server-status?auto"
                 },
                 {
-                    "macro": "{$STUB_STATUS_PORT}",
+                    "macro": "{$APACHE_STATUS_PORT}",
                     "value": "80"
                 }
             ]

@@ -12,13 +12,12 @@
                     "prototype": "apache.get_stub_status",
                     "type": "ZABBIX_AGENT",
                     "zbxVer": "3.4",
-                    "key": "web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]",
+                    "key": "web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]",
                     "triggers": [
                         {
                             "prototype": "trigger.http_get",
                             "name": "Failed to fetch Apache stub status page",
-                            "url": "https://httpd.apache.org/docs/current/mod/mod_status.html",
-                            "dependsOn": ["trigger.apache.proc.not_running"]
+                            "url": "https://httpd.apache.org/docs/current/mod/mod_status.html"
                         }
                     ]
                 },
@@ -26,22 +25,22 @@
                     "prototype": "apache.bytes_per_second"
                 },
                 {
-                    "prototype": "apache.conns_async_closing"
+                    "prototype": "apache.connections.async_closing"
                 },
                 {
-                    "prototype": "apache.conns_async_keep_alive"
+                    "prototype": "apache.connections.async_keep_alive"
                 },
                 {
-                    "prototype": "apache.conns_async_writing"
+                    "prototype": "apache.connections.async_writing"
                 },
                 {
-                    "prototype": "apache.conns_total"
+                    "prototype": "apache.connections.total"
                 },
                 {
-                    "prototype": "apache.requests_rps"
+                    "prototype": "apache.requests.total.rate"
                 },
                 {
-                    "prototype": "apache.total_accesses"
+                    "prototype": "apache.requests.total"
                 },
                 {
                     "prototype": "apache.uptime"
@@ -50,46 +49,57 @@
                     "prototype": "apache.version"
                 },
                 {
-                    "prototype": "apache.workers_busy"
+                    "prototype": "apache.workers.busy"
                 },
                 {
-                    "prototype": "apache.workers_idle"
+                    "prototype": "apache.workers.idle"
                 },
                 {
                     "id": "apache.proc.num",
-                    "name": "Number of processes running",
-                    "key": "proc.num[{$APACHE_PROC}]",
-                    "type": "ZABBIX_AGENT",
+                    "prototype": "proc.num",
+                    "key": "proc.num[{$APACHE_PROC_NAME}]",
                     "group": "Apache",
-                    "alarmObject": "Apache",
-                    "valueType": "INTEGER",
-                    "triggers": [
-                        {
-                            "id": "trigger.apache.proc.not_running",
-                            "name": "not running",
-                            "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
-                            "priority": 3
-                        }
-                    ]
+                    "alarmObject": "Apache"
+                },
+                {
+                    "id": "apache.proc.mem.rss",
+                    "prototype": "proc.mem.rss",
+                    "key": "proc.mem[{$APACHE_PROC_NAME},,,,rss]",
+                    "group": "Apache",
+                    "alarmObject": "Apache"
+                },
+                {
+                    "id": "apache.proc.mem.vsize",
+                    "prototype": "proc.mem.vsize",
+                    "key": "proc.mem[{$APACHE_PROC_NAME},,,,vsize]",
+                    "group": "Apache",
+                    "alarmObject": "Apache"
+                },
+                {
+                    "id": "apache.proc.cpu.util",
+                    "prototype": "proc.cpu.util",
+                    "key": "proc.cpu.util[{$APACHE_PROC_NAME}]",
+                    "group": "Apache",
+                    "alarmObject": "Apache"
                 }
             ],
             "macros": [
                 {
-                    "macro": "{$STUB_STATUS_HOST}",
+                    "macro": "{$APACHE_STATUS_HOST}",
                     "value": "localhost"
                 },
                 {
-                    "macro": "{$STUB_STATUS_PATH}",
+                    "macro": "{$APACHE_STATUS_PATH}",
                     "value": "server-status?auto"
                 },
                 {
-                    "macro": "{$STUB_STATUS_PORT}",
+                    "macro": "{$APACHE_STATUS_PORT}",
                     "value": "80"
                 },
                 {
-                    "macro": "{$APACHE_PROC}",
-                    "value": "apache2"
-                    //in RHEL it might be httpd
+                    "macro": "{$APACHE_PROC_NAME}",
+                    "value": "httpd"
+                    //since it might be apache2
                 }
             ]
         }

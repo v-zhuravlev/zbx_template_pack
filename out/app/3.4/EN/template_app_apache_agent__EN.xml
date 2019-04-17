@@ -29,7 +29,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+               <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                <delay>1m</delay>
                <history>1d</history>
                <trends>0</trends>
@@ -111,7 +111,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -119,7 +119,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_async_closing</key>
+               <key>apache.connections.async_closing</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -160,7 +160,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -168,7 +168,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_async_keep_alive</key>
+               <key>apache.connections.async_keep_alive</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -209,7 +209,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -217,7 +217,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_async_writing</key>
+               <key>apache.connections.async_writing</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -258,7 +258,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -266,7 +266,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_total</key>
+               <key>apache.connections.total</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -307,7 +307,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -315,7 +315,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.requests_rps</key>
+               <key>apache.requests.total.rate</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -338,7 +338,8 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>Calculated as change rate for 'Total Accesses' stat.&#13;
+ReqPerSec is not used, as it counts average since last Apache server start.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -350,21 +351,25 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>ReqPerSec:\s+([0-9\.]+)
+                     <params>Total Accesses:\s+([0-9]+)
 \1</params>
+                  </step>
+                  <step>
+                     <type>10</type>
+                     <params/>
                   </step>
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
-               <name>Apache: Total accesses</name>
+               <name>Apache: Total accesses (requests)</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.total_accesses</key>
+               <key>apache.requests.total</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -405,7 +410,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -454,7 +459,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -503,7 +508,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -511,7 +516,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.workers_busy</key>
+               <key>apache.workers.busy</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -552,7 +557,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -560,7 +565,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.workers_idle</key>
+               <key>apache.workers.idle</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -601,7 +606,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}]</key>
+                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -609,7 +614,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>proc.num[{$APACHE_PROC}]</key>
+               <key>proc.num[{$APACHE_PROC_NAME}]</key>
                <delay>5m</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -645,24 +650,147 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <jmx_endpoint/>
                <master_item/>
             </item>
+            <item>
+               <name>Apache: Memory usage (rss)</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.mem[{$APACHE_PROC_NAME},,,,rss]</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Resident set size memory used by process in bytes.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <master_item/>
+            </item>
+            <item>
+               <name>Apache: Memory usage (vsize)</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.mem[{$APACHE_PROC_NAME},,,,vsize]</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Virtual memory size used by process in bytes.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <master_item/>
+            </item>
+            <item>
+               <name>Apache: CPU utilization</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.cpu.util[{$APACHE_PROC_NAME}]</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Process CPU utilization percentage.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <master_item/>
+            </item>
          </items>
          <discovery_rules/>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$APACHE_PROC}</macro>
-               <value>apache2</value>
+               <macro>{$APACHE_PROC_NAME}</macro>
+               <value>httpd</value>
             </macro>
             <macro>
-               <macro>{$STUB_STATUS_HOST}</macro>
+               <macro>{$APACHE_STATUS_HOST}</macro>
                <value>localhost</value>
             </macro>
             <macro>
-               <macro>{$STUB_STATUS_PATH}</macro>
+               <macro>{$APACHE_STATUS_PATH}</macro>
                <value>server-status?auto</value>
             </macro>
             <macro>
-               <macro>{$STUB_STATUS_PORT}</macro>
+               <macro>{$APACHE_STATUS_PORT}</macro>
                <value>80</value>
             </macro>
          </macros>
@@ -698,7 +826,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.conns_async_closing</key>
+                  <key>apache.connections.async_closing</key>
                </item>
             </graph_item>
             <graph_item>
@@ -710,7 +838,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.conns_async_keep_alive</key>
+                  <key>apache.connections.async_keep_alive</key>
                </item>
             </graph_item>
             <graph_item>
@@ -722,7 +850,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.conns_async_writing</key>
+                  <key>apache.connections.async_writing</key>
                </item>
             </graph_item>
             <graph_item>
@@ -734,7 +862,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.conns_total</key>
+                  <key>apache.connections.total</key>
                </item>
             </graph_item>
          </graph_items>
@@ -766,7 +894,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.requests_rps</key>
+                  <key>apache.requests.total.rate</key>
                </item>
             </graph_item>
          </graph_items>
@@ -798,7 +926,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.workers_busy</key>
+                  <key>apache.workers.busy</key>
                </item>
             </graph_item>
             <graph_item>
@@ -810,7 +938,51 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache Zabbix agent</host>
-                  <key>apache.workers_idle</key>
+                  <key>apache.workers.idle</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Apache: Memory usage</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>0</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>0</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Apache Zabbix agent</host>
+                  <key>proc.mem[{$APACHE_PROC_NAME},,,,vsize]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>0</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Apache Zabbix agent</host>
+                  <key>proc.mem[{$APACHE_PROC_NAME},,,,rss]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -818,8 +990,8 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template App Apache Zabbix agent:web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}].str("HTTP/1.1 200")}=0 or&#13;
- {Template App Apache Zabbix agent:web.page.get[{$STUB_STATUS_HOST},{$STUB_STATUS_PATH},{$STUB_STATUS_PORT}].nodata(30m)}=1</expression>
+         <expression>{Template App Apache Zabbix agent:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].str("HTTP/1.1 200")}=0 or&#13;
+ {Template App Apache Zabbix agent:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].nodata(30m)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Apache: Failed to fetch Apache stub status page</name>
@@ -834,14 +1006,14 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
          <dependencies>
             <dependency>
                <name>Apache: not running</name>
-               <expression>{Template App Apache Zabbix agent:proc.num[{$APACHE_PROC}].last()}=0</expression>
+               <expression>{Template App Apache Zabbix agent:proc.num[{$APACHE_PROC_NAME}].last()}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Apache Zabbix agent:proc.num[{$APACHE_PROC}].last()}=0</expression>
+         <expression>{Template App Apache Zabbix agent:proc.num[{$APACHE_PROC_NAME}].last()}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Apache: not running</name>
@@ -849,7 +1021,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
+         <priority>4</priority>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>

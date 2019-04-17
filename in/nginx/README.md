@@ -1,12 +1,8 @@
-# template_app_nginx
+# Template App Nginx *
 
-Template App Nginx for Zabbix 3.4+ that works without any external scripts.  
-You can poll Nginx using Zabbix agent locally(Template App Nginx Zabbix agent) or poll it directly from Zabbix server/proxy(Template App Nginx HTTP). Choose template that better suits you. Tune URL with user macros if required.  
-
-
-## Setup
-
-see https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html
+Templates to monitor Nginx by Zabbix that work without any external scripts.  Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  
+Two templates are available:  
+`Template App Nginx Zabbix agent` - (Zabbix version >= 3.4) - collects metrics by polling [ngx_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) locally with Zabbix agent:
 
 ```text
 Active connections: 1 
@@ -15,7 +11,16 @@ server accepts handled requests
 Reading: 0 Writing: 1 Waiting: 0
 ```
 
-## Tuning
+It also uses Zabbix agent to collect `nginx` Linux process stats like CPU usage, memory usage and whether process is running or not.
+
+`Template App Nginx HTTP` - (Zabbix version >= 4.0) - collects metrics by polling [ngx_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) with HTTP agent remotely.  
+
+## Setup
+
+- Setup [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html)
+- (If using `Template App Nginx Zabbix agent`) install and setup [Zabbix agent](https://www.zabbix.com/documentation/current/manual/installation/install_from_packages)
+
+## Zabix configuration
 
 Change those macros on host level if needed:
 
@@ -27,9 +32,9 @@ Change those macros on host level if needed:
 
 ## Items
 
-See details in templates.
+See what items are collected in the templates.
 
-|Item|Triggers|Graphs|in Template App Nginx HTTP|in Template App Nginx Agent|
+|Item|Triggers|Graphs|HTTP agent template|Zabbix agent template|
 |---|---|---|---|---|
 |nginx.get_stub_status|x| |x|x|
 |nginx.version| | |x|x|
@@ -42,14 +47,14 @@ See details in templates.
 |nginx.connections.waiting| |x|x|x|
 |nginx.connections.writing| |x|x|x|
 |nginx.proc.num|x| | |x|
-|nginx.proc.mem| | | |x|
+|nginx.proc.mem.vsize| |x| |x|
+|nginx.proc.mem.rss| |x| |x|
 |nginx.proc.cpu.util| | | |x|
 |nginx.responses.1xx.rate| |x| | |
 |nginx.responses.2xx.rate| |x| | |
 |nginx.responses.3xx.rate| |x| | |
 |nginx.responses.4xx.rate|x|x| | |
 |nginx.responses.5xx.rate|x|x| | |
-
 
 ## Triggers
 
@@ -58,9 +63,12 @@ See in template
 ## Demo
 
 Available:
-![image](https://user-images.githubusercontent.com/14870891/40243447-ee32cc5a-5ac8-11e8-9a9f-7bb101f088df.png)
+![image](https://user-images.githubusercontent.com/14870891/56308681-91a07200-6150-11e9-8ebb-abd5ec58d7ab.png)
 
-![image](https://user-images.githubusercontent.com/14870891/40243215-5c5d3018-5ac8-11e8-8a48-8d6fece9a890.png)
+
+![image](https://user-images.githubusercontent.com/14870891/56308529-2b1b5400-6150-11e9-8378-315c43b9206f.png)
+
+![image](https://user-images.githubusercontent.com/14870891/56308912-11c6d780-6151-11e9-9198-4fa2d3c7f311.png)
 
 Work in progress:
 ![image](https://user-images.githubusercontent.com/14870891/56141847-48acba00-5fa6-11e9-92d8-2ac13db6c391.png)
@@ -69,9 +77,9 @@ Work in progress:
 
 ## Next steps
 
-- Triggers on high rate of 5xx and 4xx
-- access.log parsing
-- Add new macros:
+- Add triggers on high rate of 5xx and 4xx
+- Add access.log parsing
+- Add the following new macros:
 
 |Macro|Description|Default(agent)|Default(HTTP)|
 |---|----|---|---|
@@ -80,6 +88,7 @@ Work in progress:
 |{$NGINX_5XX_RATE_CRIT}| | 2 | n/a |
 
 ## References
+
 https://nginx.org/en/docs/http/ngx_http_stub_status_module.html  
 https://github.com/strannick-ru/nginx-plus-zabbix  
 https://github.com/AlexGluck/ZBX_NGINX  

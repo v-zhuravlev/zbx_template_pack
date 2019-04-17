@@ -99,7 +99,7 @@ The current number of idle client connections waiting for a request.</descriptio
                <master_item/>
             </item>
             <item>
-               <name>Nginx: Client requests total</name>
+               <name>Nginx: Requests total</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -166,7 +166,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Client requests per second</name>
+               <name>Nginx: Requests per second</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -237,7 +237,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Accepted connections per second</name>
+               <name>Nginx: Connections accepted per second</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -308,7 +308,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Handled connections per second</name>
+               <name>Nginx: Connections handled per second</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -379,7 +379,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Active connections</name>
+               <name>Nginx: Connections active</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -446,7 +446,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Reading</name>
+               <name>Nginx: Connections reading</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -513,7 +513,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Waiting</name>
+               <name>Nginx: Connections waiting</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -580,7 +580,7 @@ The current number of idle client connections waiting for a request.</descriptio
                </master_item>
             </item>
             <item>
-               <name>Nginx: Writing</name>
+               <name>Nginx: Connectinos writing</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -706,11 +706,11 @@ The current number of idle client connections waiting for a request.</descriptio
                <master_item/>
             </item>
             <item>
-               <name>Nginx: Memory usage</name>
+               <name>Nginx: Memory usage (vsize)</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>proc.mem[nginx]</key>
+               <key>proc.mem[nginx,,,,vsize]</key>
                <delay>5m</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -733,7 +733,7 @@ The current number of idle client connections waiting for a request.</descriptio
                <publickey/>
                <privatekey/>
                <port/>
-               <description>Memory used by process in bytes.</description>
+               <description>Virtual memory size used by process in bytes.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -765,7 +765,66 @@ The current number of idle client connections waiting for a request.</descriptio
                <master_item/>
             </item>
             <item>
-               <name>Nginx: CPU utilisation</name>
+               <name>Nginx: Memory usage (rss)</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.mem[nginx,,,,rss]</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Resident set size memory used by process in bytes.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: CPU utilization</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
@@ -792,7 +851,7 @@ The current number of idle client connections waiting for a request.</descriptio
                <publickey/>
                <privatekey/>
                <port/>
-               <description>Process CPU utilisation percentage.</description>
+               <description>Process CPU utilization percentage.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1008,6 +1067,50 @@ The current number of idle client connections waiting for a request.</descriptio
                <item>
                   <host>Template App Nginx Zabbix agent</host>
                   <key>nginx.requests.total.rate</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Nginx: Memory usage</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>0</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>0</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx Zabbix agent</host>
+                  <key>proc.mem[nginx,,,,vsize]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>0</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx Zabbix agent</host>
+                  <key>proc.mem[nginx,,,,rss]</key>
                </item>
             </graph_item>
          </graph_items>

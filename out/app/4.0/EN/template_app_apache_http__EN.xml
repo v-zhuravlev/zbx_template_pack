@@ -64,7 +64,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <preprocessing/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
-               <url>http://{HOST.CONN}:{$STUB_STATUS_PORT}/{$STUB_STATUS_PATH}</url>
+               <url>http://{HOST.CONN}:{$APACHE_STATUS_PORT}/{$APACHE_STATUS_PATH}</url>
                <query_fields/>
                <posts/>
                <status_codes/>
@@ -155,7 +155,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_async_closing</key>
+               <key>apache.connections.async_closing</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -222,7 +222,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_async_keep_alive</key>
+               <key>apache.connections.async_keep_alive</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -289,7 +289,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_async_writing</key>
+               <key>apache.connections.async_writing</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -356,7 +356,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.conns_total</key>
+               <key>apache.connections.total</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -423,7 +423,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.requests_rps</key>
+               <key>apache.requests.total.rate</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -446,7 +446,8 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>Calculated as change rate for 'Total Accesses' stat.&#13;
+ReqPerSec is not used, as it counts average since last Apache server start.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -458,8 +459,12 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>ReqPerSec:\s+([0-9\.]+)
+                     <params>Total Accesses:\s+([0-9]+)
 \1</params>
+                  </step>
+                  <step>
+                     <type>10</type>
+                     <params/>
                   </step>
                </preprocessing>
                <jmx_endpoint/>
@@ -486,11 +491,11 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                </master_item>
             </item>
             <item>
-               <name>Apache: Total accesses</name>
+               <name>Apache: Total accesses (requests)</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.total_accesses</key>
+               <key>apache.requests.total</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -691,7 +696,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.workers_busy</key>
+               <key>apache.workers.busy</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -758,7 +763,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.workers_idle</key>
+               <key>apache.workers.idle</key>
                <delay>0</delay>
                <history>90d</history>
                <trends>365d</trends>
@@ -825,11 +830,11 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
          <httptests/>
          <macros>
             <macro>
-               <macro>{$STUB_STATUS_PATH}</macro>
+               <macro>{$APACHE_STATUS_PATH}</macro>
                <value>server-status?auto</value>
             </macro>
             <macro>
-               <macro>{$STUB_STATUS_PORT}</macro>
+               <macro>{$APACHE_STATUS_PORT}</macro>
                <value>80</value>
             </macro>
          </macros>
@@ -865,7 +870,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.conns_async_closing</key>
+                  <key>apache.connections.async_closing</key>
                </item>
             </graph_item>
             <graph_item>
@@ -877,7 +882,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.conns_async_keep_alive</key>
+                  <key>apache.connections.async_keep_alive</key>
                </item>
             </graph_item>
             <graph_item>
@@ -889,7 +894,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.conns_async_writing</key>
+                  <key>apache.connections.async_writing</key>
                </item>
             </graph_item>
             <graph_item>
@@ -901,7 +906,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.conns_total</key>
+                  <key>apache.connections.total</key>
                </item>
             </graph_item>
          </graph_items>
@@ -933,7 +938,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.requests_rps</key>
+                  <key>apache.requests.total.rate</key>
                </item>
             </graph_item>
          </graph_items>
@@ -965,7 +970,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.workers_busy</key>
+                  <key>apache.workers.busy</key>
                </item>
             </graph_item>
             <graph_item>
@@ -977,7 +982,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <type>0</type>
                <item>
                   <host>Template App Apache HTTP</host>
-                  <key>apache.workers_idle</key>
+                  <key>apache.workers.idle</key>
                </item>
             </graph_item>
          </graph_items>

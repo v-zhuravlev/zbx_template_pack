@@ -33,8 +33,8 @@
 		]
 	},
 	{
-		"id": "apache.conns_async_closing",
-		"key": "apache.conns_async_closing",
+		"id": "apache.connections.async_closing",
+		"key": "apache.connections.async_closing",
 		"name": "Connections async closing",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
@@ -51,19 +51,19 @@
 				"name": "Current connections",
 				"graphItems": [
 					{
-						"name": "apache.conns_async_closing",
+						"name": "apache.connections.async_closing",
 						"drawtype": "LINE"
 					},
 					{
-						"name": "apache.conns_async_keep_alive",
+						"name": "apache.connections.async_keep_alive",
 						"drawtype": "LINE"
 					},
 					{
-						"name": "apache.conns_async_writing",
+						"name": "apache.connections.async_writing",
 						"drawtype": "LINE"
 					},
 					{
-						"name": "apache.conns_total",
+						"name": "apache.connections.total",
 						"drawtype": "BOLD_LINE"
 					}
 				]
@@ -72,7 +72,7 @@
 				"name": "Requests per second",
 				"graphItems": [
 					{
-						"name": "apache.requests_rps",
+						"name": "apache.requests.total.rate",
 						"drawtype": "GRADIENT_LINE"
 					}
 				]
@@ -82,11 +82,11 @@
 				"graphType": "STACKED",
 				"graphItems": [
 					{
-						"name": "apache.workers_busy",
+						"name": "apache.workers.busy",
 						"drawtype": "LINE"
 					},
 					{
-						"name": "apache.workers_idle",
+						"name": "apache.workers.idle",
 						"drawtype": "LINE"
 					}
 				]
@@ -94,8 +94,8 @@
 		]
 	},
 	{
-		"id": "apache.conns_async_keep_alive",
-		"key": "apache.conns_async_keep_alive",
+		"id": "apache.connections.async_keep_alive",
+		"key": "apache.connections.async_keep_alive",
 		"name": "Connections async keep alive",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
@@ -109,8 +109,8 @@
 		]
 	},
 	{
-		"id": "apache.conns_async_writing",
-		"key": "apache.conns_async_writing",
+		"id": "apache.connections.async_writing",
+		"key": "apache.connections.async_writing",
 		"name": "Connections async writing",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
@@ -124,8 +124,8 @@
 		]
 	},
 	{
-		"id": "apache.conns_total",
-		"key": "apache.conns_total",
+		"id": "apache.connections.total",
+		"key": "apache.connections.total",
 		"name": "Connections total",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
@@ -139,9 +139,10 @@
 		]
 	},
 	{
-		"id": "apache.requests_rps",
-		"key": "apache.requests_rps",
+		"id": "apache.requests.total.rate",
+		"key": "apache.requests.total.rate",
 		"name": "Requests per second",
+		"description": "Calculated as change rate for 'Total Accesses' stat.\nReqPerSec is not used, as it counts average since last Apache server start.",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
 		"group": "Apache",
@@ -151,14 +152,18 @@
 		"preprocessing": [
 			{
 				"type": "REGEX",
-				"params": "ReqPerSec:\\s+([0-9\\.]+)\r\n\\1"
+				"params": "Total Accesses:\\s+([0-9]+)\r\n\\1"
+			},
+			{
+				"type": "CHANGE_PER_SECOND",
+				"params": ""
 			}
 		]
 	},
 	{
-		"id": "apache.total_accesses",
-		"key": "apache.total_accesses",
-		"name": "Total accesses",
+		"id": "apache.requests.total",
+		"key": "apache.requests.total",
+		"name": "Total accesses (requests)",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
 		"group": "Apache",
@@ -199,12 +204,16 @@
 			{
 				"type": "REGEX",
 				"params": "ServerVersion:\\s+(.+)\r\n\\1"
+			},
+			{
+				"type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+				"params": "1d"
 			}
 		]
 	},
 	{
-		"id": "apache.workers_busy",
-		"key": "apache.workers_busy",
+		"id": "apache.workers.busy",
+		"key": "apache.workers.busy",
 		"name": "Workers busy",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
@@ -218,8 +227,8 @@
 		]
 	},
 	{
-		"id": "apache.workers_idle",
-		"key": "apache.workers_idle",
+		"id": "apache.workers.idle",
+		"key": "apache.workers.idle",
 		"name": "Workers idle",
 		"type": "DEPENDENT_ITEM",
 		"masterItem": "apache.get_stub_status",
