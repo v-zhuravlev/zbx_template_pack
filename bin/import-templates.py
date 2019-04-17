@@ -84,7 +84,7 @@ def import_configuration_from_file(zapi, filename):
     try:
         zapi.do_request('configuration.import', params)
     except ZabbixAPIException as err:
-        sys.exit(err[0]) #too long: https://github.com/adubkov/py-zabbix/blob/master/pyzabbix/api.py#L256
+        sys.exit(err.data) #too long: https://github.com/adubkov/py-zabbix/blob/master/pyzabbix/api.py#L256
         #sys.exit("Failed to import the template.")
 
 
