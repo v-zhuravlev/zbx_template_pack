@@ -112,7 +112,7 @@ cd zbx_template_pack/bin
 ```
 
 ```text
-[user@host bin]$ python import-templates.py -u Admin -p zabbix --filter EN ../out/module/3.2/EN
+[user@host bin]$ python import-templates.py -u Admin -p zabbix --filter EN ../out/3.2/EN/module
 template_module_host_resources_SNMPv1_EN.xml  
 template_module_host_resources_SNMPv2_EN.xml  
 template_module_system_snmp_SNMPv1_EN.xml  
@@ -120,7 +120,7 @@ template_module_system_snmp_SNMPv2_EN.xml
 ```
 
 ```text
-[user@host tmon bin]$ python import-templates.py -u Admin -p mypass --filter EN ../out/net/3.2/EN  
+[user@host tmon bin]$ python import-templates.py -u Admin -p mypass --filter EN ../out/3.2/EN/net  
 template_net_cisco_SNMPv1_EN.xml  
 template_net_cisco_SNMPv2_EN.xml  
 template_net_dlink_des_SNMPv1_EN.xml  
