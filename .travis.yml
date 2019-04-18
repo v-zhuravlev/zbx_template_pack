@@ -6,6 +6,10 @@ services:
 language: python
 
 env:
+  - LANG=EN ZABBIX_VERSION=4.2
+  - LANG=RU ZABBIX_VERSION=4.2
+  - LANG=EN ZABBIX_VERSION=4.0
+  - LANG=RU ZABBIX_VERSION=4.0
   - LANG=EN ZABBIX_VERSION=3.4
   - LANG=RU ZABBIX_VERSION=3.4
   - LANG=EN ZABBIX_VERSION=3.2
@@ -23,7 +27,6 @@ install: true
 
 script:
   - pushd bin
-  - ./import-templates.py --filter ${LANG} ../out/module/${ZABBIX_VERSION}/${LANG}
-  - ./import-templates.py --filter ${LANG} ../out/net/${ZABBIX_VERSION}/${LANG}
-  - ./import-templates.py --filter ${LANG} ../out/os/${ZABBIX_VERSION}/${LANG}
-  - ./import-templates.py --filter ${LANG} ../out/server/${ZABBIX_VERSION}/${LANG}
+  - ./import-templates.py ../out/${ZABBIX_VERSION}/${LANG}/module
+  - find ../out/${ZABBIX_VERSION}/${LANG}/* -type d -not -name module -exec ./import-templates.py {} \;
+
