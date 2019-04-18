@@ -13,5 +13,5 @@ try:
 except:
     sys.exit("Zabbix API is not available")
 else:
-    print "Zabbix API is ready"
+    print("Zabbix API is ready")
     zapi.do_request("user.logout", {})
