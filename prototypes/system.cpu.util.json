@@ -1,35 +1,101 @@
-{
-	"_translations": {
-		"RU": {
-			"name": "Загрузка процессора",
-			"description": "Загрузка процессора в %"
-		}
+[
+	{
+		"_translations": {
+			"RU": {
+				"name": "Загрузка процессора",
+				"description": "Загрузка процессора в %"
+			}
+		},
+		"__id": "system.cpu.util",
+		"name": "CPU utilization",
+		"description": "CPU utilization in %",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"update": "3m",
+		"history": "30d",
+		"trends": "365d",
+		"triggers": [
+			{
+				"_prototype": "trigger.cpu.high"
+			}
+		],
+		"graphs": [
+			{
+				"name": "CPU utilization",
+				"yaxismin": 0,
+				"yaxismax": 100,
+				"graph_items": [
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "system.cpu.util"
+					}
+				]
+			}
+		]
 	},
-	"_id": "system.cpu.util",
-	"name": "CPU utilization",
-	"description": "CPU utilization in %",
-	"value_type": "FLOAT",
-	"_group": "CPU",
-	"units": "%",
-	"delay": "3m",
-	"history": "30d",
-	"trends": "365d",
-	"triggers": [
-		{
-			"_prototype": "trigger.cpu.high"
-		}
-	],
-	"graphs": [
-		{
-			"name": "CPU utilization",
-			"yaxismin": 0,
-			"yaxismax": 100,
-			"graph_items": [
-				{
-					"drawtype": "GRADIENT_LINE",
-					"name": "system.cpu.util"
-				}
-			]
-		}
-	]
-}
+	{
+		"_id": "system.cpu.load.avg1",
+		"update": "1m",
+		"name": "Load average (1m avg)",
+		"group": "CPU",
+		"value_type": "FLOAT",
+		"triggers": [
+			{
+				"_id": "trigger.cpu.load.warn",
+				"name": "Load average is too high",
+				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}/{TEMPLATE_NAME:__system.cpu.num__.last()}>{$LOAD_AVG_CRIT}",
+				"priority": 3
+			}
+		],
+		"graphs": [
+			{
+				"name": "System load",
+				"graphType": "NORMAL",
+				"yaxismin": 0,
+				"ymin_type": "FIXED",
+				"graphItems": [
+					{
+						"name": "system.cpu.load.avg1",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "system.cpu.load.avg5",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "system.cpu.load.avg15",
+						"drawtype": "LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "system.cpu.load.avg5",
+		"update": "1m",
+		"name": "Load average (5m avg)",
+		"group": "CPU",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "system.cpu.load.avg15",
+		"name": "Load average (15m avg)",
+		"update": "1m",
+		"group": "CPU",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "system.cpu.num",
+		"key": "system.cpu.num",
+		"name": "Number of CPUs",
+		"group": "CPU",
+		"value_type": "UNSIGNED",
+		"preprocessing": [
+			{
+				"type": "DISCARD_UNCHANGED_HEARTBEAT",
+				"params": "1d"
+			}
+		]
+	}
+]

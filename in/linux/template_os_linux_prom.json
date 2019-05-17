@@ -1,0 +1,97 @@
+{
+    "templates": [
+        {
+            "name": "Template OS Linux Prom",
+            "classes": [
+                "OS"
+            ],
+            "zbxVer": "4.2",
+            "description": "Official Linux template using node exporter.",
+            "metrics": [
+                //get node exporter
+                {
+                    "id": "node_exporter.get",
+                    "key": "node_exporter.get",
+                    "delay": "30s",
+                    "name": "Get node_exporter metrics",
+                    "group": "Internal_items",
+                    "history": "1d",
+                    "trends": "0",
+                    "type": "HTTP_AGENT",
+                    "valueType": "TEXT",
+                    "url": "http://{HOST.CONN}:{$NODE_EXPORTER_PORT}/metrics"
+                },
+                //CPU
+                {
+                    "prototype": "system.cpu.load.avg1",
+                    "key": "node_load1",
+                    "name": "Load average (1m avg)",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_load1\r\n"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.cpu.load.avg5",
+                    "key": "node_load5",
+                    "name": "Load average (5m avg)",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_load5\r\n"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.cpu.load.avg15",
+                    "key": "node_load15",
+                    "name": "Load average (15m avg)",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_load15\r\n"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.cpu.num",
+                    "key": "system.cpu.num",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "node_cpu_seconds_total{cpu=~\".+\",mode=\"idle\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//count the number of cores\r\nreturn JSON.parse(value).length\r\n"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+                            "params": "1d"
+                        }
+                    ]
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$LOAD_AVG_CRIT}",
+                    "value": "1.5"
+                },
+                {
+                    "macro": "{$NODE_EXPORTER_PORT}",
+                    "value": "9100"
+                }
+            ]
+        }
+    ]
+}
