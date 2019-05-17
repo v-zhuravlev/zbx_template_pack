@@ -1,4 +1,5 @@
-{
+[
+	{
 	"translations": {
 		"RU": {
 			"name":"Загрузка процессора",
@@ -33,4 +34,69 @@
 			
 		}
 	]
-}
+	},
+	{
+		"id": "system.cpu.load.avg1",
+		"delay": "1m",
+		"name": "Load average (1m avg)",
+		"group": "CPU",
+		"valueType": "FLOAT",
+		"triggers": [
+			{
+				"id": "trigger.cpu.load.warn",
+				"name": "Load average is too high",
+				"expression":"{TEMPLATE_NAME:METRIC.avg(5m)}/{TEMPLATE_NAME:__system.cpu.num__.last()}>{$LOAD_AVG_CRIT}",
+				"priority": 3
+			}
+		],
+		"graphs": [
+			{
+				"name": "System load",
+				"graphType": "NORMAL",
+				"yaxismin": 0,
+				"ymin_type": "FIXED",
+				"graphItems": [
+					{
+						"name": "system.cpu.load.avg1",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "system.cpu.load.avg5",
+						"drawtype": "LINE"
+					},
+					{
+						"name": "system.cpu.load.avg15",
+						"drawtype": "LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "system.cpu.load.avg5",
+		"delay": "1m",
+		"name": "Load average (5m avg)",
+		"group": "CPU",
+		"valueType": "FLOAT"
+	},
+	{
+		"id": "system.cpu.load.avg15",
+		"name": "Load average (15m avg)",
+		"delay": "1m",
+		"group": "CPU",
+		"valueType": "FLOAT"
+	},
+	{
+		"id": "system.cpu.num",
+		"key": "system.cpu.num",
+		"name": "Number of CPUs",
+		"group": "CPU",
+		"valueType": "INTEGER",
+		"preprocessing": [
+			{
+				"type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+				"params": "1d"
+			}
+		]
+	}
+]

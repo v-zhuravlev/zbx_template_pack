@@ -1,0 +1,48 @@
+{
+    "templates": [
+        {
+            "zbxVer": "4.0",
+            "name": "Template OS Linux Zabbix agent",
+            "classes": [
+                "OS"
+            ],
+            "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
+            "metrics": [
+                //CPU
+                {
+                    "prototype": "system.cpu.load.avg1",
+                    "key": "system.cpu.load[percpu,avg1]",
+                    "type": "ZABBIX_AGENT",
+                    "name": "Load average (1m avg per core)",
+                    "description": "The load average is calculated as system CPU load divided by number of CPU cores.",
+                    "triggers":[{
+                        "id": "trigger.cpu.load.warn",
+                        "name": "Load average is too high",
+                        "expression":"{TEMPLATE_NAME:METRIC.avg(5m)}>{$LOAD_AVG_CRIT}",
+                        "priority": 3
+                    }]
+                },
+                {
+                    "prototype": "system.cpu.load.avg5",
+                    "key": "system.cpu.load[percpu,avg5]",
+                    "type": "ZABBIX_AGENT",
+                    "name": "Load average (5m avg per core)",
+                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
+                },
+                {
+                    "prototype": "system.cpu.load.avg15",
+                    "key": "system.cpu.load[percpu,avg15]",
+                    "type": "ZABBIX_AGENT",
+                    "name": "Load average (15m avg per core)",
+                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
+                }
+            ],
+            "macros": [
+                {
+                    "macro": "{$LOAD_AVG_CRIT}",
+                    "value": "1.5"
+                }
+            ]
+        }
+    ]
+}
