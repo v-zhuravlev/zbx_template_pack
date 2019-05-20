@@ -27,9 +27,23 @@ See what items are collected in the templates.
 |Item|Triggers|Graphs|Zabbix agent template|Prometheus template|SNMP template|
 |---|---|---|---|---|--|
 |system.cpu.load.avg1|y|y|y|y|-|
-|system.cpu.load.avg5|y|y|y|y|-|
-|system.cpu.load.avg15|y|y|y|y|-|
-|system.cpu.num|-|y|y|y|-|
+|system.cpu.load.avg5|-|y|y|y|-|
+|system.cpu.load.avg15|-|y|y|y|-|
+|system.cpu.num|-|-|-|y|-|
+|system.cpu.util|
+|system.cpu.system|
+|system.cpu.user|
+|system.cpu.nice|
+|system.cpu.idle|
+|system.cpu.iowait|
+|system.cpu.interrupt|
+|system.cpu.softirq|
+|system.cpu.steal|
+|system.cpu.guest|
+|system.cpu.guest_nice|
+|system.cpu.guest_nice|
+|system.cpu.switches|
+|system.cpu.intr|
 
 ## Triggers
 

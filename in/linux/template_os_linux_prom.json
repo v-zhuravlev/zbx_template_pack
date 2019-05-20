@@ -7,6 +7,248 @@
             ],
             "zbxVer": "4.2",
             "description": "Official Linux template using node exporter.",
+            "discoveryRules": [
+                {
+                    "name": "CPU discovery",
+                    "masterItem": "node_exporter.get",
+                    "type": "DEPENDENT_ITEM",
+                    "key": "node_exporter.cpu.discovery",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "node_cpu_seconds_total{cpu=~\".+\",mode=\"idle\"}"
+                        }
+                    ],
+                    "lld_macro_paths": [
+                        {
+                            "lld_macro": "{#CPUNUM}",
+                            "path": "$.labels.cpu"
+                        },
+                        {
+                            "lld_macro": "{#HELP}",
+                            "path": "$.help"
+                        }
+                    ],
+                    "metrics": [
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.util",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "system.cpu.idle",
+                            "key": "node_exporter.system.cpu.util[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "JAVASCRIPT",
+                                    "params": "//Calculate utilization\nreturn (100 - value)"
+                                },
+                            ],
+                            "triggers": []
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.idle",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.idle[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"idle\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.system",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.system[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"system\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.user",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.user[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"user\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.steal",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.steal[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"steal\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.softirq",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.softirq[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"softirq\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.nice",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.nice[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"nice\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.iowait",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.iowait[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"iowait\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.interrupt",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.interrupt[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"irq\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.guest",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.guest[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_guest_seconds_total{cpu=\"{#CPUNUM}\",mode=\"user\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "#{#CPUNUM}",
+                            "prototype": "system.cpu.guest_nice",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.system.cpu.guest_nice[{#CPUNUM}]",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_cpu_guest_seconds_total{cpu=\"{#CPUNUM}\",mode=\"nice\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        },
+                    ]
+                }
+            ],
             "metrics": [
                 //get node exporter
                 {
@@ -24,7 +266,7 @@
                 //CPU
                 {
                     "prototype": "system.cpu.load.avg1",
-                    "key": "node_load1",
+                    "key": "node_exporter.node_load1",
                     "name": "Load average (1m avg)",
                     "type": "DEPENDENT_ITEM",
                     "masterItem": "node_exporter.get",
@@ -37,7 +279,7 @@
                 },
                 {
                     "prototype": "system.cpu.load.avg5",
-                    "key": "node_load5",
+                    "key": "node_exporter.node_load5",
                     "name": "Load average (5m avg)",
                     "type": "DEPENDENT_ITEM",
                     "masterItem": "node_exporter.get",
@@ -50,7 +292,7 @@
                 },
                 {
                     "prototype": "system.cpu.load.avg15",
-                    "key": "node_load15",
+                    "key": "node_exporter.node_load15",
                     "name": "Load average (15m avg)",
                     "type": "DEPENDENT_ITEM",
                     "masterItem": "node_exporter.get",
@@ -63,7 +305,7 @@
                 },
                 {
                     "prototype": "system.cpu.num",
-                    "key": "system.cpu.num",
+                    "key": "node_exporter.system.cpu.num",
                     "type": "DEPENDENT_ITEM",
                     "masterItem": "node_exporter.get",
                     "preprocessing": [
@@ -78,6 +320,37 @@
                         {
                             "type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
                             "params": "1d"
+                        }
+                    ]
+                },
+                //"jumps", context switches and interrupts
+                {
+                    "prototype": "system.cpu.intr",
+                    "key": "node_exporter.system.cpu.intr",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_intr_total\r\n"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.cpu.switches",
+                    "key": "node_exporter.system.cpu.switches",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_context_switches_total\r\n"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
                         }
                     ]
                 }
