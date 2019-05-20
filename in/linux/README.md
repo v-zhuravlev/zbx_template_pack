@@ -55,7 +55,7 @@ Available:
 
 ## Next steps
 
-
+- prom template: CPU usage for all cpus
 
 
 
