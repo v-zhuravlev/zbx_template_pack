@@ -1,7 +1,7 @@
 {
     "templates": [
         {
-            "zbxVer": "4.0",
+            "zbxVer": "4.2",
             "name": "Template OS Linux Zabbix agent",
             "classes": [
                 "OS"
@@ -35,7 +35,91 @@
                     "type": "ZABBIX_AGENT",
                     "name": "Load average (15m avg per core)",
                     "description": "The load average is calculated as system CPU load divided by number of CPU cores."
+                },
+                {
+                    "prototype": "system.cpu.util",
+                    "type": "DEPENDENT_ITEM",
+                    "masterItem": "system.cpu.idle",
+                    "key": "system.cpu.util",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//Calculate utilization\nreturn (100 - value)"
+                        },
+                    ],
+                    "triggers": []
+                },
+                {
+                    "prototype": "system.cpu.idle",
+                    "key": "system.cpu.util[,idle]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.system",
+                    "key": "system.cpu.util[,system]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.user",
+                    "key": "system.cpu.util[,user]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.nice",
+                    "key": "system.cpu.util[,nice]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.iowait",
+                    "key": "system.cpu.util[,iowait]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.steal",
+                    "key": "system.cpu.util[,steal]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.interrupt",
+                    "key": "system.cpu.util[,interrupt]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.softirq",
+                    "key": "system.cpu.util[,softirq]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.guest",
+                    "key": "system.cpu.util[,guest]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.guest_nice",
+                    "key": "system.cpu.util[,guest_nice]",
+                    "type": "ZABBIX_AGENT"
+                },
+                {
+                    "prototype": "system.cpu.switches",
+                    "key": "system.cpu.switches",
+                    "type": "ZABBIX_AGENT",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.cpu.intr",
+                    "key": "system.cpu.intr",
+                    "type": "ZABBIX_AGENT",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
                 }
+
             ],
             "macros": [
                 {
