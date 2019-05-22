@@ -19,6 +19,41 @@
 		"trends": "365d"
 	},
 	{
+		"i_d": "vm.memory.available",
+		"name": "Available memory",
+		"_group": "Memory",
+		"units": "B",
+		"update": "3m",
+		"history": "30d",
+		"trends": "365d",
+		"description": "Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params",
+		"triggers": [
+			{
+				"name": "Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})",
+				"expression": "{TEMPLATE_NAME:METRIC.last(0)}<{$MEMORY_AVAILABLE_MIN} and {TEMPLATE_NAME:__vm.memory.total__.last(0)}>0",
+				"priority": "AVERAGE"
+			}
+		],
+		"graphs": [
+			{
+				"name": "Memory usage",
+				"graphType": "NORMAL",
+				"yaxismin": 0,
+				"ymin_type": "FIXED",
+				"graphItems": [
+					{
+						"name": "vm.memory.total",
+						"drawtype": "BOLD_LINE"
+					},
+					{
+						"name": "vm.memory.available",
+						"drawtype": "GRADIENT_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
 		"_id": "vm.memory.total",
 		"name": "Total memory",
 		"_group": "Memory",

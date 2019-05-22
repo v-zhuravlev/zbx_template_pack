@@ -3,7 +3,8 @@
         {
             "name": "Template OS Linux Prom",
             "classes": [
-                "OS"
+                "OS",
+                "PERFORMANCE"
             ],
             "zbxVer": "4.2",
             "description": "Official Linux template using node exporter.",
@@ -351,6 +352,33 @@
                         },
                         {
                             "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                },
+                //MEMORY
+                {
+                    "prototype": "vm.memory.total",
+                    "key": "node_exporter.node_memory_memtotal_bytes",
+                    "type": "DEPENDENT_ITEM",
+                    "valueType": "FLOAT",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_memory_MemTotal_bytes\r\n"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "vm.memory.available",
+                    "key": "node_exporter.node_memory_memavailable_bytes",
+                    "type": "DEPENDENT_ITEM",
+                    "valueType": "FLOAT",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_memory_MemAvailable_bytes\r\n"
                         }
                     ]
                 }
