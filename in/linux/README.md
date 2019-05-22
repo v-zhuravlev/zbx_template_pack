@@ -29,6 +29,7 @@ Change those macros on host level if needed:
 |Macro|Description|Default|
 |---|----|---|
 |{$LOAD_AVG_CRIT}| | 1.5| 
+|{$MEMORY_AVAILABLE_MIN}| | 20M |
 
 ## Items
 
@@ -55,6 +56,10 @@ See what items are collected in the templates.
 |system.cpu.guest_nice| - | y | y | y | - |
 |system.cpu.switches| - | y | y | y | - |
 |system.cpu.intr| - | y | y | y | - |
+|vm.memory.total    | - | y | y | y | y |
+|vm.memory.available| y | y | y | y | - |
+|vm.memory.used    | - | - | - | - | y |
+|vm.memory.pused| y | y | - | - | y |
 
 \* for SNMP only
 
