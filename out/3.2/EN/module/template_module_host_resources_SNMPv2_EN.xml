@@ -815,7 +815,7 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <application_prototypes/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Storage utilization</name>
+                     <name>{#SNMPVALUE}: Space utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <multiplier>0</multiplier>
@@ -861,45 +861,103 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                     <expression>{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"} and&#13;
+(({Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Disk space is critically low</name>
+                     <name>{#SNMPVALUE}: Disk space critical status</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - Disk free space is less than 5G.&#13;
+ - Disk will be full in less than 24hours.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_WARN}</expression>
+                     <expression>{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_WARN:"{#SNMPVALUE}"} and&#13;
+(({Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})&lt;10G or {Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Disk space is low</name>
+                     <name>{#SNMPVALUE}: Disk space warning</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - Disk free space is less than 10G.&#13;
+ - Disk will be full in less than 24hours.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPVALUE}: Disk space is critically low</name>
-                           <expression>{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                           <name>{#SNMPVALUE}: Disk space critical status</name>
+                           <expression>{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"} and&#13;
+(({Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template Module HOST-RESOURCES-MIB SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
-               <graph_prototypes/>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>{#SNMPVALUE}: Disk space usage</name>
+                     <width>600</width>
+                     <height>340</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>2</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>1</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>2</type>
+                           <item>
+                              <host>Template Module HOST-RESOURCES-MIB SNMPv2</host>
+                              <key>vfs.fs.total[storageTotal.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>C80000</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Module HOST-RESOURCES-MIB SNMPv2</host>
+                              <key>vfs.fs.used[storageUsed.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <host_prototypes/>
             </discovery_rule>
          </discovery_rules>
