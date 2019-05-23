@@ -248,6 +248,96 @@
                             ]
                         },
                     ]
+                },
+                {
+                    "name": "Mounted filesystem discovery",
+                    "key": "node_exporter.vfs.fs.discovery",
+                    "description": "Discovery of file systems of different types as defined in global regular expression \"File systems for discovery\".",
+                    "masterItem": "node_exporter.get",
+                    "type": "DEPENDENT_ITEM",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "node_filesystem_size_bytes{mountpoint=~\".+\"}"
+                        }
+                    ],
+                    "lld_macro_paths": [
+                        {
+                            "lld_macro": "{#FSTYPE}",
+                            "path": "$.labels.fstype"
+                        },
+                        {
+                            "lld_macro": "{#FSNAME}",
+                            "path": "$.labels.mountpoint"
+                        },
+                        {
+                            "lld_macro": "{#FSDEVICE}",
+                            "path": "$.labels.device"
+                        },
+                        {
+                            "lld_macro": "{#HELP}",
+                            "path": "$.help"
+                        }
+                    ],
+                    "filter": {
+                        "evalType":"AND",
+                        "conditions":[
+                            {
+                                "macro":"{#FSTYPE}",
+                                "value":"@File systems for discovery",
+                                "operator":"8",
+                                "formulaid":"A"
+                            }
+                        ],
+                    },
+                    "metrics":[
+                        {
+                            "alarmObject": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__",
+                            "prototype": "vfs.fs.free",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.vfs.fs.free[{#FSNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_filesystem_free_bytes{mountpoint=\"{#FSNAME}\"}\r\n"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__",
+                            "prototype": "vfs.fs.total",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.vfs.fs.total[{#FSNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_filesystem_size_bytes{mountpoint=\"{#FSNAME}\"}\r\n"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__",
+                            "prototype": "vfs.fs.used",
+                            "type": "CALCULATED",
+                            "key": "node_exporter.vfs.fs.used[{#FSNAME}]",
+                            "valueType": "FLOAT"
+                        },
+                        {
+                            "alarmObject": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__",
+                            "prototype": "vfs.fs.pused",
+                            "type": "CALCULATED",
+                            "key": "node_exporter.vfs.fs.pused[{#FSNAME}]",
+                            "valueType": "FLOAT"
+                        }
+                    ]
                 }
             ],
             "metrics": [

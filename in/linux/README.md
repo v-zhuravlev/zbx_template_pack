@@ -31,6 +31,8 @@ Change those macros on host level if needed:
 |{$LOAD_AVG_CRIT}| | 1.5| 
 |{$MEMORY_AVAILABLE_MIN}| | 20M |
 |{$SWAP_PFREE_WARN}|Trigger(warning) if drops below this value, in % | 50 |
+|{$STORAGE_UTIL_WARN:"{#FSNAME}"}|Disk space trigger(warning) if drops below this value, in % | 80 |
+|{$STORAGE_UTIL_CRIT:"{#FSNAME}"}|Disk space trigger(critical) if drops below this value, in % | 90 |
 
 
 ## Items
@@ -62,6 +64,13 @@ See what items are collected in the templates.
 |vm.memory.available| y | y | y | y | - |
 |vm.memory.used    | - | - | - | - | y |
 |vm.memory.pused| y | y | - | - | y |
+|system.swap.total| y | - | y | y | - |
+|system.swap.free| - | - | y | y | - |
+|system.swap.pfree| y | - | y | y | - |
+|vfs.fs.total| y | y | y | y | y |
+|vfs.fs.free| - | - | y | y | - |
+|vfs.fs.used| y | y | y | y | - |
+|vfs.fs.pused| y | - | y | y | y |
 
 \* for SNMP only
 
@@ -89,3 +98,4 @@ https://www.zabbix.com/documentation/4.2/manual/appendix/items/vm.memory.size_pa
 https://blog.zabbix.com/when-alexei-isnt-looking/#vm.memory.size  
 https://www.kernel.org/doc/gorman/html/understand/understand014.html  
 https://serverfault.com/questions/714952/lack-of-free-swap-space-on-windows-server  
+https://upload.wikimedia.org/wikipedia/commons/3/30/IO_stack_of_the_Linux_kernel.svg  
