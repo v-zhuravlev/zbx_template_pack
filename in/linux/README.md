@@ -83,6 +83,7 @@ Available:
 
 http://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html  
 https://www.robustperception.io/understanding-machine-cpu-usage  
-https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux  
 https://www.zabbix.com/documentation/4.2/manual/appendix/items/vm.memory.size_params  
 https://blog.zabbix.com/when-alexei-isnt-looking/#vm.memory.size  
+https://www.kernel.org/doc/gorman/html/understand/understand014.html  
+https://serverfault.com/questions/714952/lack-of-free-swap-space-on-windows-server  

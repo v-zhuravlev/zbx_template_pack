@@ -381,6 +381,38 @@
                             "params": "node_memory_MemAvailable_bytes\r\n"
                         }
                     ]
+                },
+                //SWAP
+                {
+                    "prototype": "system.swap.total",
+                    "key": "node_exporter.node_memory_swaptotal_bytes",
+                    "type": "DEPENDENT_ITEM",
+                    "valueType": "FLOAT",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_memory_SwapTotal_bytes\r\n"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.swap.free",
+                    "key": "node_exporter.node_memory_swapfree_bytes",
+                    "type": "DEPENDENT_ITEM",
+                    "valueType": "FLOAT",
+                    "masterItem": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_memory_SwapFree_bytes\r\n"
+                        }
+                    ]
+                },
+                {
+                    "prototype": "system.swap.pfree",
+                    "type": "CALCULATED",
+                    "key": "node_exporter.system.swap.pfree"
                 }
             ],
             "macros": [
