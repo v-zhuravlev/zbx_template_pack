@@ -30,6 +30,8 @@ Change those macros on host level if needed:
 |---|----|---|
 |{$LOAD_AVG_CRIT}| | 1.5| 
 |{$MEMORY_AVAILABLE_MIN}| | 20M |
+|{$SWAP_PFREE_WARN}|Trigger(warning) if drops below this value, in % | 50 |
+
 
 ## Items
 
