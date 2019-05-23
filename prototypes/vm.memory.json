@@ -120,7 +120,6 @@
 		"history": "1w",
 		"description": "Total memory in units"
 	},
-
 	{
 		"id": "system.swap.total",
 		"name": "Total swap space",
@@ -144,9 +143,10 @@
 		"delay": "3m",
 		"triggers": [
 			{
-				"expression": "{TEMPLATE_NAME:METRIC.last(0)}<{$SWAP_PFREE_WARN}",
-				"name": "High swap space usage",
-				"priority": 2
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$SWAP_PFREE_WARN} and {TEMPLATE_NAME:__system.swap.total__.last()}>0",
+				"name": "High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})",
+				"priority": 2,
+				"description": "This trigger is ignored, if there is no swap configured"
 			}
 		]
 	}

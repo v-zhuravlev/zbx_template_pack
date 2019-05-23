@@ -2200,16 +2200,17 @@ return (100 - value)</params>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux Prom:node_exporter.system.swap.pfree.last(0)}&lt;{$SWAP_PFREE_WARN}</expression>
+         <expression>{Template OS Linux Prom:node_exporter.system.swap.pfree.last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Linux Prom:node_exporter.node_memory_swaptotal_bytes.last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High swap space usage</name>
+         <name>High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger is ignored, if there is no swap configured</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
