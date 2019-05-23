@@ -119,5 +119,35 @@
 		"trends": "0",
 		"history": "1w",
 		"description": "Total memory in units"
+	},
+
+	{
+		"id": "system.swap.total",
+		"name": "Total swap space",
+		"group": "Memory",
+		"units":"B",
+		"delay": "5m"
+	},
+	{
+		"id": "system.swap.free",
+		"name": "Free swap space",
+		"group": "Memory",
+		"units":"B",
+		"delay": "3m"
+	},
+	{
+		"id": "system.swap.pfree",
+		"name": "Free swap space in %",
+		"group": "Memory",
+		"units":"%",
+		"valueType": "FLOAT",
+		"delay": "3m",
+		"triggers": [
+			{
+				"expression": "{TEMPLATE_NAME:METRIC.last(0)}<{$SWAP_PFREE_WARN}",
+				"name": "High swap space usage",
+				"priority": 2
+			}
+		]
 	}
 ]
