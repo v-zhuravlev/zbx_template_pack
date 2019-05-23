@@ -8,6 +8,60 @@
                 "PERFORMANCE"
             ],
             "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
+            "discoveryRules": [
+                {
+                    "name": "Mounted filesystem discovery",
+                    "key": "vfs.fs.discovery",
+                    "type": "ZABBIX_AGENT",
+                    "description": "Discovery of file systems of different types as defined in global regular expression \"File systems for discovery\".",
+                    "filter": {
+                        "evalType":"AND",
+                        "conditions":[
+                            {
+                                "macro":"{#FSTYPE}",
+                                "value":"@File systems for discovery",
+                                "operator":"8",
+                                "formulaid":"A"
+                            }
+                        ],
+                    },
+                    "metrics":[
+                            {
+                                "prototype": "vfs.fs.used",
+                                "type": "ZABBIX_AGENT",
+                                "key": "vfs.fs.size[{#FSNAME},used]",
+                                "group": "Filesystems",
+                                "alarmObject": "{#FSNAME}",
+                                "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            },
+                            {
+                                "prototype": "vfs.fs.free",
+                                "type": "ZABBIX_AGENT",
+                                "key": "vfs.fs.size[{#FSNAME},free]",
+                                "group": "Filesystems",
+                                "alarmObject": "{#FSNAME}",
+                                "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            },
+                            {
+                                "prototype": "vfs.fs.total",
+                                "type": "ZABBIX_AGENT",
+                                "key": "vfs.fs.size[{#FSNAME},total]",
+                                "group": "Filesystems",
+                                "alarmObject": "{#FSNAME}",
+                                "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            },
+                            {
+                                "prototype": "vfs.fs.pused",
+                                "type": "ZABBIX_AGENT",
+                                "key": "vfs.fs.size[{#FSNAME},pused]",
+                                "group": "Filesystems",
+                                "alarmObject": "{#FSNAME}",
+                                "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            }
+                    ]
+                }
+                
+            ],
             "metrics": [
                 //CPU
                 {
@@ -147,6 +201,7 @@
                     "key": "system.swap.size[,pfree]",
                     "type": "ZABBIX_AGENT"
                 }
+
             ],
             "macros": [
                 {
