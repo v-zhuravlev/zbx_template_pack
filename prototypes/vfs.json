@@ -107,5 +107,38 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "vfs.fs.inode.pfree",
+		"name": "Free inodes in %",
+		"group": "Storage",
+		"valueType": "FLOAT",
+		"units": "%",
+		"triggers": [
+			{
+				"id":"trigger.inode.pfree.crit",
+				"expression":"{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}",
+				"name":"Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}",
+				"priority":3,
+				"translations":{
+					"RU": {
+						"name":"Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"})"
+					}
+				}
+			},
+			{
+				"id":"trigger.inode.pfree.warn",
+				"expression":"{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}",
+				"name":"Free inodes is below {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}",
+				"priority":2,
+				"dependsOn":["trigger.inode.pfree.crit"],
+				"translations":{
+					"RU": {
+						"name":"Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"})"
+					}
+				}
+			}
+		]
+
 	}
 ]

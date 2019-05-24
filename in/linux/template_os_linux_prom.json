@@ -336,6 +336,24 @@
                             "type": "CALCULATED",
                             "key": "node_exporter.vfs.fs.pused[{#FSNAME}]",
                             "valueType": "FLOAT"
+                        },
+                        {
+                            "alarmObject": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__",
+                            "prototype": "vfs.fs.inode.pfree",
+                            "key": "node_exporter.vfs.fs.inode.pfree[{#FSNAME}]",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_TO_JSON",
+                                    "params": "{__name__=~\"node_filesystem_files.*\",mountpoint=\"{#FSNAME}\"}"
+                                },
+                                {
+                                    "type": "JAVASCRIPT",
+                                    "params": "//count vfs.fs.inode.pfree\nvar inode_free;\nvar inode_total;\nJSON.parse(value).forEach(function(metric) {\n  if (metric['name'] == 'node_filesystem_files'){\n      inode_total = metric['value'];\n  } else if (metric['name'] == 'node_filesystem_files_free'){\n      inode_free = metric['value'];\n  }\n});\nreturn (inode_free/inode_total)*100;"
+                                }
+                            ]
                         }
                     ]
                 }
