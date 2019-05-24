@@ -1573,6 +1573,66 @@ return (100 - value)</params>
                      <verify_host>0</verify_host>
                      <master_item/>
                   </item_prototype>
+                  <item_prototype>
+                     <name>{#FSNAME}: Free inodes in %</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>vfs.fs.inode[{#FSNAME},pfree]</key>
+                     <delay>5m</delay>
+                     <history>90d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>%</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
@@ -1621,6 +1681,44 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                            <name>{#FSNAME}: Disk space critical status</name>
                            <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
 (({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].last()}&lt;{$INODE_PFREE_CRIT:"{#FSNAME}"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].last()}&lt;{$INODE_PFREE_WARN:"{#FSNAME}"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}</name>
+                           <expression>{Template OS Linux Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].last()}&lt;{$INODE_PFREE_CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1702,6 +1800,14 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
             <macro>
                <macro>{$CPU_UTIL_MAX}</macro>
                <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$INODE_PFREE_CRIT}</macro>
+               <value>10</value>
+            </macro>
+            <macro>
+               <macro>{$INODE_PFREE_WARN}</macro>
+               <value>20</value>
             </macro>
             <macro>
                <macro>{$LOAD_AVG_CRIT}</macro>

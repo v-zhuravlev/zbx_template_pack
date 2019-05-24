@@ -31,8 +31,10 @@ Change those macros on host level if needed:
 |{$LOAD_AVG_CRIT}| | 1.5| 
 |{$MEMORY_AVAILABLE_MIN}| | 20M |
 |{$SWAP_PFREE_WARN}|Trigger(warning) if drops below this value, in % | 50 |
-|{$STORAGE_UTIL_WARN:"{#FSNAME}"}|Disk space trigger(warning) if drops below this value, in % | 80 |
-|{$STORAGE_UTIL_CRIT:"{#FSNAME}"}|Disk space trigger(critical) if drops below this value, in % | 90 |
+|{$STORAGE_UTIL_WARN:"{#FSNAME}"}|Disk space trigger(warning) if above this value, in % | 80 |
+|{$STORAGE_UTIL_CRIT:"{#FSNAME}"}|Disk space trigger(critical) if above this value, in % | 90 |
+|{$INODE_PFREE_CRIT:"{#FSNAME}"}|low percentage of free inode trigger(critical) if drops below this value, in % | 10 |
+|{$INODE_PFREE_WARN:"{#FSNAME}"}|low percentage of free inode trigger(warning) if drops below this value, in % | 20 |
 
 
 ## Items
@@ -71,6 +73,7 @@ See what items are collected in the templates.
 |vfs.fs.free| - | - | y | y | - |
 |vfs.fs.used| y | y | y | y | - |
 |vfs.fs.pused| y | - | y | y | y |
+|vfs.fs.inode.pfree| y | - | y | y | - |
 
 \* for SNMP only
 
@@ -99,3 +102,4 @@ https://blog.zabbix.com/when-alexei-isnt-looking/#vm.memory.size
 https://www.kernel.org/doc/gorman/html/understand/understand014.html  
 https://serverfault.com/questions/714952/lack-of-free-swap-space-on-windows-server  
 https://upload.wikimedia.org/wikipedia/commons/3/30/IO_stack_of_the_Linux_kernel.svg  
+http://www.linfo.org/inode.html  
