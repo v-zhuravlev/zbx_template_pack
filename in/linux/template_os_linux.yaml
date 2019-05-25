@@ -7,5 +7,36 @@ templates:
         - SNMPv2
         - SNMP_DEVICE
         - INTERFACES
+      metrics:
+        - prototype: system.cpu.load.avg1
+          oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-1\"]"
+          type: SNMP
+          snmpObject: laLoad.1
+          mib: UCD-SNMP-MIB
+          zbxVer: "4.2"
+        - prototype: system.cpu.load.avg5
+          oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-5\"]"
+          type: SNMP
+          snmpObject: laLoad.2
+          mib: UCD-SNMP-MIB
+          zbxVer: "4.2"
+        - prototype: system.cpu.load.avg15
+          oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-15\"]"
+          type: SNMP
+          snmpObject: laLoad.3
+          mib: UCD-SNMP-MIB
+          zbxVer: "4.2"
+        - prototype: system.cpu.num
+          oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+          type: SNMP
+          key: snmp.system.cpu.num
+          mib: HOST-RESOURCES-MIB
+          zbxVer: "4.2"
+          preprocessing:
+            - type: JAVASCRIPT
+              params: |
+                //count the number of cores
+                return JSON.parse(value).length;
+          vendorDescription: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
       templates:
         - Template Module HOST-RESOURCES-MIB SNMPvX
