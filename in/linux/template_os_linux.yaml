@@ -1,5 +1,7 @@
+
 templates:
     - name: Template OS Linux
+      zbxVer: "4.2"
       description: Template OS Linux
       classes:
         - Interfaces EtherLike Extension
@@ -7,6 +9,140 @@ templates:
         - SNMPv2
         - SNMP_DEVICE
         - INTERFACES
+      discoveryRules:
+        - name: CPU discovery
+          type: DEPENDENT_ITEM
+          masterItem: system.cpu.num
+          key: snmp.cpu.discovery
+          description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing.\n That's the only reason why LLD is used.
+          singleton: true
+          zbxVer: "4.2"
+          preprocessing:
+            - type: JAVASCRIPT
+              params: |
+                //count the number of CPU cores
+                return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0}])
+          metrics:
+            - prototype: system.cpu.idle
+              oid: 1.3.6.1.4.1.2021.11.53.0
+              type: SNMP
+              snmpObject: ssCpuRawIdle.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - 
+              prototype: system.cpu.system
+              oid: 1.3.6.1.4.1.2021.11.52.0
+              type: SNMP
+              snmpObject: ssCpuRawSystem.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - 
+              prototype: system.cpu.user
+              oid: 1.3.6.1.4.1.2021.11.50.0
+              type: SNMP
+              snmpObject: ssCpuRawUser.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - 
+              prototype: system.cpu.steal
+              oid: 1.3.6.1.4.1.2021.11.64.0
+              type: SNMP
+              snmpObject: ssCpuRawSteal.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - prototype: system.cpu.softirq
+              
+              oid: 1.3.6.1.4.1.2021.11.61.0
+              type: SNMP
+              snmpObject: ssCpuRawSoftIRQ.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - prototype: system.cpu.nice
+              
+              oid: 1.3.6.1.4.1.2021.11.51.0
+              type: SNMP
+              key: "{#CPUNUM}"
+              snmpObject: ssCpuRawNice.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - prototype: system.cpu.iowait
+              
+              oid: 1.3.6.1.4.1.2021.11.54.0
+              type: SNMP
+              snmpObject: ssCpuRawWait.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - prototype: system.cpu.interrupt
+              
+              oid: 1.3.6.1.4.1.2021.11.56.0
+              type: SNMP
+              snmpObject: ssCpuRawInterrupt.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - prototype: system.cpu.guest
+              
+              oid: 1.3.6.1.4.1.2021.11.65.0
+              type: SNMP
+              snmpObject: ssCpuRawGuest.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
+            - prototype: system.cpu.guest_nice
+              
+              oid: 1.3.6.1.4.1.2021.11.66.0
+              type: SNMP
+              snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
+              mib: UCD-SNMP-MIB
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                - type: JAVASCRIPT
+                  params: |
+                    //to get utilization in %, divide by N, where N is number of cores.
+                    return value/{#CPUNUM}
       metrics:
         - prototype: system.cpu.load.avg1
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-1\"]"
@@ -50,6 +186,42 @@ templates:
           oid: 1.3.6.1.4.1.2021.11.60.0
           preprocessing:
             - type: CHANGE_PER_SECOND
+        - prototype: vm.memory.free
+          snmpObject: memAvailReal.0
+          oid: 1.3.6.1.4.1.2021.4.6.0
+          mib: UCD-SNMP-MIB
+          type: SNMP
+          preprocessing:
+            - type: MULTIPLIER
+              params: "1024"
+        - prototype: vm.memory.buffers
+          snmpObject: memBuffer.0
+          oid: 1.3.6.1.4.1.2021.4.14.0
+          mib: UCD-SNMP-MIB
+          type: SNMP
+          preprocessing:
+            - type: MULTIPLIER
+              params: "1024"
+        - prototype: vm.memory.cached
+          snmpObject: memCached.0
+          oid: 1.3.6.1.4.1.2021.4.15.0
+          mib: UCD-SNMP-MIB
+          type: SNMP
+          preprocessing:
+            - type: MULTIPLIER
+              params: "1024"
+        - prototype: vm.memory.total
+          snmpObject: memTotalReal.0
+          oid: 1.3.6.1.4.1.2021.4.5.0
+          mib: UCD-SNMP-MIB
+          type: SNMP
+          preprocessing:
+            - type: MULTIPLIER
+              params: "1024"
+        - prototype: vm.memory.available
+          type: CALCULATED
+          key: snmp.vm.memory.available
+          expressionFormula: last(__vm.memory.free__)+last(__vm.memory.buffers__)+last(__vm.memory.cached__)
         - prototype: system.swap.total
           oid: 1.3.6.1.4.1.2021.4.3.0
           type: SNMP
@@ -71,6 +243,3 @@ templates:
         - prototype: system.swap.pfree
           key: snmp.system.swap.pfree
           type: CALCULATED
-
-      templates:
-        - Template Module HOST-RESOURCES-MIB SNMPvX
