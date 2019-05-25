@@ -20,7 +20,18 @@ Install node exporter, change {$NODE_EXPORTER_PORT} on the host level value if n
 
 ### SNMP agent
 
-Install snmpd agent on Linux OS, enable SNMPv2. Make sure access to UCD-SNMP-MIB is enabled in snmpd. Change {$SNMP_COMMUNITY} on the host level in Zabbix.
+Install snmpd agent on Linux OS, enable SNMPv2.  
+
+Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since  
+by default snmpd (in Ubuntu) limits access to basic system information only:
+
+```text
+rocommunity public  default    -V systemonly
+```
+
+Make sure you change that in order to read metrics from UCD-SNMP-MIB.
+
+Change {$SNMP_COMMUNITY} on the host level in Zabbix.
 
 ## Zabbix configuration
 
@@ -60,8 +71,8 @@ See what items are collected in the templates.
 |system.cpu.steal| - | y | y | y | - |
 |system.cpu.guest| - | y | y | y | - |
 |system.cpu.guest_nice| - | y | y | y | - |
-|system.cpu.switches| - | y | y | y | - |
-|system.cpu.intr| - | y | y | y | - |
+|system.cpu.switches| - | y | y | y | y |
+|system.cpu.intr| - | y | y | y | y |
 |vm.memory.total    | - | y | y | y | y |
 |vm.memory.available| y | y | y | y | - |
 |vm.memory.used    | - | - | - | - | y |

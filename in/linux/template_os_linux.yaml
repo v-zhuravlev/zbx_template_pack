@@ -38,6 +38,18 @@ templates:
                 //count the number of cores
                 return JSON.parse(value).length;
           vendorDescription: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
+        - prototype: "system.cpu.intr"
+          type: SNMP
+          snmpObject: ssRawInterrupts.0
+          oid: 1.3.6.1.4.1.2021.11.59.0
+          preprocessing:
+            - type: CHANGE_PER_SECOND
+        - prototype: "system.cpu.switches"
+          type: SNMP
+          snmpObject: ssRawContexts.0
+          oid: 1.3.6.1.4.1.2021.11.60.0
+          preprocessing:
+            - type: CHANGE_PER_SECOND
         - prototype: system.swap.total
           oid: 1.3.6.1.4.1.2021.4.3.0
           type: SNMP
