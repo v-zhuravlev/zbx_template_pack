@@ -66,9 +66,9 @@ See what items are collected in the templates.
 |vm.memory.available| y | y | y | y | - |
 |vm.memory.used    | - | - | - | - | y |
 |vm.memory.pused| y | y | - | - | y |
-|system.swap.total| y | - | y | y | - |
-|system.swap.free| - | - | y | y | - |
-|system.swap.pfree| y | - | y | y | - |
+|system.swap.total| y | - | y | y | y |
+|system.swap.free| - | - | y | y | y |
+|system.swap.pfree| y | - | y | y | y |
 |vfs.fs.total| y | y | y | y | y |
 |vfs.fs.free| - | - | y | y | - |
 |vfs.fs.used| y | y | y | y | - |
