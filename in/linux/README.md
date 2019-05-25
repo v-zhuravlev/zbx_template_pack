@@ -52,7 +52,6 @@ Change those macros on host level if needed:
 
 See what items are collected in the templates.
 
-### CPU
 
 |Item|Triggers|Graphs|Zabbix agent template|Prometheus template|SNMP template|
 |---|---|---|---|---|--|
@@ -61,30 +60,31 @@ See what items are collected in the templates.
 |system.cpu.load.avg15|-|y|y|y|y|
 |system.cpu.num|y|-|-|y|y|
 |system.cpu.util| y* | y | y | y | y |
-|system.cpu.system| - | y | y | y | - |
-|system.cpu.user| - | y | y | y | - |
-|system.cpu.nice| - | y | y | y | - |
-|system.cpu.idle| - | y | y | y | - |
-|system.cpu.iowait| - | y | y | y | - |
-|system.cpu.interrupt| - | y | y | y | - |
-|system.cpu.softirq| - | y | y | y | - |
-|system.cpu.steal| - | y | y | y | - |
-|system.cpu.guest| - | y | y | y | - |
-|system.cpu.guest_nice| - | y | y | y | - |
+|system.cpu.system| - | y | y | y | y |
+|system.cpu.user| - | y | y | y | y |
+|system.cpu.nice| - | y | y | y | y |
+|system.cpu.idle| - | y | y | y | y |
+|system.cpu.iowait| - | y | y | y | y |
+|system.cpu.interrupt| - | y | y | y | y |
+|system.cpu.softirq| - | y | y | y | y |
+|system.cpu.steal| - | y | y | y | y |
+|system.cpu.guest| - | y | y | y | y |
+|system.cpu.guest_nice| - | y | y | y | y |
 |system.cpu.switches| - | y | y | y | y |
 |system.cpu.intr| - | y | y | y | y |
 |vm.memory.total    | - | y | y | y | y |
-|vm.memory.available| y | y | y | y | - |
-|vm.memory.used    | - | - | - | - | y |
-|vm.memory.pused| y | y | - | - | y |
+|vm.memory.available| y | y | y | y | y |
+|vm.memory.used    | - | - | - | - | - |
+|vm.memory.cached    | - | - | - | - | y |
+|vm.memory.buffers    | - | - | - | - | y |
 |system.swap.total| y | - | y | y | y |
 |system.swap.free| - | - | y | y | y |
 |system.swap.pfree| y | - | y | y | y |
 |vfs.fs.total| y | y | y | y | y |
 |vfs.fs.free| - | - | y | y | - |
-|vfs.fs.used| y | y | y | y | - |
+|vfs.fs.used| y | y | y | y | y |
 |vfs.fs.pused| y | - | y | y | y |
-|vfs.fs.inode.pfree| y | - | y | y | - |
+|vfs.fs.inode.pfree| y | - | y | y | y |
 
 \* for SNMP only
 

@@ -10,139 +10,212 @@ templates:
         - SNMP_DEVICE
         - INTERFACES
       discoveryRules:
-        - name: CPU discovery
-          type: DEPENDENT_ITEM
-          masterItem: system.cpu.num
-          key: snmp.cpu.discovery
-          description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing.\n That's the only reason why LLD is used.
-          singleton: true
-          zbxVer: "4.2"
-          preprocessing:
-            - type: JAVASCRIPT
-              params: |
-                //count the number of CPU cores
-                return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0}])
-          metrics:
-            - prototype: system.cpu.idle
-              oid: 1.3.6.1.4.1.2021.11.53.0
-              type: SNMP
-              snmpObject: ssCpuRawIdle.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - 
-              prototype: system.cpu.system
-              oid: 1.3.6.1.4.1.2021.11.52.0
-              type: SNMP
-              snmpObject: ssCpuRawSystem.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - 
-              prototype: system.cpu.user
-              oid: 1.3.6.1.4.1.2021.11.50.0
-              type: SNMP
-              snmpObject: ssCpuRawUser.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - 
-              prototype: system.cpu.steal
-              oid: 1.3.6.1.4.1.2021.11.64.0
-              type: SNMP
-              snmpObject: ssCpuRawSteal.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - prototype: system.cpu.softirq
-              
-              oid: 1.3.6.1.4.1.2021.11.61.0
-              type: SNMP
-              snmpObject: ssCpuRawSoftIRQ.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - prototype: system.cpu.nice
-              
-              oid: 1.3.6.1.4.1.2021.11.51.0
-              type: SNMP
-              key: "{#CPUNUM}"
-              snmpObject: ssCpuRawNice.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - prototype: system.cpu.iowait
-              
-              oid: 1.3.6.1.4.1.2021.11.54.0
-              type: SNMP
-              snmpObject: ssCpuRawWait.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - prototype: system.cpu.interrupt
-              
-              oid: 1.3.6.1.4.1.2021.11.56.0
-              type: SNMP
-              snmpObject: ssCpuRawInterrupt.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - prototype: system.cpu.guest
-              
-              oid: 1.3.6.1.4.1.2021.11.65.0
-              type: SNMP
-              snmpObject: ssCpuRawGuest.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
-            - prototype: system.cpu.guest_nice
-              
-              oid: 1.3.6.1.4.1.2021.11.66.0
-              type: SNMP
-              snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
-              mib: UCD-SNMP-MIB
-              preprocessing:
-                - type: CHANGE_PER_SECOND
-                - type: JAVASCRIPT
-                  params: |
-                    //to get utilization in %, divide by N, where N is number of cores.
-                    return value/{#CPUNUM}
+      - name: CPU discovery
+        type: DEPENDENT_ITEM
+        masterItem: system.cpu.num
+        key: snmp.cpu.discovery
+        description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing.\n That's the only reason why LLD is used.
+        singleton: true
+        zbxVer: "4.2"
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |
+              //count the number of CPU cores
+              return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0}])
+        metrics:
+          - prototype: system.cpu.idle
+            oid: 1.3.6.1.4.1.2021.11.53.0
+            type: SNMP
+            snmpObject: ssCpuRawIdle.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - 
+            prototype: system.cpu.system
+            oid: 1.3.6.1.4.1.2021.11.52.0
+            type: SNMP
+            snmpObject: ssCpuRawSystem.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - 
+            prototype: system.cpu.user
+            oid: 1.3.6.1.4.1.2021.11.50.0
+            type: SNMP
+            snmpObject: ssCpuRawUser.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - 
+            prototype: system.cpu.steal
+            oid: 1.3.6.1.4.1.2021.11.64.0
+            type: SNMP
+            snmpObject: ssCpuRawSteal.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - prototype: system.cpu.softirq
+            
+            oid: 1.3.6.1.4.1.2021.11.61.0
+            type: SNMP
+            snmpObject: ssCpuRawSoftIRQ.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - prototype: system.cpu.nice
+            
+            oid: 1.3.6.1.4.1.2021.11.51.0
+            type: SNMP
+            key: "{#CPUNUM}"
+            snmpObject: ssCpuRawNice.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - prototype: system.cpu.iowait
+            
+            oid: 1.3.6.1.4.1.2021.11.54.0
+            type: SNMP
+            snmpObject: ssCpuRawWait.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - prototype: system.cpu.interrupt
+            
+            oid: 1.3.6.1.4.1.2021.11.56.0
+            type: SNMP
+            snmpObject: ssCpuRawInterrupt.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - prototype: system.cpu.guest
+            
+            oid: 1.3.6.1.4.1.2021.11.65.0
+            type: SNMP
+            snmpObject: ssCpuRawGuest.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+          - prototype: system.cpu.guest_nice
+            
+            oid: 1.3.6.1.4.1.2021.11.66.0
+            type: SNMP
+            snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
+            mib: UCD-SNMP-MIB
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+              - type: JAVASCRIPT
+                params: |
+                  //to get utilization in %, divide by N, where N is number of cores.
+                  return value/{#CPUNUM}
+      - name: Filesystems discovery
+        oid: "discovery[{#STORAGE_DESCR},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
+        key: "snmp.vfs.fs.discovery"
+        description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
+        filter: 
+          evalType: CUSTOM_EXPRESSION
+          formula: (A or B) and C
+          conditions: 
+          - macro: "{#STORAGE_TYPE}"
+            value: ".+(4)"
+            # OID: 1.3.6.1.2.1.25.2.1.4
+            operator: 8
+            formulaid: B
+          - macro: "{#STORAGE_TYPE}"
+            value: ".+(hrStorageFixedDisk)"
+            operator: 8
+            formulaid: A
+          - macro: "{#STORAGE_DESCR}"
+            value: "(.+/shm$|/dev/run|/sys/fs/cgroup|/run.*)"
+            operator: 9
+            formulaid: C
+        metrics:
+          - prototype: vfs.fs.units
+            oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
+            snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
+            alarmObject: "{#STORAGE_DESCR}"
+
+          - prototype: vfs.fs.units.used
+            oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
+            snmpObject: "hrStorageUsed.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
+            alarmObject: "{#STORAGE_DESCR}"
+    
+          - prototype: vfs.fs.units.total
+            oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
+            snmpObject: "hrStorageSize.{#SNMPINDEX}"
+            mib: "HOST-RESOURCES-MIB"
+            vendorDescription: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
+            alarmObject: "{#STORAGE_DESCR}"
+    
+          - prototype: vfs.fs.used
+            application_prototype: Filesystem __ALARM_OBJECT__
+            snmpObject: "storageUsed.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "{#STORAGE_DESCR}"
+    
+          - prototype: vfs.fs.total
+            application_prototype: Filesystem __ALARM_OBJECT__
+            snmpObject: "storageTotal.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "{#STORAGE_DESCR}"
+    
+          - prototype: vfs.fs.pused
+            application_prototype: Filesystem __ALARM_OBJECT__
+            snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
+            type: CALCULATED
+            alarmObject: "{#STORAGE_DESCR}"
+          
+          - prototype: vfs.fs.inode.pfree
+            alarmObject: "{#STORAGE_DESCR}"
+            application_prototype: Filesystem __ALARM_OBJECT__
+            oid: "1.3.6.1.4.1.2021.9.1.10[\"index\",\"1.3.6.1.4.1.2021.9.1.2\", \"{#STORAGE_DESCR}\"]"
+            type: SNMP
+            snmpObject: dskPercentNode.{#STORAGE_DESCR}
+            mib: UCD-SNMP-MIB
+            zbxVer: "4.2"
+            preprocessing:
+              - type: JAVASCRIPT
+                params: return (100-value);
+
       metrics:
         - prototype: system.cpu.load.avg1
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-1\"]"
