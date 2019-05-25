@@ -1893,11 +1893,11 @@ return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0}])
                </master_item>
             </discovery_rule>
             <discovery_rule>
-               <name>Storage Discovery</name>
+               <name>Filesystems discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]</snmp_oid>
-               <key>storage.discovery</key>
+               <snmp_oid>discovery[{#STORAGE_DESCR},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]</snmp_oid>
+               <key>snmp.vfs.fs.discovery</key>
                <delay>1h</delay>
                <status>0</status>
                <allowed_hosts/>
@@ -1917,20 +1917,26 @@ return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0}])
                <privatekey/>
                <port/>
                <filter>
-                  <evaltype>2</evaltype>
-                  <formula/>
+                  <evaltype>3</evaltype>
+                  <formula>(A or B) and C</formula>
                   <conditions>
                      <condition>
                         <macro>{#STORAGE_TYPE}</macro>
-                        <value>.+(4|9)</value>
+                        <value>.+(4)</value>
                         <operator>8</operator>
                         <formulaid>B</formulaid>
                      </condition>
                      <condition>
                         <macro>{#STORAGE_TYPE}</macro>
-                        <value>.+(hrStorageFixedDisk|hrStorageFlashMemory)</value>
+                        <value>.+(hrStorageFixedDisk)</value>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#STORAGE_DESCR}</macro>
+                        <value>(.+/shm$|/dev/run|/sys/fs/cgroup|/run.*)</value>
+                        <operator>9</operator>
+                        <formulaid>C</formulaid>
                      </condition>
                   </conditions>
                </filter>
@@ -1938,7 +1944,7 @@ return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0}])
                <description>HOST-RESOURCES-MIB::hrStorage discovery with storage filter</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Storage units</name>
+                     <name>{#STORAGE_DESCR}: Storage units</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}</snmp_oid>
@@ -2001,7 +2007,7 @@ this number will commonly be greater than one.  Otherwise this number will typic
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Used storage in units</name>
+                     <name>{#STORAGE_DESCR}: Used storage in units</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
@@ -2062,7 +2068,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Total space in units</name>
+                     <name>{#STORAGE_DESCR}: Total space in units</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
@@ -2125,7 +2131,7 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Used space</name>
+                     <name>{#STORAGE_DESCR}: Used space</name>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2154,16 +2160,16 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <port/>
                      <description>Used storage in Bytes</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Storage</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
                      <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#STORAGE_DESCR}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -2185,7 +2191,7 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Total space</name>
+                     <name>{#STORAGE_DESCR}: Total space</name>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2214,16 +2220,16 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <port/>
                      <description>Total space in Bytes</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Storage</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
                      <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#STORAGE_DESCR}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -2245,7 +2251,7 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Space utilization</name>
+                     <name>{#STORAGE_DESCR}: Space utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2272,18 +2278,85 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>Space utilization in % for {#SNMPVALUE}</description>
+                     <description>Space utilization in % for {#STORAGE_DESCR}</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Storage</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
                      <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#STORAGE_DESCR}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#STORAGE_DESCR}: Free inodes in %</name>
+                     <type>4</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.4.1.2021.9.1.10["index","1.3.6.1.4.1.2021.9.1.2", "{#STORAGE_DESCR}"]</snmp_oid>
+                     <key>vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}]</key>
+                     <delay>5m</delay>
+                     <history>90d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>%</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>MIB: UCD-SNMP-MIB</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>21</type>
+                           <params>return (100-value);</params>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#STORAGE_DESCR}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -2307,11 +2380,11 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"} and&#13;
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"} and&#13;
 (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Disk space critical status</name>
+                     <name>{#STORAGE_DESCR}: Disk space critical status</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2319,7 +2392,7 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
-Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"}.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"}.&#13;
  Second condition should be one of the following:&#13;
  - Disk free space is less than 5G.&#13;
  - Disk will be full in less than 24hours.</description>
@@ -2329,11 +2402,11 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_WARN:"{#SNMPVALUE}"} and&#13;
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_WARN:"{#STORAGE_DESCR}"} and&#13;
 (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})&lt;10G or {Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Disk space warning</name>
+                     <name>{#STORAGE_DESCR}: Disk space warning</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2341,7 +2414,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
-Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"}.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"}.&#13;
  Second condition should be one of the following:&#13;
  - Disk free space is less than 10G.&#13;
  - Disk will be full in less than 24hours.</description>
@@ -2349,9 +2422,47 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#SNMPVALUE}: Disk space critical status</name>
-                           <expression>{Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"{#SNMPVALUE}"} and&#13;
+                           <name>{#STORAGE_DESCR}: Disk space critical status</name>
+                           <expression>{Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"} and&#13;
 (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template OS Linux SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}&lt;{$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#STORAGE_DESCR}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}%</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}&lt;{$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#STORAGE_DESCR}: Free inodes is below {$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}%</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#STORAGE_DESCR}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}%</name>
+                           <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}&lt;{$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2360,7 +2471,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>{#SNMPVALUE}: Disk space usage</name>
+                     <name>{#STORAGE_DESCR}: Disk space usage</name>
                      <width>600</width>
                      <height>340</height>
                      <yaxismin>0</yaxismin>
@@ -2430,6 +2541,14 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
          </discovery_rules>
          <httptests/>
          <macros>
+            <macro>
+               <macro>{$INODE_PFREE_CRIT}</macro>
+               <value>10</value>
+            </macro>
+            <macro>
+               <macro>{$INODE_PFREE_WARN}</macro>
+               <value>20</value>
+            </macro>
             <macro>
                <macro>{$MEMORY_AVAILABLE_MIN}</macro>
                <value>20M</value>
