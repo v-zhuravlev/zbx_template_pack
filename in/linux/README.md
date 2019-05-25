@@ -20,9 +20,9 @@ Install node exporter, change {$NODE_EXPORTER_PORT} on the host level value if n
 
 ### SNMP agent
 
-Install snmpd agent on Linux OS, enable SNMPv2. change {$SNMP_COMMUNITY} on the host level in Zabbix.
+Install snmpd agent on Linux OS, enable SNMPv2. Make sure access to UCD-SNMP-MIB is enabled in snmpd. Change {$SNMP_COMMUNITY} on the host level in Zabbix.
 
-## Zabix configuration
+## Zabbix configuration
 
 Change those macros on host level if needed:
 
@@ -45,10 +45,10 @@ See what items are collected in the templates.
 
 |Item|Triggers|Graphs|Zabbix agent template|Prometheus template|SNMP template|
 |---|---|---|---|---|--|
-|system.cpu.load.avg1|y|y|y|y|-|
-|system.cpu.load.avg5|-|y|y|y|-|
-|system.cpu.load.avg15|-|y|y|y|-|
-|system.cpu.num|-|-|-|y|-|
+|system.cpu.load.avg1|y|y|y|y|y|
+|system.cpu.load.avg5|-|y|y|y|y|
+|system.cpu.load.avg15|-|y|y|y|y|
+|system.cpu.num|y|-|-|y|y|
 |system.cpu.util| y* | y | y | y | y |
 |system.cpu.system| - | y | y | y | - |
 |system.cpu.user| - | y | y | y | - |
@@ -104,3 +104,6 @@ https://serverfault.com/questions/714952/lack-of-free-swap-space-on-windows-serv
 https://upload.wikimedia.org/wikipedia/commons/3/30/IO_stack_of_the_Linux_kernel.svg  
 http://www.linfo.org/inode.html  
 https://www.robustperception.io/mapping-iostat-to-the-node-exporters-node_disk_-metrics  
+https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
+https://support.zabbix.com/browse/ZBXNEXT-1302
+http://www.net-snmp.org/docs/mibs/UCD-SNMP-MIB.txt
