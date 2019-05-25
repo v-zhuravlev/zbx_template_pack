@@ -11,17 +11,218 @@
       <template>
          <template>Template OS Linux SNMPv2</template>
          <name>Template OS Linux SNMPv2</name>
-         <description>Template OS Linux version: 0.15</description>
+         <description>Template OS Linux version: 0.15&#13;
+MIBs used:&#13;
+UCD-SNMP-MIB</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
             </group>
          </groups>
-         <applications/>
-         <items/>
+         <applications>
+            <application>
+               <name>Memory</name>
+            </application>
+         </applications>
+         <items>
+            <item>
+               <name>Total swap space</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>1.3.6.1.4.1.2021.4.3.0</snmp_oid>
+               <key>system.swap.total[memTotalSwap.0]</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>MIB: UCD-SNMP-MIB&#13;
+The total amount of swap space configured for this host.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>1</type>
+                     <params>1024</params>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Free swap space</name>
+               <type>4</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>1.3.6.1.4.1.2021.4.4.0</snmp_oid>
+               <key>system.swap.free[memAvailSwap.0]</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>MIB: UCD-SNMP-MIB&#13;
+The amount of swap space currently unused or available.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>1</type>
+                     <params>1024</params>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Free swap space in %</name>
+               <type>15</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>snmp.system.swap.pfree</key>
+               <delay>5m</delay>
+               <history>90d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params>((last(system.swap.free[memAvailSwap.0]))/last(system.swap.total[memTotalSwap.0]))*100</params>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+         </items>
          <discovery_rules/>
          <httptests/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$SWAP_PFREE_WARN}</macro>
+               <value>50</value>
+            </macro>
+         </macros>
          <templates>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
@@ -40,6 +241,24 @@
       </template>
    </templates>
    <graphs/>
-   <triggers/>
+   <triggers>
+      <trigger>
+         <expression>{Template OS Linux SNMPv2:snmp.system.swap.pfree.last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Linux SNMPv2:system.swap.total[memTotalSwap.0].last()}&gt;0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger is ignored, if there is no swap configured</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+   </triggers>
    <value_maps/>
 </zabbix_export>
