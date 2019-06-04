@@ -115,6 +115,8 @@ https://serverfault.com/questions/714952/lack-of-free-swap-space-on-windows-serv
 https://upload.wikimedia.org/wikipedia/commons/3/30/IO_stack_of_the_Linux_kernel.svg  
 http://www.linfo.org/inode.html  
 https://www.robustperception.io/mapping-iostat-to-the-node-exporters-node_disk_-metrics  
+https://contextswitching.tumblr.com/post/156398304918/how-is-the-await-field-in-iostat-calculated  
 https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
 https://support.zabbix.com/browse/ZBXNEXT-1302
 http://www.net-snmp.org/docs/mibs/UCD-SNMP-MIB.txt
+https://www.percona.com/blog/2017/08/28/looking-disk-utilization-and-saturation/  
