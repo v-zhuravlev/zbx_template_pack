@@ -356,6 +356,166 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "Block devices discovery",
+                    "key": "node_exporter.vfs.dev.discovery",
+                    "masterItem": "node_exporter.get",
+                    "type": "DEPENDENT_ITEM",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "node_disk_io_now{device=~\".+\"}"
+                        }
+                    ],
+                    "lld_macro_paths": [
+                        {
+                            "lld_macro": "{#DEVNAME}",
+                            "path": "$.labels.device"
+                        },
+                        {
+                            "lld_macro": "{#HELP}",
+                            "path": "$.help"
+                        }
+                    ],
+                    "metrics": [
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.read.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.vfs.dev.read.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "units": "!r/s",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_disk_reads_completed_total{device=\"{#DEVNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "r/s. The number (after merges) of read requests completed per second for the device."
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.write.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.vfs.dev.write.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "units": "!w/s",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_disk_writes_completed_total{device=\"{#DEVNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "w/s. The number (after merges) of write requests completed per second for the device."
+                        },
+
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.read.time.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.vfs.dev.read.time.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_disk_read_time_seconds_total{device=\"{#DEVNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "Rate of total read time counter. Used in r_await calculation"
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.write.time.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "key": "node_exporter.vfs.dev.write.time.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_disk_write_time_seconds_total{device=\"{#DEVNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "Rate of total write time counter. Used in w_await calculation"
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.read.await",
+                            "key": "node_exporter.vfs.dev.read.await[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "CALCULATED",
+                            "expression_formula": "(last(__vfs.dev.read.time.rate__)/(last(__vfs.dev.read.rate__)+(last(__vfs.dev.read.rate__)=0)))*1000*(last(__vfs.dev.read.rate__) > 0)",
+                            "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.write.await",
+                            "key": "node_exporter.vfs.dev.write.await[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "CALCULATED",
+                            "expression_formula": "(last(__vfs.dev.write.time.rate__)/(last(__vfs.dev.write.rate__)+(last(__vfs.dev.write.rate__)=0)))*1000*(last(__vfs.dev.write.rate__) > 0)",
+                            "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.queue_size",
+                            "key": "node_exporter.vfs.dev.queue_size[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_disk_io_time_weighted_seconds_total{device=\"{#DEVNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.util",
+                            "key": "node_exporter.vfs.dev.util[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "node_exporter.get",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_disk_io_time_seconds_total{device=\"{#DEVNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "100"
+                                }
+                            ]
+                        }
+
+                    ]
                 }
             ],
             "metrics": [
