@@ -85,6 +85,13 @@ See what items are collected in the templates.
 |vfs.fs.used| y | y | y | y | y |
 |vfs.fs.pused| y | - | y | y | y |
 |vfs.fs.inode.pfree| y | - | y | y | y |
+|vfs.dev.read.rate| y | - | y | y | y |
+|vfs.dev.write.rate| y | - | y | y | y |
+|vfs.dev.read.await| y | - | y | y | - |
+|vfs.dev.write.await| y | - | y | y | - |
+|vfs.dev.queue_size| y | - | y | y | - |
+|vfs.dev.util| y | - | y | y | y |
+
 
 \* for SNMP only
 

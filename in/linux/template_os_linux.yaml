@@ -10,6 +10,46 @@ templates:
         - SNMP_DEVICE
         - INTERFACES
       discoveryRules:
+      - name: Block devices discovery
+        key: snmp.vfs.dev.discovery
+        type: SNMP
+        oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
+        filter: 
+          evalType: "AND"
+          conditions: 
+            - macro: "{#DEVNAME}"
+              value: "(loop[\\d]*|sda([\\d])+)"
+              operator: 9
+              formulaid: A
+        metrics:
+          - prototype: vfs.dev.read.rate
+            alarmObject: "{#DEVNAME}"
+            application_prototype: "Disk __ALARM_OBJECT__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
+            snmpObject: diskIOReads.{#SNMPINDEX}
+            mib: UCD-DISKIO-MIB
+            vendorDescription: The number of read accesses from this device since boot.
+            units: "!r/s"
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+          - prototype: vfs.dev.write.rate
+            alarmObject: "{#DEVNAME}"
+            application_prototype: "Disk __ALARM_OBJECT__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
+            snmpObject: diskIOWrites.{#SNMPINDEX}
+            mib: UCD-DISKIO-MIB
+            vendorDescription: The number of write accesses from this device since boot.
+            units: "!w/s"
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+          - prototype: vfs.dev.util
+            alarmObject: "{#DEVNAME}"
+            application_prototype: "Disk __ALARM_OBJECT__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
+            snmpObject: diskIOLA1.{#SNMPINDEX}
+            mib: UCD-DISKIO-MIB
+            vendorDescription: The 1 minute average load of disk (%)
+            
       - name: CPU discovery
         type: DEPENDENT_ITEM
         masterItem: system.cpu.num
