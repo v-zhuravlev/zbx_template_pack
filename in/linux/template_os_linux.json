@@ -67,10 +67,208 @@
                                 "application_prototype": "Filesystem __ALARM_OBJECT__"
                             }
                     ]
+                },
+                {
+                    "name": "Block devices discovery",
+                    "key": "vfs.dev.discovery",
+                    "masterItem": "vfs.dev.diskstats",
+                    "type": "DEPENDENT_ITEM",
+                    "preprocessing": [
+                        {
+                            "type": "JSONPATH",
+                            "params": "$.lld"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+                            "params": "1h"
+                        }
+                    ],
+                    "filter": {
+                        "evalType":"AND",
+                        "conditions":[
+                            {
+                                "macro": "{#DEVNAME}",
+                                "value": "(loop[\\d]*|sda([\\d])+)",
+                                "operator":"9", //doesn't match
+                                "formulaid":"A"
+                            }
+                        ],
+                    },
+                    "metrics": [
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.read.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "vfs.dev.diskstats",
+                            "key": "vfs.dev.read.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "units": "!r/s",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][3]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "r/s. The number (after merges) of read requests completed per second for the device."
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.write.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "vfs.dev.diskstats",
+                            "key": "vfs.dev.write.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "units": "!w/s",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][7]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "w/s. The number (after merges) of write requests completed per second for the device."
+                        },
+
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.read.time.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "vfs.dev.diskstats",
+                            "key": "vfs.dev.read.time.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][6]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //convert 'ms' to 'seconds'
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.001"
+                                }
+                            ],
+                            "description": "Rate of total read time counter. Used in r_await calculation"
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "prototype": "vfs.dev.write.time.rate",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "vfs.dev.diskstats",
+                            "key": "vfs.dev.write.time.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][10]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //convert 'ms' to 'seconds'
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.001"
+                                }
+                            ],
+                            "description": "Rate of total write time counter. Used in w_await calculation"
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.read.await",
+                            "key": "vfs.dev.read.await[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "CALCULATED",
+                            "expression_formula": "(last(__vfs.dev.read.time.rate__)/(last(__vfs.dev.read.rate__)+(last(__vfs.dev.read.rate__)=0)))*1000*(last(__vfs.dev.read.rate__) > 0)",
+                            "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.write.await",
+                            "key": "vfs.dev.write.await[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "CALCULATED",
+                            "expression_formula": "(last(__vfs.dev.write.time.rate__)/(last(__vfs.dev.write.rate__)+(last(__vfs.dev.write.rate__)=0)))*1000*(last(__vfs.dev.write.rate__) > 0)",
+                            "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.queue_size",
+                            "key": "vfs.dev.queue_size[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "vfs.dev.diskstats",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][13]"
+                                    
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //to 'seconds'
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.001"
+                                }
+                            ]
+                        },
+                        {
+                            "alarmObject": "{#DEVNAME}",
+                            "prototype": "vfs.dev.util",
+                            "key": "vfs.dev.util[{#DEVNAME}]",
+                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "type": "DEPENDENT_ITEM",
+                            "masterItem": "vfs.dev.diskstats",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][12]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //to 'seconds'(0.001) and * 100%
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.1"
+                                }
+                            ]
+                        }
+                    ]
                 }
                 
             ],
             "metrics": [
+                //master item for proc diskstats
+                {
+                    "id": "vfs.dev.diskstats",
+                    "key": "vfs.file.contents[/proc/diskstats]",
+                    "type": "ZABBIX_AGENT",
+                    "valueType": "TEXT",
+                    "name": "Get /proc/diskstats",
+                    "group": "Internal_items",
+                    "delay": "1m",
+                    "history": "1d",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "var parsed = value.split(\"\\n\").reduce(function(acc, x, i) {\n  acc[\"values\"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)\n  acc[\"lld\"].push({\"{#DEVNAME}\":x.split(/ +/)[3]});\n  return acc;\n}, {\"values\":{}, \"lld\": []});\n\nreturn JSON.stringify(parsed);"
+                        }
+                    ]
+                },
                 //CPU
                 {
                     "prototype": "system.cpu.load.avg1",
@@ -209,6 +407,7 @@
                     "key": "system.swap.size[,pfree]",
                     "type": "ZABBIX_AGENT"
                 }
+                
 
             ],
             "macros": [
