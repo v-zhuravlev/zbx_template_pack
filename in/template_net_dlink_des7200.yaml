@@ -14,7 +14,7 @@ templates:
         metrics:
           - prototype: vm.memory.pused
             # intetionally commented out
-            # alarmObject: "{#SNMPINDEX}"
+            # resource: "{#SNMPINDEX}"
             oid: "1.3.6.1.4.1.171.10.97.2.35.1.1.1.3.{#SNMPINDEX}"
             snmpObject: "myMemoryPoolCurrentUtilization.{#SNMPINDEX}"
             mib: "MY-MEMORY-MIB"
@@ -29,7 +29,7 @@ templates:
             snmpObject: "mySystemTemperatureCurrent.{#SNMPINDEX}"
             mib: "MY-SYSTEM-MIB"
             vendorDescription: "Return the current temperature of the FastSwitch.The temperature display is not supported for the current temperature returns to 0."
-            alarmObject: "{#SNMPVALUE}" 
+            resource: "{#SNMPVALUE}" 
       - name: "PSU Discovery"
         snmp_oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.171.10.97.2.1.1.18.1.3]"
         key: "psu.discovery"
@@ -38,7 +38,7 @@ templates:
             oid: "1.3.6.1.4.1.171.10.97.2.1.1.18.1.2.{#SNMPINDEX}"
             snmpObject: "mySystemElectricalSourceIsNormal.{#SNMPINDEX}"
             mib: "MY-SYSTEM-MIB"
-            alarmObject: "{#SNMPVALUE}"
+            resource: "{#SNMPVALUE}"
             valueMap: "MY-SYSTEM-MIB::mySystemFanIsNormal" 
             triggers:
               - prototype: psu.crit
@@ -50,7 +50,7 @@ templates:
             oid: "1.3.6.1.4.1.171.10.97.2.1.1.21.1.2.{#SNMPINDEX}"
             snmpObject: "mySystemFanIsNormal.{#SNMPINDEX}"
             mib: "MY-SYSTEM-MIB"
-            alarmObject: "{#SNMPVALUE}"
+            resource: "{#SNMPVALUE}"
             valueMap: "MY-SYSTEM-MIB::mySystemFanIsNormal"
             triggers:
               - prototype: fan.crit

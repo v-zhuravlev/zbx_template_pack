@@ -27,7 +27,7 @@ templates:
       vendorDescription: The average, over the last minute, of the percentage of time
         that this processor was not idle. Implementations may approximate this one
         minute smoothing period if necessary.
-      alarmObject: "#{#SNMPINDEX}"
+      resource: "#{#SNMPINDEX}"
   - name: Temperature Discovery CPU
     oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.11]
     key: mtxrHlProcessorTemperature.discovery
@@ -44,8 +44,8 @@ templates:
       mib: MIKROTIK-MIB
       vendorDescription: "(mtxrHlProcessorTemperature) Processor temperature in Celsius
         (degrees C). Might be missing in entry models (RB750, RB450G..)"
-      alarmObject: CPU
-      alarmObjectType: CPU
+      resource: CPU
+      resourceType: CPU
       preprocessing:
       - type: MULTIPLIER
         params: '0.1'
@@ -71,7 +71,7 @@ templates:
         preprocessing:
           - type: MULTIPLIER
             params: '1024'
-        alarmObject: "Disk-{#SNMPINDEX}"
+        resource: "Disk-{#SNMPINDEX}"
       - prototype: vfs.fs.total
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
         oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
@@ -89,10 +89,10 @@ templates:
         preprocessing:
           - type: MULTIPLIER
             params: '1024'
-        alarmObject: "Disk-{#SNMPINDEX}"        
+        resource: "Disk-{#SNMPINDEX}"        
       - prototype: vfs.fs.pused
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
-        alarmObject: "Disk-{#SNMPINDEX}"
+        resource: "Disk-{#SNMPINDEX}"
         type: CALCULATED
   metrics:
   - prototype: vm.memory.used
@@ -132,8 +132,8 @@ templates:
     vendorDescription: "(mtxrHlTemperature) Device temperature in Celsius (degrees
       C). Might be missing in entry models (RB750, RB450G..)"
     ref: http://wiki.mikrotik.com/wiki/Manual:SNMP
-    alarmObject: Device
-    alarmObjectType: Device
+    resource: Device
+    resourceType: Device
     preprocessing:
     - type: MULTIPLIER
       params: '0.1'

@@ -34,7 +34,7 @@
                             "oid": "1.3.6.1.4.1.10222.2.1.9.8.1.8.{#SNMPINDEX}",
                             "snmpObject": "icsChassisSensorSlotValue.{#SNMPINDEX}",
                             "mib": "ICS-CHASSIS-MIB",
-                            "alarmObject": "{#SENSOR_INFO}",
+                            "resource": "{#SENSOR_INFO}",
                             "vendorDescription": "The current value read from the sensor.",
                             "triggers": [
                                 {
@@ -53,7 +53,7 @@
                             "oid": "1.3.6.1.4.1.10222.2.1.9.8.1.3.{#SNMPINDEX}",
                             "snmpObject": "icsChassisSensorSlotOperStatus.{#SNMPINDEX}",
                             "mib": "ICS-CHASSIS-MIB",
-                            "alarmObject": "{#SENSOR_INFO}",
+                            "resource": "{#SENSOR_INFO}",
                             "vendorDescription": "The operational status of the sensor.",
                             "valueMap": "ICS-CHASSIS-MIB::icsChassisSensorSlotOperStatus"
                         }
@@ -80,7 +80,7 @@
                             "oid": "1.3.6.1.4.1.10222.2.1.1.10.1.1.{#SNMPINDEX}",
                             "snmpObject": "icsChassisSystemUnitFruSerialNumber.{#SNMPINDEX}",
                             "mib": "ICS-CHASSIS-MIB",
-                            "alarmObject": "{#ENT_NAME}",
+                            "resource": "{#ENT_NAME}",
                             "vendorDescription": "The serial number of the FRU.  If not available, this value is a zero-length string."
                         }
                     ]
@@ -96,7 +96,7 @@
                             "oid": "1.3.6.1.4.1.10222.2.1.4.7.1.3.{#SNMPINDEX}",
                             "snmpObject": "icsChassisPowerSupplyEntry.{#SNMPINDEX}",
                             "mib": "ICS-CHASSIS-MIB",
-                            "alarmObject": "{#SNMPVALUE}",
+                            "resource": "{#SNMPVALUE}",
                             "valueMap": "ICS-CHASSIS-MIB::icsChassisPowerSupplyOperStatus",
                             "vendorDescription": "Actual status of the power supply:\r\n(1) unknown: status not known.\r\n(2) disabled: power supply is disabled.\r\n(3) failed - power supply is unable to supply power due to failure.\r\n(4) warning - power supply is supplying power, but an output or sensor is bad or warning.\r\n(5) standby - power supply believed usable,but not supplying power.\r\n(6) engaged - power supply is supplying power.\r\n(7) redundant - power supply is supplying power, but not needed.\r\n(8) notPresent - power supply is supplying power is not present.",
                             "triggers": [
@@ -121,7 +121,7 @@
                             "oid": "1.3.6.1.4.1.10222.2.1.6.5.1.3.{#SNMPINDEX}",
                             "snmpObject": "icsChassisFanOperStatus.{#SNMPINDEX}",
                             "mib": "ICS-CHASSIS-MIB",
-                            "alarmObject": "{#SNMPVALUE}",
+                            "resource": "{#SNMPVALUE}",
                             "valueMap": "ICS-CHASSIS-MIB::icsChassisFanOperStatus",
                             "vendorDescription": "The operational status of the fan unit.",
                             "triggers": [
@@ -139,30 +139,34 @@
                 <oid>1.3.6.1.4.1.10222.2.1.5.1.0</oid>
                 <snmpObject>icsChassisTemperatureStatus.0</snmpObject>
                 <mib>ICS-CHASSIS-MIB</mib>
-                <alarmObjectType>Device</alarmObjectType>
-                <alarmObject>Device</alarmObject>
+                <resourceType>Device</resourceType>
+                <resource>Device</resource>
                 <vendorDescription>The cabinet temperature. Chassis types which do not have temperature sensors will always return 'noSensor(6)'</vendorDescription>
                 <valueMap>ICS-CHASSIS-MIB::icsChassisTemperatureStatus</valueMap>
                 </sensor.temp.status> -->*/
                 {
-                    "prototype": "system.hw.model",//<!-- QLogic 12300 - Firmware Version: 7.1.0.0.58, Apr 12 2012 -->
+                    "prototype": "system.hw.model", //<!-- QLogic 12300 - Firmware Version: 7.1.0.0.58, Apr 12 2012 -->
                     "oid": "1.3.6.1.4.1.10222.2.1.1.1.0",
                     "snmpObject": "icsChassisSystemDescription.0",
                     "mib": "ICS-CHASSIS-MIB",
-                    "preprocessing": [{
-                        "type": "REGEX",
-                        "params": "(.+) - Firmware\r\n\\1"
-                    }]
+                    "preprocessing": [
+                        {
+                            "type": "REGEX",
+                            "params": "(.+) - Firmware\r\n\\1"
+                        }
+                    ]
                 },
                 {
-                    "prototype": "system.hw.firmware",//<!-- QLogic 12300 - Firmware Version: 7.1.0.0.58, Apr 12 2012 -->
+                    "prototype": "system.hw.firmware", //<!-- QLogic 12300 - Firmware Version: 7.1.0.0.58, Apr 12 2012 -->
                     "oid": "1.3.6.1.4.1.10222.2.1.1.1.0",
                     "snmpObject": "icsChassisSystemDescription.0",
                     "mib": "ICS-CHASSIS-MIB",
-                    "preprocessing": [{
-                        "type": "REGEX",
-                        "params": "Firmware Version: ([0-9.]+),\r\n\\1"
-                    }]
+                    "preprocessing": [
+                        {
+                            "type": "REGEX",
+                            "params": "Firmware Version: ([0-9.]+),\r\n\\1"
+                        }
+                    ]
                 }
             ],
             "macros": [

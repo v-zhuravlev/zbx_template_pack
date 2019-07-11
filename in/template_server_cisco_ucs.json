@@ -31,16 +31,16 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.4.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitMbTempStatsAmbientTemp.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#SENSOR_LOCATION}.Ambient",
-              "alarmObjectType": "Ambient"
+              "resource": "{#SENSOR_LOCATION}.Ambient",
+              "resourceType": "Ambient"
             },
             {
               "prototype": "sensor.temp.value",
               "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.8.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitMbTempStatsFrontTemp.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#SENSOR_LOCATION}.Front",
-              "alarmObjectType": "Ambient",
+              "resource": "{#SENSOR_LOCATION}.Front",
+              "resourceType": "Ambient",
               "vendorDescription": "Cisco UCS compute:RackUnitMbTempStats:frontTemp managed object property"
             },
             {
@@ -48,8 +48,8 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.21.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitMbTempStatsRearTemp.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#SENSOR_LOCATION}.Rear",
-              "alarmObjectType": "Ambient",
+              "resource": "{#SENSOR_LOCATION}.Rear",
+              "resourceType": "Ambient",
               "vendorDescription": "Cisco UCS compute:RackUnitMbTempStats:rearTemp managed object property"
             },
             {
@@ -57,8 +57,8 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.9.44.1.13.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitMbTempSltatsIoh1Temp.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#SENSOR_LOCATION}.IOH",
-              "alarmObjectType": "Ambient",
+              "resource": "{#SENSOR_LOCATION}.IOH",
+              "resourceType": "Ambient",
               "vendorDescription": "Cisco UCS compute:RackUnitMbTempStats:ioh1Temp managed object property"
             }
           ]
@@ -73,8 +73,8 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.41.2.1.10.{#SNMPINDEX}",
               "snmpObject": "cucsProcessorEnvStatsTemperature.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-PROCESSOR-MIB",
-              "alarmObject": "{#SENSOR_LOCATION}",
-              "alarmObjectType": "CPU",
+              "resource": "{#SENSOR_LOCATION}",
+              "resourceType": "CPU",
               "vendorDescription": "Cisco UCS processor:EnvStats:temperature managed object property"
             }
           ]
@@ -89,17 +89,17 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.15.56.1.7.{#SNMPINDEX}",
               "snmpObject": "cucsEquipmentPsuOperState.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-EQUIPMENT-MIB",
-              "alarmObject": "{#PSU_LOCATION}",
+              "resource": "{#PSU_LOCATION}",
               "vendorDescription": "Cisco UCS equipment:Psu:operState managed object property",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
-              "triggers":[
+              "triggers": [
                 {
-                  "prototype":"psu.crit",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                  "prototype": "psu.crit",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"inoperable\"},eq)}=1"
                 },
                 {
-                  "prototype":"psu.warn",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"degraded\"},eq)}=1"
+                  "prototype": "psu.warn",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"degraded\"},eq)}=1"
                 }
               ]
             }
@@ -115,17 +115,17 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.9.35.1.42.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitOperState.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#UNIT_LOCATION}",
+              "resource": "{#UNIT_LOCATION}",
               "vendorDescription": "Cisco UCS compute:RackUnit:operState managed object property",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsLsOperState",
               "triggers": [
                 {
-                  "prototype":"health.crit",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"computeFailed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"configFailure\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"unconfigFailure\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                  "prototype": "health.crit",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"computeFailed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"configFailure\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"unconfigFailure\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_CRIT_STATUS:\"inoperable\"},eq)}=1"
                 },
                 {
-                  "prototype":"health.warn",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"testFailed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"thermalProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"powerProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"voltageProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"diagnosticsFailed\"},eq)}=1"
+                  "prototype": "health.warn",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"testFailed\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"thermalProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"powerProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"voltageProblem\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$HEALTH_WARN_STATUS:\"diagnosticsFailed\"},eq)}=1"
                 }
               ]
             },
@@ -134,7 +134,7 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.9.35.1.32.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitModel.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#UNIT_LOCATION}",
+              "resource": "{#UNIT_LOCATION}",
               "vendorDescription": "Cisco UCS compute:RackUnit:model managed object property"
             },
             {
@@ -142,7 +142,7 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.9.35.1.47.{#SNMPINDEX}",
               "snmpObject": "cucsComputeRackUnitSerial.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-COMPUTE-MIB",
-              "alarmObject": "{#UNIT_LOCATION}",
+              "resource": "{#UNIT_LOCATION}",
               "vendorDescription": "Cisco UCS compute:RackUnit:serial managed object property"
             }
           ]
@@ -157,17 +157,17 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.15.12.1.9.{#SNMPINDEX}",
               "snmpObject": "cucsEquipmentFanOperState.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-EQUIPMENT-MIB",
-              "alarmObject": "{#FAN_LOCATION}",
+              "resource": "{#FAN_LOCATION}",
               "vendorDescription": "Cisco UCS equipment:Fan:operState managed object property",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
-              "triggers":[
+              "triggers": [
                 {
-                  "prototype":"fan.crit",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"inoperable\"},eq)}=1"
+                  "prototype": "fan.crit",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"inoperable\"},eq)}=1"
                 },
                 {
-                  "prototype":"fan.warn",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"degraded\"},eq)}=1"
+                  "prototype": "fan.warn",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"degraded\"},eq)}=1"
                 }
               ]
             }
@@ -185,16 +185,16 @@
               "snmpObject": "cucsStorageLocalDiskDiskState.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
               "vendorDescription": "Cisco UCS storage:LocalDisk:diskState managed object property.",
-              "alarmObject": "{#DISK_LOCATION}",
+              "resource": "{#DISK_LOCATION}",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStoragePDriveStatus",
               "triggers": [
                 {
                   "prototype": "disk.fail",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"failed\"},eq)}=1"
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS:\"failed\"},eq)}=1"
                 },
                 {
                   "prototype": "disk.crit",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS:\"bad\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS:\"predictiveFailure\"},eq)}=1"
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS:\"bad\"},eq)}=1 or {TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS:\"predictiveFailure\"},eq)}=1"
                 }
               ]
             },
@@ -203,7 +203,7 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.12.{#SNMPINDEX}",
               "snmpObject": "cucsStorageLocalDiskSerial.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
-              "alarmObject": "{#DISK_LOCATION}",
+              "resource": "{#DISK_LOCATION}",
               "vendorDescription": "Cisco UCS storage:LocalDisk:serial managed object property. Actually returns part number code"
             },
             {
@@ -212,7 +212,7 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.7.{#SNMPINDEX}",
               "snmpObject": "cucsStorageLocalDiskModel.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
-              "alarmObject": "{#DISK_LOCATION}",
+              "resource": "{#DISK_LOCATION}",
               "vendorDescription": "Cisco UCS storage:LocalDisk:model managed object property. Actually returns 'HDD' or 'SSD'",
               "valueType": "CHAR"
             },
@@ -222,7 +222,7 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.45.4.1.13.{#SNMPINDEX}",
               "snmpObject": "cucsStorageLocalDiskSize.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
-              "alarmObject": "{#DISK_LOCATION}",
+              "resource": "{#DISK_LOCATION}",
               "vendorDescription": "Cisco UCS storage:LocalDisk:size managed object property. In MB.",
               "preprocessing": [
                 {
@@ -246,11 +246,11 @@
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
               "vendorDescription": "Cisco UCS storage:LocalLun:presence managed object property",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentPresence",
-              "alarmObject": "{#VDISK_LOCATION}",
-              "triggers":[
+              "resource": "{#VDISK_LOCATION}",
+              "triggers": [
                 {
-                  "prototype":"vdisk.notok",
-                  "expression":"{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_OK_STATUS:\"equipped\"},ne)}=1"
+                  "prototype": "vdisk.notok",
+                  "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_OK_STATUS:\"equipped\"},ne)}=1"
                 }
               ]
             },
@@ -261,7 +261,7 @@
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
               "vendorDescription": "Cisco UCS storage:LocalLun:type managed object property",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStorageLunType",
-              "alarmObject": "{#VDISK_LOCATION}"
+              "resource": "{#VDISK_LOCATION}"
             },
             {
               "prototype": "system.hw.virtualdisk.size",
@@ -270,7 +270,7 @@
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
               "vendorDescription": "Cisco UCS storage:LocalLun:size managed object property in MB.",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsStorageLunType",
-              "alarmObject": "{#VDISK_LOCATION}",
+              "resource": "{#VDISK_LOCATION}",
               "preprocessing": [
                 {
                   "type": "MULTIPLIER",
@@ -291,19 +291,19 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.45.1.1.6.{#SNMPINDEX}",
               "snmpObject": "cucsStorageControllerOperState.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
-              "alarmObject": "{#DISKARRAY_LOCATION}",
+              "resource": "{#DISKARRAY_LOCATION}",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
-              "triggers":[
+              "triggers": [
                 {
-                  "prototype":"disk_array.crit",
+                  "prototype": "disk_array.crit",
                   "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CRIT_STATUS:\"inoperable\"},eq)}=1"
                 },
                 {
-                  "prototype":"disk_array.warn",
+                  "prototype": "disk_array.warn",
                   "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_WARN_STATUS:\"degraded\"},eq)}=1"
                 },
                 {
-                  "prototype":"disk_array.notok",
+                  "prototype": "disk_array.notok",
                   "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_OK_STATUS:\"operable\"},ne)}=1"
                 }
               ]
@@ -313,7 +313,7 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.45.1.1.5.{#SNMPINDEX}",
               "snmpObject": "cucsStorageControllerModel.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
-              "alarmObject": "{#DISKARRAY_LOCATION}"
+              "resource": "{#DISKARRAY_LOCATION}"
             }
           ]
         },
@@ -328,14 +328,14 @@
               "oid": "1.3.6.1.4.1.9.9.719.1.45.11.1.9.{#SNMPINDEX}",
               "snmpObject": "cucsStorageRaidBatteryOperability.{#SNMPINDEX}",
               "mib": "CISCO-UNIFIED-COMPUTING-STORAGE-MIB",
-              "alarmObject": "{#DISKARRAY_CACHE_LOCATION}",
+              "resource": "{#DISKARRAY_CACHE_LOCATION}",
               "valueMap": "CISCO-UNIFIED-COMPUTING-TC-MIB::CucsEquipmentOperability",
-              "triggers":[
+              "triggers": [
                 {
-                  "prototype":"diskarray.cache.battery.crit"
+                  "prototype": "diskarray.cache.battery.crit"
                 },
                 {
-                  "prototype":"diskarray.cache.battery.notok"
+                  "prototype": "diskarray.cache.battery.notok"
                 }
               ]
             }
@@ -441,7 +441,6 @@
           "value": "204"
         }
       ]
-
     }
   ],
   "value_maps": [

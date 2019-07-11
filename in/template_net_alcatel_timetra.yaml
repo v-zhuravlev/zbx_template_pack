@@ -81,7 +81,7 @@ templates:
             snmpObject: "tmnxHwTemperature.{#SNMPINDEX}"
             mib: "TIMETRA-SYSTEM-MIB"
             vendorDescription: "The current temperature reading in degrees celsius from this hardware component's temperature sensor.  If this component does not contain a temperature sensor, then the value -1 is returned."
-            alarmObject: "{#SNMPVALUE}"
+            resource: "{#SNMPVALUE}"
       - name: "FAN Discovery"
         oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6527.3.1.2.2.1.4.1.2]"
         key: "fan.discovery"
@@ -100,7 +100,7 @@ templates:
             snmpObject: "tmnxChassisFanOperStatus.{#SNMPINDEX}"
             mib: "TIMETRA-SYSTEM-MIB"
             vendorDescription: "Current status of the Fan tray."
-            alarmObject: "#{#SNMPINDEX}"
+            resource: "#{#SNMPINDEX}"
             valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
             triggers: [{
               "prototype":"fan.crit"
@@ -119,7 +119,7 @@ templates:
              For any other type, this represents the overall status of the power supply.
              If tmnxChassisPowerSupply1Status is'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
              A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
-            alarmObject: "#{#SNMPINDEX}"
+            resource: "#{#SNMPINDEX}"
             valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
             triggers: [{
               "prototype":"psu.crit"
@@ -134,7 +134,7 @@ templates:
              For any other type, this field is unused and set to 'deviceNotEquipped'.
              If tmnxChassisPowerSupply2Status is 'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
              A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
-            alarmObject: "#{#SNMPINDEX}"
+            resource: "#{#SNMPINDEX}"
             valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
             triggers: [{
               "prototype":"psu.crit"
@@ -156,7 +156,7 @@ templates:
             oid: "1.3.6.1.4.1.6527.3.1.2.2.1.8.1.5.{#SNMPINDEX}"
             snmpObject: "tmnxHwSerialNumber.{#SNMPINDEX}"
             mib: "TIMETRA-CHASSIS-MIB"
-            alarmObject: "{#ENT_NAME}"
+            resource: "{#ENT_NAME}"
 value_maps: 
  -
   name: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"

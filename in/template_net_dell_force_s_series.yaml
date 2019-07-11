@@ -19,20 +19,20 @@ templates:
           snmpObject: "chStackUnitCpuUtil1Min.{#SNMPINDEX}"
           mib: "F10-S-SERIES-CHASSIS-MIB"
           vendorDescription: "CPU utilization in percentage for last 1 minute."
-          alarmObject: "#{#SNMPINDEX}"
+          resource: "#{#SNMPINDEX}"
         - prototype: vm.memory.pused
           oid: "1.3.6.1.4.1.6027.3.10.1.2.9.1.5.{#SNMPINDEX}"
           snmpObject: "chStackUnitMemUsageUtil.{#SNMPINDEX}"
           mib: "F10-S-SERIES-CHASSIS-MIB"
           vendorDescription: "Total memory usage in percentage."
-          alarmObject: "#{#SNMPINDEX}"
+          resource: "#{#SNMPINDEX}"
           # <!--could not be found on the real device. 	    <vfs.fs.pused>
           #         <oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.6.{#SNMPINDEX}</oid>
           #         <snmpObject>chStackUnitFlashUsageUtil.{#SNMPINDEX}</snmpObject>
           #         <mib>F10-S-SERIES-CHASSIS-MIB</mib>
           #         <vendorDescription>Total flash usage in percentage.</vendorDescription>
           #         <discoveryRule>CPU and Memory and Flash Discovery</discoveryRule>
-          #         <alarmObject>#{#SNMPINDEX}</alarmObject>
+          #         <resource>#{#SNMPINDEX}</resource>
           # </vfs.fs.pused> -->
       - 
         name: "PSU Discovery"
@@ -44,7 +44,7 @@ templates:
             oid: "1.3.6.1.4.1.6027.3.10.1.2.3.1.2.{#SNMPINDEX}"
             snmpObject: "chSysPowerSupplyOperStatus.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "PSU {#SNMPVALUE}"
+            resource: "PSU {#SNMPVALUE}"
             valueMap: "F10-S-SERIES-CHASSIS-MIB::chSysPowerSupplyOperStatus"
             vendorDescription: "The status of the power supply {#SNMPVALUE}"
             triggers:
@@ -59,7 +59,7 @@ templates:
             oid: "1.3.6.1.4.1.6027.3.10.1.2.4.1.2.{#SNMPINDEX}"
             snmpObject: "chSysFanTrayOperStatus.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "Fan {#SNMPVALUE}"
+            resource: "Fan {#SNMPVALUE}"
             valueMap: "F10-S-SERIES-CHASSIS-MIB::chSysFanTrayOperStatus"
             vendorDescription: "The status of the fan tray {#SNMPVALUE}."
             triggers:
@@ -74,31 +74,31 @@ templates:
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.14.{#SNMPINDEX}"
             snmpObject: "chStackUnitTemp.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "Device {#SNMPVALUE}"
+            resource: "Device {#SNMPVALUE}"
             vendorDescription: "The temperature of the unit."
           - prototype: system.hw.model
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.7.{#SNMPINDEX}"
             snmpObject: "chStackUnitModelID.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "#{#SNMPVALUE}"
+            resource: "#{#SNMPVALUE}"
             vendorDescription: "The plugged-in model ID for this unit."
           - prototype: system.hw.serialnumber
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.12.{#SNMPINDEX}"
             snmpObject: "chStackUnitSerialNumber.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "#{#SNMPVALUE}"
+            resource: "#{#SNMPVALUE}"
             vendorDescription: "The unit's serial number."
           - prototype: system.hw.version
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.21.{#SNMPINDEX}"
             snmpObject: "chStackUnitProductRev.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "#{#SNMPVALUE}"
+            resource: "#{#SNMPVALUE}"
             vendorDescription: "The unit manufacturer's product revision"
           - prototype: system.sw.os
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.10.{#SNMPINDEX}"
             snmpObject: "chStackUnitCodeVersion.{#SNMPINDEX}"
             mib: "F10-S-SERIES-CHASSIS-MIB"
-            alarmObject: "#{#SNMPVALUE}"
+            resource: "#{#SNMPVALUE}"
             vendorDescription: "Current code version of this unit."
     macros:
       - macro: "{$TEMP_CRIT}"
