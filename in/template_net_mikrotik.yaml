@@ -19,7 +19,7 @@ templates:
     oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
     key: hrProcessorLoad.discovery
     description: HOST-RESOURCES-MIB::hrProcessorTable discovery
-    metrics:
+    items:
     - prototype: system.cpu.util
       snmpObject: hrProcessorLoad.{#SNMPINDEX}
       oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
@@ -34,7 +34,7 @@ templates:
     description: "MIKROTIK-MIB::mtxrHlProcessorTemperature\nSince temperature
       of CPU is not available on all Mikrotik hardware, this is done to avoid unsupported
       items."
-    metrics:
+    items:
     - prototype: sensor.temp.value
       type: SNMP
       vendorDocumentation: Discovery is used since this metric is not present on all
@@ -62,7 +62,7 @@ templates:
       - macro: "{#STORAGE_TYPE}"
         value: ".+hrStorageFixedDisk"
         formulaid: A
-    metrics: 
+    items: 
       - prototype: vfs.fs.used
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
         oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
@@ -94,7 +94,7 @@ templates:
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
         resource: "Disk-{#SNMPINDEX}"
         type: CALCULATED
-  metrics:
+  items:
   - prototype: vm.memory.used
     oid: 1.3.6.1.2.1.25.2.3.1.6.65536
     snmpObject: hrStorageUsed.Memory
