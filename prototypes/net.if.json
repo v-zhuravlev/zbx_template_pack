@@ -17,7 +17,7 @@
 		"valueType": "INTEGER",
 		"triggers": [
 			{
-				"documentation": "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled.",
+				"_documentation": "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled.",
 				"id": "if.down",
 				"expression": "{$IFCONTROL:\"{#IFNAME}\"}=1 and ({TEMPLATE_NAME:METRIC.last()}=2 and {TEMPLATE_NAME:METRIC.diff()}=1)",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.last()}<>2",
@@ -25,17 +25,17 @@
 				"name": "Link down",
 				"description": "Interface is down",
 				"priority": 3,
-				"translations":{
+				"translations": {
 					"RU": {
-						"name":"Интерфейс недоступен",
+						"name": "Интерфейс недоступен",
 						"description": "Интерфейс недоступен"
 					}
 				}
 			}
 		],
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Текущий статус интерфейса"
+				"name": "Текущий статус интерфейса"
 			}
 		}
 	},
@@ -54,7 +54,6 @@
 				"params": "8"
 			}
 		],
-		
 		"id": "net.if.in",
 		"name": "Bits received",
 		"group": "Network_interfaces",
@@ -65,7 +64,7 @@
 		"units": "bps",
 		"triggers": [
 			{
-				"documentation": "- This trigger uses 3% hysteresis (WARNING: do not change {$IF_UTIL_MAX:\"{#IFNAME}\"} below or equal to 3%\n- Additionally added 'and net.if.speed[*].last()>0' in order to fix ZBX-12688",
+				"_documentation": "- This trigger uses 3% hysteresis (WARNING: do not change {$IF_UTIL_MAX:\"{#IFNAME}\"} below or equal to 3%\n- Additionally added 'and net.if.speed[*].last()>0' in order to fix ZBX-12688",
 				"id": "if.util_high",
 				"expression": "({TEMPLATE_NAME:METRIC.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()} or\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()}) and\n{TEMPLATE_NAME:__net.if.speed__.last()}>0",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
@@ -75,9 +74,9 @@
 				"dependsOn": [
 					"if.down"
 				],
-				"translations":{
-					"RU":{
-						"name":"Интерфейс сильно загружен >{$IF_UTIL_MAX:\"{#IFNAME}\"}%"
+				"translations": {
+					"RU": {
+						"name": "Интерфейс сильно загружен >{$IF_UTIL_MAX:\"{#IFNAME}\"}%"
 					}
 				}
 			}
@@ -119,12 +118,11 @@
 				]
 			}
 		],
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Бит получено"
+				"name": "Бит получено"
 			}
 		}
-
 	},
 	{
 		"snmpObject": "ifHCOutOctets.{#SNMPINDEX}",
@@ -141,7 +139,6 @@
 				"params": "8"
 			}
 		],
-
 		"id": "net.if.out",
 		"name": "Bits sent",
 		"group": "Network_interfaces",
@@ -150,9 +147,9 @@
 		"history": "30d",
 		"valueType": "INTEGER",
 		"units": "bps",
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Бит отправлено"
+				"name": "Бит отправлено"
 			}
 		}
 	},
@@ -167,7 +164,6 @@
 				"type": "CHANGE_PER_SECOND"
 			}
 		],
-
 		"id": "net.if.in.errors",
 		"name": "Inbound packets with errors",
 		"group": "Network_interfaces",
@@ -177,7 +173,7 @@
 		"valueType": "INTEGER",
 		"triggers": [
 			{
-				"documentation": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} (see ZBX-13128)",
+				"_documentation": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} (see ZBX-13128)",
 				"id": "if.errors",
 				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}\nor {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8",
@@ -188,18 +184,17 @@
 				"dependsOn": [
 					"if.down"
 				],
-				"translations":{
+				"translations": {
 					"RU": {
-						"name":"Большое количество ошибок интерфейса",
-						"description":"Восстановление когда ниже 80% от значения {$IF_ERRORS_WARN:\"{#IFNAME}\"}"
+						"name": "Большое количество ошибок интерфейса",
+						"description": "Восстановление когда ниже 80% от значения {$IF_ERRORS_WARN:\"{#IFNAME}\"}"
 					}
 				}
-
 			}
 		],
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Входящих пакетов с ошибками"
+				"name": "Входящих пакетов с ошибками"
 			}
 		}
 	},
@@ -214,7 +209,6 @@
 				"type": "CHANGE_PER_SECOND"
 			}
 		],
-
 		"id": "net.if.out.errors",
 		"name": "Outbound packets with errors",
 		"group": "Network_interfaces",
@@ -222,9 +216,9 @@
 		"delay": "3m",
 		"history": "1w",
 		"valueType": "INTEGER",
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Исходящих пакетов с ошибками"
+				"name": "Исходящих пакетов с ошибками"
 			}
 		}
 	},
@@ -239,7 +233,6 @@
 				"type": "CHANGE_PER_SECOND"
 			}
 		],
-
 		"id": "net.if.in.discards",
 		"name": "Inbound packets discarded",
 		"group": "Network_interfaces",
@@ -247,9 +240,9 @@
 		"delay": "5m",
 		"history": "1w",
 		"valueType": "INTEGER",
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Пакетов отброшено (входящих)"
+				"name": "Пакетов отброшено (входящих)"
 			}
 		}
 	},
@@ -264,7 +257,6 @@
 				"type": "CHANGE_PER_SECOND"
 			}
 		],
-
 		"id": "net.if.out.discards",
 		"name": "Outbound packets discarded",
 		"group": "Network_interfaces",
@@ -272,9 +264,9 @@
 		"delay": "5m",
 		"history": "1w",
 		"valueType": "INTEGER",
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Пакетов отброшено (исходящих)"
+				"name": "Пакетов отброшено (исходящих)"
 			}
 		}
 	},
@@ -301,7 +293,7 @@
 		"units": "bps",
 		"triggers": [
 			{
-				"documentation": "Might be problems with Mikrotik. Also checked:\n - That type is Ethernet\n- That interfaces is not in down status (issue on HP Procurve)",
+				"_documentation": "Might be problems with Mikrotik. Also checked:\n - That type is Ethernet\n- That interfaces is not in down status (issue on HP Procurve)",
 				"id": "if.speed.not_max",
 				"expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand (\n{TEMPLATE_NAME:__net.if.type__.last()}=6 or\n{TEMPLATE_NAME:__net.if.type__.last()}=7 or\n{TEMPLATE_NAME:__net.if.type__.last()}=11 or\n{TEMPLATE_NAME:__net.if.type__.last()}=62 or\n{TEMPLATE_NAME:__net.if.type__.last()}=69 or\n{TEMPLATE_NAME:__net.if.type__.last()}=117\n)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
 				"recoveryExpression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
@@ -312,16 +304,16 @@
 				"dependsOn": [
 					"if.down"
 				],
-				"translations":{
+				"translations": {
 					"RU": {
-						"name":"Интерфейс перешел на более низкую скорость, чем был ранее"
+						"name": "Интерфейс перешел на более низкую скорость, чем был ранее"
 					}
 				}
 			}
 		],
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Пропускная способность"
+				"name": "Пропускная способность"
 			}
 		}
 	},
@@ -340,11 +332,10 @@
 		"history": "1w",
 		"trends": "0d",
 		"valueType": "INTEGER",
-		"translations":{
+		"translations": {
 			"RU": {
-				"name":"Тип интерфейса"
+				"name": "Тип интерфейса"
 			}
 		}
-
 	}
 ]

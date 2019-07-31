@@ -4,7 +4,7 @@
 		"key": "icmpping",
 		"name": "ICMP ping",
 		"group": "Status",
-		"type":"SIMPLE_CHECK",
+		"type": "SIMPLE_CHECK",
 		"history": "1w",
 		"update": "1m",
 		"valueType": "INTEGER",
@@ -19,7 +19,7 @@
 		"id": "icmppingloss",
 		"name": "ICMP loss",
 		"key": "icmppingloss",
-		"type":"SIMPLE_CHECK",
+		"type": "SIMPLE_CHECK",
 		"group": "Status",
 		"history": "1w",
 		"update": "1m",
@@ -27,14 +27,14 @@
 		"units": "%",
 		"triggers": [
 			{
-				"documentation": "{TEMPLATE_NAME:METRIC.min(5m)}<100 - go back to normal if 100% loss (So this problem is not visible if recovering from NOPING)",
+				"_documentation": "{TEMPLATE_NAME:METRIC.min(5m)}<100 - go back to normal if 100% loss (So this problem is not visible if recovering from NOPING)",
 				"name": "High ICMP ping loss",
 				"id": "icmppingloss",
 				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$ICMP_LOSS_WARN} and {TEMPLATE_NAME:METRIC.min(5m)}<100",
 				"priority": 2,
-				"translations":{
-					"RU":{
-						"name":"Потеря пакетов ICMP ping"
+				"translations": {
+					"RU": {
+						"name": "Потеря пакетов ICMP ping"
 					}
 				},
 				"dependsOn": [
@@ -51,7 +51,7 @@
 		"history": "1w",
 		"update": "1m",
 		"valueType": "FLOAT",
-		"type":"SIMPLE_CHECK",
+		"type": "SIMPLE_CHECK",
 		"units": "s",
 		"triggers": [
 			{
@@ -67,4 +67,3 @@
 		]
 	}
 ]
-
