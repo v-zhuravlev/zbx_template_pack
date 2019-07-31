@@ -71,7 +71,7 @@
 				"manual_close": "YES",
 				"name": "High bandwidth usage >{$IF_UTIL_MAX:\"{#IFNAME}\"}%",
 				"priority": 2,
-				"dependsOn": [
+				"_depends_on": [
 					"if.down"
 				],
 				"_translations": {
@@ -181,7 +181,7 @@
 				"name": "High error rate",
 				"priority": 2,
 				"description": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} threshold",
-				"dependsOn": [
+				"_depends_on": [
 					"if.down"
 				],
 				"_translations": {
@@ -296,12 +296,12 @@
 				"_documentation": "Might be problems with Mikrotik. Also checked:\n - That type is Ethernet\n- That interfaces is not in down status (issue on HP Procurve)",
 				"_id": "if.speed.not_max",
 				"expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand (\n{TEMPLATE_NAME:__net.if.type__.last()}=6 or\n{TEMPLATE_NAME:__net.if.type__.last()}=7 or\n{TEMPLATE_NAME:__net.if.type__.last()}=11 or\n{TEMPLATE_NAME:__net.if.type__.last()}=62 or\n{TEMPLATE_NAME:__net.if.type__.last()}=69 or\n{TEMPLATE_NAME:__net.if.type__.last()}=117\n)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
-				"recoveryExpression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
+				"recovery_expression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
 				"manual_close": "YES",
 				"name": "Ethernet has changed to lower speed than it was before",
 				"priority": 1,
 				"description": "This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.",
-				"dependsOn": [
+				"_depends_on": [
 					"if.down"
 				],
 				"_translations": {
