@@ -19,20 +19,20 @@ templates:
           _snmpObject: "chStackUnitCpuUtil1Min.{#SNMPINDEX}"
           _mib: "F10-S-SERIES-CHASSIS-MIB"
           _vendor_description: "CPU utilization in percentage for last 1 minute."
-          resource: "#{#SNMPINDEX}"
+          _resource: "#{#SNMPINDEX}"
         - _prototype: vm.memory.pused
           oid: "1.3.6.1.4.1.6027.3.10.1.2.9.1.5.{#SNMPINDEX}"
           _snmpObject: "chStackUnitMemUsageUtil.{#SNMPINDEX}"
           _mib: "F10-S-SERIES-CHASSIS-MIB"
           _vendor_description: "Total memory usage in percentage."
-          resource: "#{#SNMPINDEX}"
+          _resource: "#{#SNMPINDEX}"
           # <!--could not be found on the real device. 	    <vfs.fs.pused>
           #         <oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.6.{#SNMPINDEX}</oid>
           #         <_snmpObject>chStackUnitFlashUsageUtil.{#SNMPINDEX}</_snmpObject>
           #         <_mib>F10-S-SERIES-CHASSIS-MIB</_mib>
           #         <_vendor_description>Total flash usage in percentage.</_vendor_description>
           #         <discoveryRule>CPU and Memory and Flash Discovery</discoveryRule>
-          #         <resource>#{#SNMPINDEX}</resource>
+          #         <_resource>#{#SNMPINDEX}</_resource>
           # </vfs.fs.pused> -->
       - 
         name: "PSU Discovery"
@@ -44,7 +44,7 @@ templates:
             oid: "1.3.6.1.4.1.6027.3.10.1.2.3.1.2.{#SNMPINDEX}"
             _snmpObject: "chSysPowerSupplyOperStatus.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "PSU {#SNMPVALUE}"
+            _resource: "PSU {#SNMPVALUE}"
             valueMap: "F10-S-SERIES-CHASSIS-MIB::chSysPowerSupplyOperStatus"
             _vendor_description: "The status of the power supply {#SNMPVALUE}"
             triggers:
@@ -59,7 +59,7 @@ templates:
             oid: "1.3.6.1.4.1.6027.3.10.1.2.4.1.2.{#SNMPINDEX}"
             _snmpObject: "chSysFanTrayOperStatus.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "Fan {#SNMPVALUE}"
+            _resource: "Fan {#SNMPVALUE}"
             valueMap: "F10-S-SERIES-CHASSIS-MIB::chSysFanTrayOperStatus"
             _vendor_description: "The status of the fan tray {#SNMPVALUE}."
             triggers:
@@ -74,31 +74,31 @@ templates:
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.14.{#SNMPINDEX}"
             _snmpObject: "chStackUnitTemp.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "Device {#SNMPVALUE}"
+            _resource: "Device {#SNMPVALUE}"
             _vendor_description: "The temperature of the unit."
           - _prototype: system.hw.model
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.7.{#SNMPINDEX}"
             _snmpObject: "chStackUnitModelID.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
             _vendor_description: "The plugged-in model ID for this unit."
           - _prototype: system.hw.serialnumber
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.12.{#SNMPINDEX}"
             _snmpObject: "chStackUnitSerialNumber.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
             _vendor_description: "The unit's serial number."
           - _prototype: system.hw.version
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.21.{#SNMPINDEX}"
             _snmpObject: "chStackUnitProductRev.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
             _vendor_description: "The unit manufacturer's product revision"
           - _prototype: system.sw.os
             oid: "1.3.6.1.4.1.6027.3.10.1.2.2.1.10.{#SNMPINDEX}"
             _snmpObject: "chStackUnitCodeVersion.{#SNMPINDEX}"
             _mib: "F10-S-SERIES-CHASSIS-MIB"
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
             _vendor_description: "Current code version of this unit."
     macros:
       - macro: "{$TEMP_CRIT}"

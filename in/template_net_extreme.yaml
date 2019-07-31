@@ -18,7 +18,7 @@ templates:
             _snmpObject: extremeMemoryMonitorSystemFree.{#SNMPINDEX}
             _mib: EXTREME-SOFTWARE-MONITOR-MIB
             _vendor_description: Total amount of free memory in Kbytes in the system.
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
             preprocessing:
               - type: MULTIPLIER
                 params: "1024"
@@ -27,7 +27,7 @@ templates:
             _snmpObject: extremeMemoryMonitorSystemTotal.{#SNMPINDEX}
             _mib: EXTREME-SOFTWARE-MONITOR-MIB
             _vendor_description: Total amount of DRAM in Kbytes in the system.
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
             preprocessing:
                 - type: MULTIPLIER
                   params: "1024"
@@ -35,7 +35,7 @@ templates:
             _snmpObject: "{#SNMPVALUE}"
             type: CALCULATED
             discoveryRule: Memory Discovery
-            resource: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
       -
         name: PSU Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.1.1.27.1.1]
@@ -46,7 +46,7 @@ templates:
             oid: 1.3.6.1.4.1.1916.1.1.1.27.1.2.{#SNMPINDEX}
             _snmpObject: extremePowerSupplyStatus.{#SNMPINDEX}
             _mib: EXTREME-SYSTEM-MIB
-            resource: PSU {#SNMPVALUE}
+            _resource: PSU {#SNMPVALUE}
             valueMap: EXTREME-SYSTEM-MIB::extremePowerSupplyStatus
             _vendor_description: Status of the power supply {#SNMPVALUE}
             triggers:
@@ -60,7 +60,7 @@ templates:
           oid: 1.3.6.1.4.1.1916.1.1.1.9.1.2.{#SNMPINDEX}
           _snmpObject: extremeFanOperational.{#SNMPINDEX}
           _mib: EXTREME-SYSTEM-MIB
-          resource: Fan {#SNMPVALUE}
+          _resource: Fan {#SNMPVALUE}
           valueMap: EXTREME-SYSTEM-MIB::extremeFanOperational
           _vendor_description: Operational status of a cooling fan.
           triggers:
@@ -69,7 +69,7 @@ templates:
           oid: 1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}
           _snmpObject: extremeFanSpeed.{#SNMPINDEX}
           _mib: EXTREME-SYSTEM-MIB
-          resource: Fan {#SNMPVALUE}
+          _resource: Fan {#SNMPVALUE}
           _vendor_description: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
     items:
       - _prototype: system.cpu.util
@@ -83,7 +83,7 @@ templates:
         _snmpObject: extremeCurrentTemperature.0
         _mib: EXTREME-SYSTEM-MIB
         _ref: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-support-temperature-polling-via-SNMP-on-all-nodes-in-a-stack
-        resource: Device
+        _resource: Device
         triggers:
           - _prototype: tempWarn
           - _prototype: tempCrit.combined
@@ -92,7 +92,7 @@ templates:
         oid: 1.3.6.1.4.1.1916.1.1.1.7.0
         _snmpObject: extremeOverTemperatureAlarm.0
         _mib: EXTREME-SYSTEM-MIB
-        resource: Device
+        _resource: Device
         valueMap: EXTREME-SYSTEM-MIB::extremeOverTemperatureAlarm
 
 

@@ -27,7 +27,7 @@ templates:
       _vendor_description: The average, over the last minute, of the percentage of time
         that this processor was not idle. Implementations may approximate this one
         minute smoothing period if necessary.
-      resource: "#{#SNMPINDEX}"
+      _resource: "#{#SNMPINDEX}"
   - name: Temperature Discovery CPU
     oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.11]
     key: mtxrHlProcessorTemperature.discovery
@@ -44,8 +44,8 @@ templates:
       _mib: MIKROTIK-MIB
       _vendor_description: "(mtxrHlProcessorTemperature) Processor temperature in Celsius
         (degrees C). Might be missing in entry models (RB750, RB450G..)"
-      resource: CPU
-      resourceType: CPU
+      _resource: CPU
+      _resource_type: CPU
       preprocessing:
       - type: MULTIPLIER
         params: '0.1'
@@ -71,7 +71,7 @@ templates:
         preprocessing:
           - type: MULTIPLIER
             params: '1024'
-        resource: "Disk-{#SNMPINDEX}"
+        _resource: "Disk-{#SNMPINDEX}"
       - _prototype: vfs.fs.total
         _snmpObject: "hrStorageSize.{#SNMPINDEX}"
         oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
@@ -89,10 +89,10 @@ templates:
         preprocessing:
           - type: MULTIPLIER
             params: '1024'
-        resource: "Disk-{#SNMPINDEX}"        
+        _resource: "Disk-{#SNMPINDEX}"        
       - _prototype: vfs.fs.pused
         _snmpObject: "hrStorageSize.{#SNMPINDEX}"
-        resource: "Disk-{#SNMPINDEX}"
+        _resource: "Disk-{#SNMPINDEX}"
         type: CALCULATED
   items:
   - _prototype: vm.memory.used
@@ -132,8 +132,8 @@ templates:
     _vendor_description: "(mtxrHlTemperature) Device temperature in Celsius (degrees
       C). Might be missing in entry models (RB750, RB450G..)"
     _ref: http://wiki.mikrotik.com/wiki/Manual:SNMP
-    resource: Device
-    resourceType: Device
+    _resource: Device
+    _resource_type: Device
     preprocessing:
     - type: MULTIPLIER
       params: '0.1'
