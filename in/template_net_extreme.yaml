@@ -13,25 +13,25 @@ templates:
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.32.2.2.1.1]
         key: memory.discovery
         items:
-          - prototype: vm.memory.free
+          - _prototype: vm.memory.free
             oid: 1.3.6.1.4.1.1916.1.32.2.2.1.3.{#SNMPINDEX}
             snmpObject: extremeMemoryMonitorSystemFree.{#SNMPINDEX}
             mib: EXTREME-SOFTWARE-MONITOR-MIB
-            vendorDescription: Total amount of free memory in Kbytes in the system.
+            _vendor_description: Total amount of free memory in Kbytes in the system.
             resource: "#{#SNMPVALUE}"
             preprocessing:
               - type: MULTIPLIER
                 params: "1024"
-          - prototype: vm.memory.total
+          - _prototype: vm.memory.total
             oid: 1.3.6.1.4.1.1916.1.32.2.2.1.2.{#SNMPINDEX}
             snmpObject: extremeMemoryMonitorSystemTotal.{#SNMPINDEX}
             mib: EXTREME-SOFTWARE-MONITOR-MIB
-            vendorDescription: Total amount of DRAM in Kbytes in the system.
+            _vendor_description: Total amount of DRAM in Kbytes in the system.
             resource: "#{#SNMPVALUE}"
             preprocessing:
                 - type: MULTIPLIER
                   params: "1024"
-          - prototype: vm.memory.pused
+          - _prototype: vm.memory.pused
             snmpObject: "{#SNMPVALUE}"
             type: CALCULATED
             discoveryRule: Memory Discovery
@@ -42,53 +42,53 @@ templates:
         key: psu.discovery
         description: Table of status of all power supplies in the system.
         items:
-          - prototype: sensor.psu.status
+          - _prototype: sensor.psu.status
             oid: 1.3.6.1.4.1.1916.1.1.1.27.1.2.{#SNMPINDEX}
             snmpObject: extremePowerSupplyStatus.{#SNMPINDEX}
             mib: EXTREME-SYSTEM-MIB
             resource: PSU {#SNMPVALUE}
             valueMap: EXTREME-SYSTEM-MIB::extremePowerSupplyStatus
-            vendorDescription: Status of the power supply {#SNMPVALUE}
+            _vendor_description: Status of the power supply {#SNMPVALUE}
             triggers:
-              - prototype: psu.crit            
+              - _prototype: psu.crit            
       -
         name: FAN Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.1.1.9.1.1]
         key: fan.discovery
         items:
-        - prototype: sensor.fan.status
+        - _prototype: sensor.fan.status
           oid: 1.3.6.1.4.1.1916.1.1.1.9.1.2.{#SNMPINDEX}
           snmpObject: extremeFanOperational.{#SNMPINDEX}
           mib: EXTREME-SYSTEM-MIB
           resource: Fan {#SNMPVALUE}
           valueMap: EXTREME-SYSTEM-MIB::extremeFanOperational
-          vendorDescription: Operational status of a cooling fan.
+          _vendor_description: Operational status of a cooling fan.
           triggers:
-           - prototype: fan.crit
-        - prototype: sensor.fan.speed
+           - _prototype: fan.crit
+        - _prototype: sensor.fan.speed
           oid: 1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}
           snmpObject: extremeFanSpeed.{#SNMPINDEX}
           mib: EXTREME-SYSTEM-MIB
           resource: Fan {#SNMPVALUE}
-          vendorDescription: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
+          _vendor_description: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
     items:
-      - prototype: system.cpu.util
+      - _prototype: system.cpu.util
         oid: 1.3.6.1.4.1.1916.1.32.1.2.0
         snmpObject: extremeCpuMonitorTotalUtilization.0
         mib: EXTREME-SOFTWARE-MONITOR-MIB
-        vendorDescription: Total CPU utlization (percentage) as of last sampling.
+        _vendor_description: Total CPU utlization (percentage) as of last sampling.
       
-      - prototype: sensor.temp.value
+      - _prototype: sensor.temp.value
         oid: 1.3.6.1.4.1.1916.1.1.1.8.0
         snmpObject: extremeCurrentTemperature.0
         mib: EXTREME-SYSTEM-MIB
         ref: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-support-temperature-polling-via-SNMP-on-all-nodes-in-a-stack
         resource: Device
         triggers:
-          - prototype: tempWarn
-          - prototype: tempCrit.combined
-          - prototype: tempLow
-      - prototype: sensor.temp.status
+          - _prototype: tempWarn
+          - _prototype: tempCrit.combined
+          - _prototype: tempLow
+      - _prototype: sensor.temp.status
         oid: 1.3.6.1.4.1.1916.1.1.1.7.0
         snmpObject: extremeOverTemperatureAlarm.0
         mib: EXTREME-SYSTEM-MIB
@@ -96,27 +96,27 @@ templates:
         valueMap: EXTREME-SYSTEM-MIB::extremeOverTemperatureAlarm
 
 
-      - prototype: system.hw.model
+      - _prototype: system.hw.model
         oid: 1.3.6.1.2.1.47.1.1.1.1.2.1
         snmpObject: entPhysicalDescr.1
         mib: ENTITY-MIB
-      - prototype: system.hw.serialnumber
+      - _prototype: system.hw.serialnumber
         oid: 1.3.6.1.2.1.47.1.1.1.1.11.1
         snmpObject: entPhysicalSerialNum.1
         mib: ENTITY-MIB
-      - prototype: system.hw.firmware
+      - _prototype: system.hw.firmware
         oid: 1.3.6.1.2.1.47.1.1.1.1.9.1
         snmpObject: entPhysicalFirmwareRev.1
         mib: ENTITY-MIB
-      - prototype: system.hw.version
+      - _prototype: system.hw.version
         oid: 1.3.6.1.2.1.47.1.1.1.1.9.1
         snmpObject: entPhysicalHardwareRev.1
         mib: ENTITY-MIB
-      - prototype: system.sw.os
+      - _prototype: system.sw.os
         oid: 1.3.6.1.4.1.1916.1.1.1.13.0
         snmpObject: extremePrimarySoftwareRev.0
         mib: EXTREME-SYSTEM-MIB
-        vendorDescription: | 
+        _vendor_description: | 
           The software revision of the primary image stored in this device.
           This string will have a zero length if the revision is unknown, invalid or not present.
           This will also be reported in RMON2 probeSoftwareRev if this is the software image currently running in the device.

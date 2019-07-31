@@ -20,11 +20,11 @@ templates:
     key: hrProcessorLoad.discovery
     description: HOST-RESOURCES-MIB::hrProcessorTable discovery
     items:
-    - prototype: system.cpu.util
+    - _prototype: system.cpu.util
       snmpObject: hrProcessorLoad.{#SNMPINDEX}
       oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
       mib: HOST-RESOURCES-MIB
-      vendorDescription: The average, over the last minute, of the percentage of time
+      _vendor_description: The average, over the last minute, of the percentage of time
         that this processor was not idle. Implementations may approximate this one
         minute smoothing period if necessary.
       resource: "#{#SNMPINDEX}"
@@ -35,14 +35,14 @@ templates:
       of CPU is not available on all Mikrotik hardware, this is done to avoid unsupported
       items."
     items:
-    - prototype: sensor.temp.value
+    - _prototype: sensor.temp.value
       type: SNMP
-      vendorDocumentation: Discovery is used since this metric is not present on all
+      _vendor_documentation: Discovery is used since this metric is not present on all
         Mikrotik devices. Do not place {#SNMPINDEX} in location, it's redundant
       oid: 1.3.6.1.4.1.14988.1.1.3.11.{#SNMPINDEX}
       snmpObject: mtxrHlProcessorTemperature.{#SNMPINDEX}
       mib: MIKROTIK-MIB
-      vendorDescription: "(mtxrHlProcessorTemperature) Processor temperature in Celsius
+      _vendor_description: "(mtxrHlProcessorTemperature) Processor temperature in Celsius
         (degrees C). Might be missing in entry models (RB750, RB450G..)"
       resource: CPU
       resourceType: CPU
@@ -63,20 +63,20 @@ templates:
         value: ".+hrStorageFixedDisk"
         formulaid: A
     items: 
-      - prototype: vfs.fs.used
+      - _prototype: vfs.fs.used
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
         oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
         mib: HOST-RESOURCES-MIB
-        vendorDescription: The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.
+        _vendor_description: The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.
         preprocessing:
           - type: MULTIPLIER
             params: '1024'
         resource: "Disk-{#SNMPINDEX}"
-      - prototype: vfs.fs.total
+      - _prototype: vfs.fs.total
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
         oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
         mib: HOST-RESOURCES-MIB
-        vendorDescription: |
+        _vendor_description: |
          The size of the storage represented by this entry, in
          units of hrStorageAllocationUnits. This object is
          writable to allow remote configuration of the size of
@@ -90,25 +90,25 @@ templates:
           - type: MULTIPLIER
             params: '1024'
         resource: "Disk-{#SNMPINDEX}"        
-      - prototype: vfs.fs.pused
+      - _prototype: vfs.fs.pused
         snmpObject: "hrStorageSize.{#SNMPINDEX}"
         resource: "Disk-{#SNMPINDEX}"
         type: CALCULATED
   items:
-  - prototype: vm.memory.used
+  - _prototype: vm.memory.used
     oid: 1.3.6.1.2.1.25.2.3.1.6.65536
     snmpObject: hrStorageUsed.Memory
     mib: HOST-RESOURCES-MIB
-    vendorDescription: The amount of the storage represented by this entry that is
+    _vendor_description: The amount of the storage represented by this entry that is
       allocated, in units of hrStorageAllocationUnits.
     preprocessing:
     - type: MULTIPLIER
       params: '1024'
-  - prototype: vm.memory.total
+  - _prototype: vm.memory.total
     oid: 1.3.6.1.2.1.25.2.3.1.5.65536
     snmpObject: hrStorageSize.Memory
     mib: HOST-RESOURCES-MIB
-    vendorDescription: |
+    _vendor_description: |
      The size of the storage represented by this entry, in
      units of hrStorageAllocationUnits. This object is
      writable to allow remote configuration of the size of
@@ -121,15 +121,15 @@ templates:
     preprocessing:
     - type: MULTIPLIER
       params: '1024'
-  - prototype: vm.memory.pused
+  - _prototype: vm.memory.pused
     snmpObject: memoryUsedPercentage.Memory
     type: CALCULATED
-  - prototype: sensor.temp.value
+  - _prototype: sensor.temp.value
     type: SNMP
     oid: 1.3.6.1.4.1.14988.1.1.3.10.0
     snmpObject: mtxrHlTemperature
     mib: MIKROTIK-MIB
-    vendorDescription: "(mtxrHlTemperature) Device temperature in Celsius (degrees
+    _vendor_description: "(mtxrHlTemperature) Device temperature in Celsius (degrees
       C). Might be missing in entry models (RB750, RB450G..)"
     ref: http://wiki.mikrotik.com/wiki/Manual:SNMP
     resource: Device
@@ -137,24 +137,24 @@ templates:
     preprocessing:
     - type: MULTIPLIER
       params: '0.1'
-  - prototype: system.sw.os
+  - _prototype: system.sw.os
     oid: 1.3.6.1.4.1.14988.1.1.4.4.0
     snmpObject: mtxrLicVersion.0
     mib: MIKROTIK-MIB
-    vendorDescription: Software version
-  - prototype: system.hw.model
+    _vendor_description: Software version
+  - _prototype: system.hw.model
     oid: 1.3.6.1.2.1.1.1.0
     snmpObject: sysDescr.0
-  - prototype: system.hw.serialnumber
+  - _prototype: system.hw.serialnumber
     oid: 1.3.6.1.4.1.14988.1.1.7.3.0
     snmpObject: mtxrSerialNumber.0
     mib: MIKROTIK-MIB
-    vendorDescription: RouterBOARD serial number
-  - prototype: system.hw.firmware
+    _vendor_description: RouterBOARD serial number
+  - _prototype: system.hw.firmware
     oid: 1.3.6.1.4.1.14988.1.1.7.4.0
     snmpObject: mtxrFirmwareVersion.0
     mib: MIKROTIK-MIB
-    vendorDescription: Current firmware version
+    _vendor_description: Current firmware version
   macros:
     - macro: "{$TEMP_CRIT:\"CPU\"}"
       value: "75"

@@ -1,6 +1,6 @@
 [
 	{
-		"id": "sensor.temp.value",
+		"_id": "sensor.temp.value",
 		"name": "Temperature",
 		"description": "Temperature readings of testpoint: __RESOURCE__",
 		"valueType": "FLOAT",
@@ -17,19 +17,19 @@
 		},
 		"triggers": [
 			{
-				"prototype": "tempWarn"
+				"_prototype": "tempWarn"
 			},
 			{
-				"prototype": "tempCrit"
+				"_prototype": "tempCrit"
 			},
 			{
-				"prototype": "tempLow"
+				"_prototype": "tempLow"
 			}
 		]
 	},
 	{
 		"_documentation": "Using recovery expression... Temperature has to drop 3 points less than threshold level ({$TEMP_WARN}-3)",
-		"id": "tempWarn",
+		"_id": "tempWarn",
 		"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_WARN:\"__RESOURCE_TYPE__\"}",
 		"recoveryExpression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$TEMP_WARN:\"__RESOURCE_TYPE__\"}-3",
 		"name": "Temperature is above warning threshold: >{$TEMP_WARN:\"__RESOURCE_TYPE__\"}",
@@ -47,7 +47,7 @@
 	},
 	{
 		"_documentation": "Using recovery expression... Temperature has to drop 3 points less than threshold level ({$TEMP_WARN}-3)",
-		"id": "tempWarn.combined",
+		"_id": "tempWarn.combined",
 		"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_WARN:\"__RESOURCE_TYPE__\"}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_WARN_STATUS}",
 		"recoveryExpression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$TEMP_WARN:\"__RESOURCE_TYPE__\"}-3",
 		"name": "Temperature is above warning threshold: >{$TEMP_WARN:\"__RESOURCE_TYPE__\"}",
@@ -65,7 +65,7 @@
 	},
 	{
 		"_documentation": "Using recovery expression... Temperature has to drop 3 points less than threshold level ({$TEMP_WARN}-3)",
-		"id": "tempCrit",
+		"_id": "tempCrit",
 		"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_CRIT:\"__RESOURCE_TYPE__\"}",
 		"recoveryExpression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$TEMP_CRIT:\"__RESOURCE_TYPE__\"}-3",
 		"name": "Temperature is above critical threshold: >{$TEMP_CRIT:\"__RESOURCE_TYPE__\"}",
@@ -79,7 +79,7 @@
 	},
 	{
 		"_documentation": "Using recovery expression... Temperature has to drop 3 points less than threshold level ({$TEMP_CRIT}-3)",
-		"id": "tempCrit.combined",
+		"_id": "tempCrit.combined",
 		"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$TEMP_CRIT:\"__RESOURCE_TYPE__\"}\nor\n{TEMPLATE_NAME:__sensor.temp.status__.last(0)}={$TEMP_CRIT_STATUS}",
 		"recoveryExpression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$TEMP_CRIT:\"__RESOURCE_TYPE__\"}-3",
 		"name": "Temperature is above critical threshold: >{$TEMP_CRIT:\"__RESOURCE_TYPE__\"}",
@@ -93,7 +93,7 @@
 	},
 	{
 		"_documentation": "Using recovery expression... Temperature has to be 3 points more than threshold level  ({$TEMP_CRIT_LOW}+3)",
-		"id": "tempLow",
+		"_id": "tempLow",
 		"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$TEMP_CRIT_LOW:\"__RESOURCE_TYPE__\"}",
 		"recoveryExpression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$TEMP_CRIT_LOW:\"__RESOURCE_TYPE__\"}+3",
 		"name": "Temperature is too low: <{$TEMP_CRIT_LOW:\"__RESOURCE_TYPE__\"}",
@@ -105,7 +105,7 @@
 		}
 	},
 	{
-		"id": "sensor.temp.status",
+		"_id": "sensor.temp.status",
 		"name": "Temperature status",
 		"group": "Temperature",
 		"description": "Temperature status of testpoint: __RESOURCE__",
@@ -114,7 +114,7 @@
 		"trends": "0d"
 	},
 	{
-		"id": "sensor.temp.locale",
+		"_id": "sensor.temp.locale",
 		"name": "Temperature sensor location",
 		"group": "Temperature",
 		"description": "Temperature location of testpoint: __RESOURCE__",
@@ -123,7 +123,7 @@
 		"trends": "0d"
 	},
 	{
-		"id": "sensor.psu.status",
+		"_id": "sensor.psu.status",
 		"name": "Power supply status",
 		"group": "Power_supply",
 		"delay": "3m",
@@ -131,10 +131,10 @@
 		"trends": "0d",
 		"triggers": [
 			{
-				"prototype": "psu.crit"
+				"_prototype": "psu.crit"
 			},
 			{
-				"prototype": "psu.warn"
+				"_prototype": "psu.warn"
 			}
 		],
 		"translations": {
@@ -144,7 +144,7 @@
 		}
 	},
 	{
-		"id": "sensor.fan.status",
+		"_id": "sensor.fan.status",
 		"name": "Fan status",
 		"group": "Fans",
 		"delay": "3m",
@@ -152,10 +152,10 @@
 		"trends": "0d",
 		"triggers": [
 			{
-				"prototype": "fan.crit"
+				"_prototype": "fan.crit"
 			},
 			{
-				"prototype": "fan.warn"
+				"_prototype": "fan.warn"
 			}
 		],
 		"translations": {
@@ -165,7 +165,7 @@
 		}
 	},
 	{
-		"id": "sensor.fan.speed.percentage",
+		"_id": "sensor.fan.speed.percentage",
 		"name": "Fan speed, %",
 		"group": "Fans",
 		"units": "%",
@@ -177,7 +177,7 @@
 		}
 	},
 	{
-		"id": "sensor.fan.speed",
+		"_id": "sensor.fan.speed",
 		"name": "Fan speed",
 		"group": "Fans",
 		"units": "rpm",
