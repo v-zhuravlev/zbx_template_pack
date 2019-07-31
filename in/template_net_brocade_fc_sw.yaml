@@ -39,8 +39,8 @@ templates:
         items: 
             - _prototype: "sensor.temp.value"
               oid: "1.3.6.1.4.1.1588.2.1.1.1.1.22.1.4.{#SNMPINDEX}"
-              snmpObject: "swSensorValue.{#SNMPINDEX}"
-              mib: "SW-MIB"
+              _snmpObject: "swSensorValue.{#SNMPINDEX}"
+              _mib: "SW-MIB"
               resource: "{#SENSOR_INFO}"
               triggers:
                 - _prototype: tempWarn.combined
@@ -48,8 +48,8 @@ templates:
                 - _prototype: tempLow
             - _prototype: sensor.temp.status 
               oid: "1.3.6.1.4.1.1588.2.1.1.1.1.22.1.3.{#SNMPINDEX}"
-              snmpObject: "swSensorStatus.{#SNMPINDEX}"
-              mib: "SW-MIB"
+              _snmpObject: "swSensorStatus.{#SNMPINDEX}"
+              _mib: "SW-MIB"
               resource: "{#SENSOR_INFO}"
               valueMap: "SW-MIB::swSensorStatus"
       - 
@@ -67,8 +67,8 @@ templates:
         items:
           - _prototype: sensor.psu.status 
             oid: "1.3.6.1.4.1.1588.2.1.1.1.1.22.1.3.{#SNMPINDEX}"
-            snmpObject: "swSensorStatus.{#SNMPINDEX}"
-            mib: "SW-MIB"
+            _snmpObject: "swSensorStatus.{#SNMPINDEX}"
+            _mib: "SW-MIB"
             resource: "{#SENSOR_INFO}"
             valueMap: "SW-MIB::swSensorStatus"
             triggers: 
@@ -89,8 +89,8 @@ templates:
         items:
           - _prototype: sensor.fan.status 
             oid: "1.3.6.1.4.1.1588.2.1.1.1.1.22.1.3.{#SNMPINDEX}"
-            snmpObject: "swSensorStatus.{#SNMPINDEX}"
-            mib: "SW-MIB"
+            _snmpObject: "swSensorStatus.{#SNMPINDEX}"
+            _mib: "SW-MIB"
             resource: "{#SENSOR_INFO}"
             valueMap: "SW-MIB::swSensorStatus"
             triggers:
@@ -98,24 +98,24 @@ templates:
               - _prototype: fan.notok
           - _prototype: sensor.fan.speed 
             oid: "1.3.6.1.4.1.1588.2.1.1.1.1.22.1.4.{#SNMPINDEX}"
-            snmpObject: "swSensorValue.{#SNMPINDEX}"
-            mib: "SW-MIB"
+            _snmpObject: "swSensorValue.{#SNMPINDEX}"
+            _mib: "SW-MIB"
             resource: "{#SENSOR_INFO}"
             _vendor_description: "The current value (reading) of the sensor.\nThe value, -2147483648, represents an unknown quantity.\nThe fan value will be in RPM(revolution per minute)\n"
     items: 
       - _prototype: system.cpu.util 
         oid: "1.3.6.1.4.1.1588.2.1.1.1.26.1.0"
-        snmpObject: "swCpuUsage.0"
-        mib: "SW-MIB"
+        _snmpObject: "swCpuUsage.0"
+        _mib: "SW-MIB"
         _vendor_description: "System's CPU usage."
       - _prototype: vm.memory.pused 
         oid: "1.3.6.1.4.1.1588.2.1.1.1.26.6.0"
-        snmpObject: "swMemUsage.0"
-        mib: "SW-MIB"
+        _snmpObject: "swMemUsage.0"
+        _mib: "SW-MIB"
       - _prototype: system.status 
         oid: "1.3.6.1.4.1.1588.2.1.1.1.1.7.0"
-        snmpObject: "swOperStatus.0"
-        mib: "SW-MIB"
+        _snmpObject: "swOperStatus.0"
+        _mib: "SW-MIB"
         _vendor_description: "The current operational status of the switch.The states are as follow:\nonline(1) means the switch is accessible by an external Fibre Channel port\noffline(2) means the switch is not accessible\ntesting(3) means the switch is in a built-in test mode and is not accessible by an external Fibre Channel port\nfaulty(4) means the switch is not operational."
         valueMap: "SW-MIB::swOperStatus"
         triggers:
@@ -125,12 +125,12 @@ templates:
 
       - _prototype: system.hw.serialnumber 
         oid: "1.3.6.1.4.1.1588.2.1.1.1.1.10.0"
-        snmpObject: "swSsn.0"
-        mib: "SW-MIB"
+        _snmpObject: "swSsn.0"
+        _mib: "SW-MIB"
       - _prototype: system.hw.firmware 
         oid: "1.3.6.1.4.1.1588.2.1.1.1.1.6.0"
-        snmpObject: "swFirmwareVersion.0"
-        mib: "SW-MIB"
+        _snmpObject: "swFirmwareVersion.0"
+        _mib: "SW-MIB"
     macros: 
           - macro: "{$TEMP_CRIT}"
             value: "75"
