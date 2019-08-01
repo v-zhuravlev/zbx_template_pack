@@ -24,7 +24,7 @@
 				"manual_close": "NO",
 				"name": "Link down",
 				"description": "Interface is down",
-				"priority": 3,
+				"priority": "AVERAGE",
 				"_translations": {
 					"RU": {
 						"name": "Интерфейс недоступен",
@@ -70,7 +70,7 @@
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
 				"manual_close": "YES",
 				"name": "High bandwidth usage >{$IF_UTIL_MAX:\"{#IFNAME}\"}%",
-				"priority": 2,
+				"priority": "WARNING",
 				"_depends_on": [
 					"if.down"
 				],
@@ -179,7 +179,7 @@
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8",
 				"manual_close": "YES",
 				"name": "High error rate",
-				"priority": 2,
+				"priority": "WARNING",
 				"description": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} threshold",
 				"_depends_on": [
 					"if.down"
@@ -299,7 +299,7 @@
 				"recovery_expression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
 				"manual_close": "YES",
 				"name": "Ethernet has changed to lower speed than it was before",
-				"priority": 1,
+				"priority": "INFO",
 				"description": "This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.",
 				"_depends_on": [
 					"if.down"

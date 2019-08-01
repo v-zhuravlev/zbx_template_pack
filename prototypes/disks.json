@@ -22,7 +22,7 @@
     "_id": "diskarray.cache.crit",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS},eq)}=1",
     "name": "Disk array cache controller is in critical state!",
-    "priority": "3",
+    "priority": "AVERAGE",
     "description": "Please check the device for faults",
     "_translations": {
       "RU": {
@@ -35,7 +35,7 @@
     "_id": "diskarray.cache.warn",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS},eq)}=1",
     "name": "Disk array cache controller is in warning state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check the device for faults",
     "_depends_on": [
       "diskarray.cache.crit"
@@ -51,7 +51,7 @@
     "_id": "diskarray.cache.notok",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_OK_STATUS},ne)}=1",
     "name": "Disk array cache controller is not in optimal state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check the device for faults",
     "_depends_on": [
       "diskarray.cache.warn",
@@ -87,7 +87,7 @@
     "_id": "diskarray.cache.battery.crit",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1",
     "name": "Disk array cache controller battery is in critical state!",
-    "priority": "3",
+    "priority": "AVERAGE",
     "description": "Please check the device for faults",
     "_translations": {
       "RU": {
@@ -100,7 +100,7 @@
     "_id": "diskarray.cache.battery.warn",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1",
     "name": "Disk array cache controller battery is in warning state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check the device for faults",
     "_depends_on": [
       "diskarray.cache.battery.crit"
@@ -116,7 +116,7 @@
     "_id": "diskarray.cache.battery.notok",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS},ne)}=1",
     "name": "Disk array cache controller battery is not in optimal state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check the device for faults",
     "_depends_on": [
       "diskarray.cache.battery.crit",
@@ -152,7 +152,7 @@
     "_id": "disk_array.fail",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_FAIL_STATUS},eq)}=1",
     "name": "Disk array controller is in unrecoverable state!",
-    "priority": "5",
+    "priority": "DISASTER",
     "description": "Please check the device for faults",
     "_translations": {
       "RU": {
@@ -165,7 +165,7 @@
     "_id": "disk_array.crit",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_CRIT_STATUS},eq)}=1",
     "name": "Disk array controller is in critical state",
-    "priority": "4",
+    "priority": "HIGH",
     "description": "Please check the device for faults",
     "_depends_on": [
       "disk_array.fail"
@@ -181,7 +181,7 @@
     "_id": "disk_array.warn",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_WARN_STATUS},eq)}=1",
     "name": "Disk array controller is in warning state",
-    "priority": "3",
+    "priority": "AVERAGE",
     "description": "Please check the device for faults",
     "_depends_on": [
       "disk_array.fail",
@@ -198,7 +198,7 @@
     "_id": "disk_array.notok",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_ARRAY_OK_STATUS},ne)}=1",
     "name": "Disk array controller is not in optimal state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check the device for faults",
     "_depends_on": [
       "disk_array.fail",
@@ -248,7 +248,7 @@
   {
     "_id": "disk.fail",
     "name": "Physical disk failed",
-    "priority": "4",
+    "priority": "HIGH",
     "description": "Please check physical disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_FAIL_STATUS},eq)}=1",
     "_translations": {
@@ -261,7 +261,7 @@
   {
     "_id": "disk.crit",
     "name": "Physical disk error",
-    "priority": "3",
+    "priority": "AVERAGE",
     "description": "Please check physical disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_CRIT_STATUS},eq)}=1",
     "_depends_on": [
@@ -277,7 +277,7 @@
   {
     "_id": "disk.warn",
     "name": "Physical disk is in warning state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check physical disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_WARN_STATUS},eq)}=1",
     "_depends_on": [
@@ -294,7 +294,7 @@
   {
     "_id": "disk.notok",
     "name": "Physical disk is not in OK state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check physical disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_OK_STATUS},ne)}=1",
     "_depends_on": [
@@ -331,7 +331,7 @@
   {
     "_id": "disk_smart.fail",
     "name": "Physical disk S.M.A.R.T. failed",
-    "priority": "4",
+    "priority": "HIGH",
     "description": "Disk probably requires replacement.",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_SMART_FAIL_STATUS},eq)}=1",
     "_depends_on": [
@@ -347,7 +347,7 @@
   {
     "_id": "disk_smart.notok",
     "name": "Physical disk S.M.A.R.T. status is not in OK state",
-    "priority": "3",
+    "priority": "AVERAGE",
     "description": "Disk probably requires replacement.",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$DISK_SMART_OK_STATUS},ne)}=1",
     "_depends_on": [
@@ -524,7 +524,7 @@
   {
     "_id": "vdisk.crit",
     "name": "Virtual disk failed",
-    "priority": "4",
+    "priority": "HIGH",
     "description": "Please check virtual disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_CRIT_STATUS},eq)}=1",
     "_translations": {
@@ -537,7 +537,7 @@
   {
     "_id": "vdisk.warn",
     "name": "Virtual disk is in warning state",
-    "priority": "3",
+    "priority": "AVERAGE",
     "description": "Please check virtual disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_WARN_STATUS},eq)}=1",
     "_depends_on": [
@@ -553,7 +553,7 @@
   {
     "_id": "vdisk.notok",
     "name": "Virtual disk is not in OK state",
-    "priority": "2",
+    "priority": "WARNING",
     "description": "Please check virtual disk for warnings or errors",
     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$VDISK_OK_STATUS},ne)}=1",
     "_depends_on": [
