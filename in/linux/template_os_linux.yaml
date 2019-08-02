@@ -1,7 +1,7 @@
 
 templates:
     - name: Template OS Linux
-      zbx_ver: "4.2"
+      _zbx_ver: "4.2"
       description: Template OS Linux
       _classes:
         - Interfaces EtherLike Extension
@@ -19,12 +19,12 @@ templates:
           conditions: 
             - macro: "{#DEVNAME}"
               value: "(loop[\\d]*|sda([\\d])+)"
-              operator: 9
+              operator: NOT_MATCHES_REGEX
               formulaid: A
         metrics:
           - _prototype: vfs.dev.read.rate
             _resource: "{#DEVNAME}"
-            application_prototype: "Disk __ALARM_OBJECT__"
+            application_prototype: "Disk __RESOURCE__"
             oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
             snmpObject: diskIOReads.{#SNMPINDEX}
             mib: UCD-DISKIO-MIB
@@ -34,7 +34,7 @@ templates:
               - type: CHANGE_PER_SECOND
           - _prototype: vfs.dev.write.rate
             _resource: "{#DEVNAME}"
-            application_prototype: "Disk __ALARM_OBJECT__"
+            application_prototype: "Disk __RESOURCE__"
             oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
             snmpObject: diskIOWrites.{#SNMPINDEX}
             mib: UCD-DISKIO-MIB
@@ -44,19 +44,19 @@ templates:
               - type: CHANGE_PER_SECOND
           - _prototype: vfs.dev.util
             _resource: "{#DEVNAME}"
-            application_prototype: "Disk __ALARM_OBJECT__"
+            application_prototype: "Disk __RESOURCE__"
             oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
             snmpObject: diskIOLA1.{#SNMPINDEX}
             mib: UCD-DISKIO-MIB
             vendorDescription: The 1 minute average load of disk (%)
             
       - name: CPU discovery
-        type: DEPENDENT_ITEM
+        type: DEPENDENT
         masterItem: system.cpu.num
         key: snmp.cpu.discovery
         description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.
         singleton: true
-        zbx_ver: "4.2"
+        _zbx_ver: "4.2"
         preprocessing:
           - type: JAVASCRIPT
             params: |
@@ -188,21 +188,21 @@ templates:
         key: "snmp.vfs.fs.discovery"
         description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
         filter: 
-          evalType: CUSTOM_EXPRESSION
+          evalType: FORMULA
           formula: (A or B) and C
           conditions: 
           - macro: "{#STORAGE_TYPE}"
             value: ".+(4)"
             # OID: 1.3.6.1.2.1.25.2.1.4
-            operator: 8
+            operator: MATCHES_REGEX
             formulaid: B
           - macro: "{#STORAGE_TYPE}"
             value: ".+(hrStorageFixedDisk)"
-            operator: 8
+            operator: MATCHES_REGEX
             formulaid: A
           - macro: "{#STORAGE_DESCR}"
             value: "(.+/shm$|/dev/run|/sys/fs/cgroup|/run.*)"
-            operator: 9
+            operator: NOT_MATCHES_REGEX
             formulaid: C
         metrics:
           - _prototype: vfs.fs.units
@@ -227,31 +227,31 @@ templates:
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.used
-            application_prototype: Filesystem __ALARM_OBJECT__
+            application_prototype: Filesystem __RESOURCE__
             snmpObject: "storageUsed.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.total
-            application_prototype: Filesystem __ALARM_OBJECT__
+            application_prototype: Filesystem __RESOURCE__
             snmpObject: "storageTotal.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.pused
-            application_prototype: Filesystem __ALARM_OBJECT__
+            application_prototype: Filesystem __RESOURCE__
             snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#STORAGE_DESCR}"
           
           - _prototype: vfs.fs.inode.pfree
             _resource: "{#STORAGE_DESCR}"
-            application_prototype: Filesystem __ALARM_OBJECT__
+            application_prototype: Filesystem __RESOURCE__
             oid: "1.3.6.1.4.1.2021.9.1.10[\"index\",\"1.3.6.1.4.1.2021.9.1.2\", \"{#STORAGE_DESCR}\"]"
             type: SNMP
             snmpObject: dskPercentNode.{#STORAGE_DESCR}
             mib: UCD-SNMP-MIB
-            zbx_ver: "4.2"
+            _zbx_ver: "4.2"
             preprocessing:
               - type: JAVASCRIPT
                 params: return (100-value);
@@ -262,25 +262,25 @@ templates:
           type: SNMP
           snmpObject: laLoad.1
           mib: UCD-SNMP-MIB
-          zbx_ver: "4.2"
+          _zbx_ver: "4.2"
         - _prototype: system.cpu.load.avg5
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-5\"]"
           type: SNMP
           snmpObject: laLoad.2
           mib: UCD-SNMP-MIB
-          zbx_ver: "4.2"
+          _zbx_ver: "4.2"
         - _prototype: system.cpu.load.avg15
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-15\"]"
           type: SNMP
           snmpObject: laLoad.3
           mib: UCD-SNMP-MIB
-          zbx_ver: "4.2"
+          _zbx_ver: "4.2"
         - _prototype: system.cpu.num
           oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
           type: SNMP
           key: snmp.system.cpu.num
           mib: HOST-RESOURCES-MIB
-          zbx_ver: "4.2"
+          _zbx_ver: "4.2"
           preprocessing:
             - type: JAVASCRIPT
               params: |

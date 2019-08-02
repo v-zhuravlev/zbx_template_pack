@@ -1,14 +1,14 @@
 {
     "templates": [
         {
-            "zbx_ver": "4.2",
+            "_zbx_ver": "4.2",
             "name": "Template OS Linux Zabbix agent",
-            "classes": [
+            "_classes": [
                 "OS",
                 "PERFORMANCE"
             ],
             "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
-            "discoveryRules": [
+            "discovery_rules": [
                 {
                     "name": "Mounted filesystem discovery",
                     "key": "vfs.fs.discovery",
@@ -20,19 +20,19 @@
                             {
                                 "macro": "{#FSTYPE}",
                                 "value": "@File systems for discovery",
-                                "operator": "8",
+                                "operator": "MATCHES_REGEX",
                                 "formulaid": "A"
                             }
                         ],
                     },
-                    "metrics": [
+                    "items": [
                         {
                             "_prototype": "vfs.fs.used",
                             "type": "ZABBIX_PASSIVE",
                             "key": "vfs.fs.size[{#FSNAME},used]",
                             "_group": "Filesystems",
                             "_resource": "{#FSNAME}",
-                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            "application_prototype": "Filesystem __RESOURCE__"
                         },
                         {
                             "_prototype": "vfs.fs.free",
@@ -40,7 +40,7 @@
                             "key": "vfs.fs.size[{#FSNAME},free]",
                             "_group": "Filesystems",
                             "_resource": "{#FSNAME}",
-                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            "application_prototype": "Filesystem __RESOURCE__"
                         },
                         {
                             "_prototype": "vfs.fs.total",
@@ -48,7 +48,7 @@
                             "key": "vfs.fs.size[{#FSNAME},total]",
                             "_group": "Filesystems",
                             "_resource": "{#FSNAME}",
-                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            "application_prototype": "Filesystem __RESOURCE__"
                         },
                         {
                             "_prototype": "vfs.fs.pused",
@@ -56,7 +56,7 @@
                             "key": "vfs.fs.size[{#FSNAME},pused]",
                             "_group": "Filesystems",
                             "_resource": "{#FSNAME}",
-                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            "application_prototype": "Filesystem __RESOURCE__"
                         },
                         {
                             "_prototype": "vfs.fs.inode.pfree",
@@ -64,22 +64,22 @@
                             "key": "vfs.fs.inode[{#FSNAME},pfree]",
                             "_group": "Filesystems",
                             "_resource": "{#FSNAME}",
-                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                            "application_prototype": "Filesystem __RESOURCE__"
                         }
                     ]
                 },
                 {
                     "name": "Block devices discovery",
                     "key": "vfs.dev.discovery",
-                    "masterItem": "vfs.dev.diskstats",
-                    "type": "DEPENDENT_ITEM",
+                    "master_item": "vfs.dev.diskstats",
+                    "type": "DEPENDENT",
                     "preprocessing": [
                         {
                             "type": "JSONPATH",
                             "params": "$.lld"
                         },
                         {
-                            "type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
                             "params": "1h"
                         }
                     ],
@@ -89,18 +89,18 @@
                             {
                                 "macro": "{#DEVNAME}",
                                 "value": "(loop[\\d]*|sda([\\d])+)",
-                                "operator": "9", //doesn't match
+                                "operator": "NOT_MATCHES_REGEX", //doesn't match
                                 "formulaid": "A"
                             }
                         ],
                     },
-                    "metrics": [
+                    "items": [
                         {
                             "_resource": "{#DEVNAME}",
-                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "application_prototype": "Disk __RESOURCE__",
                             "_prototype": "vfs.dev.read.rate",
-                            "type": "DEPENDENT_ITEM",
-                            "masterItem": "vfs.dev.diskstats",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
                             "key": "vfs.dev.read.rate[{#DEVNAME}]",
                             "valueType": "FLOAT",
                             "units": "!r/s",
@@ -117,10 +117,10 @@
                         },
                         {
                             "_resource": "{#DEVNAME}",
-                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "application_prototype": "Disk __RESOURCE__",
                             "_prototype": "vfs.dev.write.rate",
-                            "type": "DEPENDENT_ITEM",
-                            "masterItem": "vfs.dev.diskstats",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
                             "key": "vfs.dev.write.rate[{#DEVNAME}]",
                             "valueType": "FLOAT",
                             "units": "!w/s",
@@ -137,11 +137,11 @@
                         },
                         {
                             "_resource": "{#DEVNAME}",
-                            //"application_prototype": "Disk __ALARM_OBJECT__",
+                            //"application_prototype": "Disk __RESOURCE__",
                             "_group": "Internal_items",
                             "_prototype": "vfs.dev.read.time.rate",
-                            "type": "DEPENDENT_ITEM",
-                            "masterItem": "vfs.dev.diskstats",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
                             "key": "vfs.dev.read.time.rate[{#DEVNAME}]",
                             "valueType": "FLOAT",
                             "preprocessing": [
@@ -162,11 +162,11 @@
                         },
                         {
                             "_resource": "{#DEVNAME}",
-                            //"application_prototype": "Disk __ALARM_OBJECT__",
+                            //"application_prototype": "Disk __RESOURCE__",
                             "_group": "Internal_items",
                             "_prototype": "vfs.dev.write.time.rate",
-                            "type": "DEPENDENT_ITEM",
-                            "masterItem": "vfs.dev.diskstats",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
                             "key": "vfs.dev.write.time.rate[{#DEVNAME}]",
                             "valueType": "FLOAT",
                             "preprocessing": [
@@ -189,7 +189,7 @@
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.read.await",
                             "key": "vfs.dev.read.await[{#DEVNAME}]",
-                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "application_prototype": "Disk __RESOURCE__",
                             "type": "CALCULATED",
                             "expression_formula": "(last(__vfs.dev.read.time.rate__)/(last(__vfs.dev.read.rate__)+(last(__vfs.dev.read.rate__)=0)))*1000*(last(__vfs.dev.read.rate__) > 0)",
                             "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
@@ -198,7 +198,7 @@
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.write.await",
                             "key": "vfs.dev.write.await[{#DEVNAME}]",
-                            "application_prototype": "Disk __ALARM_OBJECT__",
+                            "application_prototype": "Disk __RESOURCE__",
                             "type": "CALCULATED",
                             "expression_formula": "(last(__vfs.dev.write.time.rate__)/(last(__vfs.dev.write.rate__)+(last(__vfs.dev.write.rate__)=0)))*1000*(last(__vfs.dev.write.rate__) > 0)",
                             "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
@@ -207,9 +207,9 @@
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.queue_size",
                             "key": "vfs.dev.queue_size[{#DEVNAME}]",
-                            "application_prototype": "Disk __ALARM_OBJECT__",
-                            "type": "DEPENDENT_ITEM",
-                            "masterItem": "vfs.dev.diskstats",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
                             "preprocessing": [
                                 {
                                     "type": "JSONPATH",
@@ -229,9 +229,9 @@
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.util",
                             "key": "vfs.dev.util[{#DEVNAME}]",
-                            "application_prototype": "Disk __ALARM_OBJECT__",
-                            "type": "DEPENDENT_ITEM",
-                            "masterItem": "vfs.dev.diskstats",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
                             "preprocessing": [
                                 {
                                     "type": "JSONPATH",
@@ -250,7 +250,7 @@
                     ]
                 }
             ],
-            "metrics": [
+            "items": [
                 //master item for proc diskstats
                 {
                     "_id": "vfs.dev.diskstats",
@@ -300,8 +300,8 @@
                 },
                 {
                     "_prototype": "system.cpu.util",
-                    "type": "DEPENDENT_ITEM",
-                    "masterItem": "system.cpu.idle",
+                    "type": "DEPENDENT",
+                    "master_item": "system.cpu.idle",
                     "key": "system.cpu.util",
                     "preprocessing": [
                         {
