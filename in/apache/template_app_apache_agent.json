@@ -2,85 +2,85 @@
     "templates": [
         {
             "name": "Template App Apache Zabbix agent",
-            "zbxVer": "3.4",
-            "classes": [
+            "_zbx_ver": "3.4",
+            "_classes": [
                 "APP"
             ],
             "description": "Get metrics from mod_status module using Zabbix agent.\nhttps://httpd.apache.org/docs/current/mod/mod_status.html",
-            "metrics": [
+            "items": [
                 {
-                    "prototype": "apache.get_stub_status",
-                    "type": "ZABBIX_AGENT",
-                    "zbxVer": "3.4",
+                    "_prototype": "apache.get_stub_status",
+                    "type": "ZABBIX_PASSIVE",
+                    "_zbx_ver": "3.4",
                     "key": "web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]",
                     "triggers": [
                         {
-                            "prototype": "trigger.http_get",
+                            "_prototype": "trigger.http_get",
                             "name": "Failed to fetch Apache stub status page",
                             "url": "https://httpd.apache.org/docs/current/mod/mod_status.html"
                         }
                     ]
                 },
                 {
-                    "prototype": "apache.bytes_per_second"
+                    "_prototype": "apache.bytes_per_second"
                 },
                 {
-                    "prototype": "apache.connections.async_closing"
+                    "_prototype": "apache.connections.async_closing"
                 },
                 {
-                    "prototype": "apache.connections.async_keep_alive"
+                    "_prototype": "apache.connections.async_keep_alive"
                 },
                 {
-                    "prototype": "apache.connections.async_writing"
+                    "_prototype": "apache.connections.async_writing"
                 },
                 {
-                    "prototype": "apache.connections.total"
+                    "_prototype": "apache.connections.total"
                 },
                 {
-                    "prototype": "apache.requests.total.rate"
+                    "_prototype": "apache.requests.total.rate"
                 },
                 {
-                    "prototype": "apache.requests.total"
+                    "_prototype": "apache.requests.total"
                 },
                 {
-                    "prototype": "apache.uptime"
+                    "_prototype": "apache.uptime"
                 },
                 {
-                    "prototype": "apache.version"
+                    "_prototype": "apache.version"
                 },
                 {
-                    "prototype": "apache.workers.busy"
+                    "_prototype": "apache.workers.busy"
                 },
                 {
-                    "prototype": "apache.workers.idle"
+                    "_prototype": "apache.workers.idle"
                 },
                 {
-                    "id": "apache.proc.num",
-                    "prototype": "proc.num",
+                    "_id": "apache.proc.num",
+                    "_prototype": "proc.num",
                     "key": "proc.num[{$APACHE_PROC_NAME}]",
-                    "group": "Apache",
-                    "alarmObject": "Apache"
+                    "_group": "Apache",
+                    "_resource": "Apache"
                 },
                 {
-                    "id": "apache.proc.mem.rss",
-                    "prototype": "proc.mem.rss",
+                    "_id": "apache.proc.mem.rss",
+                    "_prototype": "proc.mem.rss",
                     "key": "proc.mem[{$APACHE_PROC_NAME},,,,rss]",
-                    "group": "Apache",
-                    "alarmObject": "Apache"
+                    "_group": "Apache",
+                    "_resource": "Apache"
                 },
                 {
-                    "id": "apache.proc.mem.vsize",
-                    "prototype": "proc.mem.vsize",
+                    "_id": "apache.proc.mem.vsize",
+                    "_prototype": "proc.mem.vsize",
                     "key": "proc.mem[{$APACHE_PROC_NAME},,,,vsize]",
-                    "group": "Apache",
-                    "alarmObject": "Apache"
+                    "_group": "Apache",
+                    "_resource": "Apache"
                 },
                 {
-                    "id": "apache.proc.cpu.util",
-                    "prototype": "proc.cpu.util",
+                    "_id": "apache.proc.cpu.util",
+                    "_prototype": "proc.cpu.util",
                     "key": "proc.cpu.util[{$APACHE_PROC_NAME}]",
-                    "group": "Apache",
-                    "alarmObject": "Apache"
+                    "_group": "Apache",
+                    "_resource": "Apache"
                 }
             ],
             "macros": [
@@ -103,6 +103,5 @@
                 }
             ]
         }
-
     ]
 }

@@ -1,5 +1,5 @@
 templates:
-  - classes:
+  - _classes:
       - INTERFACES
       - Interfaces EtherLike Extension
       - NETWORK
@@ -7,116 +7,116 @@ templates:
       - SNMPv2
     name: Template Net Extreme EXOS
     description: Template Extreme EXOS
-    discoveryRules:
+    discovery_rules:
       -
         name: Memory Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.32.2.2.1.1]
         key: memory.discovery
-        metrics:
-          - prototype: vm.memory.free
+        items:
+          - _prototype: vm.memory.free
             oid: 1.3.6.1.4.1.1916.1.32.2.2.1.3.{#SNMPINDEX}
-            snmpObject: extremeMemoryMonitorSystemFree.{#SNMPINDEX}
-            mib: EXTREME-SOFTWARE-MONITOR-MIB
-            vendorDescription: Total amount of free memory in Kbytes in the system.
-            alarmObject: "#{#SNMPVALUE}"
+            _snmpObject: extremeMemoryMonitorSystemFree.{#SNMPINDEX}
+            _mib: EXTREME-SOFTWARE-MONITOR-MIB
+            _vendor_description: Total amount of free memory in Kbytes in the system.
+            _resource: "#{#SNMPVALUE}"
             preprocessing:
               - type: MULTIPLIER
-                params: 1024
-          - prototype: vm.memory.total
+                params: "1024"
+          - _prototype: vm.memory.total
             oid: 1.3.6.1.4.1.1916.1.32.2.2.1.2.{#SNMPINDEX}
-            snmpObject: extremeMemoryMonitorSystemTotal.{#SNMPINDEX}
-            mib: EXTREME-SOFTWARE-MONITOR-MIB
-            vendorDescription: Total amount of DRAM in Kbytes in the system.
-            alarmObject: "#{#SNMPVALUE}"
+            _snmpObject: extremeMemoryMonitorSystemTotal.{#SNMPINDEX}
+            _mib: EXTREME-SOFTWARE-MONITOR-MIB
+            _vendor_description: Total amount of DRAM in Kbytes in the system.
+            _resource: "#{#SNMPVALUE}"
             preprocessing:
                 - type: MULTIPLIER
-                  params: 1024
-          - prototype: vm.memory.pused
-            snmpObject: "{#SNMPVALUE}"
+                  params: "1024"
+          - _prototype: vm.memory.pused
+            _snmpObject: "{#SNMPVALUE}"
             type: CALCULATED
             discoveryRule: Memory Discovery
-            alarmObject: "#{#SNMPVALUE}"
+            _resource: "#{#SNMPVALUE}"
       -
         name: PSU Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.1.1.27.1.1]
         key: psu.discovery
         description: Table of status of all power supplies in the system.
-        metrics:
-          - prototype: sensor.psu.status
+        items:
+          - _prototype: sensor.psu.status
             oid: 1.3.6.1.4.1.1916.1.1.1.27.1.2.{#SNMPINDEX}
-            snmpObject: extremePowerSupplyStatus.{#SNMPINDEX}
-            mib: EXTREME-SYSTEM-MIB
-            alarmObject: PSU {#SNMPVALUE}
+            _snmpObject: extremePowerSupplyStatus.{#SNMPINDEX}
+            _mib: EXTREME-SYSTEM-MIB
+            _resource: PSU {#SNMPVALUE}
             valueMap: EXTREME-SYSTEM-MIB::extremePowerSupplyStatus
-            vendorDescription: Status of the power supply {#SNMPVALUE}
+            _vendor_description: Status of the power supply {#SNMPVALUE}
             triggers:
-              - prototype: psu.crit            
+              - _prototype: psu.crit            
       -
         name: FAN Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.1.1.9.1.1]
         key: fan.discovery
-        metrics:
-        - prototype: sensor.fan.status
+        items:
+        - _prototype: sensor.fan.status
           oid: 1.3.6.1.4.1.1916.1.1.1.9.1.2.{#SNMPINDEX}
-          snmpObject: extremeFanOperational.{#SNMPINDEX}
-          mib: EXTREME-SYSTEM-MIB
-          alarmObject: Fan {#SNMPVALUE}
+          _snmpObject: extremeFanOperational.{#SNMPINDEX}
+          _mib: EXTREME-SYSTEM-MIB
+          _resource: Fan {#SNMPVALUE}
           valueMap: EXTREME-SYSTEM-MIB::extremeFanOperational
-          vendorDescription: Operational status of a cooling fan.
+          _vendor_description: Operational status of a cooling fan.
           triggers:
-           - prototype: fan.crit
-        - prototype: sensor.fan.speed
+           - _prototype: fan.crit
+        - _prototype: sensor.fan.speed
           oid: 1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}
-          snmpObject: extremeFanSpeed.{#SNMPINDEX}
-          mib: EXTREME-SYSTEM-MIB
-          alarmObject: Fan {#SNMPVALUE}
-          vendorDescription: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
-    metrics:
-      - prototype: system.cpu.util
+          _snmpObject: extremeFanSpeed.{#SNMPINDEX}
+          _mib: EXTREME-SYSTEM-MIB
+          _resource: Fan {#SNMPVALUE}
+          _vendor_description: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
+    items:
+      - _prototype: system.cpu.util
         oid: 1.3.6.1.4.1.1916.1.32.1.2.0
-        snmpObject: extremeCpuMonitorTotalUtilization.0
-        mib: EXTREME-SOFTWARE-MONITOR-MIB
-        vendorDescription: Total CPU utlization (percentage) as of last sampling.
+        _snmpObject: extremeCpuMonitorTotalUtilization.0
+        _mib: EXTREME-SOFTWARE-MONITOR-MIB
+        _vendor_description: Total CPU utlization (percentage) as of last sampling.
       
-      - prototype: sensor.temp.value
+      - _prototype: sensor.temp.value
         oid: 1.3.6.1.4.1.1916.1.1.1.8.0
-        snmpObject: extremeCurrentTemperature.0
-        mib: EXTREME-SYSTEM-MIB
-        ref: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-support-temperature-polling-via-SNMP-on-all-nodes-in-a-stack
-        alarmObject: Device
+        _snmpObject: extremeCurrentTemperature.0
+        _mib: EXTREME-SYSTEM-MIB
+        _ref: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-support-temperature-polling-via-SNMP-on-all-nodes-in-a-stack
+        _resource: Device
         triggers:
-          - prototype: tempWarn
-          - prototype: tempCrit.combined
-          - prototype: tempLow
-      - prototype: sensor.temp.status
+          - _prototype: tempWarn
+          - _prototype: tempCrit.combined
+          - _prototype: tempLow
+      - _prototype: sensor.temp.status
         oid: 1.3.6.1.4.1.1916.1.1.1.7.0
-        snmpObject: extremeOverTemperatureAlarm.0
-        mib: EXTREME-SYSTEM-MIB
-        alarmObject: Device
+        _snmpObject: extremeOverTemperatureAlarm.0
+        _mib: EXTREME-SYSTEM-MIB
+        _resource: Device
         valueMap: EXTREME-SYSTEM-MIB::extremeOverTemperatureAlarm
 
 
-      - prototype: system.hw.model
+      - _prototype: system.hw.model
         oid: 1.3.6.1.2.1.47.1.1.1.1.2.1
-        snmpObject: entPhysicalDescr.1
-        mib: ENTITY-MIB
-      - prototype: system.hw.serialnumber
+        _snmpObject: entPhysicalDescr.1
+        _mib: ENTITY-MIB
+      - _prototype: system.hw.serialnumber
         oid: 1.3.6.1.2.1.47.1.1.1.1.11.1
-        snmpObject: entPhysicalSerialNum.1
-        mib: ENTITY-MIB
-      - prototype: system.hw.firmware
+        _snmpObject: entPhysicalSerialNum.1
+        _mib: ENTITY-MIB
+      - _prototype: system.hw.firmware
         oid: 1.3.6.1.2.1.47.1.1.1.1.9.1
-        snmpObject: entPhysicalFirmwareRev.1
-        mib: ENTITY-MIB
-      - prototype: system.hw.version
+        _snmpObject: entPhysicalFirmwareRev.1
+        _mib: ENTITY-MIB
+      - _prototype: system.hw.version
         oid: 1.3.6.1.2.1.47.1.1.1.1.9.1
-        snmpObject: entPhysicalHardwareRev.1
-        mib: ENTITY-MIB
-      - prototype: system.sw.os
+        _snmpObject: entPhysicalHardwareRev.1
+        _mib: ENTITY-MIB
+      - _prototype: system.sw.os
         oid: 1.3.6.1.4.1.1916.1.1.1.13.0
-        snmpObject: extremePrimarySoftwareRev.0
-        mib: EXTREME-SYSTEM-MIB
-        vendorDescription: | 
+        _snmpObject: extremePrimarySoftwareRev.0
+        _mib: EXTREME-SYSTEM-MIB
+        _vendor_description: | 
           The software revision of the primary image stored in this device.
           This string will have a zero length if the revision is unknown, invalid or not present.
           This will also be reported in RMON2 probeSoftwareRev if this is the software image currently running in the device.

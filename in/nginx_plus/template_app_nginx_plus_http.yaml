@@ -1,26 +1,26 @@
 templates:
   - name: Template App Nginx Plus HTTP
-    classes:
+    _classes:
       - APP
     description: TODO
-    zbxVer: "4.2"
-    metrics:
-      - id: nginx.plus.get_server_zones
+    _zbx_ver: "4.2"
+    items:
+      - _id: nginx.plus.get_server_zones
         key: nginx.plus.get_server_zones
         name: Get server zones
         description: Display information about HTTP virtual servers
-        group: Nginx
-        alarmObject: Nginx
+        _group: Nginx
+        _resource: Nginx
         type: HTTP_AGENT
-        valueType: TEXT
+        value_type: TEXT
         history: 7d
         trends: "0"
         url: "{$NGINX_API_URL}/http/server_zones"
-    discoveryRules:
+    discovery_rules:
       - name: Nginx Plus server zones discovery
         description: Discover NginxHTTP virtual servers
         key: nginx.plus.get_server_zones.discovery
-        type: DEPENDENT_ITEM
+        type: DEPENDENT
         masterItem: nginx.plus.get_server_zones
         preprocessing:
           - type: JAVASCRIPT
@@ -80,134 +80,134 @@ templates:
                         }
                       }
                       */
-          - type: DISCARD_UNCHANGED_WITH_HEARTBEAT
+          - type: DISCARD_UNCHANGED_HEARTBEAT
             params: "1h"
-        metrics:
-          - id: nginx.plus.discarded
+        items:
+          - _id: nginx.plus.discarded
             key: nginx.plus.discarded[{#NGINX_ZONE}]
             name: Discarded
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].discarded
-          - id: nginx.plus.processing
+          - _id: nginx.plus.processing
             key: nginx.plus.processing[{#NGINX_ZONE}]
             name: Processing
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].processing
-          - id: nginx.plus.received
+          - _id: nginx.plus.received
             key: nginx.plus.received[{#NGINX_ZONE}]
             name: Received
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].received
 
-          - id: nginx.plus.requests
+          - _id: nginx.plus.requests
             key: nginx.plus.requests[{#NGINX_ZONE}]
             name: Requests
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].requests
 
-          - id: nginx.plus.responses.1xx
+          - _id: nginx.plus.responses.1xx
             key: nginx.plus.responses.1xx[{#NGINX_ZONE}]
             name: Responses 1xx
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].responses.1xx
 
-          - id: nginx.plus.responses.2xx
+          - _id: nginx.plus.responses.2xx
             key: nginx.plus.responses.2xx[{#NGINX_ZONE}]
             name: Responses 2xx
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].responses.2xx
           
-          - id: nginx.plus.responses.3xx
+          - _id: nginx.plus.responses.3xx
             key: nginx.plus.responses.3xx[{#NGINX_ZONE}]
             name: Responses 3xx
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].responses.3xx
 
-          - id: nginx.plus.responses.4xx
+          - _id: nginx.plus.responses.4xx
             key: nginx.plus.responses.4xx[{#NGINX_ZONE}]
             name: Responses 4xx
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].responses.4xx
 
-          - id: nginx.plus.responses.5xx
+          - _id: nginx.plus.responses.5xx
             key: nginx.plus.responses.5xx[{#NGINX_ZONE}]
             name: Responses 5xx
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].responses.5xx
 
-          - id: nginx.plus.responses.total
+          - _id: nginx.plus.responses.total
             key: nginx.plus.responses.total[{#NGINX_ZONE}]
             name: Responses total
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH
                 params: $["{#NGINX_ZONE}"].responses.total
 
-          - id: nginx.plus.sent
+          - _id: nginx.plus.sent
             key: nginx.plus.sent[{#NGINX_ZONE}]
             name: Sent
-            alarmObject: "{#NGINX_ZONE}"
-            type: DEPENDENT_ITEM
+            _resource: "{#NGINX_ZONE}"
+            type: DEPENDENT
             master_item: nginx.plus.get_server_zones
-            group: Nginx
+            _group: Nginx
             application_prototype: "Nginx {#NGINX_ZONE}"
             preprocessing:
               - type: JSONPATH

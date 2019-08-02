@@ -2,68 +2,72 @@
   "$id": "http://zabbix.com/template_gen_metric_prototype.json",
   "type": "array",
   "definitions": {
-    "zbxVer":{
-        "type":"string",
-        "default": "3.0",
-        "enum": [
-          "3.0",
-          "3.2",
-          "3.4",
-          "4.0",
-          "4.2"
-        ]
+    "_zbx_ver": {
+      "type": "string",
+      "default": "3.0",
+      "enum": [
+        "3.0",
+        "3.2",
+        "3.4",
+        "4.0",
+        "4.2"
+      ]
     },
-    "preprocessing":{
-      "type":"array",
-      "required": ["type"],
+    "preprocessing": {
+      "type": "array",
+      "required": [
+        "type"
+      ],
       "items": {
         "defaultSnippets": [
           {
             "label": "Regex",
             "description": "Regex preprocessing",
             "body": {
-                "type": "REGEX",
-                "params": "$1\r\n\\1"
+              "type": "REGEX",
+              "params": "$1\r\n\\1"
             }
           },
           {
             "label": "Multiplier",
             "description": "Multiplier preprocessing",
             "body": {
-                "type": "MULTIPLIER",
-                "params": "$1"
+              "type": "MULTIPLIER",
+              "params": "$1"
             }
           }
         ],
         "type": "object",
-        "required": ["type"],
+        "required": [
+          "type"
+        ],
         "properties": {
           "type": {
             "enum": [
               "MULTIPLIER",
-              "RIGHT_TRIM",
-              "LEFT_TRIM",
+              "RTRIM",
+              "LTRIM",
               "TRIM",
               "REGEX",
-              "BOOLEAN_TO_DECIMAL", 
-              "OCTAL_TO_DECIMAL", 
-              "HEXADECIMAL_TO_DECIMAL", 
-              "SIMPLE_CHANGE", 
-              "CHANGE_PER_SECOND", 
-              "XML_XPATH", 
-              "JSONPATH", 
-              "IN_RANGE", 
-              "MATCHES_REGULAR_EXPRESSION", 
-              "DOES_NOT_MATCH_REGULAR_EXPRESSION", 
-              "CHECK_FOR_ERROR_IN_JSON", 
-              "CHECK_FOR_ERROR_IN_XML", 
-              "CHECK_FOR_ERROR_IN_REGULAR_EXPRESSION", 
-              "DISCARD_UNCHANGED", 
-              "DISCARD_UNCHANGED_WITH_HEARTBEAT", 
-              "JAVASCRIPT", 
-              "PROMETHEUS_PATTERN", 
+              "BOOL_TO_DECIMAL",
+              "OCTAL_TO_DECIMAL",
+              "HEX_TO_DECIMAL",
+              "SIMPLE_CHANGE",
+              "CHANGE_PER_SECOND",
+              "XMLPATH",
+              "JSONPATH",
+              "IN_RANGE",
+              "MATCHES_REGEX",
+              "NOT_MATCHES_REGEX",
+              "CHECK_JSON_ERROR",
+              "CHECK_XML_ERROR",
+              "CHECK_REGEX_ERROR",
+              "DISCARD_UNCHANGED",
+              "DISCARD_UNCHANGED_HEARTBEAT",
+              "JAVASCRIPT",
+              "PROMETHEUS_PATTERN",
               "PROMETHEUS_TO_JSON"
-              ]
+            ]
           },
           "params": {
             "type": "string",
@@ -79,25 +83,25 @@
     "defaultSnippets": [
       {
         "label": "New SNMP prototyped metric",
-        "description": "Add new metric from existing prototype",
+        "description": "Add new metric from existing _prototype",
         "body": {
-          "prototype": "$1",
+          "_prototype": "$1",
           "oid": "$2",
-          "snmpObject": "$3",
-          "mib": "$4",
-          "alarmObject": "$5"
+          "_snmpObject": "$3",
+          "_mib": "$4",
+          "_resource": "$5"
         }
       },
       {
         "label": "Dependent metric(regex)",
         "description": "Dependent metric",
         "body": {
-          "id": "$1",
+          "_id": "$1",
           "key": "$2",
           "name": "$3",
-          "type": "DEPENDENT_ITEM",
+          "type": "DEPENDENT",
           "masterItem": "$4",
-          "group": "$5",
+          "_group": "$5",
           "preprocessing": [
             {
               "type": "REGEX",
@@ -107,20 +111,20 @@
         }
       },
       {
-        "label": "New metric without prototype",
+        "label": "New metric without _prototype",
         "body": {
-          "id": "icmpping",
+          "_id": "icmpping",
           "key": "icmpping",
           "name": "ICMP ping",
-          "group": "Status",
-          "type": "SIMPLE_CHECK",
+          "_group": "Status",
+          "type": "SIMPLE",
           "history": "1w",
-          "update": "1m",
-          "valueType": "INTEGER",
+          "delay": "1m",
+          "value_type": "UNSIGNED",
           "valueMap": "Service state",
           "triggers": [
             {
-              "prototype": "noping"
+              "_prototype": "noping"
             }
           ]
         }
@@ -128,8 +132,8 @@
     ],
     "type": "object",
     "properties": {
-      "prototype": {
-        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/prototype",
+      "_prototype": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/_prototype",
         "type": "string",
         "title": "The Prototype Schema ",
         "default": "",
@@ -137,7 +141,7 @@
           "net.if.status"
         ]
       },
-      "id": {
+      "_id": {
         "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/id",
         "type": "string"
       },
@@ -160,50 +164,64 @@
         ]
       },
       "type": {
-          "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/description",
-          "type": "string",
-          "description": "see also org.zabbix.template.generator.objects.Type",
-          "enum": [
-            "ZABBIX_AGENT",
-            "SNMP_V1",
-            "ZABBIX_TRAPPER",
-            "SIMPLE_CHECK",
-            "SNMP_V2",
-            "SNMP", // !!!!not official
-            "ZABBIX_INTERNAL",
-            "SNMP_V3",
-            "ZABBIX_AGENT_ACTIVE",
-            "ZABBIX_AGGREGATE",
-            "WEB_ITEM",
-            "EXTERNAL_CHECK",
-            "DATABASE_MONITOR",
-            "IPMI_AGENT",
-            "SSH_AGENT",
-            "TELNET_AGENT",
-            "CALCULATED",
-            "JMX_AGENT",
-            "SNMP_TRAP",
-            "DEPENDENT_ITEM",
-            "HTTP_AGENT"
-          ]
-
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/description",
+        "type": "string",
+        "description": "see also org.zabbix.template.generator.objects.Type",
+        "enum": [
+          "ZABBIX_PASSIVE",
+          "SNMPV1",
+          "TRAP",
+          "SIMPLE",
+          "SNMPV2",
+          "SNMP", // !!!!not official
+          "INTERNAL",
+          "SNMPV3",
+          "ZABBIX_ACTIVE",
+          "AGGREGATE",
+          "WEB_ITEM",
+          "EXTERNAL",
+          "ODBC",
+          "IPMI",
+          "SSH",
+          "TELNET",
+          "CALCULATED",
+          "JMX",
+          "SNMP_TRAP",
+          "DEPENDENT",
+          "HTTP_AGENT"
+        ]
       },
-      "group": {
-        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/group",
+      "_group": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/_group",
         "type": "string",
         "title": "The Group Schema",
         "examples": [
-           "CPU",  "Memory",  "Status",  "Temperature",  "Network_interfaces",  "Internal_items",  "Inventory",  "Storage",  "General",  "Fans", "Filesystems",
-           "Power_supply",  "Physical_disks",  "Virtual_disks",  "Disk_arrays",  "Wireless",
-           "Nginx", "Apache"]
+          "CPU",
+          "Memory",
+          "Status",
+          "Temperature",
+          "Network_interfaces",
+          "Internal_items",
+          "Inventory",
+          "Storage",
+          "General",
+          "Fans",
+          "Power_supply",
+          "Physical_disks",
+          "Virtual_disks",
+          "Disk_arrays",
+          "Wireless",
+          "Nginx",
+          "Apache"
+        ]
       },
-      "application_prototype" :{
+      "application_prototype": {
         "type": "string",
-        "default": "__ALARM_OBJECT__",
+        "default": "__RESOURCE__",
         "pattern": ".*\\{#.+\\}.*"
       },
-      "delay": {
-        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/delay",
+      "update": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/update",
         "description": "Update interval",
         "type": "string",
         "title": "The Delay Schema ",
@@ -235,21 +253,20 @@
           "0d"
         ]
       },
-      "valueType": {
-        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/valueType",
+      "value_type": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/value_type",
         "type": "string",
         "title": "The Valuetype Schema ",
         "enum": [
           "FLOAT",
           "CHAR",
           "LOG",
-          "INTEGER",
+          "UNSIGNED",
           "TEXT"
         ]
-
       },
       "oid": {
-        "$id": "/properties/templates/items/properties/metrics/items/properties/oid",
+        "$id": "/properties/templates/items/properties/items/items/properties/oid",
         "type": "string",
         "title": "The Oid Schema ",
         "default": "",
@@ -257,8 +274,8 @@
           "1.3.6.1.4.1.171.12.1.1.6.2.0"
         ]
       },
-      "snmpObject": {
-        "$id": "/properties/templates/items/properties/metrics/items/properties/snmpObject",
+      "_snmpObject": {
+        "$id": "/properties/templates/items/properties/items/items/properties/_snmpObject",
         "type": "string",
         "title": "The Snmpobject Schema ",
         "default": "",
@@ -266,8 +283,8 @@
           "agentCPUutilizationIn1min.0"
         ]
       },
-      "mib": {
-        "$id": "/properties/templates/items/properties/metrics/items/properties/mib",
+      "_mib": {
+        "$id": "/properties/templates/items/properties/items/items/properties/_mib",
         "type": "string",
         "title": "The Mib Schema ",
         "default": "",
@@ -275,8 +292,8 @@
           "DLINK-AGENT-MIB"
         ]
       },
-      "vendorDescription": {
-        "$id": "/properties/templates/items/properties/metrics/items/properties/vendorDescription",
+      "_vendor_description": {
+        "$id": "/properties/templates/items/properties/items/items/properties/_vendor_description",
         "type": "string",
         "title": "The Vendor description Schema ",
         "default": "",
@@ -284,28 +301,30 @@
           "The unit of time is 1 minute. The value will be between 0% (idle) and 100%(very busy)."
         ]
       },
-      "masterItem":{
-        "$id": "/properties/templates/items/properties/metrics/items/properties/masterItem",
+      "masterItem": {
+        "$id": "/properties/templates/items/properties/items/items/properties/masterItem",
         "type": "string",
         "description": "Insert master item 'id' (only required for type = dependent item)"
       },
-      "zbxVer": {
-        "$ref": "#definitions/zbxVer",
+      "_zbx_ver": {
+        "$ref": "#definitions/_zbx_ver",
         "description": "(optional) Please provide minimum Zabbix version required. Metric will be filtered out for any templates for versions below"
-        
       },
-      "preprocessing":{
+      "preprocessing": {
         "$ref": "#definitions/preprocessing"
       },
       "triggers": {
         "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers",
         "type": "array",
-        "required": ["name","expression"],
+        "required": [
+          "name",
+          "expression"
+        ],
         "items": {
           "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items",
           "type": "object",
           "properties": {
-            "prototype": {
+            "_prototype": {
               "type": "string"
             },
             "documentation": {
@@ -317,7 +336,7 @@
                 "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled."
               ]
             },
-            "id": {
+            "_id": {
               "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/id",
               "type": "string",
               "title": "The Id Schema ",
@@ -374,14 +393,18 @@
             },
             "priority": {
               "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/triggers/items/properties/priority",
-              "type": "integer",
-              "title": "The Priority Schema ",
-              "default": 0,
-              "minimum": 0,
-              "maximum": 5
+              "default": "NOT_CLASSIFIED",
+              "enum": [
+                "NOT_CLASSIFIED",
+                "INFO",
+                "WARNING",
+                "AVERAGE",
+                "HIGH",
+                "DISASTER"
+              ]
             },
-            "dependsOn": {
-              "type":"array"
+            "_depends_on": {
+              "type": "array"
             }
           }
         }
@@ -394,37 +417,40 @@
             "name": {
               "type": "string"
             },
-            "graphType": {
-               "default": "NORMAL",
-               "enum": [
-                 "NORMAL",
-                 "STACKED",
-                 "PIE",
-                 "EXPLODED"
-               ]
+            "graphtype": {
+              "default": "NORMAL",
+              "enum": [
+                "NORMAL",
+                "STACKED",
+                "PIE",
+                "EXPLODED"
+              ]
             },
-            "graphItems": {
-              "type":"array",
+            "graph_items": {
+              "type": "array",
               "items": {
-                "type":"object",
+                "type": "object",
                 "properties": {
                   "drawtype": {
-                    "default": "LINE",
+                    "default": "SINGLE_LINE",
                     "enum": [
-                      "LINE",
+                      "SINGLE_LINE",
                       "FILLED_REGION",
                       "BOLD_LINE",
-                      "DOT",
+                      "DOTTED_LINE",
                       "DASHED_LINE",
                       "GRADIENT_LINE"
                     ]
                   },
                   "name": {
                     "description": "Enter metric id here",
-                    "type":"string"
+                    "type": "string"
                   },
                   "yaxisside": {
-                    "enum": ["LEFT", "RIGHT"]
+                    "enum": [
+                      "LEFT",
+                      "RIGHT"
+                    ]
                   }
                 }
               }

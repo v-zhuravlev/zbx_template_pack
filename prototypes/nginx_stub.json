@@ -1,43 +1,43 @@
 [
 	{
-		"id": "nginx.get_stub_status",
+		"_id": "nginx.get_stub_status",
 		"name": "Get stub status page",
 		"delay": "1m",
-		"zbxVer": "3.4",
+		"_zbx_ver": "3.4",
 		"history": "1h",
 		"trends": "0",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
-		"valueType": "TEXT",
+		"_group": "Nginx",
+		"_resource": "Nginx",
+		"value_type": "TEXT",
 		"description": "The following status information is provided:\nActive connections\nThe current number of active client connections including Waiting connections.\naccepts\nThe total number of accepted client connections.\nhandled\nThe total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).\nrequests\nThe total number of client requests.\nReading\nThe current number of connections where nginx is reading the request header.\nWriting\nThe current number of connections where nginx is writing the response back to the client.\nWaiting\nThe current number of idle client connections waiting for a request.",
 		"triggers": [
-			{				
-				"prototype": "trigger.http_get",
+			{
+				"_prototype": "trigger.http_get",
 				"name": "Failed to fetch stub status page",
 				"url": "https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html"
 			}
-		/* Parsing:
+			/* Parsing:
 		Active connections: 1 
 		server accepts handled requests
  		3 3 3 
 		Reading: 0 Writing: 1 Waiting: 0
 		*/
-	]
+		]
 	},
 	{
-		"id": "nginx.connections.accepted.rate",
+		"_id": "nginx.connections.accepted.rate",
 		"key": "nginx.connections.accepted.rate",
-		"type": "DEPENDENT_ITEM",
-		"valueType": "FLOAT",
+		"type": "DEPENDENT",
+		"value_type": "FLOAT",
 		"name": "Connections accepted per second",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"masterItem": "nginx.get_stub_status",
 		"description": "The total number of accepted client connections.",
 		"preprocessing": [
 			{
-			  "type": "REGEX",
-			  "params": "server accepts handled requests\\s+([0-9]+) ([0-9]+) ([0-9]+)\r\n\\1"
+				"type": "REGEX",
+				"params": "server accepts handled requests\\s+([0-9]+) ([0-9]+) ([0-9]+)\r\n\\1"
 			},
 			{
 				"type": "CHANGE_PER_SECOND"
@@ -45,13 +45,13 @@
 		]
 	},
 	{
-		"id": "nginx.connections.active",
+		"_id": "nginx.connections.active",
 		"name": "Connections active",
 		"key": "nginx.connections.active",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"description": "The current number of active client connections including Waiting connections.",
 		"preprocessing": [
 			{
@@ -59,27 +59,27 @@
 				"params": "Active connections: ([0-9]+)\r\n\\1"
 			}
 		],
-		"graphs":[
+		"graphs": [
 			{
 				"name": "Current connections",
-				"graphItems": [
+				"graph_items": [
 					{
 						"drawtype": "BOLD_LINE",
 						"name": "nginx.connections.active",
 						"yaxisside": "LEFT"
 					},
 					{
-						"drawtype": "LINE",
+						"drawtype": "SINGLE_LINE",
 						"name": "nginx.connections.waiting",
 						"yaxisside": "LEFT"
 					},
 					{
-						"drawtype": "LINE",
+						"drawtype": "SINGLE_LINE",
 						"name": "nginx.connections.writing",
 						"yaxisside": "LEFT"
 					},
 					{
-						"drawtype": "LINE",
+						"drawtype": "SINGLE_LINE",
 						"name": "nginx.connections.reading",
 						"yaxisside": "LEFT"
 					}
@@ -87,7 +87,7 @@
 			},
 			{
 				"name": "Requests per second",
-				"graphItems": [
+				"graph_items": [
 					{
 						"name": "nginx.requests.total.rate",
 						"drawtype": "GRADIENT_LINE"
@@ -97,15 +97,15 @@
 		]
 	},
 	{
-		"id": "nginx.connections.handled.rate",
+		"_id": "nginx.connections.handled.rate",
 		"key": "nginx.connections.handled.rate",
 		"name": "Connections handled per second",
-		"type": "DEPENDENT_ITEM",
-		"valueType": "FLOAT",
+		"type": "DEPENDENT",
+		"value_type": "FLOAT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
 		"description": "The total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).",
+		"_resource": "Nginx",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -117,14 +117,14 @@
 		]
 	},
 	{
-		"id": "nginx.requests.total.rate",
+		"_id": "nginx.requests.total.rate",
 		"key": "nginx.requests.total.rate",
 		"name": "Requests per second",
-		"type": "DEPENDENT_ITEM",
-		"valueType": "FLOAT",
+		"type": "DEPENDENT",
+		"value_type": "FLOAT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"description": "The total number of client requests.",
 		"units": "!rps",
 		"preprocessing": [
@@ -138,13 +138,13 @@
 		]
 	},
 	{
-		"id": "nginx.requests.total",
+		"_id": "nginx.requests.total",
 		"key": "nginx.requests.total",
 		"name": "Requests total",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"description": "The total number of client requests.",
 		"preprocessing": [
 			{
@@ -154,13 +154,13 @@
 		]
 	},
 	{
-		"id": "nginx.connections.reading",
+		"_id": "nginx.connections.reading",
 		"key": "nginx.connections.reading",
 		"name": "Connections reading",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"description": "The current number of connections where nginx is reading the request header.",
 		"preprocessing": [
 			{
@@ -168,15 +168,15 @@
 				"params": "Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)\r\n\\1"
 			}
 		]
-	},	
+	},
 	{
-		"id": "nginx.connections.waiting",
+		"_id": "nginx.connections.waiting",
 		"key": "nginx.connections.waiting",
 		"name": "Connections waiting",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"description": "The current number of idle client connections waiting for a request.",
 		"preprocessing": [
 			{
@@ -186,13 +186,13 @@
 		]
 	},
 	{
-		"id": "nginx.connections.writing",
+		"_id": "nginx.connections.writing",
 		"key": "nginx.connections.writing",
 		"name": "Connectinos writing",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"description": "The current number of connections where nginx is writing the response back to the client.",
 		"preprocessing": [
 			{
@@ -202,21 +202,21 @@
 		]
 	},
 	{
-		"id": "nginx.version",
+		"_id": "nginx.version",
 		"key": "nginx.version",
 		"name": "Version",
-		"valueType": "CHAR",
-		"type": "DEPENDENT_ITEM",
+		"value_type": "CHAR",
+		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
-		"group": "Nginx",
-		"alarmObject": "Nginx",
+		"_group": "Nginx",
+		"_resource": "Nginx",
 		"preprocessing": [
 			{
 				"type": "REGEX",
 				"params": "Server: nginx/(.+)\r\n\\1"
 			},
 			{
-				"type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+				"type": "DISCARD_UNCHANGED_HEARTBEAT",
 				"params": "1d"
 			}
 		]

@@ -2,13 +2,13 @@
 templates:
 - name: Template Module Interfaces Windows
   description: Template Interfaces Windows
-  classes:
+  _classes:
   - IF_MIB
   - SNMPv2
   - MODULE
-  documentation:
+  _documentation:
     overview: Special version of interfaces template that is required for Windows OS. Since MS doesn't support 64 bit counters but supports ifAlias and ifHighSpeed.
-  discoveryRules:
+  discovery_rules:
   - name: Network Interfaces Discovery
     #<!-- {#IFNAME} = {#IFDESCR} in Interfaces Simple. Since {#IFNAME} - is used in triggers and so on and ifName is not available in Simple(no ifXTable). -->
     oid: discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]
@@ -19,7 +19,7 @@ templates:
         - with notPresent(6) Operational status
         - loopbacks
     filter:
-      evalType: AND
+      evaltype: AND
       conditions:
       - macro: "{#IFADMINSTATUS}"
         value: "(1|3)"
@@ -32,31 +32,31 @@ templates:
         value: "@Network interfaces for discovery" 
         # <!-- should filter out loopbacks and nulls -->
         formulaid: B
-    metrics:
-    - prototype: net.if.status
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.in
+    items:
+    - _prototype: net.if.status
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.in
       oid: "1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}"
-      snmpObject: ifInOctets.{#SNMPINDEX}
-      vendorDescription: "The total number of octets received on the interface,including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and atother times as indicated by the value of ifCounterDiscontinuityTime."
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.out
+      _snmpObject: ifInOctets.{#SNMPINDEX}
+      _vendor_description: "The total number of octets received on the interface,including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and atother times as indicated by the value of ifCounterDiscontinuityTime."
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.out
       oid: 1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}
-      snmpObject: ifOutOctets.{#SNMPINDEX}
-      vendorDescription: The total number of octets transmitted out of the interface, including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.in.errors
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.out.errors
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.out.discards
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.in.discards
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.type
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
-    - prototype: net.if.speed
-      alarmObject: Interface {#IFNAME}({#IFALIAS})
+      _snmpObject: ifOutOctets.{#SNMPINDEX}
+      _vendor_description: The total number of octets transmitted out of the interface, including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.in.errors
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.out.errors
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.out.discards
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.in.discards
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.type
+      _resource: Interface {#IFNAME}({#IFALIAS})
+    - _prototype: net.if.speed
+      _resource: Interface {#IFNAME}({#IFALIAS})
 valueMaps:
 - name: IF-MIB::ifOperStatus
   mappings:

@@ -1,30 +1,32 @@
 [
 	{
-		"id": "apache.get_stub_status",
+		"_id": "apache.get_stub_status",
 		"name": "Get Apache HTTP status",
 		"delay": "1m",
-		"zbxVer": "3.4",
+		"_zbx_ver": "3.4",
 		"history": "1d",
 		"trends": "0",
-		"group": "Apache",
-		"alarmObject": "Apache",
-		"valueType": "TEXT",
-		"triggers": [{
-			"prototype": "trigger.http_get",
-			"name": "Failed to fetch Apache stub status page",
-			"url": "https://httpd.apache.org/docs/current/mod/mod_status.html"
-		}]
+		"_group": "Apache",
+		"_resource": "Apache",
+		"value_type": "TEXT",
+		"triggers": [
+			{
+				"_prototype": "trigger.http_get",
+				"name": "Failed to fetch Apache stub status page",
+				"url": "https://httpd.apache.org/docs/current/mod/mod_status.html"
+			}
+		]
 	},
 	{
-		"id": "apache.bytes_per_second",
+		"_id": "apache.bytes_per_second",
 		"key": "apache.bytes_per_second",
 		"name": "Bytes per second",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"units": "Bps",
-		"valueType": "FLOAT",
+		"value_type": "FLOAT",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -33,13 +35,13 @@
 		]
 	},
 	{
-		"id": "apache.connections.async_closing",
+		"_id": "apache.connections.async_closing",
 		"key": "apache.connections.async_closing",
 		"name": "Connections async closing",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -49,18 +51,18 @@
 		"graphs": [
 			{
 				"name": "Current connections",
-				"graphItems": [
+				"graph_items": [
 					{
 						"name": "apache.connections.async_closing",
-						"drawtype": "LINE"
+						"drawtype": "SINGLE_LINE"
 					},
 					{
 						"name": "apache.connections.async_keep_alive",
-						"drawtype": "LINE"
+						"drawtype": "SINGLE_LINE"
 					},
 					{
 						"name": "apache.connections.async_writing",
-						"drawtype": "LINE"
+						"drawtype": "SINGLE_LINE"
 					},
 					{
 						"name": "apache.connections.total",
@@ -70,7 +72,7 @@
 			},
 			{
 				"name": "Requests per second",
-				"graphItems": [
+				"graph_items": [
 					{
 						"name": "apache.requests.total.rate",
 						"drawtype": "GRADIENT_LINE"
@@ -79,28 +81,28 @@
 			},
 			{
 				"name": "Workers",
-				"graphType": "STACKED",
-				"graphItems": [
+				"graphtype": "STACKED",
+				"graph_items": [
 					{
 						"name": "apache.workers.busy",
-						"drawtype": "LINE"
+						"drawtype": "SINGLE_LINE"
 					},
 					{
 						"name": "apache.workers.idle",
-						"drawtype": "LINE"
+						"drawtype": "SINGLE_LINE"
 					}
 				]
 			}
 		]
 	},
 	{
-		"id": "apache.connections.async_keep_alive",
+		"_id": "apache.connections.async_keep_alive",
 		"key": "apache.connections.async_keep_alive",
 		"name": "Connections async keep alive",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -109,13 +111,13 @@
 		]
 	},
 	{
-		"id": "apache.connections.async_writing",
+		"_id": "apache.connections.async_writing",
 		"key": "apache.connections.async_writing",
 		"name": "Connections async writing",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -124,13 +126,13 @@
 		]
 	},
 	{
-		"id": "apache.connections.total",
+		"_id": "apache.connections.total",
 		"key": "apache.connections.total",
 		"name": "Connections total",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -139,15 +141,15 @@
 		]
 	},
 	{
-		"id": "apache.requests.total.rate",
+		"_id": "apache.requests.total.rate",
 		"key": "apache.requests.total.rate",
 		"name": "Requests per second",
 		"description": "Calculated as change rate for 'Total Accesses' stat.\nReqPerSec is not used, as it counts average since last Apache server start.",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
-		"valueType": "FLOAT",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"value_type": "FLOAT",
 		"units": "!rps",
 		"preprocessing": [
 			{
@@ -161,13 +163,13 @@
 		]
 	},
 	{
-		"id": "apache.requests.total",
+		"_id": "apache.requests.total",
 		"key": "apache.requests.total",
 		"name": "Total accesses (requests)",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -176,13 +178,13 @@
 		]
 	},
 	{
-		"id": "apache.uptime",
+		"_id": "apache.uptime",
 		"key": "apache.uptime",
 		"name": "Uptime",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"units": "uptime",
 		"preprocessing": [
 			{
@@ -192,33 +194,33 @@
 		]
 	},
 	{
-		"id": "apache.version",
+		"_id": "apache.version",
 		"key": "apache.version",
 		"name": "Version",
-		"type": "DEPENDENT_ITEM",
-		"valueType": "CHAR",
+		"type": "DEPENDENT",
+		"value_type": "CHAR",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
 				"params": "ServerVersion:\\s+(.+)\r\n\\1"
 			},
 			{
-				"type": "DISCARD_UNCHANGED_WITH_HEARTBEAT",
+				"type": "DISCARD_UNCHANGED_HEARTBEAT",
 				"params": "1d"
 			}
 		]
 	},
 	{
-		"id": "apache.workers.busy",
+		"_id": "apache.workers.busy",
 		"key": "apache.workers.busy",
 		"name": "Workers busy",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -227,13 +229,13 @@
 		]
 	},
 	{
-		"id": "apache.workers.idle",
+		"_id": "apache.workers.idle",
 		"key": "apache.workers.idle",
 		"name": "Workers idle",
-		"type": "DEPENDENT_ITEM",
+		"type": "DEPENDENT",
 		"masterItem": "apache.get_stub_status",
-		"group": "Apache",
-		"alarmObject": "Apache",
+		"_group": "Apache",
+		"_resource": "Apache",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -241,5 +243,4 @@
 			}
 		]
 	}
-
 ]

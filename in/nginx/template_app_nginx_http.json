@@ -2,52 +2,51 @@
     "templates": [
         {
             "name": "Template App Nginx HTTP",
-            "zbxVer": "4.0",
-            "classes": [
+            "_zbx_ver": "4.0",
+            "_classes": [
                 "APP"
             ],
             "description": "Get metrics from stub status module using HTTP agent\nhttps://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
-            "documentation": {
+            "_documentation": {
                 "overview": "Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-http_stub_status_module'"
             },
-            "metrics": [
+            "items": [
                 {
-                    "prototype": "nginx.get_stub_status",
+                    "_prototype": "nginx.get_stub_status",
                     "key": "nginx.get_stub_status",
                     "type": "HTTP_AGENT",
-                    "zbxVer": "4.0",
+                    "_zbx_ver": "4.0",
                     "url": "http://{HOST.CONN}:{$NGINX_STUB_STATUS_PORT}/{$NGINX_STUB_STATUS_PATH}",
                     "status_codes": "",
                     "follow_redirects": "0",
                     "retrieve_mode": "BODY_AND_HEADERS"
                 },
                 {
-                    "prototype": "nginx.requests.total"
+                    "_prototype": "nginx.requests.total"
                 },
                 {
-                    "prototype": "nginx.requests.total.rate"
-                },
-
-                {
-                    "prototype": "nginx.connections.accepted.rate"
+                    "_prototype": "nginx.requests.total.rate"
                 },
                 {
-                    "prototype": "nginx.connections.handled.rate"
+                    "_prototype": "nginx.connections.accepted.rate"
                 },
                 {
-                    "prototype": "nginx.connections.active"
+                    "_prototype": "nginx.connections.handled.rate"
                 },
                 {
-                    "prototype": "nginx.connections.reading"
+                    "_prototype": "nginx.connections.active"
                 },
                 {
-                    "prototype": "nginx.connections.waiting"
+                    "_prototype": "nginx.connections.reading"
                 },
                 {
-                    "prototype": "nginx.connections.writing"
+                    "_prototype": "nginx.connections.waiting"
                 },
                 {
-                    "prototype": "nginx.version"
+                    "_prototype": "nginx.connections.writing"
+                },
+                {
+                    "_prototype": "nginx.version"
                 }
             ],
             "macros": [
@@ -61,6 +60,5 @@
                 }
             ]
         }
-
     ]
 }

@@ -21,14 +21,14 @@
       ],
       "name": "Template Net D-Link DES_DGS Switch",
       "description": "Template D-Link DES_DGS Switch",
-      "classes": [
+      "_classes": [
         "INTERFACES",
         "SNMP_DEVICE",
         "NETWORK",
         "SNMPv2",
         "Interfaces EtherLike Extension"
       ],
-      "documentation": {
+      "_documentation": {
         "issues": [
           {
             "description": "D-Link reports missing PSU as fail(4)",
@@ -37,19 +37,19 @@
           }
         ]
       },
-      "discoveryRules": [
+      "discovery_rules": [
         {
           "name": "Memory Discovery",
           "oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.171.12.1.1.9.1.1]",
           "key": "memory.discovery",
-          "metrics": [
+          "items": [
             {
-              "prototype": "vm.memory.pused",
+              "_prototype": "vm.memory.pused",
               "oid": "1.3.6.1.4.1.171.12.1.1.9.1.4.{#SNMPINDEX}",
-              "snmpObject": "agentDRAMutilization.{#SNMPINDEX}",
-              "mib": "DLINK-AGENT-MIB",
-              "vendorDescription": "The percentage of used DRAM memory of the total DRAM memory available.The value will be between 0%(idle) and 100%(very busy)",
-              "alarmObject": "#{#SNMPVALUE}"
+              "_snmpObject": "agentDRAMutilization.{#SNMPINDEX}",
+              "_mib": "DLINK-AGENT-MIB",
+              "_vendor_description": "The percentage of used DRAM memory of the total DRAM memory available.The value will be between 0%(idle) and 100%(very busy)",
+              "_resource": "#{#SNMPVALUE}"
             }
           ]
         },
@@ -57,14 +57,14 @@
           "name": "Temperature Discovery",
           "oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.171.12.11.1.8.1.1]",
           "key": "temperature.discovery",
-          "metrics": [
+          "items": [
             {
-              "prototype": "sensor.temp.value",
+              "_prototype": "sensor.temp.value",
               "oid": "1.3.6.1.4.1.171.12.11.1.8.1.2.{#SNMPINDEX}",
-              "snmpObject": "swTemperatureCurrent.{#SNMPINDEX}",
-              "mib": "EQUIPMENT-MIB",
-              "vendorDescription": "The shelf current temperature.",
-              "alarmObject": "#{#SNMPVALUE}"
+              "_snmpObject": "swTemperatureCurrent.{#SNMPINDEX}",
+              "_mib": "EQUIPMENT-MIB",
+              "_vendor_description": "The shelf current temperature.",
+              "_resource": "#{#SNMPVALUE}"
             }
           ]
         },
@@ -74,28 +74,27 @@
           "key": "psu.discovery",
           "description": "swPowerID of EQUIPMENT-MIB::swPowerTable",
           "filter": {
-            "evalType": "AND_OR",
+            "evaltype": "AND_OR",
             "conditions": [
               {
                 "macro": "{#STATUS}",
                 "value": "[^0]",
-                "operator": "8",
                 "formulaid": "A"
               }
             ]
           },
-          "metrics": [
+          "items": [
             {
-              "prototype": "sensor.psu.status",
+              "_prototype": "sensor.psu.status",
               "oid": "1.3.6.1.4.1.171.12.11.1.6.1.3.{#SNMPINDEX}",
-              "snmpObject": "swPowerStatus.{#SNMPINDEX}",
-              "mib": "EQUIPMENT-MIB",
-              "vendorDescription": "Indicates the current power status.\nlowVoltage : The voltage of the power unit is too low.\noverCurrent: The current of the power unit is too high.\nworking    : The power unit is working normally.\nfail       : The power unit has failed.\nconnect    : The power unit is connected but not powered on.\ndisconnect : The power unit is not connected.",
-              "alarmObject": "#{#SNMPVALUE}",
+              "_snmpObject": "swPowerStatus.{#SNMPINDEX}",
+              "_mib": "EQUIPMENT-MIB",
+              "_vendor_description": "Indicates the current power status.\nlowVoltage : The voltage of the power unit is too low.\noverCurrent: The current of the power unit is too high.\nworking    : The power unit is working normally.\nfail       : The power unit has failed.\nconnect    : The power unit is connected but not powered on.\ndisconnect : The power unit is not connected.",
+              "_resource": "#{#SNMPVALUE}",
               "valueMap": "EQUIPMENT-MIB::swPowerStatus",
               "triggers": [
                 {
-                  "prototype": "psu.crit"
+                  "_prototype": "psu.crit"
                 }
               ]
             }
@@ -107,67 +106,66 @@
           "key": "fan.discovery",
           "description": "swFanID of EQUIPMENT-MIB::swFanTable",
           "filter": {
-            "evalType": "AND_OR",
+            "evaltype": "AND_OR",
             "conditions": [
               {
                 "macro": "{#STATUS}",
                 "value": "[^0]",
-                "operator": "8",
                 "formulaid": "A"
               }
             ]
           },
-          "metrics": [
+          "items": [
             {
-              "prototype": "sensor.fan.status",
+              "_prototype": "sensor.fan.status",
               "oid": "1.3.6.1.4.1.171.12.11.1.7.1.3.{#SNMPINDEX}",
-              "snmpObject": "swFanStatus.{#SNMPINDEX}",
-              "mib": "EQUIPMENT-MIB",
-              "vendorDescription": "Indicates the current fan status.\nspeed-0     : If the fan function is normal and the fan does not spin            due to the temperature not  reaching the threshold, the status of the fan is speed 0.\nspeed-low   : Fan spin using the lowest speed.\nspeed-middle: Fan spin using the middle speed.\nspeed-high  : Fan spin using the highest speed.",
-              "alarmObject": "#{#SNMPVALUE}",
+              "_snmpObject": "swFanStatus.{#SNMPINDEX}",
+              "_mib": "EQUIPMENT-MIB",
+              "_vendor_description": "Indicates the current fan status.\nspeed-0     : If the fan function is normal and the fan does not spin            due to the temperature not  reaching the threshold, the status of the fan is speed 0.\nspeed-low   : Fan spin using the lowest speed.\nspeed-middle: Fan spin using the middle speed.\nspeed-high  : Fan spin using the highest speed.",
+              "_resource": "#{#SNMPVALUE}",
               "valueMap": "EQUIPMENT-MIB::swFanStatus",
               "triggers": [
                 {
-                  "prototype": "fan.crit"
+                  "_prototype": "fan.crit"
                 }
               ]
             }
           ]
         }
       ],
-      "metrics": [
+      "items": [
         {
-          "prototype": "system.cpu.util",
+          "_prototype": "system.cpu.util",
           "oid": "1.3.6.1.4.1.171.12.1.1.6.2.0",
-          "snmpObject": "agentCPUutilizationIn1min.0",
-          "mib": "DLINK-AGENT-MIB",
-          "vendorDescription": "The unit of time is 1 minute. The value will be between 0% (idle) and 100%(very busy)."
+          "_snmpObject": "agentCPUutilizationIn1min.0",
+          "_mib": "DLINK-AGENT-MIB",
+          "_vendor_description": "The unit of time is 1 minute. The value will be between 0% (idle) and 100%(very busy)."
         },
         {
-          "prototype": "system.hw.model",
+          "_prototype": "system.hw.model",
           "oid": "1.3.6.1.2.1.1.1.0",
-          "snmpObject": "sysDescr.hwModel",
-          "mib": "SNMPv2-MIB",
-          "vendorDescription": "A textual description of the entity.  This value should\ninclude the full name and version identification of the system's hardware type, software operating-system, and\nnetworking software."
+          "_snmpObject": "sysDescr.hwModel",
+          "_mib": "SNMPv2-MIB",
+          "_vendor_description": "A textual description of the entity.  This value should\ninclude the full name and version identification of the system's hardware type, software operating-system, and\nnetworking software."
         },
         {
-          "prototype": "system.hw.serialnumber",
+          "_prototype": "system.hw.serialnumber",
           "oid": "1.3.6.1.4.1.171.12.1.1.12.0",
-          "snmpObject": "agentSerialNumber.0",
-          "mib": "DLINK-AGENT-MIB",
-          "vendorDescription": "A text string containing the serial number of this device."
+          "_snmpObject": "agentSerialNumber.0",
+          "_mib": "DLINK-AGENT-MIB",
+          "_vendor_description": "A text string containing the serial number of this device."
         },
         {
-          "prototype": "system.hw.firmware",
+          "_prototype": "system.hw.firmware",
           "oid": "1.3.6.1.2.1.47.1.1.1.1.9.1",
-          "snmpObject": "entPhysicalFirmwareRev.1",
-          "mib": "ENTITY-MIB"
+          "_snmpObject": "entPhysicalFirmwareRev.1",
+          "_mib": "ENTITY-MIB"
         },
         {
-          "prototype": "system.hw.version",
+          "_prototype": "system.hw.version",
           "oid": "1.3.6.1.2.1.47.1.1.1.1.8.1",
-          "snmpObject": "entPhysicalHardwareRev.1",
-          "mib": "ENTITY-MIB"
+          "_snmpObject": "entPhysicalHardwareRev.1",
+          "_mib": "ENTITY-MIB"
         }
       ]
     }

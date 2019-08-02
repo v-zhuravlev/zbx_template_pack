@@ -1,7 +1,7 @@
 {
     "templates": [
         {
-            "classes": [
+            "_classes": [
                 "INVENTORY",
                 "PERFORMANCE",
                 "FAULT",
@@ -13,8 +13,8 @@
             ],
             "name": "Template Net Arista",
             "description": "Template Net Arista",
-            "documentation": {
-                "known_devices": [
+            "_documentation": {
+                "_known_devices": [
                     {
                         "name": "Arista DCS-7050Q-16",
                         "version": "EOS version 4.12.6",
@@ -22,36 +22,34 @@
                     }
                 ]
             },
-            "discoveryRules": [
+            "discovery_rules": [
                 {
                     "name": "CPU Discovery",
                     "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.2.1,{#DEVICE_TYPE},1.3.6.1.2.1.25.3.2.1.2,{#DEVICE_DESCR},1.3.6.1.2.1.25.3.2.1.3]",
                     "key": "hrProcessorLoad.discovery",
                     "filter": {
-                        "evalType": "OR",
+                        "evaltype": "OR",
                         "conditions": [
                             {
-                                "macro": "{#DEVICE_TYPE}",//<!-- OID: 1.3.6.1.2.1.25.3.1.3 cpu -->
+                                "macro": "{#DEVICE_TYPE}", //<!-- OID: 1.3.6.1.2.1.25.3.1.3 cpu -->
                                 "value": ".+3$",
-                                "operator": "8",
                                 "formulaid": "B"
                             },
                             {
                                 "macro": "{#DEVICE_TYPE}",
                                 "value": ".+hrDeviceProcessor",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "system.cpu.util",
+                            "_prototype": "system.cpu.util",
                             "oid": "1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}",
-                            "snmpObject": "hrProcessorLoad.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The average, over the last minute, of the percentage of time that this processor was not idle.\r\nImplementations may approximate this one minute smoothing period if necessary.",
-                            "alarmObject": "{#DEVICE_DESCR}"
+                            "_snmpObject": "hrProcessorLoad.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The average, over the last minute, of the percentage of time that this processor was not idle.\r\nImplementations may approximate this one minute smoothing period if necessary.",
+                            "_resource": "{#DEVICE_DESCR}"
                         }
                     ]
                 },
@@ -61,71 +59,68 @@
                     "key": "memory.discovery",
                     "description": "HOST-RESOURCES-MIB::hrStorage discovery with memory filter and description 'RAM'. Do not discover RAM(Buffers) or RAM(Cache)",
                     "filter": {
-                        "evalType": "3",
+                        "evaltype": "3",
                         "formula": "(A or B) and C",
                         "conditions": [
                             {
                                 "macro": "{#STORAGE_TYPE}",
                                 "value": ".+2$",
-                                "operator": "8",
                                 "formulaid": "B"
                             },
                             {
                                 "macro": "{#STORAGE_TYPE}",
                                 "value": ".+hrStorageRam",
-                                "operator": "8",
                                 "formulaid": "A"
                             },
                             {
                                 "macro": "{#SNMPVALUE}",
                                 "value": "^RAM$",
-                                "operator": "8",
                                 "formulaid": "C"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "vm.memory.units",
+                            "_prototype": "vm.memory.units",
                             "oid": "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}",
-                            "snmpObject": "hrStorageAllocationUnits.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The size, in bytes, of the data objects allocated from this pool.\r\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\r\nthis number will commonly be greater than one. Otherwise this number will typically be one.",
-                            "alarmObject": "#{#SNMPINDEX}"
+                            "_snmpObject": "hrStorageAllocationUnits.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The size, in bytes, of the data objects allocated from this pool.\r\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\r\nthis number will commonly be greater than one. Otherwise this number will typically be one.",
+                            "_resource": "#{#SNMPINDEX}"
                         },
                         {
-                            "prototype": "vm.memory.units.used",
+                            "_prototype": "vm.memory.units.used",
                             "oid": "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}",
-                            "snmpObject": "hrStorageUsed.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.",
-                            "alarmObject": "#{#SNMPINDEX}"
+                            "_snmpObject": "hrStorageUsed.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.",
+                            "_resource": "#{#SNMPINDEX}"
                         },
                         {
-                            "prototype": "vm.memory.units.total",
+                            "_prototype": "vm.memory.units.total",
                             "oid": "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}",
-                            "snmpObject": "hrStorageSize.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\r\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\r\nFor example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.",
-                            "alarmObject": "#{#SNMPINDEX}"
+                            "_snmpObject": "hrStorageSize.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\r\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\r\nFor example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.",
+                            "_resource": "#{#SNMPINDEX}"
                         },
                         {
-                            "prototype": "vm.memory.used",
-                            "snmpObject": "memoryUsed.{#SNMPINDEX}",
+                            "_prototype": "vm.memory.used",
+                            "_snmpObject": "memoryUsed.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "#{#SNMPINDEX}"
+                            "_resource": "#{#SNMPINDEX}"
                         },
                         {
-                            "prototype": "vm.memory.total",
-                            "snmpObject": "memoryTotal.{#SNMPINDEX}",
+                            "_prototype": "vm.memory.total",
+                            "_snmpObject": "memoryTotal.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "#{#SNMPINDEX}"
+                            "_resource": "#{#SNMPINDEX}"
                         },
                         {
-                            "prototype": "vm.memory.pused",
-                            "snmpObject": "memoryUsedPercentage.{#SNMPINDEX}",
+                            "_prototype": "vm.memory.pused",
+                            "_snmpObject": "memoryUsedPercentage.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "#{#SNMPINDEX}"
+                            "_resource": "#{#SNMPINDEX}"
                         }
                     ]
                 },
@@ -136,64 +131,62 @@
                     "description": "HOST-RESOURCES-MIB::hrStorage discovery with storage filter",
                     "filter": {
                         //<!-- filter where units (or total is not 0) -->
-                        "evalType": "OR",
+                        "evaltype": "OR",
                         "conditions": [
                             {
                                 "macro": "{#STORAGE_TYPE}",
-                                "value": ".+(4|9)$",// <!-- OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9-->
-                                "operator": "8",
+                                "value": ".+(4|9)$", // <!-- OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9-->
                                 "formulaid": "B"
                             },
                             {
                                 "macro": "{#STORAGE_TYPE}",
                                 "value": ".+(hrStorageFixedDisk|hrStorageFlashMemory)",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "vfs.fs.units",
+                            "_prototype": "vfs.fs.units",
                             "oid": "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}",
-                            "snmpObject": "hrStorageAllocationUnits.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The size, in bytes, of the data objects allocated from this pool.\r\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\r\nthis number will commonly be greater than one.  Otherwise this number will typically be one.",
-                            "alarmObject": "{#SNMPVALUE}"
+                            "_snmpObject": "hrStorageAllocationUnits.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The size, in bytes, of the data objects allocated from this pool.\r\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\r\nthis number will commonly be greater than one.  Otherwise this number will typically be one.",
+                            "_resource": "{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vfs.fs.units.used",
+                            "_prototype": "vfs.fs.units.used",
                             "oid": "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}",
-                            "snmpObject": "hrStorageUsed.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.",
-                            "alarmObject": "{#SNMPVALUE}"
+                            "_snmpObject": "hrStorageUsed.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.",
+                            "_resource": "{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vfs.fs.units.total",
+                            "_prototype": "vfs.fs.units.total",
                             "oid": "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}",
-                            "snmpObject": "hrStorageSize.{#SNMPINDEX}",
-                            "mib": "HOST-RESOURCES-MIB",
-                            "vendorDescription": "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\r\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\r\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.",
-                            "alarmObject": "{#SNMPVALUE}"
+                            "_snmpObject": "hrStorageSize.{#SNMPINDEX}",
+                            "_mib": "HOST-RESOURCES-MIB",
+                            "_vendor_description": "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\r\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\r\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.",
+                            "_resource": "{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vfs.fs.used",
-                            "snmpObject": "storageUsed.{#SNMPINDEX}",
+                            "_prototype": "vfs.fs.used",
+                            "_snmpObject": "storageUsed.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "{#SNMPVALUE}"
+                            "_resource": "{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vfs.fs.total",
-                            "snmpObject": "storageTotal.{#SNMPINDEX}",
+                            "_prototype": "vfs.fs.total",
+                            "_snmpObject": "storageTotal.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "{#SNMPVALUE}"
+                            "_resource": "{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vfs.fs.pused",
-                            "snmpObject": "storageUsedPercentage.{#SNMPINDEX}",
+                            "_prototype": "vfs.fs.pused",
+                            "_snmpObject": "storageUsedPercentage.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "{#SNMPVALUE}"
+                            "_resource": "{#SNMPVALUE}"
                         }
                     ]
                 },
@@ -203,18 +196,16 @@
                     "key": "temp.discovery",
                     "description": "ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter",
                     "filter": {
-                        "evalType": "AND",
+                        "evaltype": "AND",
                         "conditions": [
                             {
-                                "macro": "{#SENSOR_TYPE}",//<!-- celsius -->
+                                "macro": "{#SENSOR_TYPE}", //<!-- celsius -->
                                 "value": "8",
-                                "operator": "8",
                                 "formulaid": "B"
                             },
                             {
                                 "macro": "{#SENSOR_PRECISION}",
-                                "value": "1",//<!-- limit only to precision 1 (like 10.1) -->
-                                "operator": "8",
+                                "value": "1", //<!-- limit only to precision 1 (like 10.1) -->
                                 "formulaid": "B"
                             }
                         ]
@@ -241,14 +232,14 @@
                             truthvalue(12):  value takes { true(1), false(2) }                        
                         */
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.temp.value",
+                            "_prototype": "sensor.temp.value",
                             "oid": "1.3.6.1.2.1.99.1.1.1.4.{#SNMPINDEX}",
-                            "snmpObject": "entPhySensorValue.{#SNMPINDEX}",
-                            "mib": "ENTITY-SENSORS-MIB",//<!-- rpm -->
-                            "vendorDescription": "The most recent measurement obtained by the agent for this sensor.\r\nTo correctly interpret the value of this object, the associated entPhySensorType,\r\nentPhySensorScale, and entPhySensorPrecision objects must also be examined.",
-                            "alarmObject": "{#SENSOR_INFO}",
+                            "_snmpObject": "entPhySensorValue.{#SNMPINDEX}",
+                            "_mib": "ENTITY-SENSORS-MIB", //<!-- rpm -->
+                            "_vendor_description": "The most recent measurement obtained by the agent for this sensor.\r\nTo correctly interpret the value of this object, the associated entPhySensorType,\r\nentPhySensorScale, and entPhySensorPrecision objects must also be examined.",
+                            "_resource": "{#SENSOR_INFO}",
                             "preprocessing": [
                                 {
                                     "type": "MULTIPLIER",
@@ -257,23 +248,23 @@
                             ],
                             "triggers": [
                                 {
-                                    "prototype": "tempWarn.combined"
+                                    "_prototype": "tempWarn.combined"
                                 },
                                 {
-                                    "prototype": "tempCrit"
+                                    "_prototype": "tempCrit"
                                 },
                                 {
-                                    "prototype": "tempLow"
+                                    "_prototype": "tempLow"
                                 }
                             ]
                         },
                         {
-                            "prototype": "sensor.temp.status",
+                            "_prototype": "sensor.temp.status",
                             "oid": "1.3.6.1.2.1.99.1.1.1.5.{#SNMPINDEX}",
-                            "snmpObject": "entPhySensorOperStatus.{#SNMPINDEX}",
-                            "mib": "ENTITY-SENSORS-MIB",
-                            "vendorDescription": "The operational status of the sensor {#SENSOR_INFO}",
-                            "alarmObject": "{#SENSOR_INFO}",
+                            "_snmpObject": "entPhySensorOperStatus.{#SNMPINDEX}",
+                            "_mib": "ENTITY-SENSORS-MIB",
+                            "_vendor_description": "The operational status of the sensor {#SENSOR_INFO}",
+                            "_resource": "{#SENSOR_INFO}",
                             "valueMap": "ENTITY-SENSORS-MIB::EntitySensorStatus"
                         }
                     ]
@@ -284,36 +275,35 @@
                     "key": "fan.discovery",
                     "description": "ENTITY-SENSORS-MIB::EntitySensorDataType discovery with rpm filter",
                     "filter": {
-                        "evalType": "OR",
+                        "evaltype": "OR",
                         "conditions": [
                             {
                                 "macro": "{#SNMPVALUE}",
                                 "value": "10",
-                                "operator": "8",
                                 "formulaid": "B"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.fan.speed",
+                            "_prototype": "sensor.fan.speed",
                             "oid": "1.3.6.1.2.1.99.1.1.1.4.{#SNMPINDEX}",
-                            "snmpObject": "entPhySensorValue.{#SNMPINDEX}",
-                            "mib": "ENTITY-SENSORS-MIB",
-                            "vendorDescription": "The most recent measurement obtained by the agent for this sensor.\r\nTo correctly interpret the value of this object, the associated entPhySensorType,\r\nentPhySensorScale, and entPhySensorPrecision objects must also be examined.",
-                            "alarmObject": "{#SENSOR_INFO}"
+                            "_snmpObject": "entPhySensorValue.{#SNMPINDEX}",
+                            "_mib": "ENTITY-SENSORS-MIB",
+                            "_vendor_description": "The most recent measurement obtained by the agent for this sensor.\r\nTo correctly interpret the value of this object, the associated entPhySensorType,\r\nentPhySensorScale, and entPhySensorPrecision objects must also be examined.",
+                            "_resource": "{#SENSOR_INFO}"
                         },
                         {
-                            "prototype": "sensor.fan.status",
+                            "_prototype": "sensor.fan.status",
                             "oid": "1.3.6.1.2.1.99.1.1.1.5.{#SNMPINDEX}",
-                            "snmpObject": "entPhySensorOperStatus.{#SNMPINDEX}",
-                            "mib": "ENTITY-SENSORS-MIB",
-                            "vendorDescription": "The operational status of the sensor {#SENSOR_INFO}",
-                            "alarmObject": "{#SENSOR_INFO}",
+                            "_snmpObject": "entPhySensorOperStatus.{#SNMPINDEX}",
+                            "_mib": "ENTITY-SENSORS-MIB",
+                            "_vendor_description": "The operational status of the sensor {#SENSOR_INFO}",
+                            "_resource": "{#SENSOR_INFO}",
                             "valueMap": "ENTITY-SENSORS-MIB::EntitySensorStatus",
                             "triggers": [
                                 {
-                                    "prototype": "fan.crit"
+                                    "_prototype": "fan.crit"
                                 }
                             ]
                         }
@@ -324,30 +314,29 @@
                     "snmp_oid": "discovery[{#ENT_CLASS},1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]",
                     "key": "entity.discovery",
                     "filter": {
-                        "evalType": "AND_OR",
+                        "evaltype": "AND_OR",
                         "conditions": [
                             {
                                 "macro": "{#ENT_CLASS}",
-                                "value": "3",//<!-- 3 - chassis-->
-                                "operator": "8",
+                                "value": "3", //<!-- 3 - chassis-->
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "system.hw.model",
+                            "_prototype": "system.hw.model",
                             "oid": "1.3.6.1.2.1.47.1.1.1.1.13.{#SNMPINDEX}",
-                            "snmpObject": "entPhysicalModelName.{#SNMPINDEX}",
-                            "mib": "ENTITY-MIB",
-                            "alarmObject": "{#ENT_NAME}"
+                            "_snmpObject": "entPhysicalModelName.{#SNMPINDEX}",
+                            "_mib": "ENTITY-MIB",
+                            "_resource": "{#ENT_NAME}"
                         },
                         {
-                            "prototype": "system.hw.serialnumber",
+                            "_prototype": "system.hw.serialnumber",
                             "oid": "1.3.6.1.2.1.47.1.1.1.1.11.{#SNMPINDEX}",
-                            "snmpObject": "entPhysicalSerialNum.{#SNMPINDEX}",
-                            "mib": "ENTITY-MIB",
-                            "alarmObject": "{#ENT_NAME}"
+                            "_snmpObject": "entPhysicalSerialNum.{#SNMPINDEX}",
+                            "_mib": "ENTITY-MIB",
+                            "_resource": "{#ENT_NAME}"
                         }
                     ]
                 },
@@ -356,34 +345,33 @@
                     "snmp_oid": "discovery[{#ENT_CLASS},1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]",
                     "key": "psu.discovery",
                     "filter": {
-                        "evalType": "AND_OR",
+                        "evaltype": "AND_OR",
                         "conditions": [
                             {
                                 "macro": "{#ENT_CLASS}",
                                 "value": "6",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.psu.status",
+                            "_prototype": "sensor.psu.status",
                             "oid": "1.3.6.1.2.1.131.1.1.1.3.{#SNMPINDEX}",
-                            "snmpObject": "entStateOper.{#SNMPINDEX}",
-                            "mib": "ENTITY-STATE-MIB",
-                            "alarmObject": "{#ENT_NAME}",
+                            "_snmpObject": "entStateOper.{#SNMPINDEX}",
+                            "_mib": "ENTITY-STATE-MIB",
+                            "_resource": "{#ENT_NAME}",
                             "valueMap": "ENTITY-STATE-MIB::EntityOperState",
                             "triggers": [
                                 {
-                                    "prototype": "psu.crit"
+                                    "_prototype": "psu.crit"
                                 }
                             ]
                         }
                     ]
                 }
             ],
-            "metrics": [],
+            "items": [],
             "macros": [
                 {
                     "macro": "{$PSU_CRIT_STATUS}",

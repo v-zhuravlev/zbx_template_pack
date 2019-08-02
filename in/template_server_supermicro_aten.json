@@ -1,6 +1,7 @@
 {
-    "templates": [{
-      "classes": [
+  "templates": [
+    {
+      "_classes": [
         "FAULT",
         "SERVER",
         "SNMP_DEVICE",
@@ -8,46 +9,45 @@
       ],
       "name": "Template Server Supermicro Aten",
       "description": "Template Server Supermicro Aten",
-      "documentation": {
+      "_documentation": {
         "overview": "for BMC ATEN IPMI controllers of Supermicro servers\r\nhttps://www.supermicro.com/solutions/IPMI.cfm",
-        "known_devices": [{
-          "name": "Supermicro X10DRI",
-          "oid": "1.3.6.1.4.1.8072.3.2.10"
-        }]
+        "_known_devices": [
+          {
+            "name": "Supermicro X10DRI",
+            "oid": "1.3.6.1.4.1.8072.3.2.10"
+          }
+        ]
       },
-      "discoveryRules": [
+      "discovery_rules": [
         {
           "name": "Temperature Discovery",
           "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.3.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.21317.1.3.1.13]",
           "key": "tempDescr.discovery",
           "description": "Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected temp sensors (Value = 0)",
           "filter": {
-            "evalType": "AND",
+            "evaltype": "AND",
             "conditions": [
               {
                 "macro": "{#SNMPVALUE}",
                 "value": "[1-9]+",
-                "operator": "8",
                 "formulaid": "B"
               },
               {
                 "macro": "{#SENSOR_DESCR}",
                 "value": ".*Temp.*",
-                "operator": "8",
                 "formulaid": "A"
               }
             ]
           },
-          "metrics": [
+          "items": [
             {
-                "prototype":"sensor.temp.value",
-                "oid": "1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}",
-                "snmpObject": "sensorReading.{#SNMPINDEX}",
-                "mib": "ATEN-IPMI-MIB",
-                "alarmObject": "{#SENSOR_DESCR}",
-                "vendorDescription": "A textual string containing information about the interface.\r\nThis string should include the name of the manufacturer, the product name and the version of the interface hardware/software."
-              }
-      
+              "_prototype": "sensor.temp.value",
+              "oid": "1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}",
+              "_snmpObject": "sensorReading.{#SNMPINDEX}",
+              "_mib": "ATEN-IPMI-MIB",
+              "_resource": "{#SENSOR_DESCR}",
+              "_vendor_description": "A textual string containing information about the interface.\r\nThis string should include the name of the manufacturer, the product name and the version of the interface hardware/software."
+            }
           ]
         },
         {
@@ -56,33 +56,32 @@
           "key": "fan.discovery",
           "description": "Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected FAN sensors (Value = 0)",
           "filter": {
-            "evalType": "AND",
+            "evaltype": "AND",
             "conditions": [
               {
                 "macro": "{#SNMPVALUE}",
                 "value": "[1-9]+",
-                "operator": "8",
                 "formulaid": "B"
               },
               {
                 "macro": "{#SENSOR_DESCR}",
                 "value": "FAN.*",
-                "operator": "8",
                 "formulaid": "A"
               }
             ]
           },
-          "metrics": [
+          "items": [
             {
-                "prototype":"sensor.fan.speed.percentage",
-                "oid": "1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}",
-                "snmpObject": "sensorReading.{#SNMPINDEX}",
-                "mib": "ATEN-IPMI-MIB",
-                "alarmObject": "{#SENSOR_DESCR}",
-                "vendorDescription": "A textual string containing information about the interface.\r\nThis string should include the name of the manufacturer, the product name and the version of the interface hardware/software."
-              }
+              "_prototype": "sensor.fan.speed.percentage",
+              "oid": "1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}",
+              "_snmpObject": "sensorReading.{#SNMPINDEX}",
+              "_mib": "ATEN-IPMI-MIB",
+              "_resource": "{#SENSOR_DESCR}",
+              "_vendor_description": "A textual string containing information about the interface.\r\nThis string should include the name of the manufacturer, the product name and the version of the interface hardware/software."
+            }
           ]
         }
       ]
-    }]
+    }
+  ]
 }

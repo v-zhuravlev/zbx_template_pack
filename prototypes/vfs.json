@@ -1,42 +1,41 @@
 [
 	{
 		"name": "Storage units",
-		"id": "vfs.fs.units",
-		"group": "Internal_items",
+		"_id": "vfs.fs.units",
+		"_group": "Internal_items",
 		"history": "1w",
 		"trends": "0d"
 	},
 	{
-		"name":"Used storage in units",
-		"id":"vfs.fs.units.used",
-		"group":"Internal_items",
-		"description":"Used storage in units",
-		"units":"units",
-		"history":"1w",
-		"trends":"0d"
+		"name": "Used storage in units",
+		"_id": "vfs.fs.units.used",
+		"_group": "Internal_items",
+		"description": "Used storage in units",
+		"units": "units",
+		"history": "1w",
+		"trends": "0d"
 	},
 	{
-		"name":"Total space in units",
-		"id":"vfs.fs.units.total",
-		"group":"Internal_items",
-		"description":"Total space in units",
-		"units":"units",
-		"history":"1w",
-		"trends":"0d"
-	},	
-
+		"name": "Total space in units",
+		"_id": "vfs.fs.units.total",
+		"_group": "Internal_items",
+		"description": "Total space in units",
+		"units": "units",
+		"history": "1w",
+		"trends": "0d"
+	},
 	{
-		"id": "vfs.fs.used",
+		"_id": "vfs.fs.used",
 		"name": "Used space",
 		"description": "Used storage in Bytes",
-		"group": "Storage",
+		"_group": "Storage",
 		"history": "30d",
 		"units": "B"
 	},
 	{
-		"id": "vfs.fs.total",
+		"_id": "vfs.fs.total",
 		"name": "Total space",
-		"group": "Storage",
+		"_group": "Storage",
 		"history": "30d",
 		"units": "B",
 		"description": "Total space in Bytes",
@@ -64,121 +63,120 @@
 			}
 		]
 	},
-	
 	{
-		"id": "vfs.fs.free",
+		"_id": "vfs.fs.free",
 		"name": "Free space",
-		"group": "Storage",
+		"_group": "Storage",
 		"history": "30d",
 		"units": "B"
 	},
 	{
-		"id": "vfs.fs.pused",
+		"_id": "vfs.fs.pused",
 		"name": "Space utilization",
-		"group": "Storage",
+		"_group": "Storage",
 		"history": "30d",
-		"valueType": "FLOAT",
+		"value_type": "FLOAT",
 		"units": "%",
-		"description": "Space utilization in % for __ALARM_OBJECT__",
+		"description": "Space utilization in % for __RESOURCE__",
 		"triggers": [
 			{
-				"prototype": "trigger.storageCrit_with_timeleft"
+				"_prototype": "trigger.storageCrit_with_timeleft"
 			},
 			{
-				"prototype": "trigger.storageWarn_with_timeleft"
+				"_prototype": "trigger.storageWarn_with_timeleft"
 			}
 		]
 	},
 	{
-		"id": "vfs.fs.inode.pfree",
+		"_id": "vfs.fs.inode.pfree",
 		"name": "Free inodes in %",
-		"group": "Storage",
-		"valueType": "FLOAT",
+		"_group": "Storage",
+		"value_type": "FLOAT",
 		"units": "%",
 		"triggers": [
 			{
-				"id":"trigger.inode.pfree.crit",
-				"expression":"{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}",
-				"name":"Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}%",
-				"priority":3,
-				"translations":{
+				"_id": "trigger.inode.pfree.crit",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__RESOURCE__\"}",
+				"name": "Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__RESOURCE__\"}%",
+				"priority": "AVERAGE",
+				"translations": {
 					"RU": {
-						"name":"Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}%)"
+						"name": "Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__RESOURCE__\"}%)"
 					}
 				}
 			},
 			{
-				"id":"trigger.inode.pfree.warn",
-				"expression":"{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}",
-				"name":"Free inodes is below {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}%",
-				"priority":2,
-				"dependsOn":["trigger.inode.pfree.crit"],
-				"translations":{
+				"_id": "trigger.inode.pfree.warn",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__RESOURCE__\"}",
+				"name": "Free inodes is below {$INODE_PFREE_WARN:\"__RESOURCE__\"}%",
+				"priority": "WARNING",
+				"dependsOn": [
+					"trigger.inode.pfree.crit"
+				],
+				"translations": {
 					"RU": {
-						"name":"Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}%)"
+						"name": "Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__RESOURCE__\"}%)"
 					}
 				}
 			}
 		]
-
 	},
-
 	//PERFORMANCE
 	{
-		"id": "vfs.dev.read.rate",
+		"_id": "vfs.dev.read.rate",
 		"name": "Disk read rate",
-		"group": "Storage",
-		"valueType": "FLOAT"
+		"_group": "Storage",
+		"value_type": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.write.rate",
+		"_id": "vfs.dev.write.rate",
 		"name": "Disk write rate",
-		"group": "Storage",
-		"valueType": "FLOAT"
+		"_group": "Storage",
+		"value_type": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.read.time.rate",
+		"_id": "vfs.dev.read.time.rate",
 		"name": "Disk read time (rate)",
-		"group": "Storage",
-		"valueType": "FLOAT"
+		"_group": "Storage",
+		"value_type": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.write.time.rate",
+		"_id": "vfs.dev.write.time.rate",
 		"name": "Disk write time (rate)",
-		"group": "Storage",
-		"valueType": "FLOAT"
+		"_group": "Storage",
+		"value_type": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.read.await",
+		"_id": "vfs.dev.read.await",
 		"name": "Disk read request avg waiting time (r_await)",
-		"group": "Storage",
+		"_group": "Storage",
 		"units": "!ms",
-		"delay": "1m",
-		"valueType": "FLOAT",
+		"update": "1m",
+		"value_type": "FLOAT",
 		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
 	},
 	{
-		"id": "vfs.dev.write.await",
+		"_id": "vfs.dev.write.await",
 		"name": "Disk write request avg waiting time (w_await)",
-		"group": "Storage",
+		"_group": "Storage",
 		"units": "!ms",
-		"delay": "1m",
-		"valueType": "FLOAT",
+		"update": "1m",
+		"value_type": "FLOAT",
 		"description": "The average time for write requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
 	},
 	{
-		"id": "vfs.dev.queue_size",
+		"_id": "vfs.dev.queue_size",
 		"name": "Disk average queue size (avgqu-sz)",
-		"group": "Storage",
-		"delay": "1m",
-		"valueType": "FLOAT"
+		"_group": "Storage",
+		"update": "1m",
+		"value_type": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.util",
+		"_id": "vfs.dev.util",
 		"name": "Disk utilization",
-		"group": "Storage",
-		"delay": "1m",
-		"valueType": "FLOAT",
+		"_group": "Storage",
+		"update": "1m",
+		"value_type": "FLOAT",
 		"units": "%"
 	}
 ]

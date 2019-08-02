@@ -1,7 +1,7 @@
 {
     "templates": [
         {
-            "classes": [
+            "_classes": [
                 "INVENTORY",
                 "PERFORMANCE",
                 "FAULT",
@@ -13,8 +13,8 @@
             ],
             "name": "Template Net HP Enterprise Switch",
             "description": "Template Net HP Enterprise Switch",
-            "documentation": {
-                "known_devices": [
+            "_documentation": {
+                "_known_devices": [
                     {
                         "name": "HP ProCurve J4900B Switch 2626",
                         "version": "ProCurve J4900B Switch 2626, revision H.10.31, ROM H.08.02 (/sw/code/build/fish(mkfs))",
@@ -27,25 +27,23 @@
                     }
                 ]
             },
-            "discoveryRules": [
+            "discovery_rules": [
                 {
                     "name": "Temperature Discovery",
                     "snmp_oid": "discovery[{#SENSOR_TYPE},1.3.6.1.2.1.99.1.1.1.1,{#SENSOR_INFO},1.3.6.1.2.1.47.1.1.1.1.2,{#SENSOR_PRECISION},1.3.6.1.2.1.99.1.1.1.3]",
                     "key": "temp.precision0.discovery",
                     "description": "ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter",
                     "filter": {
-                        "evalType": "AND",
+                        "evaltype": "AND",
                         "conditions": [
                             {
                                 "macro": "{#SENSOR_TYPE}",
                                 "value": "8", //<!-- celsius -->
-                                "operator": "8",
                                 "formulaid": "B"
                             },
                             {
                                 "macro": "{#SENSOR_PRECISION}",
                                 "value": "0", //<!-- limit only to precision 0 (like 10) -->
-                                "operator": "8",
                                 "formulaid": "B"
                             }
                             /*
@@ -73,23 +71,23 @@
               */
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.temp.value",
+                            "_prototype": "sensor.temp.value",
                             "oid": "1.3.6.1.2.1.99.1.1.1.4.{#SNMPINDEX}",
-                            "snmpObject": "entPhySensorValue.{#SNMPINDEX}",
-                            "mib": "ENTITY-SENSORS-MIB",
-                            "vendorDescription": "The most recent measurement obtained by the agent for this sensor.\r\nTo correctly interpret the value of this object, the associated entPhySensorType,\r\nentPhySensorScale, and entPhySensorPrecision objects must also be examined.",
-                            "alarmObject": "{#SENSOR_INFO}"
+                            "_snmpObject": "entPhySensorValue.{#SNMPINDEX}",
+                            "_mib": "ENTITY-SENSORS-MIB",
+                            "_vendor_description": "The most recent measurement obtained by the agent for this sensor.\r\nTo correctly interpret the value of this object, the associated entPhySensorType,\r\nentPhySensorScale, and entPhySensorPrecision objects must also be examined.",
+                            "_resource": "{#SENSOR_INFO}"
                         }
                         /*
 			<!--		  <sensor.temp.status>
                           <oid>1.3.6.1.2.1.99.1.1.1.5.{#SNMPINDEX}</oid>
-                          <snmpObject>entPhySensorOperStatus.{#SNMPINDEX}</snmpObject>
-                          <mib>ENTITY-SENSORS-MIB</mib>
-                          <vendorDescription>The operational status of the sensor {#SENSOR_INFO}</vendorDescription>
-                          <discoveryRules>Temperature Discovery</discoveryRules>
-                          <alarmObject>{#SENSOR_INFO}</alarmObject>
+                          <_snmpObject>entPhySensorOperStatus.{#SNMPINDEX}</_snmpObject>
+                          <_mib>ENTITY-SENSORS-MIB</_mib>
+                          <_vendor_description>The operational status of the sensor {#SENSOR_INFO}</_vendor_description>
+                          <discovery_rules>Temperature Discovery</discovery_rules>
+                          <_resource>{#SENSOR_INFO}</_resource>
                           <valueMap>ENTITY-SENSORS-MIB::EntitySensorStatus</valueMap>
                       </sensor.temp.status>-->            
             */
@@ -100,28 +98,28 @@
                     "snmp_oid": "discovery[{#SNMPVALUE},1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.1]",
                     "key": "memory.discovery",
                     "description": "Discovery of NETSWITCH-MIB::hpLocalMemTable, A table that contains information on all the local memory for each slot.",
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "vm.memory.used",
+                            "_prototype": "vm.memory.used",
                             "oid": "1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.7.{#SNMPINDEX}",
-                            "snmpObject": "hpLocalMemAllocBytes.{#SNMPINDEX}",
-                            "mib": "NETSWITCH-MIB",
-                            "vendorDescription": "The number of currently allocated bytes.",
-                            "alarmObject": "#{#SNMPVALUE}"
+                            "_snmpObject": "hpLocalMemAllocBytes.{#SNMPINDEX}",
+                            "_mib": "NETSWITCH-MIB",
+                            "_vendor_description": "The number of currently allocated bytes.",
+                            "_resource": "#{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vm.memory.free",
+                            "_prototype": "vm.memory.free",
                             "oid": "1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.6.{#SNMPINDEX}",
-                            "snmpObject": "hpLocalMemFreeBytes.{#SNMPINDEX}",
-                            "mib": "NETSWITCH-MIB",
-                            "vendorDescription": "The number of available (unallocated) bytes.",
-                            "alarmObject": "#{#SNMPVALUE}"
+                            "_snmpObject": "hpLocalMemFreeBytes.{#SNMPINDEX}",
+                            "_mib": "NETSWITCH-MIB",
+                            "_vendor_description": "The number of available (unallocated) bytes.",
+                            "_resource": "#{#SNMPVALUE}"
                         },
                         {
-                            "prototype": "vm.memory.pused",
-                            "snmpObject": "vm.memory.pused.{#SNMPINDEX}",
+                            "_prototype": "vm.memory.pused",
+                            "_snmpObject": "vm.memory.pused.{#SNMPINDEX}",
                             "type": "CALCULATED",
-                            "alarmObject": "#{#SNMPVALUE}"
+                            "_resource": "#{#SNMPVALUE}"
                         }
                     ]
                 },
@@ -131,38 +129,37 @@
                     "key": "fan.discovery",
                     "description": "Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.2 - fans and are present",
                     "filter": {
-                        "evalType": "AND",
+                        "evaltype": "AND",
                         "conditions": [
                             {
                                 "macro": "{#ENT_CLASS}",
                                 "value": ".+8.3.2$",
-                                "operator": "8", //						<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
+                                //						<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
                                 "formulaid": "A"
                             },
                             {
                                 "macro": "{#ENT_STATUS}",
                                 "value": "(1|2|3|4)",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.fan.status",
+                            "_prototype": "sensor.fan.status",
                             "oid": "1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}",
-                            "snmpObject": "hpicfSensorStatus.{#SNMPINDEX}",
-                            "mib": "HP-ICF-CHASSIS",
-                            "vendorDescription": "Actual status indicated by the sensor: {#ENT_DESCR}",
-                            "alarmObject": "{#ENT_DESCR}",
+                            "_snmpObject": "hpicfSensorStatus.{#SNMPINDEX}",
+                            "_mib": "HP-ICF-CHASSIS",
+                            "_vendor_description": "Actual status indicated by the sensor: {#ENT_DESCR}",
+                            "_resource": "{#ENT_DESCR}",
                             "valueMap": "HP-ICF-CHASSIS::hpicfSensorStatus",
                             "triggers": [
                                 {
-                                    "prototype": "fan.crit",
+                                    "_prototype": "fan.crit",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_CRIT_STATUS:\"bad\"},eq)}=1"
                                 },
                                 {
-                                    "prototype": "fan.warn",
+                                    "_prototype": "fan.warn",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$FAN_WARN_STATUS:\"warning\"},eq)}=1"
                                 }
                             ]
@@ -175,38 +172,36 @@
                     "key": "psu.discovery",
                     "description": "Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.1 - power supplies and are present",
                     "filter": {
-                        "evalType": "AND",
+                        "evaltype": "AND",
                         "conditions": [
                             {
                                 "macro": "{#ENT_CLASS}",
                                 "value": ".+8.3.1$", //						<!--1: unknown(1)                      2: bad(2)                      3: warning(3)                      4: good(4)                      5: notPresent(5)-->
-                                "operator": "8",
                                 "formulaid": "A"
                             },
                             {
                                 "macro": "{#ENT_STATUS}",
                                 "value": "(1|2|3|4)",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.psu.status",
+                            "_prototype": "sensor.psu.status",
                             "oid": "1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}",
-                            "snmpObject": "hpicfSensorStatus.{#SNMPINDEX}",
-                            "mib": "HP-ICF-CHASSIS",
-                            "vendorDescription": "Actual status indicated by the sensor: {#ENT_DESCR}",
-                            "alarmObject": "{#ENT_DESCR}",
+                            "_snmpObject": "hpicfSensorStatus.{#SNMPINDEX}",
+                            "_mib": "HP-ICF-CHASSIS",
+                            "_vendor_description": "Actual status indicated by the sensor: {#ENT_DESCR}",
+                            "_resource": "{#ENT_DESCR}",
                             "valueMap": "HP-ICF-CHASSIS::hpicfSensorStatus",
                             "triggers": [
                                 {
-                                    "prototype": "psu.crit",
+                                    "_prototype": "psu.crit",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_CRIT_STATUS:\"bad\"},eq)}=1"
                                 },
                                 {
-                                    "prototype": "psu.warn",
+                                    "_prototype": "psu.warn",
                                     "expression": "{TEMPLATE_NAME:METRIC.count(#1,{$PSU_WARN_STATUS:\"warning\"},eq)}=1"
                                 }
                             ]
@@ -219,30 +214,28 @@
                     "key": "temp.status.discovery",
                     "description": "Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.3 - over temp status and are present",
                     "filter": {
-                        "evalType": "AND",
+                        "evaltype": "AND",
                         "conditions": [
                             {
                                 "macro": "{#ENT_CLASS}",
                                 "value": ".+8.3.3$",
-                                "operator": "8",
                                 "formulaid": "A"
                             },
                             {
                                 "macro": "{#ENT_STATUS}",
                                 "value": "(1|2|3|4)",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "sensor.temp.status",
+                            "_prototype": "sensor.temp.status",
                             "oid": "1.3.6.1.4.1.11.2.14.11.1.2.6.1.4.{#SNMPINDEX}",
-                            "snmpObject": "hpicfSensorStatus.{#SNMPINDEX}",
-                            "mib": "HP-ICF-CHASSIS",
-                            "vendorDescription": "Actual status indicated by the sensor: {#ENT_DESCR}",
-                            "alarmObject": "{#ENT_DESCR}",
+                            "_snmpObject": "hpicfSensorStatus.{#SNMPINDEX}",
+                            "_mib": "HP-ICF-CHASSIS",
+                            "_vendor_description": "Actual status indicated by the sensor: {#ENT_DESCR}",
+                            "_resource": "{#ENT_DESCR}",
                             "valueMap": "HP-ICF-CHASSIS::hpicfSensorStatus"
                         }
                     ]
@@ -252,55 +245,54 @@
                     "snmp_oid": "discovery[{#ENT_CLASS},1.3.6.1.2.1.47.1.1.1.1.5,{#ENT_NAME},1.3.6.1.2.1.47.1.1.1.1.7]",
                     "key": "entity.discovery",
                     "filter": {
-                        "evalType": "AND_OR",
+                        "evaltype": "AND_OR",
                         "conditions": [
                             {
                                 "macro": "{#ENT_CLASS}",
                                 "value": "3",
-                                "operator": "8",
                                 "formulaid": "A"
                             }
                         ]
                     },
-                    "metrics": [
+                    "items": [
                         {
-                            "prototype": "system.hw.model",
+                            "_prototype": "system.hw.model",
                             "oid": "1.3.6.1.2.1.47.1.1.1.1.2.{#SNMPINDEX}",
-                            "snmpObject": "entPhysicalDescr.{#SNMPINDEX}",
-                            "mib": "ENTITY-MIB",
-                            "alarmObject": "{#ENT_NAME}"
+                            "_snmpObject": "entPhysicalDescr.{#SNMPINDEX}",
+                            "_mib": "ENTITY-MIB",
+                            "_resource": "{#ENT_NAME}"
                         },
                         {
-                            "prototype": "system.hw.version",
+                            "_prototype": "system.hw.version",
                             "oid": "1.3.6.1.2.1.47.1.1.1.1.8.{#SNMPINDEX}",
-                            "snmpObject": "entPhysicalHardwareRev.{#SNMPINDEX}",
-                            "mib": "ENTITY-MIB",
-                            "alarmObject": "{#ENT_NAME}"
+                            "_snmpObject": "entPhysicalHardwareRev.{#SNMPINDEX}",
+                            "_mib": "ENTITY-MIB",
+                            "_resource": "{#ENT_NAME}"
                         }
                     ]
                 }
             ],
-            "metrics": [
+            "items": [
                 {
-                    "prototype": "system.cpu.util",
+                    "_prototype": "system.cpu.util",
                     "oid": "1.3.6.1.4.1.11.2.14.11.5.1.9.6.1.0",
-                    "snmpObject": "hpSwitchCpuStat.0",
-                    "mib": "STATISTICS-MIB",
-                    "vendorDescription": "The CPU utilization in percent(%).",
-                    "ref": "http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c02597344&sp4ts.oid=51079"
+                    "_snmpObject": "hpSwitchCpuStat.0",
+                    "_mib": "STATISTICS-MIB",
+                    "_vendor_description": "The CPU utilization in percent(%).",
+                    "_ref": "http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c02597344&sp4ts.oid=51079"
                 },
                 {
-                    "prototype": "system.hw.serialnumber",
+                    "_prototype": "system.hw.serialnumber",
                     "oid": "1.3.6.1.4.1.11.2.36.1.1.2.9.0",
-                    "snmpObject": "hpHttpMgSerialNumber.0",
-                    "mib": "SEMI-MIB"
+                    "_snmpObject": "hpHttpMgSerialNumber.0",
+                    "_mib": "SEMI-MIB"
                 },
                 {
-                    "prototype": "system.hw.firmware",
+                    "_prototype": "system.hw.firmware",
                     "oid": "1.3.6.1.4.1.11.2.14.11.5.1.1.3.0",
-                    "snmpObject": "1.3.6.1.4.1.11.2.14.11.5.1.1.3.0",
-                    "mib": "NETSWITCH-MIB",
-                    "vendorDescription": "Contains the operating code version number (also known as software or firmware).\r\nFor example, a software version such as A.08.01 is described as follows:\r\nA    the function set available in your router\r\n08   the common release number\r\n01   updates to the current common release"
+                    "_snmpObject": "1.3.6.1.4.1.11.2.14.11.5.1.1.3.0",
+                    "_mib": "NETSWITCH-MIB",
+                    "_vendor_description": "Contains the operating code version number (also known as software or firmware).\r\nFor example, a software version such as A.08.01 is described as follows:\r\nA    the function set available in your router\r\n08   the common release number\r\n01   updates to the current common release"
                 }
             ],
             "macros": [

@@ -2,7 +2,7 @@
 templates:
 - name: Template Module Interfaces Simple
   description: Template Interfaces Simple (no ifXTable)
-  classes:
+  _classes:
   - IF_MIB
   - SNMPv1
   - SNMPv2
@@ -10,7 +10,7 @@ templates:
   macros:
     - macro: "{$IF_UTIL_MAX}"
       value: "95"
-  discoveryRules:
+  discovery_rules:
   - name: Network Interfaces Discovery
     #<!-- {#IFNAME} = {#IFDESCR} in Interfaces Simple. Since {#IFNAME} - is used in triggers and so on and ifName is not available in Simple(no ifXTable). -->
     oid: discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.2.2.1.2,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]
@@ -21,7 +21,7 @@ templates:
         - with notPresent(6) Operational status
         - loopbacks
     filter:
-      evalType: AND
+      evaltype: AND
       conditions:
       - macro: "{#IFADMINSTATUS}"
         value: "(1|3)"
@@ -34,34 +34,34 @@ templates:
         value: "@Network interfaces for discovery" 
         # <!-- should filter out loopbacks and nulls -->
         formulaid: B
-    metrics:
-    - prototype: net.if.status
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.in
+    items:
+    - _prototype: net.if.status
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.in
       oid: "1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}"
-      snmpObject: ifInOctets.{#SNMPINDEX}
-      vendorDescription: "The total number of octets received on the interface,including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and atother times as indicated by the value of ifCounterDiscontinuityTime."
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.out
+      _snmpObject: ifInOctets.{#SNMPINDEX}
+      _vendor_description: "The total number of octets received on the interface,including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and atother times as indicated by the value of ifCounterDiscontinuityTime."
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.out
       oid: 1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}
-      snmpObject: ifOutOctets.{#SNMPINDEX}
-      vendorDescription: The total number of octets transmitted out of the interface, including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.in.errors
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.out.errors
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.out.discards
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.in.discards
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.type
-      alarmObject: Interface {#IFDESCR}
-    - prototype: net.if.speed
-      alarmObject: Interface {#IFDESCR}
+      _snmpObject: ifOutOctets.{#SNMPINDEX}
+      _vendor_description: The total number of octets transmitted out of the interface, including framing characters. Discontinuities in the value of this counter can occurat re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.in.errors
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.out.errors
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.out.discards
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.in.discards
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.type
+      _resource: Interface {#IFDESCR}
+    - _prototype: net.if.speed
+      _resource: Interface {#IFDESCR}
       oid: 1.3.6.1.2.1.2.2.1.5.{#SNMPINDEX}
-      snmpObject: ifSpeed.{#SNMPINDEX}
-      vendorDescription: | 
+      _snmpObject: ifSpeed.{#SNMPINDEX}
+      _vendor_description: | 
        An estimate of the interface's current bandwidth in bits per second.
        For interfaces which do not vary in bandwidth or for those where no accurate estimation can be made,
        this object should contain the nominal bandwidth.
@@ -87,7 +87,7 @@ valueMaps:
   - value: 7
     newValue: lowerLayerDown
 - name: "IF-MIB::ifType"
-# https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib LAST-UPDATED "201703300000Z"  March 30, 2017
+# https://www.iana.org/assignments/ianaiftype-_mib/ianaiftype-_mib LAST-UPDATED "201703300000Z"  March 30, 2017
   mappings:
   - value: 1
     newValue: other
