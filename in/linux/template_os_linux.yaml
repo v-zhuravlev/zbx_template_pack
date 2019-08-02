@@ -15,7 +15,7 @@ templates:
         type: SNMP
         oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
         filter: 
-          evalType: "AND"
+          evalType: AND
           conditions: 
             - macro: "{#DEVNAME}"
               value: "(loop[\\d]*|sda([\\d])+)"
@@ -26,9 +26,9 @@ templates:
             _resource: "{#DEVNAME}"
             application_prototype: "Disk __RESOURCE__"
             oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
-            snmpObject: diskIOReads.{#SNMPINDEX}
-            mib: UCD-DISKIO-MIB
-            vendorDescription: The number of read accesses from this device since boot.
+            _snmpObject: diskIOReads.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The number of read accesses from this device since boot.
             units: "!r/s"
             preprocessing:
               - type: CHANGE_PER_SECOND
@@ -36,9 +36,9 @@ templates:
             _resource: "{#DEVNAME}"
             application_prototype: "Disk __RESOURCE__"
             oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
-            snmpObject: diskIOWrites.{#SNMPINDEX}
-            mib: UCD-DISKIO-MIB
-            vendorDescription: The number of write accesses from this device since boot.
+            _snmpObject: diskIOWrites.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The number of write accesses from this device since boot.
             units: "!w/s"
             preprocessing:
               - type: CHANGE_PER_SECOND
@@ -46,9 +46,9 @@ templates:
             _resource: "{#DEVNAME}"
             application_prototype: "Disk __RESOURCE__"
             oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
-            snmpObject: diskIOLA1.{#SNMPINDEX}
-            mib: UCD-DISKIO-MIB
-            vendorDescription: The 1 minute average load of disk (%)
+            _snmpObject: diskIOLA1.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The 1 minute average load of disk (%)
             
       - name: CPU discovery
         type: DEPENDENT
@@ -66,8 +66,8 @@ templates:
           - _prototype: system.cpu.idle
             oid: 1.3.6.1.4.1.2021.11.53.0
             type: SNMP
-            snmpObject: ssCpuRawIdle.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawIdle.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -78,8 +78,8 @@ templates:
             _prototype: system.cpu.system
             oid: 1.3.6.1.4.1.2021.11.52.0
             type: SNMP
-            snmpObject: ssCpuRawSystem.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawSystem.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -90,8 +90,8 @@ templates:
             _prototype: system.cpu.user
             oid: 1.3.6.1.4.1.2021.11.50.0
             type: SNMP
-            snmpObject: ssCpuRawUser.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawUser.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -102,8 +102,8 @@ templates:
             _prototype: system.cpu.steal
             oid: 1.3.6.1.4.1.2021.11.64.0
             type: SNMP
-            snmpObject: ssCpuRawSteal.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawSteal.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -114,8 +114,8 @@ templates:
             
             oid: 1.3.6.1.4.1.2021.11.61.0
             type: SNMP
-            snmpObject: ssCpuRawSoftIRQ.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawSoftIRQ.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -127,8 +127,8 @@ templates:
             oid: 1.3.6.1.4.1.2021.11.51.0
             type: SNMP
             key: "{#CPUNUM}"
-            snmpObject: ssCpuRawNice.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawNice.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -139,8 +139,8 @@ templates:
             
             oid: 1.3.6.1.4.1.2021.11.54.0
             type: SNMP
-            snmpObject: ssCpuRawWait.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawWait.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -151,8 +151,8 @@ templates:
             
             oid: 1.3.6.1.4.1.2021.11.56.0
             type: SNMP
-            snmpObject: ssCpuRawInterrupt.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawInterrupt.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -163,8 +163,8 @@ templates:
             
             oid: 1.3.6.1.4.1.2021.11.65.0
             type: SNMP
-            snmpObject: ssCpuRawGuest.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawGuest.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -175,8 +175,8 @@ templates:
             
             oid: 1.3.6.1.4.1.2021.11.66.0
             type: SNMP
-            snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
-            mib: UCD-SNMP-MIB
+            _snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
+            _mib: UCD-SNMP-MIB
             preprocessing:
               - type: CHANGE_PER_SECOND
               - type: JAVASCRIPT
@@ -207,40 +207,40 @@ templates:
         metrics:
           - _prototype: vfs.fs.units
             oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
-            snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
-            mib: "HOST-RESOURCES-MIB"
-            vendorDescription: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
+            _snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
+            _mib: "HOST-RESOURCES-MIB"
+            _vendor_description: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
             _resource: "{#STORAGE_DESCR}"
 
           - _prototype: vfs.fs.units.used
             oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
-            snmpObject: "hrStorageUsed.{#SNMPINDEX}"
-            mib: "HOST-RESOURCES-MIB"
-            vendorDescription: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
+            _snmpObject: "hrStorageUsed.{#SNMPINDEX}"
+            _mib: "HOST-RESOURCES-MIB"
+            _vendor_description: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.units.total
             oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
-            snmpObject: "hrStorageSize.{#SNMPINDEX}"
-            mib: "HOST-RESOURCES-MIB"
-            vendorDescription: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
+            _snmpObject: "hrStorageSize.{#SNMPINDEX}"
+            _mib: "HOST-RESOURCES-MIB"
+            _vendor_description: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.used
             application_prototype: Filesystem __RESOURCE__
-            snmpObject: "storageUsed.{#SNMPINDEX}"
+            _snmpObject: "storageUsed.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.total
             application_prototype: Filesystem __RESOURCE__
-            snmpObject: "storageTotal.{#SNMPINDEX}"
+            _snmpObject: "storageTotal.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#STORAGE_DESCR}"
     
           - _prototype: vfs.fs.pused
             application_prototype: Filesystem __RESOURCE__
-            snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
+            _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#STORAGE_DESCR}"
           
@@ -249,8 +249,8 @@ templates:
             application_prototype: Filesystem __RESOURCE__
             oid: "1.3.6.1.4.1.2021.9.1.10[\"index\",\"1.3.6.1.4.1.2021.9.1.2\", \"{#STORAGE_DESCR}\"]"
             type: SNMP
-            snmpObject: dskPercentNode.{#STORAGE_DESCR}
-            mib: UCD-SNMP-MIB
+            _snmpObject: dskPercentNode.{#STORAGE_DESCR}
+            _mib: UCD-SNMP-MIB
             _zbx_ver: "4.2"
             preprocessing:
               - type: JAVASCRIPT
@@ -260,73 +260,73 @@ templates:
         - _prototype: system.cpu.load.avg1
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-1\"]"
           type: SNMP
-          snmpObject: laLoad.1
-          mib: UCD-SNMP-MIB
+          _snmpObject: laLoad.1
+          _mib: UCD-SNMP-MIB
           _zbx_ver: "4.2"
         - _prototype: system.cpu.load.avg5
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-5\"]"
           type: SNMP
-          snmpObject: laLoad.2
-          mib: UCD-SNMP-MIB
+          _snmpObject: laLoad.2
+          _mib: UCD-SNMP-MIB
           _zbx_ver: "4.2"
         - _prototype: system.cpu.load.avg15
           oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-15\"]"
           type: SNMP
-          snmpObject: laLoad.3
-          mib: UCD-SNMP-MIB
+          _snmpObject: laLoad.3
+          _mib: UCD-SNMP-MIB
           _zbx_ver: "4.2"
         - _prototype: system.cpu.num
           oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
           type: SNMP
           key: snmp.system.cpu.num
-          mib: HOST-RESOURCES-MIB
+          _mib: HOST-RESOURCES-MIB
           _zbx_ver: "4.2"
           preprocessing:
             - type: JAVASCRIPT
               params: |
                 //count the number of cores
                 return JSON.parse(value).length;
-          vendorDescription: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
+          _vendor_description: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
         - _prototype: "system.cpu.intr"
           type: SNMP
-          snmpObject: ssRawInterrupts.0
+          _snmpObject: ssRawInterrupts.0
           oid: 1.3.6.1.4.1.2021.11.59.0
           preprocessing:
             - type: CHANGE_PER_SECOND
         - _prototype: "system.cpu.switches"
           type: SNMP
-          snmpObject: ssRawContexts.0
+          _snmpObject: ssRawContexts.0
           oid: 1.3.6.1.4.1.2021.11.60.0
           preprocessing:
             - type: CHANGE_PER_SECOND
         - _prototype: vm.memory.free
-          snmpObject: memAvailReal.0
+          _snmpObject: memAvailReal.0
           oid: 1.3.6.1.4.1.2021.4.6.0
-          mib: UCD-SNMP-MIB
+          _mib: UCD-SNMP-MIB
           type: SNMP
           preprocessing:
             - type: MULTIPLIER
               params: "1024"
         - _prototype: vm.memory.buffers
-          snmpObject: memBuffer.0
+          _snmpObject: memBuffer.0
           oid: 1.3.6.1.4.1.2021.4.14.0
-          mib: UCD-SNMP-MIB
+          _mib: UCD-SNMP-MIB
           type: SNMP
           preprocessing:
             - type: MULTIPLIER
               params: "1024"
         - _prototype: vm.memory.cached
-          snmpObject: memCached.0
+          _snmpObject: memCached.0
           oid: 1.3.6.1.4.1.2021.4.15.0
-          mib: UCD-SNMP-MIB
+          _mib: UCD-SNMP-MIB
           type: SNMP
           preprocessing:
             - type: MULTIPLIER
               params: "1024"
         - _prototype: vm.memory.total
-          snmpObject: memTotalReal.0
+          _snmpObject: memTotalReal.0
           oid: 1.3.6.1.4.1.2021.4.5.0
-          mib: UCD-SNMP-MIB
+          _mib: UCD-SNMP-MIB
           type: SNMP
           preprocessing:
             - type: MULTIPLIER
@@ -338,18 +338,18 @@ templates:
         - _prototype: system.swap.total
           oid: 1.3.6.1.4.1.2021.4.3.0
           type: SNMP
-          snmpObject: memTotalSwap.0
-          mib: UCD-SNMP-MIB
-          vendorDescription: The total amount of swap space configured for this host.
+          _snmpObject: memTotalSwap.0
+          _mib: UCD-SNMP-MIB
+          _vendor_description: The total amount of swap space configured for this host.
           preprocessing:
             - type: MULTIPLIER
               params: "1024"
         - _prototype: system.swap.free
           oid: 1.3.6.1.4.1.2021.4.4.0
           type: SNMP
-          snmpObject: memAvailSwap.0
-          mib: UCD-SNMP-MIB
-          vendorDescription: The amount of swap space currently unused or available.
+          _snmpObject: memAvailSwap.0
+          _mib: UCD-SNMP-MIB
+          _vendor_description: The amount of swap space currently unused or available.
           preprocessing:
             - type: MULTIPLIER
               params: "1024"
