@@ -1,7 +1,7 @@
 {
     "templates": [
         {
-            "zbxVer": "4.2",
+            "zbx_ver": "4.2",
             "name": "Template OS Linux Zabbix agent",
             "classes": [
                 "OS",
@@ -12,60 +12,60 @@
                 {
                     "name": "Mounted filesystem discovery",
                     "key": "vfs.fs.discovery",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "description": "Discovery of file systems of different types as defined in global regular expression \"File systems for discovery\".",
                     "filter": {
-                        "evalType":"AND",
-                        "conditions":[
+                        "evalType": "AND",
+                        "conditions": [
                             {
-                                "macro":"{#FSTYPE}",
-                                "value":"@File systems for discovery",
-                                "operator":"8",
-                                "formulaid":"A"
+                                "macro": "{#FSTYPE}",
+                                "value": "@File systems for discovery",
+                                "operator": "8",
+                                "formulaid": "A"
                             }
                         ],
                     },
-                    "metrics":[
-                            {
-                                "prototype": "vfs.fs.used",
-                                "type": "ZABBIX_AGENT",
-                                "key": "vfs.fs.size[{#FSNAME},used]",
-                                "group": "Filesystems",
-                                "alarmObject": "{#FSNAME}",
-                                "application_prototype": "Filesystem __ALARM_OBJECT__"
-                            },
-                            {
-                                "prototype": "vfs.fs.free",
-                                "type": "ZABBIX_AGENT",
-                                "key": "vfs.fs.size[{#FSNAME},free]",
-                                "group": "Filesystems",
-                                "alarmObject": "{#FSNAME}",
-                                "application_prototype": "Filesystem __ALARM_OBJECT__"
-                            },
-                            {
-                                "prototype": "vfs.fs.total",
-                                "type": "ZABBIX_AGENT",
-                                "key": "vfs.fs.size[{#FSNAME},total]",
-                                "group": "Filesystems",
-                                "alarmObject": "{#FSNAME}",
-                                "application_prototype": "Filesystem __ALARM_OBJECT__"
-                            },
-                            {
-                                "prototype": "vfs.fs.pused",
-                                "type": "ZABBIX_AGENT",
-                                "key": "vfs.fs.size[{#FSNAME},pused]",
-                                "group": "Filesystems",
-                                "alarmObject": "{#FSNAME}",
-                                "application_prototype": "Filesystem __ALARM_OBJECT__"
-                            },
-                            {
-                                "prototype": "vfs.fs.inode.pfree",
-                                "type": "ZABBIX_AGENT",
-                                "key": "vfs.fs.inode[{#FSNAME},pfree]",
-                                "group": "Filesystems",
-                                "alarmObject": "{#FSNAME}",
-                                "application_prototype": "Filesystem __ALARM_OBJECT__"
-                            }
+                    "metrics": [
+                        {
+                            "_prototype": "vfs.fs.used",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},used]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                        },
+                        {
+                            "_prototype": "vfs.fs.free",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},free]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                        },
+                        {
+                            "_prototype": "vfs.fs.total",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},total]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                        },
+                        {
+                            "_prototype": "vfs.fs.pused",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},pused]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                        },
+                        {
+                            "_prototype": "vfs.fs.inode.pfree",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.inode[{#FSNAME},pfree]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __ALARM_OBJECT__"
+                        }
                     ]
                 },
                 {
@@ -84,21 +84,21 @@
                         }
                     ],
                     "filter": {
-                        "evalType":"AND",
-                        "conditions":[
+                        "evalType": "AND",
+                        "conditions": [
                             {
                                 "macro": "{#DEVNAME}",
                                 "value": "(loop[\\d]*|sda([\\d])+)",
-                                "operator":"9", //doesn't match
-                                "formulaid":"A"
+                                "operator": "9", //doesn't match
+                                "formulaid": "A"
                             }
                         ],
                     },
                     "metrics": [
                         {
-                            "alarmObject": "{#DEVNAME}",
+                            "_resource": "{#DEVNAME}",
                             "application_prototype": "Disk __ALARM_OBJECT__",
-                            "prototype": "vfs.dev.read.rate",
+                            "_prototype": "vfs.dev.read.rate",
                             "type": "DEPENDENT_ITEM",
                             "masterItem": "vfs.dev.diskstats",
                             "key": "vfs.dev.read.rate[{#DEVNAME}]",
@@ -116,9 +116,9 @@
                             "description": "r/s. The number (after merges) of read requests completed per second for the device."
                         },
                         {
-                            "alarmObject": "{#DEVNAME}",
+                            "_resource": "{#DEVNAME}",
                             "application_prototype": "Disk __ALARM_OBJECT__",
-                            "prototype": "vfs.dev.write.rate",
+                            "_prototype": "vfs.dev.write.rate",
                             "type": "DEPENDENT_ITEM",
                             "masterItem": "vfs.dev.diskstats",
                             "key": "vfs.dev.write.rate[{#DEVNAME}]",
@@ -135,12 +135,11 @@
                             ],
                             "description": "w/s. The number (after merges) of write requests completed per second for the device."
                         },
-
                         {
-                            "alarmObject": "{#DEVNAME}",
+                            "_resource": "{#DEVNAME}",
                             //"application_prototype": "Disk __ALARM_OBJECT__",
-                            "group": "Internal_items",
-                            "prototype": "vfs.dev.read.time.rate",
+                            "_group": "Internal_items",
+                            "_prototype": "vfs.dev.read.time.rate",
                             "type": "DEPENDENT_ITEM",
                             "masterItem": "vfs.dev.diskstats",
                             "key": "vfs.dev.read.time.rate[{#DEVNAME}]",
@@ -162,10 +161,10 @@
                             "description": "Rate of total read time counter. Used in r_await calculation"
                         },
                         {
-                            "alarmObject": "{#DEVNAME}",
+                            "_resource": "{#DEVNAME}",
                             //"application_prototype": "Disk __ALARM_OBJECT__",
-                            "group": "Internal_items",
-                            "prototype": "vfs.dev.write.time.rate",
+                            "_group": "Internal_items",
+                            "_prototype": "vfs.dev.write.time.rate",
                             "type": "DEPENDENT_ITEM",
                             "masterItem": "vfs.dev.diskstats",
                             "key": "vfs.dev.write.time.rate[{#DEVNAME}]",
@@ -187,8 +186,8 @@
                             "description": "Rate of total write time counter. Used in w_await calculation"
                         },
                         {
-                            "alarmObject": "{#DEVNAME}",
-                            "prototype": "vfs.dev.read.await",
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.read.await",
                             "key": "vfs.dev.read.await[{#DEVNAME}]",
                             "application_prototype": "Disk __ALARM_OBJECT__",
                             "type": "CALCULATED",
@@ -196,8 +195,8 @@
                             "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
                         },
                         {
-                            "alarmObject": "{#DEVNAME}",
-                            "prototype": "vfs.dev.write.await",
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.write.await",
                             "key": "vfs.dev.write.await[{#DEVNAME}]",
                             "application_prototype": "Disk __ALARM_OBJECT__",
                             "type": "CALCULATED",
@@ -205,8 +204,8 @@
                             "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
                         },
                         {
-                            "alarmObject": "{#DEVNAME}",
-                            "prototype": "vfs.dev.queue_size",
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.queue_size",
                             "key": "vfs.dev.queue_size[{#DEVNAME}]",
                             "application_prototype": "Disk __ALARM_OBJECT__",
                             "type": "DEPENDENT_ITEM",
@@ -215,7 +214,6 @@
                                 {
                                     "type": "JSONPATH",
                                     "params": "$.values['{#DEVNAME}'][13]"
-                                    
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -228,8 +226,8 @@
                             ]
                         },
                         {
-                            "alarmObject": "{#DEVNAME}",
-                            "prototype": "vfs.dev.util",
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.util",
                             "key": "vfs.dev.util[{#DEVNAME}]",
                             "application_prototype": "Disk __ALARM_OBJECT__",
                             "type": "DEPENDENT_ITEM",
@@ -251,18 +249,17 @@
                         }
                     ]
                 }
-                
             ],
             "metrics": [
                 //master item for proc diskstats
                 {
-                    "id": "vfs.dev.diskstats",
+                    "_id": "vfs.dev.diskstats",
                     "key": "vfs.file.contents[/proc/diskstats]",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "valueType": "TEXT",
                     "name": "Get /proc/diskstats",
-                    "group": "Internal_items",
-                    "delay": "1m",
+                    "_group": "Internal_items",
+                    "update": "1m",
                     "history": "1d",
                     "preprocessing": [
                         {
@@ -273,34 +270,36 @@
                 },
                 //CPU
                 {
-                    "prototype": "system.cpu.load.avg1",
+                    "_prototype": "system.cpu.load.avg1",
                     "key": "system.cpu.load[percpu,avg1]",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "name": "Load average (1m avg per core)",
                     "description": "The load average is calculated as system CPU load divided by number of CPU cores.",
-                    "triggers":[{
-                        "id": "trigger.cpu.load.warn",
-                        "name": "Load average is too high",
-                        "expression":"{TEMPLATE_NAME:METRIC.avg(5m)}>{$LOAD_AVG_CRIT}",
-                        "priority": 3
-                    }]
+                    "triggers": [
+                        {
+                            "_id": "trigger.cpu.load.warn",
+                            "name": "Load average is too high",
+                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$LOAD_AVG_CRIT}",
+                            "priority": "WARNING"
+                        }
+                    ]
                 },
                 {
-                    "prototype": "system.cpu.load.avg5",
+                    "_prototype": "system.cpu.load.avg5",
                     "key": "system.cpu.load[percpu,avg5]",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "name": "Load average (5m avg per core)",
                     "description": "The load average is calculated as system CPU load divided by number of CPU cores."
                 },
                 {
-                    "prototype": "system.cpu.load.avg15",
+                    "_prototype": "system.cpu.load.avg15",
                     "key": "system.cpu.load[percpu,avg15]",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "name": "Load average (15m avg per core)",
                     "description": "The load average is calculated as system CPU load divided by number of CPU cores."
                 },
                 {
-                    "prototype": "system.cpu.util",
+                    "_prototype": "system.cpu.util",
                     "type": "DEPENDENT_ITEM",
                     "masterItem": "system.cpu.idle",
                     "key": "system.cpu.util",
@@ -313,59 +312,59 @@
                     "triggers": []
                 },
                 {
-                    "prototype": "system.cpu.idle",
+                    "_prototype": "system.cpu.idle",
                     "key": "system.cpu.util[,idle]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.system",
+                    "_prototype": "system.cpu.system",
                     "key": "system.cpu.util[,system]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.user",
+                    "_prototype": "system.cpu.user",
                     "key": "system.cpu.util[,user]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.nice",
+                    "_prototype": "system.cpu.nice",
                     "key": "system.cpu.util[,nice]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.iowait",
+                    "_prototype": "system.cpu.iowait",
                     "key": "system.cpu.util[,iowait]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.steal",
+                    "_prototype": "system.cpu.steal",
                     "key": "system.cpu.util[,steal]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.interrupt",
+                    "_prototype": "system.cpu.interrupt",
                     "key": "system.cpu.util[,interrupt]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.softirq",
+                    "_prototype": "system.cpu.softirq",
                     "key": "system.cpu.util[,softirq]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.guest",
+                    "_prototype": "system.cpu.guest",
                     "key": "system.cpu.util[,guest]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.guest_nice",
+                    "_prototype": "system.cpu.guest_nice",
                     "key": "system.cpu.util[,guest_nice]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.cpu.switches",
+                    "_prototype": "system.cpu.switches",
                     "key": "system.cpu.switches",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "preprocessing": [
                         {
                             "type": "CHANGE_PER_SECOND"
@@ -373,9 +372,9 @@
                     ]
                 },
                 {
-                    "prototype": "system.cpu.intr",
+                    "_prototype": "system.cpu.intr",
                     "key": "system.cpu.intr",
-                    "type": "ZABBIX_AGENT",
+                    "type": "ZABBIX_PASSIVE",
                     "preprocessing": [
                         {
                             "type": "CHANGE_PER_SECOND"
@@ -384,33 +383,31 @@
                 },
                 //MEMORY
                 {
-                    "prototype": "vm.memory.total",
+                    "_prototype": "vm.memory.total",
                     "key": "vm.memory.size[total]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "vm.memory.available",
+                    "_prototype": "vm.memory.available",
                     "key": "vm.memory.size[available]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 //SWAP,
                 {
-                    "prototype": "system.swap.total",
+                    "_prototype": "system.swap.total",
                     "key": "system.swap.size[,total]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.swap.free",
+                    "_prototype": "system.swap.free",
                     "key": "system.swap.size[,free]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
-                    "prototype": "system.swap.pfree",
+                    "_prototype": "system.swap.pfree",
                     "key": "system.swap.size[,pfree]",
-                    "type": "ZABBIX_AGENT"
+                    "type": "ZABBIX_PASSIVE"
                 }
-                
-
             ],
             "macros": [
                 {

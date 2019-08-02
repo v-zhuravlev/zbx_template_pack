@@ -109,94 +109,94 @@
 		]
 	},
 	{
-		"id": "vfs.fs.inode.pfree",
+		"_id": "vfs.fs.inode.pfree",
 		"name": "Free inodes in %",
-		"group": "Storage",
+		"_group": "Storage",
 		"valueType": "FLOAT",
 		"units": "%",
 		"triggers": [
 			{
-				"id":"trigger.inode.pfree.crit",
-				"expression":"{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}",
-				"name":"Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}%",
-				"priority":3,
-				"translations":{
+				"_id": "trigger.inode.pfree.crit",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}",
+				"name": "Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}%",
+				"priority": "WARNING",
+				"translations": {
 					"RU": {
-						"name":"Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}%)"
+						"name": "Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__ALARM_OBJECT__\"}%)"
 					}
 				}
 			},
 			{
-				"id":"trigger.inode.pfree.warn",
-				"expression":"{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}",
-				"name":"Free inodes is below {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}%",
-				"priority":2,
-				"dependsOn":["trigger.inode.pfree.crit"],
-				"translations":{
+				"_id": "trigger.inode.pfree.warn",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}",
+				"name": "Free inodes is below {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}%",
+				"priority": 2,
+				"dependsOn": [
+					"trigger.inode.pfree.crit"
+				],
+				"translations": {
 					"RU": {
-						"name":"Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}%)"
+						"name": "Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__ALARM_OBJECT__\"}%)"
 					}
 				}
 			}
 		]
-
 	},
-
 	//PERFORMANCE
 	{
-		"id": "vfs.dev.read.rate",
+		"_id": "vfs.dev.read.rate",
 		"name": "Disk read rate",
-		"group": "Storage",
+		"_group": "Storage",
 		"valueType": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.write.rate",
+		"_id": "vfs.dev.write.rate",
 		"name": "Disk write rate",
-		"group": "Storage",
+		"_group": "Storage",
 		"valueType": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.read.time.rate",
+		"_id": "vfs.dev.read.time.rate",
 		"name": "Disk read time (rate)",
-		"group": "Storage",
+		"_group": "Storage",
 		"valueType": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.write.time.rate",
+		"_id": "vfs.dev.write.time.rate",
 		"name": "Disk write time (rate)",
-		"group": "Storage",
+		"_group": "Storage",
 		"valueType": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.read.await",
+		"_id": "vfs.dev.read.await",
 		"name": "Disk read request avg waiting time (r_await)",
-		"group": "Storage",
+		"_group": "Storage",
 		"units": "!ms",
-		"delay": "1m",
+		"update": "1m",
 		"valueType": "FLOAT",
 		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
 	},
 	{
-		"id": "vfs.dev.write.await",
+		"_id": "vfs.dev.write.await",
 		"name": "Disk write request avg waiting time (w_await)",
-		"group": "Storage",
+		"_group": "Storage",
 		"units": "!ms",
-		"delay": "1m",
+		"update": "1m",
 		"valueType": "FLOAT",
 		"description": "The average time for write requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
 	},
 	{
-		"id": "vfs.dev.queue_size",
+		"_id": "vfs.dev.queue_size",
 		"name": "Disk average queue size (avgqu-sz)",
-		"group": "Storage",
-		"delay": "1m",
+		"_group": "Storage",
+		"update": "1m",
 		"valueType": "FLOAT"
 	},
 	{
-		"id": "vfs.dev.util",
+		"_id": "vfs.dev.util",
 		"name": "Disk utilization",
-		"group": "Storage",
-		"delay": "1m",
+		"_group": "Storage",
+		"update": "1m",
 		"valueType": "FLOAT",
 		"units": "%"
 	}
