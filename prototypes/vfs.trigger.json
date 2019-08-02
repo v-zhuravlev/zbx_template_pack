@@ -3,9 +3,9 @@
 		"_id": "trigger.storageCrit_with_timeleft",
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$STORAGE_UTIL_CRIT:\"__ALARM_OBJECT__\"} and\n(({TEMPLATE_NAME:__vfs.fs.total__.last()}-{TEMPLATE_NAME:__vfs.fs.used__.last()})<5G or {TEMPLATE_NAME:METRIC.timeleft(1h,,100)}<1d)",
 		"name": "Disk space critical status",
-		"priority": "WARNING",
+		"priority": "AVERAGE",
 		"description": "Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.\nTwo conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:\"__ALARM_OBJECT__\"}.\n Second condition should be one of the following:\n - Disk free space is less than 5G.\n - Disk will be full in less than 24hours.",
-		"translations": {
+		"_translations": {
 			"RU": {
 				"name": "Мало свободного места"
 			}
@@ -15,12 +15,12 @@
 		"_id": "trigger.storageWarn_with_timeleft",
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$STORAGE_UTIL_WARN:\"__ALARM_OBJECT__\"} and\n(({TEMPLATE_NAME:__vfs.fs.total__.last()}-{TEMPLATE_NAME:__vfs.fs.used__.last()})<10G or {TEMPLATE_NAME:METRIC.timeleft(1h,,100)}<1d)",
 		"name": "Disk space warning",
-		"priority": 2,
+		"priority": "WARNING",
 		"description": "Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.\nTwo conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:\"__ALARM_OBJECT__\"}.\n Second condition should be one of the following:\n - Disk free space is less than 10G.\n - Disk will be full in less than 24hours.",
-		"dependsOn": [
+		"depends_on": [
 			"trigger.storageCrit_with_timeleft"
 		],
-		"translations": {
+		"_translations": {
 			"RU": {
 				"name": "Мало свободного места"
 			}
@@ -30,8 +30,8 @@
 		"_id": "trigger.storageCrit",
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$STORAGE_UTIL_CRIT:\"__ALARM_OBJECT__\"}",
 		"name": "Disk space is critically low",
-		"priority": "WARNING",
-		"translations": {
+		"priority": "AVERAGE",
+		"_translations": {
 			"RU": {
 				"name": "Мало свободного места"
 			}
@@ -41,11 +41,11 @@
 		"_id": "trigger.storageWarn",
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$STORAGE_UTIL_WARN:\"__ALARM_OBJECT__\"}",
 		"name": "Disk space is low",
-		"priority": 2,
-		"dependsOn": [
+		"priority": "WARNING",
+		"depends_on": [
 			"trigger.storageCrit"
 		],
-		"translations": {
+		"_translations": {
 			"RU": {
 				"name": "Мало свободного места"
 			}
