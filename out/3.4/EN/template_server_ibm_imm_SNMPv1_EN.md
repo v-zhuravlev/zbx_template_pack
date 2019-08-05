@@ -8,10 +8,10 @@ for IMM2 and IMM1 IBM serverX hardware
 
 This template was tested on:
 
-- IBM System x3550 M2 with IMM1, version 
-- IBM x3250M3 with IMM1, version 
-- IBM x3550M5 with IMM2, version 
-- System x3550 M3 with IMM1, version 
+- IBM System x3550 M2 with IMM1
+- IBM x3250M3 with IMM1
+- IBM x3550M5 with IMM2
+- System x3550 M3 with IMM1
 
 ## Setup
 

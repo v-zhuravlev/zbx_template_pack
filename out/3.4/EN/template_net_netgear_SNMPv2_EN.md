@@ -8,7 +8,7 @@ https://kb.netgear.com/24352/MIBs-for-Smart-switches
 
 This template was tested on:
 
-- Netgear M5300-28G, version 
+- Netgear M5300-28G
 
 ## Setup
 

@@ -8,7 +8,7 @@ for Cisco UCS via Integrated Management Controller
 
 This template was tested on:
 
-- Cisco UCS C240 M4SX, version 
+- Cisco UCS C240 M4SX
 
 ## Setup
 

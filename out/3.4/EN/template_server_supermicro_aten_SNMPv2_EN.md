@@ -8,7 +8,7 @@ for BMC ATEN IPMI controllers of Supermicro servers</br>https://www.supermicro.c
 
 This template was tested on:
 
-- Supermicro X10DRI, version 
+- Supermicro X10DRI
 
 ## Setup
 

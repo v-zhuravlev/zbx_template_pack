@@ -8,7 +8,7 @@ for HP iLO adapters that support SNMP get. Or via operating system, using SNMP H
 
 This template was tested on:
 
-- iLo4, HP Proliant G9, version 
+- iLo4, HP Proliant G9
 
 ## Setup
 

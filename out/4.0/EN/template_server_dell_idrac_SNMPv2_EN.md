@@ -8,9 +8,9 @@ for Dell servers with iDRAC controllers</br>http://www.dell.com/support/manuals/
 
 This template was tested on:
 
-- iDRAC7, PowerEdge R620, version 
-- iDRAC8, PowerEdge R730xd, version 
-- iDRAC8, PowerEdge R720, version 
+- iDRAC7, PowerEdge R620
+- iDRAC8, PowerEdge R730xd
+- iDRAC8, PowerEdge R720
 
 ## Setup
 
