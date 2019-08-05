@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.2  
+For Zabbix version: 4.2  
 Special version of interfaces template that is required for Windows OS. Since MS doesn't support 64 bit counters but supports ifAlias and ifHighSpeed.
 
 ## Setup
@@ -44,12 +44,12 @@ Special version of interfaces template that is required for Windows OS. Since MS
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Interface {#IFNAME}({#IFALIAS}): Link down|Last value: {ITEM.LASTVALUE1}.</br>Interface is down|`{$IFCONTROL:"{#IFNAME}"}=1 and ({TEMPLATE_NAME:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {TEMPLATE_NAME:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)`|
-|Interface {#IFNAME}({#IFALIAS}): High bandwidth usage >{$IF_UTIL_MAX:"{#IFNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`({TEMPLATE_NAME:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Windows SNMPv2:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()} or {Template Module Interfaces Windows SNMPv2:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Windows SNMPv2:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}) and {Template Module Interfaces Windows SNMPv2:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}>0`|
-|Interface {#IFNAME}({#IFALIAS}): High error rate|Last value: {ITEM.LASTVALUE1}.</br>Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold|`{TEMPLATE_NAME:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"} or {Template Module Interfaces Windows SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"}`|
-|Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before|Last value: {ITEM.LASTVALUE1}.</br>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.|`{TEMPLATE_NAME:net.if.speed[ifHighSpeed.{#SNMPINDEX}].change()}<0 and {TEMPLATE_NAME:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}>0 and ( {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=117 ) and ({Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}<>2)`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Interface {#IFNAME}({#IFALIAS}): Link down|Last value: {ITEM.LASTVALUE1}.</br>Interface is down|`{$IFCONTROL:"{#IFNAME}"}=1 and ({TEMPLATE_NAME:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}=2 and {TEMPLATE_NAME:net.if.status[ifOperStatus.{#SNMPINDEX}].diff()}=1)`|AVERAGE|
+|Interface {#IFNAME}({#IFALIAS}): High bandwidth usage >{$IF_UTIL_MAX:"{#IFNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`({TEMPLATE_NAME:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Windows SNMPv2:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()} or {Template Module Interfaces Windows SNMPv2:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Windows SNMPv2:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}) and {Template Module Interfaces Windows SNMPv2:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}>0`|WARNING|
+|Interface {#IFNAME}({#IFALIAS}): High error rate|Last value: {ITEM.LASTVALUE1}.</br>Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold|`{TEMPLATE_NAME:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"} or {Template Module Interfaces Windows SNMPv2:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"}`|WARNING|
+|Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before|Last value: {ITEM.LASTVALUE1}.</br>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.|`{TEMPLATE_NAME:net.if.speed[ifHighSpeed.{#SNMPINDEX}].change()}<0 and {TEMPLATE_NAME:net.if.speed[ifHighSpeed.{#SNMPINDEX}].last()}>0 and ( {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=6 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=7 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=11 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=62 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=69 or {Template Module Interfaces Windows SNMPv2:net.if.type[ifType.{#SNMPINDEX}].last()}=117 ) and ({Template Module Interfaces Windows SNMPv2:net.if.status[ifOperStatus.{#SNMPINDEX}].last()}<>2)`|INFO|
 
 ## References
 

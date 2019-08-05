@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 3.4  
+For Zabbix version: 3.4  
 Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-http_stub_status_module'
 
 ## Setup
@@ -46,10 +46,10 @@ Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Nginx: Failed to fetch nginx stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}].nodata(30m)}=1`|
-|Nginx: not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num[nginx].last()}=0`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Nginx: Failed to fetch nginx stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}].nodata(30m)}=1`|WARNING|
+|Nginx: not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num[nginx].last()}=0`|HIGH|
 
 ## References
 

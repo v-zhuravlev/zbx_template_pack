@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.2  
+For Zabbix version: 4.2  
 
 ## Setup
 
@@ -48,10 +48,10 @@ Minimum version: 4.2
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Apache: Failed to fetch Apache stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].nodata(30m)}=1`|
-|Apache: not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num[{$APACHE_PROC_NAME}].last()}=0`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Apache: Failed to fetch Apache stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].nodata(30m)}=1`|WARNING|
+|Apache: not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num[{$APACHE_PROC_NAME}].last()}=0`|HIGH|
 
 ## References
 

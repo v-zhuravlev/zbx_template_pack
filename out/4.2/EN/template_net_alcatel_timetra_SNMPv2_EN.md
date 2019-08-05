@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.2  
+For Zabbix version: 4.2  
 
 ## Setup
 
@@ -59,17 +59,17 @@ Minimum version: 4.2
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[sgiCpuUsage.0].avg(5m)}>{$CPU_UTIL_MAX}`|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|
-|{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`|
-|{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`|
-|{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|
-|#{#SNMPINDEX}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[tmnxChassisFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|
-|#{#SNMPINDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[tmnxChassisPowerSupply1Status.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|
-|#{#SNMPINDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[tmnxChassisPowerSupply2Status.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|
-|{#ENT_NAME}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].strlen()}>0`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[sgiCpuUsage.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
+|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
+|{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`|WARNING|
+|{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`|HIGH|
+|{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[tmnxHwTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|AVERAGE|
+|#{#SNMPINDEX}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[tmnxChassisFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE|
+|#{#SNMPINDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[tmnxChassisPowerSupply1Status.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
+|#{#SNMPINDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[tmnxChassisPowerSupply2Status.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
+|{#ENT_NAME}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].strlen()}>0`|INFO|
 
 ## References
 

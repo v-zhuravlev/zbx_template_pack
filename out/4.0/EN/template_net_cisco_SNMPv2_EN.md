@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -35,16 +35,16 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|{#SNMPVALUE}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|{#SNMPVALUE}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
 
 ## References
 # Template Module Cisco CISCO-PROCESS-MIB SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -74,16 +74,16 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|#{#SNMPINDEX}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|#{#SNMPINDEX}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 
 ## References
 # Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -113,16 +113,16 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|{#SNMPVALUE}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|{#SNMPVALUE}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 
 ## References
 # Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -149,16 +149,16 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[avgBusy5].avg(5m)}>{$CPU_UTIL_MAX}`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[avgBusy5].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 
 ## References
 # Template Module Cisco Inventory SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -186,17 +186,17 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|
-|{#ENT_NAME}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}>0`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
+|{#ENT_NAME}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}>0`|INFO|
 
 ## References
 # Template Module Cisco CISCO-ENVMON-MIB SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -246,22 +246,22 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}`|
-|{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}`|
-|{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|
-|{#SENSOR_INFO}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"critical"},eq)}=1 or {TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"shutdown"},eq)}=1`|
-|{#SENSOR_INFO}: Power supply is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1 or {TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"notFunctioning"},eq)}=1`|
-|{#SENSOR_INFO}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"critical"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"shutdown"},eq)}=1`|
-|{#SENSOR_INFO}: Fan is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"notFunctioning"},eq)}=1`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}`|WARNING|
+|{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS} or {Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}].last(0)}={$TEMP_DISASTER_STATUS}`|HIGH|
+|{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|AVERAGE|
+|{#SENSOR_INFO}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"critical"},eq)}=1 or {TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"shutdown"},eq)}=1`|AVERAGE|
+|{#SENSOR_INFO}: Power supply is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1 or {TEMPLATE_NAME:sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"notFunctioning"},eq)}=1`|WARNING|
+|{#SENSOR_INFO}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"critical"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"shutdown"},eq)}=1`|AVERAGE|
+|{#SENSOR_INFO}: Fan is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"notFunctioning"},eq)}=1`|WARNING|
 
 ## References
 # Template Net Cisco IOS SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -293,15 +293,15 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
 
 ## References
 # Template Net Cisco IOS versions 12.0_3_T-12.2_3.5 SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -332,15 +332,15 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
 
 ## References
 # Template Net Cisco IOS prior to 12.0_3_T SNMPv2
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -370,8 +370,8 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
 
 ## References
 

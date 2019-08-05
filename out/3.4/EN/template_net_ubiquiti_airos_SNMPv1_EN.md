@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 3.4  
+For Zabbix version: 3.4  
 
 ## Setup
 
@@ -42,11 +42,11 @@ Minimum version: 3.4
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[loadValue.2].avg(5m)}>{$CPU_UTIL_MAX}`|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage].avg(5m)}>{$MEMORY_UTIL_MAX}`|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[loadValue.2].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
+|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
+|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
 
 ## References
 

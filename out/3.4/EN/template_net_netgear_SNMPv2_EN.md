@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 3.4  
+For Zabbix version: 3.4  
 https://kb.netgear.com/24352/MIBs-for-Smart-switches
 This template was tested on:
 
@@ -63,16 +63,16 @@ This template was tested on:
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[agentSwitchCpuProcessTotalUtilization.0].avg(5m)}>{$CPU_UTIL_MAX}`|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|
-|#{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}`|
-|#{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}`|
-|#{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|
-|#{#SNMPVALUE}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"failed"},eq)}=1`|
-|#{#SNMPVALUE}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[boxServicesPowSupplyItemState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"failed"},eq)}=1`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[agentSwitchCpuProcessTotalUtilization.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
+|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
+|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
+|#{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}`|WARNING|
+|#{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}`|HIGH|
+|#{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|AVERAGE|
+|#{#SNMPVALUE}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE|
+|#{#SNMPVALUE}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[boxServicesPowSupplyItemState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE|
 
 ## References
 

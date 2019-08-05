@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 3.2  
+For Zabbix version: 3.2  
 for BMC ATEN IPMI controllers of Supermicro servers
 https://www.supermicro.com/solutions/IPMI.cfm
 This template was tested on:
@@ -47,11 +47,11 @@ This template was tested on:
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`|
-|{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`|
-|{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`|WARNING|
+|{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`|HIGH|
+|{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|AVERAGE|
 
 ## References
 

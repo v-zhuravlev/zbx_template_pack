@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 3.2  
+For Zabbix version: 3.2  
 
 ## Setup
 
@@ -61,20 +61,20 @@ Minimum version: 3.2
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.Memory].avg(5m)}>{$MEMORY_UTIL_MAX}`|
-|Device: Temperature is above warning threshold: >{$TEMP_WARN:"Device"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlTemperature].avg(5m)}>{$TEMP_WARN:"Device"}`|
-|Device: Temperature is above critical threshold: >{$TEMP_CRIT:"Device"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlTemperature].avg(5m)}>{$TEMP_CRIT:"Device"}`|
-|Device: Temperature is too low: <{$TEMP_CRIT_LOW:"Device"}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlTemperature].avg(5m)}<{$TEMP_CRIT_LOW:"Device"}`|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|
-|#{#SNMPINDEX}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|
-|CPU: Temperature is above warning threshold: >{$TEMP_WARN:"CPU"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:"CPU"}`|
-|CPU: Temperature is above critical threshold: >{$TEMP_CRIT:"CPU"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:"CPU"}`|
-|CPU: Temperature is too low: <{$TEMP_CRIT_LOW:"CPU"}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:"CPU"}`|
-|Disk-{#SNMPINDEX}: Disk space critical status|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 5G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"} and (({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|
-|Disk-{#SNMPINDEX}: Disk space warning|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 10G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_WARN:"Disk-{#SNMPINDEX}"} and (({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.Memory].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
+|Device: Temperature is above warning threshold: >{$TEMP_WARN:"Device"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlTemperature].avg(5m)}>{$TEMP_WARN:"Device"}`|WARNING|
+|Device: Temperature is above critical threshold: >{$TEMP_CRIT:"Device"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlTemperature].avg(5m)}>{$TEMP_CRIT:"Device"}`|HIGH|
+|Device: Temperature is too low: <{$TEMP_CRIT_LOW:"Device"}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlTemperature].avg(5m)}<{$TEMP_CRIT_LOW:"Device"}`|AVERAGE|
+|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
+|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
+|#{#SNMPINDEX}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
+|CPU: Temperature is above warning threshold: >{$TEMP_WARN:"CPU"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:"CPU"}`|WARNING|
+|CPU: Temperature is above critical threshold: >{$TEMP_CRIT:"CPU"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:"CPU"}`|HIGH|
+|CPU: Temperature is too low: <{$TEMP_CRIT_LOW:"CPU"}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:"CPU"}`|AVERAGE|
+|Disk-{#SNMPINDEX}: Disk space critical status|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 5G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"} and (({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|AVERAGE|
+|Disk-{#SNMPINDEX}: Disk space warning|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 10G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_WARN:"Disk-{#SNMPINDEX}"} and (({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|WARNING|
 
 ## References
 

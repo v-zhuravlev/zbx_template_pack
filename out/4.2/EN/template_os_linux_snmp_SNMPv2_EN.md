@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.2  
+For Zabbix version: 4.2  
 
 ## Setup
 
@@ -80,15 +80,15 @@ Minimum version: 4.2
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Load average is too high|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux SNMPv2:snmp.system.cpu.num.last()}>{$LOAD_AVG_CRIT}`|
-|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:snmp.vm.memory.available.last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux SNMPv2:vm.memory.total[memTotalReal.0].last(0)}>0`|
-|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|Last value: {ITEM.LASTVALUE1}.</br>This trigger is ignored, if there is no swap configured|`{TEMPLATE_NAME:snmp.system.swap.pfree.last()}<{$SWAP_PFREE_WARN} and {Template OS Linux SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|
-|{#STORAGE_DESCR}: Disk space critical status|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 5G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"} and (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|
-|{#STORAGE_DESCR}: Disk space warning|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 10G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_WARN:"{#STORAGE_DESCR}"} and (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|
-|{#STORAGE_DESCR}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}<{$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}`|
-|{#STORAGE_DESCR}: Free inodes is below {$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}<{$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Load average is too high|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux SNMPv2:snmp.system.cpu.num.last()}>{$LOAD_AVG_CRIT}`|AVERAGE|
+|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:snmp.vm.memory.available.last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux SNMPv2:vm.memory.total[memTotalReal.0].last(0)}>0`|AVERAGE|
+|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|Last value: {ITEM.LASTVALUE1}.</br>This trigger is ignored, if there is no swap configured|`{TEMPLATE_NAME:snmp.system.swap.pfree.last()}<{$SWAP_PFREE_WARN} and {Template OS Linux SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING|
+|{#STORAGE_DESCR}: Disk space critical status|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 5G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"} and (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|AVERAGE|
+|{#STORAGE_DESCR}: Disk space warning|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#STORAGE_DESCR}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 10G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$STORAGE_UTIL_WARN:"{#STORAGE_DESCR}"} and (({Template OS Linux SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|WARNING|
+|{#STORAGE_DESCR}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}<{$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}`|AVERAGE|
+|{#STORAGE_DESCR}: Free inodes is below {$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}<{$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}`|WARNING|
 
 ## References
 

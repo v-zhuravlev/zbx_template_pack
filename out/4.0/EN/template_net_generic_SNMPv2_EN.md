@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 Use this template if you can't find the template for specific vendor or device family.
 
 ## Setup
@@ -32,8 +32,8 @@ Use this template if you can't find the template for specific vendor or device f
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
 
 ## References
 

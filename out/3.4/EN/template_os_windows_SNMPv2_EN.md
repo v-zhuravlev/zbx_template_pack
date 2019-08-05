@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 3.4  
+For Zabbix version: 3.4  
 
 ## Setup
 
@@ -31,8 +31,8 @@ Minimum version: 3.4
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
 
 ## References
 

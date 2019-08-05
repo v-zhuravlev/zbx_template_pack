@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 
 ## Setup
 
@@ -42,9 +42,9 @@ Minimum version: 4.0
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Apache: Failed to fetch Apache stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:apache.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:apache.get_stub_status.nodata(30m)}=1`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Apache: Failed to fetch Apache stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:apache.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:apache.get_stub_status.nodata(30m)}=1`|WARNING|
 
 ## References
 

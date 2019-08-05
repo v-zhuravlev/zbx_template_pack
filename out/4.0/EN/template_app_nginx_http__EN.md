@@ -3,7 +3,7 @@
 
 ## Overview
 
-Minimum version: 4.0  
+For Zabbix version: 4.0  
 Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-http_stub_status_module'
 
 ## Setup
@@ -41,9 +41,9 @@ Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-
 
 ## Triggers
 
-|Name|Description|Expression|
-|----|-----------|----|
-|Nginx: Failed to fetch stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:nginx.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:nginx.get_stub_status.nodata(30m)}=1`|
+|Name|Description|Expression|Severity|
+|----|-----------|----|----|
+|Nginx: Failed to fetch stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:nginx.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:nginx.get_stub_status.nodata(30m)}=1`|WARNING|
 
 ## References
 
