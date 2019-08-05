@@ -39,7 +39,6 @@ For Zabbix version: 3.4
 |----|-----------|----|----|
 |{#SNMPVALUE}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
 
-## References
 # Template Module Cisco CISCO-PROCESS-MIB SNMPv2
 
 ## Overview
@@ -78,7 +77,6 @@ For Zabbix version: 3.4
 |----|-----------|----|----|
 |#{#SNMPINDEX}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 
-## References
 # Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2
 
 ## Overview
@@ -117,7 +115,6 @@ For Zabbix version: 3.4
 |----|-----------|----|----|
 |{#SNMPVALUE}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 
-## References
 # Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2
 
 ## Overview
@@ -153,7 +150,6 @@ For Zabbix version: 3.4
 |----|-----------|----|----|
 |High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[avgBusy5].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 
-## References
 # Template Module Cisco Inventory SNMPv2
 
 ## Overview
@@ -191,7 +187,6 @@ For Zabbix version: 3.4
 |Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
 |{#ENT_NAME}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}>0`|INFO|
 
-## References
 # Template Module Cisco CISCO-ENVMON-MIB SNMPv2
 
 ## Overview
@@ -256,7 +251,6 @@ For Zabbix version: 3.4
 |{#SENSOR_INFO}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"critical"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"shutdown"},eq)}=1`|AVERAGE|
 |{#SENSOR_INFO}: Fan is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"notFunctioning"},eq)}=1`|WARNING|
 
-## References
 # Template Net Cisco IOS SNMPv2
 
 ## Overview
@@ -298,7 +292,6 @@ No specific Zabbix configuration is required.
 |Name|Description|Expression|Severity|
 |----|-----------|----|----|
 
-## References
 # Template Net Cisco IOS versions 12.0_3_T-12.2_3.5 SNMPv2
 
 ## Overview
@@ -337,7 +330,6 @@ For Zabbix version: 3.4
 |Name|Description|Expression|Severity|
 |----|-----------|----|----|
 
-## References
 # Template Net Cisco IOS prior to 12.0_3_T SNMPv2
 
 ## Overview
@@ -375,5 +367,4 @@ For Zabbix version: 3.4
 |Name|Description|Expression|Severity|
 |----|-----------|----|----|
 
-## References
 

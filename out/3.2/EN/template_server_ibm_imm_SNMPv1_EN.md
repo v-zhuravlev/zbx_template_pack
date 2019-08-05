@@ -91,5 +91,4 @@ No specific Zabbix configuration is required.
 |{#FAN_DESCR}: Fan is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[fanHealthStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|
 |{#SNMPINDEX}: Physical disk is not in OK state|Last value: {ITEM.LASTVALUE1}.</br>Please check physical disk for warnings or errors|`{TEMPLATE_NAME:system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}].count(#1,{$DISK_OK_STATUS},ne)}=1`|WARNING|
 
-## References
 

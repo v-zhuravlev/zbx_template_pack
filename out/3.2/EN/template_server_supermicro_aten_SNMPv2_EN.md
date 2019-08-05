@@ -4,8 +4,7 @@
 ## Overview
 
 For Zabbix version: 3.2  
-for BMC ATEN IPMI controllers of Supermicro servers
-https://www.supermicro.com/solutions/IPMI.cfm
+for BMC ATEN IPMI controllers of Supermicro servers</br>https://www.supermicro.com/solutions/IPMI.cfm
 
 This template was tested on:
 
@@ -56,5 +55,4 @@ No specific Zabbix configuration is required.
 |{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`|HIGH|
 |{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[sensorReading.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|AVERAGE|
 
-## References
 

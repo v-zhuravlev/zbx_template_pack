@@ -39,5 +39,4 @@ For Zabbix version: 4.0
 |High ICMP ping loss|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:icmppingloss.min(5m)}>{$ICMP_LOSS_WARN} and {TEMPLATE_NAME:icmppingloss.min(5m)}<100`|WARNING|
 |High ICMP ping response time|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:icmppingsec.avg(5m)}>{$ICMP_RESPONSE_TIME_WARN}`|WARNING|
 
-## References
 

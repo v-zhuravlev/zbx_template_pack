@@ -50,5 +50,4 @@ No specific Zabbix configuration is required.
 |High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
 |Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
 
-## References
 

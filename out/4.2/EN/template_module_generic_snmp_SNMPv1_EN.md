@@ -47,5 +47,4 @@ For Zabbix version: 4.2
 |{HOST.NAME} has been restarted|Last value: {ITEM.LASTVALUE1}.</br>The device uptime is less than 10 minutes|`{TEMPLATE_NAME:system.uptime[sysUpTime].last()}<10m`|WARNING|
 |No SNMP data collection|Last value: {ITEM.LASTVALUE1}.</br>SNMP is not available for polling. Please check device connectivity and SNMP settings.|`{TEMPLATE_NAME:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0`|WARNING|
 
-## References
 

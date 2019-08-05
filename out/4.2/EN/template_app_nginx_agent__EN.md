@@ -53,5 +53,4 @@ No specific Zabbix configuration is required.
 |Nginx: Failed to fetch nginx stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$NGINX_STUB_STATUS_HOST},{$NGINX_STUB_STATUS_PATH},{$NGINX_STUB_STATUS_PORT}].nodata(30m)}=1`|WARNING|
 |Nginx: not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num[nginx].last()}=0`|HIGH|
 
-## References
 

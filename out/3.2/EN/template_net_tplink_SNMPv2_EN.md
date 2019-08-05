@@ -4,9 +4,7 @@
 ## Overview
 
 For Zabbix version: 3.2  
-Link to MIBs: http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files
-Sample device overview page: http://www.tp-linkru.com/products/details/cat-39_T2600G-28TS.html#overview
-emulation page(web): http://www.tp-linkru.com/resources/simulator/T2600G-28TS(UN)_1.0/Index.htm
+Link to MIBs: http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files</br>Sample device overview page: http://www.tp-linkru.com/products/details/cat-39_T2600G-28TS.html#overview</br>emulation page(web): http://www.tp-linkru.com/resources/simulator/T2600G-28TS(UN)_1.0/Index.htm
 
 This template was tested on:
 
@@ -62,5 +60,4 @@ No specific Zabbix configuration is required.
 |#{#SNMPVALUE}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[tpSysMonitorCpu1Minute.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 |#{#SNMPVALUE}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[tpSysMonitorMemoryUtilization.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
 
-## References
 

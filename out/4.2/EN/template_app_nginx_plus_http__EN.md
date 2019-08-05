@@ -47,5 +47,4 @@ For Zabbix version: 4.2
 |Name|Description|Expression|Severity|
 |----|-----------|----|----|
 
-## References
 

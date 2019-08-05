@@ -36,5 +36,4 @@ No specific Zabbix configuration is required.
 |Name|Description|Expression|Severity|
 |----|-----------|----|----|
 
-## References
 

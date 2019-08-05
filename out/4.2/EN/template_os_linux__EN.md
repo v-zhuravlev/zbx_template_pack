@@ -85,5 +85,4 @@ For Zabbix version: 4.2
 |{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode[{#FSNAME},pfree].last()}<{$INODE_PFREE_CRIT:"{#FSNAME}"}`|AVERAGE|
 |{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode[{#FSNAME},pfree].last()}<{$INODE_PFREE_WARN:"{#FSNAME}"}`|WARNING|
 
-## References
 

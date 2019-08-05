@@ -32,5 +32,4 @@ For Zabbix version: 4.0
 |----|-----------|----|----|
 |Interface {#IFNAME}({#IFALIAS}): In half-duplex mode|Last value: {ITEM.LASTVALUE1}.</br>Please check autonegotiation settings and cabling|`{TEMPLATE_NAME:net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}].last()}=2`|WARNING|
 
-## References
 

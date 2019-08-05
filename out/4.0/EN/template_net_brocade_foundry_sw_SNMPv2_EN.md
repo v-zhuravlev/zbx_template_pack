@@ -37,18 +37,12 @@ For Zabbix version: 4.0
 |High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[snAgGblCpuUtil1MinAvg.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
 |High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[snAgGblDynMemUtil.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
 
-## References
 # Template Net Brocade_Foundry Nonstackable SNMPv2
 
 ## Overview
 
 For Zabbix version: 4.0  
-For devices(old Foundry devices, MLXe and so on) that doesn't support Stackable SNMP Tables: snChasFan2Table, snChasPwrSupply2Table,snAgentTemp2Table -
-FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are used instead.
-For example:
-The objects in table snChasPwrSupply2Table is not supported on the NetIron and the FastIron SX devices.
-snChasFan2Table is not supported on  on the NetIron devices.
-snAgentTemp2Table is not supported on old versions of MLXe
+For devices(old Foundry devices, MLXe and so on) that doesn't support Stackable SNMP Tables: snChasFan2Table, snChasPwrSupply2Table,snAgentTemp2Table -</br>FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are used instead.</br>For example:</br>The objects in table snChasPwrSupply2Table is not supported on the NetIron and the FastIron SX devices.</br>snChasFan2Table is not supported on  on the NetIron devices.</br>snAgentTemp2Table is not supported on old versions of MLXe
 
 This template was tested on:
 
@@ -122,7 +116,6 @@ No specific Zabbix configuration is required.
 |Chassis #{#SNMPINDEX}: Temperature is above critical threshold: >{$TEMP_CRIT:"Chassis"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:"Chassis"}`|HIGH|
 |Chassis #{#SNMPINDEX}: Temperature is too low: <{$TEMP_CRIT_LOW:"Chassis"}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:"Chassis"}`|AVERAGE|
 
-## References
 # Template Net Brocade_Foundry Stackable SNMPv2
 
 ## Overview
@@ -203,5 +196,4 @@ No specific Zabbix configuration is required.
 |{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`|AVERAGE|
 |Unit {#SNMPVALUE}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].strlen()}>0`|INFO|
 
-## References
 

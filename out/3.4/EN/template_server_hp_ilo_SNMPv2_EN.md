@@ -155,5 +155,4 @@ No specific Zabbix configuration is required.
 |Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk failed|Last value: {ITEM.LASTVALUE1}.</br>Please check virtual disk for warnings or errors|`{TEMPLATE_NAME:system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_CRIT_STATUS},eq)}=1`|HIGH|
 |Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk is not in OK state|Last value: {ITEM.LASTVALUE1}.</br>Please check virtual disk for warnings or errors|`{TEMPLATE_NAME:system.hw.virtualdisk.status[cpqDaLogDrvStatus.{#SNMPINDEX}].count(#1,{$VDISK_OK_STATUS},ne)}=1`|WARNING|
 
-## References
 

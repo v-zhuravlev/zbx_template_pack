@@ -47,5 +47,4 @@ No specific Zabbix configuration is required.
 |----|-----------|----|----|
 |Nginx: Failed to fetch stub status page|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:nginx.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:nginx.get_stub_status.nodata(30m)}=1`|WARNING|
 
-## References
 

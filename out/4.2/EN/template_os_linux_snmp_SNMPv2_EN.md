@@ -90,5 +90,4 @@ For Zabbix version: 4.2
 |{#STORAGE_DESCR}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}<{$INODE_PFREE_CRIT:"{#STORAGE_DESCR}"}`|AVERAGE|
 |{#STORAGE_DESCR}: Free inodes is below {$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#STORAGE_DESCR}].last()}<{$INODE_PFREE_WARN:"{#STORAGE_DESCR}"}`|WARNING|
 
-## References
 
