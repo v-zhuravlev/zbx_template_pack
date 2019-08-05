@@ -1126,7 +1126,7 @@ might be modified.</description>
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Disk-{#SNMPINDEX}: Storage utilization</name>
+                     <name>Disk-{#SNMPINDEX}: Space utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -1153,7 +1153,7 @@ might be modified.</description>
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>Storage utilization in % for Disk-{#SNMPINDEX}</description>
+                     <description>Space utilization in % for Disk-{#SNMPINDEX}</description>
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
@@ -1188,45 +1188,103 @@ might be modified.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"} and&#13;
+(({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})&lt;5G or {Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Disk-{#SNMPINDEX}: Disk space is critically low</name>
+                     <name>Disk-{#SNMPINDEX}: Disk space critical status</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - Disk free space is less than 5G.&#13;
+ - Disk will be full in less than 24hours.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_WARN}</expression>
+                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_WARN:"Disk-{#SNMPINDEX}"} and&#13;
+(({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})&lt;10G or {Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Disk-{#SNMPINDEX}: Disk space is low</name>
+                     <name>Disk-{#SNMPINDEX}: Disk space warning</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - Disk free space is less than 10G.&#13;
+ - Disk will be full in less than 24hours.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Disk-{#SNMPINDEX}: Disk space is critically low</name>
-                           <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                           <name>Disk-{#SNMPINDEX}: Disk space critical status</name>
+                           <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}&gt;{$STORAGE_UTIL_CRIT:"Disk-{#SNMPINDEX}"} and&#13;
+(({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})&lt;5G or {Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
-               <graph_prototypes/>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Disk-{#SNMPINDEX}: Disk space usage</name>
+                     <width>600</width>
+                     <height>340</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>2</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>1</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>969696</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>2</type>
+                           <item>
+                              <host>Template Net Mikrotik SNMPv2</host>
+                              <key>vfs.fs.total[hrStorageSize.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>C80000</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Net Mikrotik SNMPv2</host>
+                              <key>vfs.fs.used[hrStorageSize.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <host_prototypes/>
                <jmx_endpoint/>
                <timeout>3s</timeout>

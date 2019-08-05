@@ -38,7 +38,30 @@
 		"_group": "Storage",
 		"history": "30d",
 		"units": "B",
-		"description": "Total space in Bytes"
+		"description": "Total space in Bytes",
+		"graphs": [
+			{
+				"name": "Disk space usage",
+				"graphType": "PIE",
+				"width": 600,
+				"height": 340,
+				"show_3d": 1,
+				"graphItems": [
+					{
+						"name": "vfs.fs.total",
+						"type": "GRAPH_SUM",
+						"calc_fnc": "LAST",
+						"color": "969696"
+					},
+					{
+						"name": "vfs.fs.used",
+						"type": "SIMPLE",
+						"calc_fnc": "LAST",
+						"color": "C80000"
+					}
+				]
+			}
+		]
 	},
 	{
 		"_id": "vfs.fs.free",
@@ -49,40 +72,111 @@
 	},
 	{
 		"_id": "vfs.fs.pused",
-		"name": "Storage utilization",
+		"name": "Space utilization",
 		"_group": "Storage",
 		"history": "30d",
 		"value_type": "FLOAT",
 		"units": "%",
-		"description": "Storage utilization in % for __RESOURCE__",
+		"description": "Space utilization in % for __RESOURCE__",
 		"triggers": [
 			{
-				"_id": "none",
-				"_id": "storageCrit",
-				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$STORAGE_UTIL_CRIT}",
-				"name": "Disk space is critically low",
+				"_prototype": "trigger.storageCrit_with_timeleft"
+			},
+			{
+				"_prototype": "trigger.storageWarn_with_timeleft"
+			}
+		]
+	},
+	{
+		"_id": "vfs.fs.inode.pfree",
+		"name": "Free inodes in %",
+		"_group": "Storage",
+		"value_type": "FLOAT",
+		"units": "%",
+		"triggers": [
+			{
+				"_id": "trigger.inode.pfree.crit",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__RESOURCE__\"}",
+				"name": "Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__RESOURCE__\"}%",
 				"priority": "AVERAGE",
-				"_translations": {
+				"translations": {
 					"RU": {
-						"name": "Мало свободного места"
+						"name": "Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__RESOURCE__\"}%)"
 					}
 				}
 			},
 			{
-				"_id": "none",
-				"_id": "storageWarn",
-				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$STORAGE_UTIL_WARN}",
-				"name": "Disk space is low",
+				"_id": "trigger.inode.pfree.warn",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__RESOURCE__\"}",
+				"name": "Free inodes is below {$INODE_PFREE_WARN:\"__RESOURCE__\"}%",
 				"priority": "WARNING",
-				"_depends_on": [
-					"storageCrit"
+				"dependsOn": [
+					"trigger.inode.pfree.crit"
 				],
-				"_translations": {
+				"translations": {
 					"RU": {
-						"name": "Мало свободного места"
+						"name": "Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__RESOURCE__\"}%)"
 					}
 				}
 			}
 		]
+	},
+	//PERFORMANCE
+	{
+		"_id": "vfs.dev.read.rate",
+		"name": "Disk read rate",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.write.rate",
+		"name": "Disk write rate",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.read.time.rate",
+		"name": "Disk read time (rate)",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.write.time.rate",
+		"name": "Disk write time (rate)",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.read.await",
+		"name": "Disk read request avg waiting time (r_await)",
+		"_group": "Storage",
+		"units": "!ms",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
+	},
+	{
+		"_id": "vfs.dev.write.await",
+		"name": "Disk write request avg waiting time (w_await)",
+		"_group": "Storage",
+		"units": "!ms",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"description": "The average time for write requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
+	},
+	{
+		"_id": "vfs.dev.queue_size",
+		"name": "Disk average queue size (avgqu-sz)",
+		"_group": "Storage",
+		"update": "1m",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.util",
+		"name": "Disk utilization",
+		"_group": "Storage",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"units": "%"
 	}
 ]

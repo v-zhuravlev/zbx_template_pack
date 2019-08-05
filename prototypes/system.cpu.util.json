@@ -1,35 +1,278 @@
-{
-	"_translations": {
-		"RU": {
-			"name": "Загрузка процессора",
-			"description": "Загрузка процессора в %"
-		}
+[
+	{
+		"_translations": {
+			"RU": {
+				"name": "Загрузка процессора",
+				"description": "Загрузка процессора в %"
+			}
+		},
+		"_id": "system.cpu.util",
+		"name": "CPU utilization",
+		"description": "CPU utilization in %",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"update": "3m",
+		"history": "30d",
+		"trends": "365d",
+		"triggers": [
+			{
+				"_prototype": "trigger.cpu.high"
+			}
+		],
+		"graphs": [
+			{
+				"name": "CPU utilization",
+				"yaxismin": 0,
+				"yaxismax": 100,
+				"graph_items": [
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "system.cpu.util"
+					}
+				]
+			}
+		]
 	},
-	"_id": "system.cpu.util",
-	"name": "CPU utilization",
-	"description": "CPU utilization in %",
-	"value_type": "FLOAT",
-	"_group": "CPU",
-	"units": "%",
-	"delay": "3m",
-	"history": "30d",
-	"trends": "365d",
-	"triggers": [
-		{
-			"_prototype": "trigger.cpu.high"
-		}
-	],
-	"graphs": [
-		{
-			"name": "CPU utilization",
-			"yaxismin": 0,
-			"yaxismax": 100,
-			"graph_items": [
-				{
-					"drawtype": "GRADIENT_LINE",
-					"name": "system.cpu.util"
-				}
-			]
-		}
-	]
-}
+	{
+		"_id": "system.cpu.load.avg1",
+		"update": "1m",
+		"name": "Load average (1m avg)",
+		"group": "CPU",
+		"value_type": "FLOAT",
+		"triggers": [
+			{
+				"_id": "trigger.cpu.load.warn",
+				"name": "Load average is too high",
+				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}/{TEMPLATE_NAME:__system.cpu.num__.last()}>{$LOAD_AVG_CRIT}",
+				"priority": "AVERAGE"
+			}
+		],
+		"graphs": [
+			{
+				"name": "System load",
+				"graphType": "NORMAL",
+				"yaxismin": 0,
+				"ymin_type": "FIXED",
+				"graphItems": [
+					{
+						"name": "system.cpu.load.avg1",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.load.avg5",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.load.avg15",
+						"drawtype": "SINGLE_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "system.cpu.load.avg5",
+		"update": "1m",
+		"name": "Load average (5m avg)",
+		"group": "CPU",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "system.cpu.load.avg15",
+		"name": "Load average (15m avg)",
+		"update": "1m",
+		"group": "CPU",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "system.cpu.num",
+		"key": "system.cpu.num",
+		"name": "Number of CPUs",
+		"group": "CPU",
+		"value_type": "UNSIGNED",
+		"preprocessing": [
+			{
+				"type": "DISCARD_UNCHANGED_HEARTBEAT",
+				"params": "1d"
+			}
+		]
+	},
+	//CPU time idle, user, system, etc
+	{
+		"_id": "system.cpu.idle",
+		"name": "CPU idle time",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The time the CPU has spent doing nothing.",
+		"graphs": [
+			{
+				"name": "CPU usage",
+				"graphType": "STACKED",
+				"yaxismin": 0,
+				"ymin_type": "FIXED",
+				"yaxismax": 100,
+				"ymax_type": "FIXED",
+				"graphItems": [
+					{
+						"name": "system.cpu.system",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.user",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.nice",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.iowait",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.steal",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.interrupt",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.softirq",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.guest",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.guest_nice",
+						"drawtype": "SINGLE_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "system.cpu.system",
+		"update": "1m",
+		"name": "CPU system time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The time the CPU has spent running the kernel and its processes."
+	},
+	{
+		"_id": "system.cpu.user",
+		"update": "1m",
+		"name": "CPU user time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The time the CPU has spent running users' processes that are not niced."
+	},
+	{
+		"_id": "system.cpu.steal",
+		"update": "1m",
+		"name": "CPU steal time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The amount of CPU 'stolen' from this virtual machine by the hypervisor for other tasks (such as running another virtual machine)."
+	},
+	{
+		"_id": "system.cpu.softirq",
+		"update": "1m",
+		"name": "CPU softirq time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The amount of time the CPU has been servicing software interrupts."
+	},
+	{
+		"_id": "system.cpu.nice",
+		"update": "1m",
+		"name": "CPU nice time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The time the CPU has spent running users' processes that have been niced."
+	},
+	{
+		"_id": "system.cpu.iowait",
+		"update": "1m",
+		"name": "CPU iowait time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "Amount of time the CPU has been waiting for I/O to complete."
+		// "triggers": [
+		// 	{
+		// 		"name": "Disk I/O is overloaded",
+		// 		"expression":"{TEMPLATE_NAME:METRIC.avg(5m)}>20",
+		// 		"priority": 2,
+		// 		"description": "OS spends significant time waiting for I/O (input/output) operations. It could be indicator of performance issues with storage system."
+		// 	}
+		// ]
+	},
+	{
+		"_id": "system.cpu.interrupt",
+		"update": "1m",
+		"name": "CPU interrupt time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "The amount of time the CPU has been servicing hardware interrupts."
+	},
+	{
+		"_id": "system.cpu.guest",
+		"update": "1m",
+		"name": "CPU guest time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "Guest  time (time  spent  running  a  virtual  CPU  for  a  guest  operating  system)"
+	},
+	{
+		"_id": "system.cpu.guest_nice",
+		"update": "1m",
+		"name": "CPU guest nice time",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "%",
+		"description": "Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)"
+	},
+	{
+		"_id": "system.cpu.switches",
+		"name": "Context switches per second",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "!sps",
+		"graphs": [
+			{
+				"graphType": "NORMAL",
+				"name": "CPU jumps",
+				"graphItems": [
+					{
+						"name": "system.cpu.switches",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "system.cpu.intr",
+						"drawtype": "SINGLE_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "system.cpu.intr",
+		"name": "Interrupts per second",
+		"value_type": "FLOAT",
+		"_group": "CPU",
+		"units": "!ips"
+	}
+]

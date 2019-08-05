@@ -5,25 +5,80 @@
 		"description": "Used memory in Bytes",
 		"_group": "Memory",
 		"units": "B",
-		"delay": "3m",
+		"update": "3m",
 		"history": "30d",
 		"trends": "365d"
 	},
 	{
 		"_id": "vm.memory.free",
+		"name": "Free memory",
+		"_group": "Memory",
+		"units": "B",
+		"update": "3m",
+		"history": "30d",
+		"trends": "365d"
+	},
+	{
+		"_id": "vm.memory.buffers",
+		"name": "Memory (buffers)",
+		"_group": "Memory",
+		"units": "B",
+		"update": "3m",
+		"history": "30d",
+		"trends": "365d",
+		"description": "Memory used by kernel buffers (Buffers in /proc/meminfo)"
+	},
+	{
+		"_id": "vm.memory.cached",
+		"name": "Memory (cached)",
+		"_group": "Memory",
+		"units": "B",
+		"update": "3m",
+		"history": "30d",
+		"trends": "365d",
+		"description": "Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)"
+	},
+	{
+		"_id": "vm.memory.available",
 		"name": "Available memory",
 		"_group": "Memory",
 		"units": "B",
-		"delay": "3m",
+		"update": "3m",
 		"history": "30d",
-		"trends": "365d"
+		"trends": "365d",
+		"description": "Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params",
+		"triggers": [
+			{
+				"name": "Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})",
+				"expression": "{TEMPLATE_NAME:METRIC.last(0)}<{$MEMORY_AVAILABLE_MIN} and {TEMPLATE_NAME:__vm.memory.total__.last(0)}>0",
+				"priority": "AVERAGE"
+			}
+		],
+		"graphs": [
+			{
+				"name": "Memory usage",
+				"graphType": "NORMAL",
+				"yaxismin": 0,
+				"ymin_type": "FIXED",
+				"graphItems": [
+					{
+						"name": "vm.memory.total",
+						"drawtype": "BOLD_LINE"
+					},
+					{
+						"name": "vm.memory.available",
+						"drawtype": "GRADIENT_LINE"
+					}
+				]
+			}
+		]
 	},
 	{
 		"_id": "vm.memory.total",
 		"name": "Total memory",
 		"_group": "Memory",
 		"units": "B",
-		"delay": "3m",
+		"update": "3m",
 		"history": "30d",
 		"trends": "365d",
 		"description": "Total memory in Bytes"
@@ -35,7 +90,7 @@
 		"value_type": "FLOAT",
 		"units": "%",
 		"description": "Memory utilization in %",
-		"delay": "3m",
+		"update": "3m",
 		"history": "30d",
 		"trends": "365d",
 		"triggers": [
@@ -84,5 +139,35 @@
 		"trends": "0",
 		"history": "1w",
 		"description": "Total memory in units"
+	},
+	{
+		"_id": "system.swap.total",
+		"name": "Total swap space",
+		"group": "Memory",
+		"units": "B",
+		"delay": "5m"
+	},
+	{
+		"_id": "system.swap.free",
+		"name": "Free swap space",
+		"group": "Memory",
+		"units": "B",
+		"delay": "5m"
+	},
+	{
+		"_id": "system.swap.pfree",
+		"name": "Free swap space in %",
+		"group": "Memory",
+		"units": "%",
+		"valueType": "FLOAT",
+		"update": "5m",
+		"triggers": [
+			{
+				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$SWAP_PFREE_WARN} and {TEMPLATE_NAME:__system.swap.total__.last()}>0",
+				"name": "High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})",
+				"priority": "WARNING",
+				"description": "This trigger is ignored, if there is no swap configured"
+			}
+		]
 	}
 ]
