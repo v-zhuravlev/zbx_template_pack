@@ -4,15 +4,18 @@
 ## Overview
 
 For Zabbix version: 4.2  
+
 This template was tested on:
 
 - Arista DCS-7050Q-16, version EOS version 4.12.6
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

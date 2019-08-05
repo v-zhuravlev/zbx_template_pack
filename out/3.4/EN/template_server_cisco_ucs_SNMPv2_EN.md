@@ -5,15 +5,18 @@
 
 For Zabbix version: 3.4  
 for Cisco UCS via Integrated Management Controller
+
 This template was tested on:
 
 - Cisco UCS C240 M4SX, version 
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

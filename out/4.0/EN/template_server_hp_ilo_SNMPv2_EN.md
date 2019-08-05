@@ -5,15 +5,18 @@
 
 For Zabbix version: 4.0  
 for HP iLO adapters that support SNMP get. Or via operating system, using SNMP HP subagent
+
 This template was tested on:
 
 - iLo4, HP Proliant G9, version 
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

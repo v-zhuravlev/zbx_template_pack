@@ -6,15 +6,18 @@
 For Zabbix version: 4.2  
 for BMC ATEN IPMI controllers of Supermicro servers
 https://www.supermicro.com/solutions/IPMI.cfm
+
 This template was tested on:
 
 - Supermicro X10DRI, version 
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

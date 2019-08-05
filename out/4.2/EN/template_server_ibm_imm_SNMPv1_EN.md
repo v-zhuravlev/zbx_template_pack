@@ -5,6 +5,7 @@
 
 For Zabbix version: 4.2  
 for IMM2 and IMM1 IBM serverX hardware
+
 This template was tested on:
 
 - IBM System x3550 M2 with IMM1, version 
@@ -14,9 +15,11 @@ This template was tested on:
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

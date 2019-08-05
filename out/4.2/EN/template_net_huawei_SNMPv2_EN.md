@@ -9,9 +9,11 @@ Reference: http://support.huawei.com/enterprise/KnowledgebaseReadAction.action?c
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

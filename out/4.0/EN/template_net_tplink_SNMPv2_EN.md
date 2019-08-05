@@ -7,15 +7,18 @@ For Zabbix version: 4.0
 Link to MIBs: http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files
 Sample device overview page: http://www.tp-linkru.com/products/details/cat-39_T2600G-28TS.html#overview
 emulation page(web): http://www.tp-linkru.com/resources/simulator/T2600G-28TS(UN)_1.0/Index.htm
+
 This template was tested on:
 
 - T2600G-28TS revision 2.0, version 2.0.0 Build 20170628 Rel.55184(Beta)
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

@@ -8,9 +8,11 @@ Special version of interfaces template that is required for Windows OS. Since MS
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

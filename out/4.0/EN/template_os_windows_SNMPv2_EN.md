@@ -7,9 +7,11 @@ For Zabbix version: 4.0
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 
 ## Template links

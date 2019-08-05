@@ -4,6 +4,7 @@
 ## Overview
 
 For Zabbix version: 4.2  
+
 This template was tested on:
 
 - HP ProCurve J4900B Switch 2626, version ProCurve J4900B Switch 2626, revision H.10.31, ROM H.08.02 (/sw/code/build/fish(mkfs))
@@ -11,9 +12,11 @@ This template was tested on:
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

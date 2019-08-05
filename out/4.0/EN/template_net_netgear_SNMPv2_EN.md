@@ -5,15 +5,18 @@
 
 For Zabbix version: 4.0  
 https://kb.netgear.com/24352/MIBs-for-Smart-switches
+
 This template was tested on:
 
 - Netgear M5300-28G, version 
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

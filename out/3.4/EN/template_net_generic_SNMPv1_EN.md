@@ -8,9 +8,11 @@ Use this template if you can't find the template for specific vendor or device f
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 
 ## Template links

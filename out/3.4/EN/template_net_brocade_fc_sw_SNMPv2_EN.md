@@ -5,6 +5,7 @@
 
 For Zabbix version: 3.4  
 https://community.brocade.com/dtscp75322/attachments/dtscp75322/fibre/25235/1/FOS_MIB_Reference_v740.pdf
+
 This template was tested on:
 
 - Brocade 6520, version v7.4.1c
@@ -13,9 +14,11 @@ This template was tested on:
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 

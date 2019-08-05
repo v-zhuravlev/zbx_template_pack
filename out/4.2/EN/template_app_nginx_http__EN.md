@@ -8,9 +8,11 @@ Test availability of http_stub_status module with 'nginx -V 2>&1 | grep -o with-
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
