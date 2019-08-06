@@ -22,6 +22,9 @@ No specific Zabbix configuration is required.
 |{$NGINX_STUB_STATUS_PATH}|-|basic_status|
 |{$NGINX_STUB_STATUS_PORT}|-|80|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

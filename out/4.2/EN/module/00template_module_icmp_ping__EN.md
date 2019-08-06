@@ -18,6 +18,9 @@ For Zabbix version: 4.2
 |{$ICMP_LOSS_WARN}|-|20|
 |{$ICMP_RESPONSE_TIME_WARN}|-|0.15|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

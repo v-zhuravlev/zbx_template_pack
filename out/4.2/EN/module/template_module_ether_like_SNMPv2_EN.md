@@ -12,6 +12,9 @@ For Zabbix version: 4.2
 
 
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

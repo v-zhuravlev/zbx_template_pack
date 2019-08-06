@@ -18,6 +18,9 @@ For Zabbix version: 4.2
 |{$CPU_UTIL_MAX}|-|90|
 |{$MEMORY_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

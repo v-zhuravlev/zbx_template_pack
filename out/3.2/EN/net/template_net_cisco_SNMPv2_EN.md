@@ -17,6 +17,9 @@ For Zabbix version: 3.2
 |----|-----------|-------|
 |{$MEMORY_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
@@ -57,6 +60,9 @@ For Zabbix version: 3.2
 |----|-----------|-------|
 |{$CPU_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
@@ -95,6 +101,9 @@ For Zabbix version: 3.2
 |----|-----------|-------|
 |{$CPU_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
@@ -133,6 +142,9 @@ For Zabbix version: 3.2
 |----|-----------|-------|
 |{$CPU_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
@@ -163,6 +175,9 @@ For Zabbix version: 3.2
 
 
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
@@ -219,6 +234,9 @@ For Zabbix version: 3.2
 |{$TEMP_WARN_STATUS}|-|2|
 |{$TEMP_WARN}|-|50|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

@@ -20,6 +20,9 @@ For Zabbix version: 4.2
 |{$APACHE_STATUS_PATH}|-|server-status?auto|
 |{$APACHE_STATUS_PORT}|-|80|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

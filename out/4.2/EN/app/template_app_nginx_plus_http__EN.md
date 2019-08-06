@@ -17,6 +17,9 @@ For Zabbix version: 4.2
 |----|-----------|-------|
 |{$NGINX_API_URL}|-|http://demo.nginx.com/api/3|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

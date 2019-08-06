@@ -19,6 +19,9 @@ For Zabbix version: 4.0
 |{$IF_ERRORS_WARN}|-|2|
 |{$IF_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

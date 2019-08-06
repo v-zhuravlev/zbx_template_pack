@@ -20,6 +20,9 @@ For Zabbix version: 3.4
 |{$STORAGE_UTIL_CRIT}|-|90|
 |{$STORAGE_UTIL_WARN}|-|80|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 

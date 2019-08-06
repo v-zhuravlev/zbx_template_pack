@@ -22,6 +22,9 @@ No specific Zabbix configuration is required.
 |{$IF_ERRORS_WARN}|-|2|
 |{$IF_UTIL_MAX}|-|90|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
