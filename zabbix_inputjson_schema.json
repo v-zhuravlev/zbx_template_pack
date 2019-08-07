@@ -33,6 +33,83 @@
           "name"
         ],
         "properties": {
+          "screens": {
+            "$id": "/properties/templates/items/properties/screens",
+            "type": "array",
+            "items": {
+              "defaultSnippets": [
+                {
+                  "label": "New screen",
+                  "description": "Add new screen",
+                  "body": {
+                    "name": "$1",
+                    "hsize": 2,
+                    "vsize": 4,
+                    "screen_items": [
+                      {
+                        "_graph_id": "$2",
+                        "x": 0,
+                        "y": 0
+                      },
+                      {
+                        "_metric_id": "$3",
+                        "x": 0,
+                        "y": 1
+                      }
+                    ]
+                  }
+                }
+              ],
+              "$id": "/properties/templates/items/properties/screens/items",
+              "type": "object",
+              "properties": {
+                "hsize": {
+                  "$id": "/properties/templates/items/properties/screens/items/properties/hsize",
+                  "type": "number",
+                  "default": 2,
+                  "description": "Number of cells horizontally"
+                },
+                "vsize": {
+                  "$id": "/properties/templates/items/properties/screens/items/properties/vsize",
+                  "type": "number",
+                  "default": 4,
+                  "description": "Number of cells vertically"
+                },
+                "name": {
+                  "$id": "/properties/templates/items/properties/screens/items/properties/name",
+                  "type": "string",
+                  "description": "Screen name"
+                },
+                "screen_items": {
+                  "$id": "/properties/templates/items/properties/screens/items/properties/screen_items",
+                  "type": "array",
+                  "description": "Screen items list",
+                  "items": {
+                    "$id": "/properties/templates/items/properties/screens/properties/screen_items/items",
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "description": "X position of this screen item"
+                      },
+                      "y": {
+                        "type": "number",
+                        "description": "Y position of this screen item"
+                      },
+                      "_metric_id": {
+                        "type": "string",
+                        "description": "Define metric _id For simple graphs (and simple graph prototypes)"
+                      },
+                      "_graph_id": {
+                        "type": "string",
+                        "description": "Define graph _id For graphs (and graph prototypes)"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "macros": {
             "$id": "/properties/templates/items/properties/macros",
             "type": "array",
@@ -63,6 +140,43 @@
                   "type": "string",
                   "title": "The Description Schema",
                   "description": "Used in macros table in README file"
+                }
+              }
+            }
+          },
+          "_issues": {
+            "$id": "/properties/templates/items/properties/documentation/properties/_issues",
+            "type": "array",
+            "items": {
+              "$id": "/properties/templates/items/properties/documentation/properties/issues/items",
+              "type": "object",
+              "properties": {
+                "description": {
+                  "$id": "/properties/templates/items/properties/documentation/properties/issues/items/properties/description",
+                  "type": "string",
+                  "title": "The Description Schema",
+                  "default": "",
+                  "examples": [
+                    "D-Link reports missing PSU as fail(4)"
+                  ]
+                },
+                "version": {
+                  "$id": "/properties/templates/items/properties/documentation/properties/issues/items/properties/version",
+                  "type": "string",
+                  "title": "The Version Schema",
+                  "default": "",
+                  "examples": [
+                    "Firmware: 1.73R008,hardware revision: B1"
+                  ]
+                },
+                "device": {
+                  "$id": "/properties/templates/items/properties/documentation/properties/issues/items/properties/device",
+                  "type": "string",
+                  "title": "The Device Schema",
+                  "default": "",
+                  "examples": [
+                    "DGS-3420-26SC Gigabit Ethernet Switch"
+                  ]
                 }
               }
             }
