@@ -11,7 +11,13 @@
       <template>
          <template>Template OS Linux Prom</template>
          <name>Template OS Linux Prom</name>
-         <description>Official Linux template using node exporter. version: 0.15</description>
+         <description>Official Linux template using node exporter. version: 0.15&#13;
+Overview: This template collects Linux metrics from node_exporter 0.16 and above. Support for older node_exporter versions is provided as 'best effort'.&#13;
+Known Issues:&#13;
+description : node_exporter v0.16.0 renamed many metrics. CPU utilisation for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter &lt; 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  &#13;
+ See https://github.com/prometheus/node_exporter/releases/tag/v0.16.0 for details.&#13;
+version : below 0.16.0&#13;
+device :</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -338,7 +344,7 @@
                <preprocessing>
                   <step>
                      <type>23</type>
-                     <params>node_cpu_seconds_total{cpu=~".+",mode="idle"}</params>
+                     <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu=~".+",mode="idle"}</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -420,7 +426,7 @@ return JSON.parse(value).length
                <preprocessing>
                   <step>
                      <type>22</type>
-                     <params>node_intr_total
+                     <params>{__name__=~"node_intr"}
 </params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -495,7 +501,7 @@ return JSON.parse(value).length
                <preprocessing>
                   <step>
                      <type>22</type>
-                     <params>node_context_switches_total
+                     <params>{__name__=~"node_context_switches"}
 </params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -570,7 +576,7 @@ return JSON.parse(value).length
                <preprocessing>
                   <step>
                      <type>22</type>
-                     <params>node_memory_MemTotal_bytes
+                     <params>{__name__=~"node_memory_MemTotal"}
 </params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -639,7 +645,7 @@ return JSON.parse(value).length
                <preprocessing>
                   <step>
                      <type>22</type>
-                     <params>node_memory_MemAvailable_bytes
+                     <params>{__name__=~"node_memory_MemAvailable"}
 </params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -708,7 +714,7 @@ return JSON.parse(value).length
                <preprocessing>
                   <step>
                      <type>22</type>
-                     <params>node_memory_SwapTotal_bytes
+                     <params>{__name__=~"node_memory_SwapTotal"}
 </params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -777,7 +783,7 @@ return JSON.parse(value).length
                <preprocessing>
                   <step>
                      <type>22</type>
-                     <params>node_memory_SwapFree_bytes
+                     <params>{__name__=~"node_memory_SwapFree"}
 </params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -1009,7 +1015,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="idle"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="idle"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1091,7 +1097,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="system"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="system"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1173,7 +1179,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="user"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="user"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1255,7 +1261,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="steal"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="steal"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1337,7 +1343,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="softirq"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="softirq"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1419,7 +1425,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="nice"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="nice"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1501,7 +1507,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="iowait"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="iowait"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1583,7 +1589,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_seconds_total{cpu="{#CPUNUM}",mode="irq"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="irq"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1665,7 +1671,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_guest_seconds_total{cpu="{#CPUNUM}",mode="user"}
+                           <params>{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPUNUM}",mode=~"^(?:user|guest)$"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1747,7 +1753,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_cpu_guest_seconds_total{cpu="{#CPUNUM}",mode="nice"}
+                           <params>{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPUNUM}",mode=~"^(?:nice|guest_nice)$"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -1985,7 +1991,7 @@ return (100 - value)</params>
                <preprocessing>
                   <step>
                      <type>23</type>
-                     <params>node_cpu_seconds_total{cpu=~".+",mode="idle"}</params>
+                     <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu=~".+",mode="idle"}</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -2069,7 +2075,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_filesystem_avail_bytes{mountpoint="{#FSNAME}"}
+                           <params>{__name__=~"^node_filesystem_avail(?:_bytes)?$", mountpoint="{#FSNAME}"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2139,7 +2145,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>node_filesystem_size_bytes{mountpoint="{#FSNAME}"}
+                           <params>{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint="{#FSNAME}"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2556,7 +2562,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <preprocessing>
                   <step>
                      <type>23</type>
-                     <params>node_filesystem_size_bytes{mountpoint=~".+"}</params>
+                     <params>{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint=~".+"}</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>

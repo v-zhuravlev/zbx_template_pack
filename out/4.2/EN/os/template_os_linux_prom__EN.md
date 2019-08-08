@@ -4,12 +4,19 @@
 ## Overview
 
 For Zabbix version: 4.2  
+This template collects Linux metrics from node_exporter 0.16 and above. Support for older node_exporter versions is provided as 'best effort'.
+
+This template was tested on:
+
+- node_exporter, version 0.17.0
 
 ## Setup
 
+Please refer to the node_exporter docs. Use node_exporter v0.16.0 or above
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
@@ -25,6 +32,9 @@ For Zabbix version: 4.2
 |{$STORAGE_UTIL_WARN}|-|80|
 |{$SWAP_PFREE_WARN}|-|50|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
@@ -88,4 +98,6 @@ For Zabbix version: 4.2
 |{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].last()}<{$INODE_PFREE_CRIT:"{#FSNAME}"}`|AVERAGE|
 |{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].last()}<{$INODE_PFREE_WARN:"{#FSNAME}"}`|WARNING|
 
+## References
+https://github.com/prometheus/node_exporter
 

@@ -8,6 +8,23 @@
             ],
             "_zbx_ver": "4.2",
             "description": "Official Linux template using node exporter.",
+            "_documentation": {
+                "_overview": "This template collects Linux metrics from node_exporter 0.16 and above. Support for older node_exporter versions is provided as 'best effort'.",
+                "_setup": "Please refer to the node_exporter docs. Use node_exporter v0.16.0 or above",
+                "_issues": [
+                    {
+                        "version": "below 0.16.0",
+                        "description": "node_exporter v0.16.0 renamed many metrics. CPU utilisation for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter < 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  \n See https://github.com/prometheus/node_exporter/releases/tag/v0.16.0 for details."
+                    }
+                ],
+                "_tested_on": [
+                    {
+                        "name": "node_exporter",
+                        "version": "0.17.0"
+                    }
+                ],
+                "_ref": "https://github.com/prometheus/node_exporter"
+            },
             "discoveryRules": [
                 {
                     "name": "CPU discovery",
@@ -17,7 +34,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_TO_JSON",
-                            "params": "node_cpu_seconds_total{cpu=~\".+\",mode=\"idle\"}"
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"idle\"}"
                         }
                     ],
                     "lld_macro_paths": [
@@ -54,7 +71,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"idle\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"idle\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -74,7 +91,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"system\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"system\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -94,7 +111,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"user\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"user\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -114,7 +131,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"steal\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"steal\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -134,7 +151,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"softirq\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"softirq\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -154,7 +171,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"nice\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"nice\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -174,7 +191,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"iowait\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"iowait\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -194,7 +211,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_seconds_total{cpu=\"{#CPUNUM}\",mode=\"irq\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=\"irq\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -211,10 +228,13 @@
                             "type": "DEPENDENT",
                             "masterItem": "node_exporter.get",
                             "key": "node_exporter.system.cpu.guest[{#CPUNUM}]",
+                            // this metric is only supported for 0.16.0 or above
+                            // node_cpu{cpu=""cpu0"",mode="guest"} 0 (pre 0.16.0)
+                            // node_cpu_guest_seconds_total{cpu="1",mode="user"} 0 (after 0.16.0)
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_guest_seconds_total{cpu=\"{#CPUNUM}\",mode=\"user\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=~\"^(?:user|guest)$\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -231,10 +251,13 @@
                             "type": "DEPENDENT",
                             "masterItem": "node_exporter.get",
                             "key": "node_exporter.system.cpu.guest_nice[{#CPUNUM}]",
+                            // this metric is only supported for 0.16.0 or above
+                            // node_cpu{cpu=""cpu0"",mode="guest_nice} 0 (pre 0.16.0)
+                            // node_cpu_guest_seconds_total{cpu="1",mode="nice"} 0 (after 0.16.0)
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_cpu_guest_seconds_total{cpu=\"{#CPUNUM}\",mode=\"nice\"}\r\n"
+                                    "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=\"{#CPUNUM}\",mode=~\"^(?:nice|guest_nice)$\"}\r\n"
                                 },
                                 {
                                     "type": "CHANGE_PER_SECOND"
@@ -256,7 +279,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_TO_JSON",
-                            "params": "node_filesystem_size_bytes{mountpoint=~\".+\"}"
+                            "params": "{__name__=~\"^node_filesystem_size(?:_bytes)?$\", mountpoint=~\".+\"}"
                         }
                     ],
                     "lld_macro_paths": [
@@ -300,7 +323,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_filesystem_avail_bytes{mountpoint=\"{#FSNAME}\"}\r\n"
+                                    "params": "{__name__=~\"^node_filesystem_avail(?:_bytes)?$\", mountpoint=\"{#FSNAME}\"}\r\n"
                                 }
                             ]
                         },
@@ -315,7 +338,7 @@
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_filesystem_size_bytes{mountpoint=\"{#FSNAME}\"}\r\n"
+                                    "params": "{__name__=~\"^node_filesystem_size(?:_bytes)?$\", mountpoint=\"{#FSNAME}\"}\r\n"
                                 }
                             ]
                         },
@@ -578,7 +601,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_TO_JSON",
-                            "params": "node_cpu_seconds_total{cpu=~\".+\",mode=\"idle\"}"
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"idle\"}"
                         },
                         {
                             "type": "JAVASCRIPT",
@@ -599,7 +622,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_PATTERN",
-                            "params": "node_intr_total\r\n"
+                            "params": "{__name__=~\"node_intr\"}\r\n"
                         },
                         {
                             "type": "CHANGE_PER_SECOND"
@@ -614,7 +637,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_PATTERN",
-                            "params": "node_context_switches_total\r\n"
+                            "params": "{__name__=~\"node_context_switches\"}\r\n"
                         },
                         {
                             "type": "CHANGE_PER_SECOND"
@@ -631,7 +654,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_PATTERN",
-                            "params": "node_memory_MemTotal_bytes\r\n"
+                            "params": "{__name__=~\"node_memory_MemTotal\"}\r\n"
                         }
                     ]
                 },
@@ -644,7 +667,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_PATTERN",
-                            "params": "node_memory_MemAvailable_bytes\r\n"
+                            "params": "{__name__=~\"node_memory_MemAvailable\"}\r\n"
                         }
                     ]
                 },
@@ -658,7 +681,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_PATTERN",
-                            "params": "node_memory_SwapTotal_bytes\r\n"
+                            "params": "{__name__=~\"node_memory_SwapTotal\"}\r\n"
                         }
                     ]
                 },
@@ -671,7 +694,7 @@
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_PATTERN",
-                            "params": "node_memory_SwapFree_bytes\r\n"
+                            "params": "{__name__=~\"node_memory_SwapFree\"}\r\n"
                         }
                     ]
                 },
