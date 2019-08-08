@@ -24,6 +24,9 @@ For Zabbix version: 4.2
 |{$STORAGE_UTIL_WARN}|-|80|
 |{$SWAP_PFREE_WARN}|-|50|
 
+## Template links
+
+There are no template links in this template.
 
 ## Discovery rules
 
