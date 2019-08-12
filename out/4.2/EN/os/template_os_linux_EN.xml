@@ -2506,7 +2506,25 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      </master_item>
                   </item_prototype>
                </item_prototypes>
-               <trigger_prototypes/>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#DEVNAME}: Disk read request response are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 5m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 5m)</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger might indicate disk {#DEVNAME} saturation.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
                <graph_prototypes/>
                <host_prototypes/>
                <jmx_endpoint/>
@@ -2580,6 +2598,14 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
             <macro>
                <macro>{$SWAP_PFREE_WARN}</macro>
                <value>50</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.DEV.READ.AWAIT.WARN}</macro>
+               <value>20</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.DEV.WRITE.AWAIT.WARN}</macro>
+               <value>20</value>
             </macro>
          </macros>
          <templates/>
