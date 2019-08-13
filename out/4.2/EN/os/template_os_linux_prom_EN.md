@@ -9,6 +9,7 @@ This template collects Linux metrics from node_exporter 0.16 and above. Support 
 This template was tested on:
 
 - node_exporter, version 0.17.0
+- node_exporter, version 0.18.1
 
 ## Setup
 
