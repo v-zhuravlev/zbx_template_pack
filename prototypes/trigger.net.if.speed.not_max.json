@@ -1,0 +1,20 @@
+[
+    {
+        "_documentation": "Might be problems with Mikrotik. Also checked:\n - That type is Ethernet\n- That interfaces is not in down status (issue on HP Procurve). Since 6 is also ethernet in if_arp.h - this trigger can also be used in Linux non SNMP templates for now.",
+        "_id": "trigger.if.speed.not_max",
+        "expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand (\n{TEMPLATE_NAME:__net.if.type__.last()}=6 or\n{TEMPLATE_NAME:__net.if.type__.last()}=7 or\n{TEMPLATE_NAME:__net.if.type__.last()}=11 or\n{TEMPLATE_NAME:__net.if.type__.last()}=62 or\n{TEMPLATE_NAME:__net.if.type__.last()}=69 or\n{TEMPLATE_NAME:__net.if.type__.last()}=117\n)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
+        "recovery_expression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
+        "manual_close": "YES",
+        "name": "Ethernet has changed to lower speed than it was before",
+        "priority": "INFO",
+        "description": "This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.",
+        "_depends_on": [
+            "if.down"
+        ],
+        "_translations": {
+            "RU": {
+                "name": "Интерфейс перешел на более низкую скорость, чем был ранее"
+            }
+        }
+    }
+]

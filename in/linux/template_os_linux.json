@@ -5,10 +5,153 @@
             "name": "Template OS Linux Zabbix agent",
             "_classes": [
                 "OS",
-                "PERFORMANCE"
+                "PERFORMANCE",
+                "IF_MIB"
             ],
+            "_documentation": {
+                "_issues": [
+                    {
+                        "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
+                    }
+                ],
+                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
+            },
             "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
             "discovery_rules": [
+                {
+                    "name": "Network interface discovery",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "net.if.discovery",
+                    "description": "Discovery of network interfaces as defined in global regular expression \"Network interfaces for discovery\".\nFiltering veth interfaces automatically created by Docker.",
+                    "filter": {
+                        "evaltype": "AND",
+                        "conditions": [
+                            {
+                                //TODO remove global regex in filter
+                                "macro": "{#IFNAME}",
+                                "value": "@Network interfaces for discovery",
+                                "formulaid": "A",
+                            },
+                            {
+                                //filter out docker veth links
+                                "macro": "{#IFNAME}",
+                                "value": "^veth[0-9a-z]+$",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            }
+                        ],
+                    },
+                    "items": [
+                        {
+                            "_prototype": "net.if.in",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\"]",
+                            //removing trigger if.util_high since there is no net.if.speed to evaluate it properly.
+                            "triggers": []
+                        },
+                        {
+                            "_prototype": "net.if.out",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\"]"
+                        },
+                        {
+                            "_prototype": "net.if.out.errors",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\",errors]"
+                        },
+                        {
+                            "_prototype": "net.if.in.errors",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\",errors]"
+                        },
+                        {
+                            "_prototype": "net.if.out.discards",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\",dropped]"
+                        },
+                        {
+                            "_prototype": "net.if.in.discards",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\",dropped]"
+                        },
+                        {
+                            "_prototype": "net.if.status",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/operstate\"]",
+                            "_resource": "Interface {#IFNAME}",
+                            "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
+                            "preprocessing": [
+                                /*
+                                var newvalue;
+                                switch(value) {
+                                case "up":
+                                    newvalue = 1;
+                                    break;
+                                case "down":
+                                    newvalue = 2;
+                                    break;
+                                case "testing":
+                                    newvalue = 4;
+                                    break;
+                                case "unknown":
+                                    newvalue = 5;
+                                    break;
+                                case "dormant":
+                                    newvalue = 6;
+                                    break;
+                                case "notPresent":
+                                    newvalue = 7;
+                                    break;
+                                default:
+                                    newvalue = "Problem parsing interface operstate in JS";
+                                }
+                                return newvalue;
+                                */
+                                {
+                                    "type": "JAVASCRIPT",
+                                    "params": "var newvalue;\nswitch(value) {\n  case \"up\":\n    newvalue = 1;\n    break;\n  case \"down\":\n    newvalue = 2;\n    break;\n  case \"testing\":\n    newvalue = 4;\n    break;\n  case \"unknown\":\n    newvalue = 5;\n    break;\n  case \"dormant\":\n    newvalue = 6;\n    break;\n  case \"notPresent\":\n    newvalue = 7;\n    break;\n  default:\n    newvalue = \"Problem parsing interface operstate in JS\";\n}\nreturn newvalue;"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.type",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/type\"]",
+                            "_vendor_description": "Indicates the interface latest or current speed value.\nValue is an integer representing the link speed in Mbits/sec. \nNote: this attribute is only valid for interfaces that implement \nthe ethtool get_link_ksettings method (mostly Ethernet).",
+                            "value_map": "Linux::Interface protocol types",
+                            "triggers": [
+                                {
+                                    "_prototype": "trigger.if.speed.not_max",
+                                    "expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand\n({TEMPLATE_NAME:__net.if.type__.last()}=6\nor {TEMPLATE_NAME:__net.if.type__.last()}=1)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
+                                }
+                            ]
+                        }
+                        // add these metrics
+                        // net.if.duplex is ethernet only
+                        // {
+                        //     "_prototype": "net.if.duplex",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "_resource": "Interface {#IFNAME}",
+                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/duplex\"]",
+                        //     "_vendor_description": "Indicates the interface latest or current duplex value. Possible\nvalues are:\nhalf: half duplex\nfull: full duplex\n\nNote: This attribute is only valid for interfaces that implement\nthe ethtool get_link_ksettings method (mostly Ethernet)."
+                        // }
+                        // unable to add net.if.speed, since sometimes(for eth like bridges...) it return "File is too large for this check."
+                        // {
+                        //     "_prototype": "net.if.speed",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "_resource": "Interface {#IFNAME}",
+                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/speed\"]",
+                        //     "_vendor_description": "Indicates the interface latest or current speed value.\nValue is an integer representing the link speed in Mbits/sec. \nNote: this attribute is only valid for interfaces that implement \nthe ethtool get_link_ksettings method (mostly Ethernet)."
+                        // },
+                    ]
+                },
                 {
                     "name": "Mounted filesystem discovery",
                     "key": "vfs.fs.discovery",
@@ -18,6 +161,7 @@
                         "evaltype": "AND",
                         "conditions": [
                             {
+                                //TODO remove global regex in filter
                                 "macro": "{#FSTYPE}",
                                 "value": "@File systems for discovery",
                                 "formulaid": "A"
@@ -422,6 +566,301 @@
                     "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
                     "value": "20",
                     "_description": "Disk write average response time (in ms) before the trigger would fire"
+                }
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "IF-MIB::ifOperStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "up"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "down"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "dormant"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "notPresent"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "lowerLayerDown"
+                }
+            ]
+        },
+        {
+            "name": "Linux::Interface protocol types",
+            "mappings": [
+                //https://github.com/torvalds/linux/blob/master/include/uapi/linux/if_arp.h
+                /* ARP protocol HARDWARE identifiers. */
+                {
+                    "value": "0",
+                    "newvalue": "from KA9Q: NET/ROM pseudo"
+                },
+                {
+                    "value": "1",
+                    "newvalue": "Ethernet 10Mbps"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Experimental Ethernet"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "AX.25 Level 2"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "PROnet token ring"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "Chaosnet"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "IEEE 802.2 Ethernet/TR/TB"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "ARCnet"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "APPLEtalk"
+                },
+                {
+                    "value": "15",
+                    "newvalue": "Frame Relay DLCI"
+                },
+                {
+                    "value": "19",
+                    "newvalue": "ATM"
+                },
+                {
+                    "value": "23",
+                    "newvalue": "Metricom STRIP (new IANA id)"
+                },
+                {
+                    "value": "24",
+                    "newvalue": "IEEE 1394 IPv4 - RFC 2734"
+                },
+                {
+                    "value": "27",
+                    "newvalue": "EUI-64"
+                },
+                {
+                    "value": "32",
+                    "newvalue": "InfiniBand"
+                },
+                {
+                    "value": "256",
+                    "newvalue": "ARPHRD_SLIP"
+                },
+                {
+                    "value": "257",
+                    "newvalue": "ARPHRD_CSLIP"
+                },
+                {
+                    "value": "258",
+                    "newvalue": "ARPHRD_SLIP6"
+                },
+                {
+                    "value": "259",
+                    "newvalue": "ARPHRD_CSLIP6"
+                },
+                {
+                    "value": "260",
+                    "newvalue": "Notional KISS type"
+                },
+                {
+                    "value": "264",
+                    "newvalue": "ARPHRD_ADAPT"
+                },
+                {
+                    "value": "270",
+                    "newvalue": "ARPHRD_ROSE"
+                },
+                {
+                    "value": "271",
+                    "newvalue": "CCITT X.25"
+                },
+                {
+                    "value": "272",
+                    "newvalue": "Boards with X.25 in firmware"
+                },
+                {
+                    "value": "280",
+                    "newvalue": "Controller Area Network"
+                },
+                {
+                    "value": "512",
+                    "newvalue": "ARPHRD_PPP"
+                },
+                {
+                    "value": "513",
+                    "newvalue": "Cisco HDLC"
+                },
+                {
+                    "value": "516",
+                    "newvalue": "LAPB"
+                },
+                {
+                    "value": "517",
+                    "newvalue": "Digital's DDCMP protocol"
+                },
+                {
+                    "value": "518",
+                    "newvalue": "Raw HDLC"
+                },
+                {
+                    "value": "519",
+                    "newvalue": "Raw IP"
+                },
+                {
+                    "value": "768",
+                    "newvalue": "IPIP tunnel"
+                },
+                {
+                    "value": "769",
+                    "newvalue": "IP6IP6 tunnel"
+                },
+                {
+                    "value": "770",
+                    "newvalue": "Frame Relay Access Device"
+                },
+                {
+                    "value": "771",
+                    "newvalue": "SKIP vif"
+                },
+                {
+                    "value": "772",
+                    "newvalue": "Loopback device"
+                },
+                {
+                    "value": "773",
+                    "newvalue": "Localtalk device"
+                },
+                {
+                    "value": "774",
+                    "newvalue": "Fiber Distributed Data Interface"
+                },
+                {
+                    "value": "775",
+                    "newvalue": "AP1000 BIF"
+                },
+                {
+                    "value": "776",
+                    "newvalue": "sit0 device - IPv6-in-IPv4"
+                },
+                {
+                    "value": "777",
+                    "newvalue": "IP over DDP tunneller"
+                },
+                {
+                    "value": "778",
+                    "newvalue": "GRE over IP"
+                },
+                {
+                    "value": "779",
+                    "newvalue": "PIMSM register interface"
+                },
+                {
+                    "value": "780",
+                    "newvalue": "High Performance Parallel Interface"
+                },
+                {
+                    "value": "781",
+                    "newvalue": "Nexus 64Mbps Ash"
+                },
+                {
+                    "value": "782",
+                    "newvalue": "Acorn Econet"
+                },
+                {
+                    "value": "783",
+                    "newvalue": "Linux-IrDA"
+                },
+                {
+                    "value": "784",
+                    "newvalue": "Point to point fibrechannel"
+                },
+                {
+                    "value": "785",
+                    "newvalue": "Fibrechannel arbitrated loop"
+                },
+                {
+                    "value": "786",
+                    "newvalue": "Fibrechannel public loop"
+                },
+                {
+                    "value": "787",
+                    "newvalue": "Fibrechannel fabric"
+                },
+                /* 787->799 reserved for fibrechannel media types */
+                {
+                    "value": "800",
+                    "newvalue": "Magic type ident for TR"
+                },
+                {
+                    "value": "801",
+                    "newvalue": "IEEE 802.11"
+                },
+                {
+                    "value": "802",
+                    "newvalue": "IEEE 802.11 + Prism2 header"
+                },
+                {
+                    "value": "803",
+                    "newvalue": "IEEE 802.11 + radiotap header"
+                },
+                {
+                    "value": "804",
+                    "newvalue": "ARPHRD_IEEE802154"
+                },
+                {
+                    "value": "805",
+                    "newvalue": "IEEE 802.15.4 network monitor"
+                },
+                {
+                    "value": "820",
+                    "newvalue": "PhoNet media type"
+                },
+                {
+                    "value": "821",
+                    "newvalue": "PhoNet pipe header"
+                },
+                {
+                    "value": "822",
+                    "newvalue": "CAIF media type"
+                },
+                {
+                    "value": "823",
+                    "newvalue": "GRE over IPv6"
+                },
+                {
+                    "value": "824",
+                    "newvalue": "Netlink header"
+                },
+                {
+                    "value": "825",
+                    "newvalue": "IPv6 over LoWPAN"
+                },
+                {
+                    "value": "826",
+                    "newvalue": "Vsock monitor header"
                 }
             ]
         }

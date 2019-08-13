@@ -127,3 +127,5 @@ https://support.zabbix.com/browse/ZBXNEXT-1302
 http://www.net-snmp.org/docs/mibs/UCD-SNMP-MIB.txt
 https://www.percona.com/blog/2017/08/28/looking-disk-utilization-and-saturation/  
 https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics
+https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt
+https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net

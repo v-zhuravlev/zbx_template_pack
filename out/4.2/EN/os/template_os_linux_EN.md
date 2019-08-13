@@ -4,18 +4,24 @@
 ## Overview
 
 For Zabbix version: 4.2  
+New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
 |Name|Description|Default|
 |----|-----------|-------|
 |{$CPU_UTIL_MAX}|-|90|
+|{$IFCONTROL}|-|1|
+|{$IF_ERRORS_WARN}|-|2|
+|{$IF_UTIL_MAX}|-|90|
 |{$INODE_PFREE_CRIT}|-|10|
 |{$INODE_PFREE_WARN}|-|20|
 |{$LOAD_AVG_CRIT}|-|1.5|
@@ -34,6 +40,7 @@ There are no template links in this template.
 
 |Name|Description|Type|
 |----|-----------|----|
+|Network interface discovery|Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".</br>Filtering veth interfaces automatically created by Docker.|ZABBIX_PASSIVE|
 |Mounted filesystem discovery|Discovery of file systems of different types as defined in global regular expression "File systems for discovery".|ZABBIX_PASSIVE|
 |Block devices discovery|-|DEPENDENT|
 
@@ -63,6 +70,14 @@ There are no template links in this template.
 |Total swap space|-|ZABBIX_PASSIVE|
 |Free swap space|-|ZABBIX_PASSIVE|
 |Free swap space in %|-|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Bits received|MIB: IF-MIB</br>The total number of octets received on the interface,including framing characters.  This object is a 64-bit version of ifInOctets. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Bits sent|MIB: IF-MIB</br>The total number of octets transmitted out of the interface, including framing characters.  This object is a 64-bit version of ifOutOctets.Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Outbound packets with errors|MIB: IF-MIB</br>For packet-oriented interfaces, the number of outbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of outbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Inbound packets with errors|MIB: IF-MIB</br>For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Outbound packets discarded|MIB: IF-MIB</br>The number of outbound packets which were chosen to be discarded</br>even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.</br>One possible reason for discarding such a packet could be to free up buffer space.</br>Discontinuities in the value of this counter can occur at re-initialization of the management system,</br>and at other times as indicated by the value of ifCounterDiscontinuityTime.|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Inbound packets discarded|MIB: IF-MIB</br>The number of inbound packets which were chosen to be discarded</br>even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.</br>One possible reason for discarding such a packet could be to free up buffer space.</br>Discontinuities in the value of this counter can occur at re-initialization of the management system,</br>and at other times as indicated by the value of ifCounterDiscontinuityTime.|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Operational status|MIB: IF-MIB</br>Indicates the interface RFC2863 operational state as a string.</br>Possible values are:"unknown", "notpresent", "down", "lowerlayerdown", "testing","dormant", "up".|ZABBIX_PASSIVE|
+|Interface {#IFNAME}: Interface type|MIB: IF-MIB</br>Indicates the interface latest or current speed value.</br>Value is an integer representing the link speed in Mbits/sec. </br>Note: this attribute is only valid for interfaces that implement </br>the ethtool get_link_ksettings method (mostly Ethernet).|ZABBIX_PASSIVE|
 |{#FSNAME}: Used space|Used storage in Bytes|ZABBIX_PASSIVE|
 |{#FSNAME}: Free space|-|ZABBIX_PASSIVE|
 |{#FSNAME}: Total space|Total space in Bytes|ZABBIX_PASSIVE|
@@ -85,6 +100,9 @@ There are no template links in this template.
 |Load average is too high|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.load[percpu,avg1].avg(5m)}>{$LOAD_AVG_CRIT}`|AVERAGE|
 |Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.size[available].last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux Zabbix agent:vm.memory.size[total].last(0)}>0`|AVERAGE|
 |High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|Last value: {ITEM.LASTVALUE1}.</br>This trigger is ignored, if there is no swap configured|`{TEMPLATE_NAME:system.swap.size[,pfree].last()}<{$SWAP_PFREE_WARN} and {Template OS Linux Zabbix agent:system.swap.size[,total].last()}>0`|WARNING|
+|Interface {#IFNAME}: High error rate|Last value: {ITEM.LASTVALUE1}.</br>Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold|`{TEMPLATE_NAME:net.if.in["{#IFNAME}",errors].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"} or {Template OS Linux Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"}`</br>Recovery expression: `{TEMPLATE_NAME:net.if.in["{#IFNAME}",errors].avg(5m)}<{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8 and {Template OS Linux Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}<{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8`|WARNING|
+|Interface {#IFNAME}: Link down|Last value: {ITEM.LASTVALUE1}.</br>Interface is down|`{$IFCONTROL:"{#IFNAME}"}=1 and ({TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)`</br>Recovery expression: `{TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}<>2`|AVERAGE|
+|Interface {#IFNAME}: Ethernet has changed to lower speed than it was before|Last value: {ITEM.LASTVALUE1}.</br>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.|`{TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}<0 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}>0 and ({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=6 or {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=1) and ({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}<>2)`</br>Recovery expression: `({TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}>0 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].prev()}>0) or ({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2)`|INFO|
 |{#FSNAME}: Disk space critical status|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 5G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].last()}>{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and (({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})<5G or {TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}<1d)`|AVERAGE|
 |{#FSNAME}: Disk space warning|Last value: {ITEM.LASTVALUE1}.</br>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</br>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.</br> Second condition should be one of the following:</br> - Disk free space is less than 10G.</br> - Disk will be full in less than 24hours.|`{TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].last()}>{$STORAGE_UTIL_WARN:"{#FSNAME}"} and (({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})<10G or {TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}<1d)`|WARNING|
 |{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vfs.fs.inode[{#FSNAME},pfree].last()}<{$INODE_PFREE_CRIT:"{#FSNAME}"}`|AVERAGE|
