@@ -48,37 +48,43 @@
                             "_resource": "Interface {#IFNAME}",
                             "key": "net.if.in[\"{#IFNAME}\"]",
                             //removing trigger if.util_high since there is no net.if.speed to evaluate it properly.
-                            "triggers": []
+                            "triggers": [],
+                            "_vendor_description": ""
                         },
                         {
                             "_prototype": "net.if.out",
                             "type": "ZABBIX_PASSIVE",
                             "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.out[\"{#IFNAME}\"]"
+                            "key": "net.if.out[\"{#IFNAME}\"]",
+                            "_vendor_description": ""
                         },
                         {
                             "_prototype": "net.if.out.errors",
                             "type": "ZABBIX_PASSIVE",
                             "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.out[\"{#IFNAME}\",errors]"
+                            "key": "net.if.out[\"{#IFNAME}\",errors]",
+                            "_vendor_description": ""
                         },
                         {
                             "_prototype": "net.if.in.errors",
                             "type": "ZABBIX_PASSIVE",
                             "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.in[\"{#IFNAME}\",errors]"
+                            "key": "net.if.in[\"{#IFNAME}\",errors]",
+                            "_vendor_description": ""
                         },
                         {
                             "_prototype": "net.if.out.discards",
                             "type": "ZABBIX_PASSIVE",
                             "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.out[\"{#IFNAME}\",dropped]"
+                            "key": "net.if.out[\"{#IFNAME}\",dropped]",
+                            "_vendor_description": ""
                         },
                         {
                             "_prototype": "net.if.in.discards",
                             "type": "ZABBIX_PASSIVE",
                             "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.in[\"{#IFNAME}\",dropped]"
+                            "key": "net.if.in[\"{#IFNAME}\",dropped]",
+                            "_vendor_description": ""
                         },
                         {
                             "_prototype": "net.if.status",
@@ -86,6 +92,7 @@
                             "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/operstate\"]",
                             "_resource": "Interface {#IFNAME}",
                             "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
                             "preprocessing": [
                                 /*
                                 var newvalue;
@@ -124,7 +131,8 @@
                             "type": "ZABBIX_PASSIVE",
                             "_resource": "Interface {#IFNAME}",
                             "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/type\"]",
-                            "_vendor_description": "Indicates the interface latest or current speed value.\nValue is an integer representing the link speed in Mbits/sec. \nNote: this attribute is only valid for interfaces that implement \nthe ethtool get_link_ksettings method (mostly Ethernet).",
+                            "_vendor_description": "Indicates the interface protocol type as a decimal value.\nSee include/uapi/linux/if_arp.h for all possible values.",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
                             "value_map": "Linux::Interface protocol types",
                             "triggers": [
                                 {
