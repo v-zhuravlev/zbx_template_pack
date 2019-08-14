@@ -122,9 +122,8 @@
                   "type": "string",
                   "title": "The Macro Schema",
                   "default": "",
-                  "examples": [
-                    "{$PSU_CRIT_STATUS}"
-                  ]
+                  "pattern": "^\\{\\$[0-9A-Z_\\.]+(:\".*\")?\\}$",
+                  "description": "User macro"
                 },
                 "value": {
                   "$id": "/properties/templates/items/properties/macros/items/properties/value",
@@ -339,6 +338,10 @@
             "items": {
               "$id": "/properties/templates/items/properties/discovery_rules/items",
               "type": "object",
+              "required": [
+                "items",
+                "name"
+              ],
               "properties": {
                 "name": {
                   "$id": "/properties/templates/items/properties/discovery_rules/items/properties/name",
@@ -372,7 +375,7 @@
                 "items": {
                   "$ref": "./zabbix_metric_prototype_schema.json"
                 },
-                "masterItem": {
+                "master_item": {
                   "type": "string"
                 },
                 "preprocessing": {
@@ -380,6 +383,64 @@
                 },
                 "type": {
                   "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "filter": {
+                  "type": "object",
+                  "properties": {
+                    "evaltype": {
+                      "type": "string",
+                      "enum": [
+                        "AND",
+                        "AND_OR",
+                        "OR"
+                      ]
+                    },
+                    "conditions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "macro",
+                          "value",
+                          "formulaid"
+                        ],
+                        "properties": {
+                          "macro": {
+                            "type": "string",
+                            "pattern": "^\\{#[0-9A-Z_\\.]+\\}$",
+                            "description": "LLD macro"
+                          },
+                          "value": {
+                            "type": "string"
+                          },
+                          "formulaid": {
+                            "type": "string",
+                            "enum": [
+                              "A",
+                              "B",
+                              "C",
+                              "D",
+                              "E",
+                              "F",
+                              "G"
+                            ],
+                            "default": "A"
+                          },
+                          "operator": {
+                            "type": "string",
+                            "enum": [
+                              "MATCHES_REGEX",
+                              "NOT_MATCHES_REGEX"
+                            ],
+                            "default": "MATCHES_REGEX"
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -398,8 +459,58 @@
       "$id": "/properties/value_maps",
       "type": "array",
       "items": {
+        "defaultSnippets": [
+          {
+            "label": "New value map",
+            "body": {
+              "name": "$1",
+              "mappings": [
+                {
+                  "value": "$2",
+                  "newvalue": "$3"
+                }
+              ]
+            }
+          },
+          {
+            "label": "IF-MIB::ifOperStatus",
+            "body": {
+              "name": "IF-MIB::ifOperStatus",
+              "mappings": [
+                {
+                  "value": "1",
+                  "newvalue": "up"
+                },
+                {
+                  "value": "2",
+                  "newvalue": "down"
+                },
+                {
+                  "value": "4",
+                  "newvalue": "unknown"
+                },
+                {
+                  "value": "5",
+                  "newvalue": "dormant"
+                },
+                {
+                  "value": "6",
+                  "newvalue": "notPresent"
+                },
+                {
+                  "value": "7",
+                  "newvalue": "lowerLayerDown"
+                }
+              ]
+            }
+          }
+        ],
         "$id": "/properties/value_maps/items",
         "type": "object",
+        "required": [
+          "name",
+          "mappings"
+        ],
         "properties": {
           "name": {
             "$id": "/properties/value_maps/items/properties/name",
@@ -416,6 +527,14 @@
             "items": {
               "$id": "/properties/value_maps/items/properties/mappings/items",
               "type": "object",
+              "default": {
+                "value": "",
+                "newvalue": ""
+              },
+              "required": [
+                "value",
+                "newvalue"
+              ],
               "properties": {
                 "value": {
                   "$id": "/properties/value_maps/items/properties/mappings/items/properties/value",
