@@ -49,45 +49,44 @@ There are no template links in this template.
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|Get node_exporter metrics|-|HTTP_AGENT|
-|Load average (1m avg)|-|DEPENDENT|
-|Load average (5m avg)|-|DEPENDENT|
-|Load average (15m avg)|-|DEPENDENT|
-|Number of CPUs|-|DEPENDENT|
-|Interrupts per second|-|DEPENDENT|
-|Context switches per second|-|DEPENDENT|
-|Total memory|Total memory in Bytes|DEPENDENT|
-|Available memory|Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params|DEPENDENT|
-|Total swap space|-|DEPENDENT|
-|Free swap space|-|DEPENDENT|
-|Free swap space in %|-|CALCULATED|
-|#{#CPUNUM}: CPU utilization|CPU utilization in %|DEPENDENT|
-|#{#CPUNUM}: CPU idle time|The time the CPU has spent doing nothing.|DEPENDENT|
-|#{#CPUNUM}: CPU system time|The time the CPU has spent running the kernel and its processes.|DEPENDENT|
-|#{#CPUNUM}: CPU user time|The time the CPU has spent running users' processes that are not niced.|DEPENDENT|
-|#{#CPUNUM}: CPU steal time|The amount of CPU 'stolen' from this virtual machine by the hypervisor for other tasks (such as running another virtual machine).|DEPENDENT|
-|#{#CPUNUM}: CPU softirq time|The amount of time the CPU has been servicing software interrupts.|DEPENDENT|
-|#{#CPUNUM}: CPU nice time|The time the CPU has spent running users' processes that have been niced.|DEPENDENT|
-|#{#CPUNUM}: CPU iowait time|Amount of time the CPU has been waiting for I/O to complete.|DEPENDENT|
-|#{#CPUNUM}: CPU interrupt time|The amount of time the CPU has been servicing hardware interrupts.|DEPENDENT|
-|#{#CPUNUM}: CPU guest time|Guest  time (time  spent  running  a  virtual  CPU  for  a  guest  operating  system)|DEPENDENT|
-|#{#CPUNUM}: CPU guest nice time|Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)|DEPENDENT|
-|{#FSNAME}: Free space|-|DEPENDENT|
-|{#FSNAME}: Total space|Total space in Bytes|DEPENDENT|
-|{#FSNAME}: Used space|Used storage in Bytes|CALCULATED|
-|{#FSNAME}: Space utilization|Space utilization in % for {#FSNAME}|CALCULATED|
-|{#FSNAME}: Free inodes in %|-|DEPENDENT|
-|{#DEVNAME}: Disk read rate|r/s. The number (after merges) of read requests completed per second for the device.|DEPENDENT|
-|{#DEVNAME}: Disk write rate|w/s. The number (after merges) of write requests completed per second for the device.|DEPENDENT|
-|{#DEVNAME}: Disk read time (rate)|Rate of total read time counter. Used in r_await calculation|DEPENDENT|
-|{#DEVNAME}: Disk write time (rate)|Rate of total write time counter. Used in w_await calculation|DEPENDENT|
-|{#DEVNAME}: Disk read request avg waiting time (r_await)|This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.|CALCULATED|
-|{#DEVNAME}: Disk write request avg waiting time (w_await)|This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.|CALCULATED|
-|{#DEVNAME}: Disk average queue size (avgqu-sz)|-|DEPENDENT|
-|{#DEVNAME}: Disk utilization|-|DEPENDENT|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|Load average (1m avg)|-|DEPENDENT|node_exporter.node_load1 </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_load1 `|
+|CPU|Load average (5m avg)|-|DEPENDENT|node_exporter.node_load5 </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_load5 `|
+|CPU|Load average (15m avg)|-|DEPENDENT|node_exporter.node_load15 </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_load15 `|
+|CPU|Number of CPUs|-|DEPENDENT|node_exporter.system.cpu.num </br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu=~".+",mode="idle"}`</br> - JAVASCRIPT: `//count the number of cores return JSON.parse(value).length `</br> - DISCARD_UNCHANGED_HEARTBEAT: `1d`|
+|CPU|Interrupts per second|-|DEPENDENT|node_exporter.system.cpu.intr </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"node_intr"} `</br> - CHANGE_PER_SECOND|
+|CPU|Context switches per second|-|DEPENDENT|node_exporter.system.cpu.switches </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"node_context_switches"} `</br> - CHANGE_PER_SECOND|
+|CPU|#{#CPUNUM}: CPU utilization|CPU utilization in %|DEPENDENT|node_exporter.system.cpu.util[{#CPUNUM}] </br>**Preprocessing**:</br> - JAVASCRIPT: `//Calculate utilization return (100 - value)`|
+|CPU|#{#CPUNUM}: CPU idle time|The time the CPU has spent doing nothing.|DEPENDENT|node_exporter.system.cpu.idle[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="idle"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU system time|The time the CPU has spent running the kernel and its processes.|DEPENDENT|node_exporter.system.cpu.system[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="system"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU user time|The time the CPU has spent running users' processes that are not niced.|DEPENDENT|node_exporter.system.cpu.user[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="user"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU steal time|The amount of CPU 'stolen' from this virtual machine by the hypervisor for other tasks (such as running another virtual machine).|DEPENDENT|node_exporter.system.cpu.steal[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="steal"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU softirq time|The amount of time the CPU has been servicing software interrupts.|DEPENDENT|node_exporter.system.cpu.softirq[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="softirq"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU nice time|The time the CPU has spent running users' processes that have been niced.|DEPENDENT|node_exporter.system.cpu.nice[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="nice"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU iowait time|Amount of time the CPU has been waiting for I/O to complete.|DEPENDENT|node_exporter.system.cpu.iowait[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="iowait"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU interrupt time|The amount of time the CPU has been servicing hardware interrupts.|DEPENDENT|node_exporter.system.cpu.interrupt[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="irq"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU guest time|Guest  time (time  spent  running  a  virtual  CPU  for  a  guest  operating  system)|DEPENDENT|node_exporter.system.cpu.guest[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPUNUM}",mode=~"^(?:user|guest)$"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|CPU|#{#CPUNUM}: CPU guest nice time|Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)|DEPENDENT|node_exporter.system.cpu.guest_nice[{#CPUNUM}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPUNUM}",mode=~"^(?:nice|guest_nice)$"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|Memory|Total memory|Total memory in Bytes|DEPENDENT|node_exporter.node_memory_memtotal_bytes </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"node_memory_MemTotal"} `|
+|Memory|Available memory|Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params|DEPENDENT|node_exporter.node_memory_memavailable_bytes </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"node_memory_MemAvailable"} `|
+|Memory|Total swap space|-|DEPENDENT|node_exporter.node_memory_swaptotal_bytes </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"node_memory_SwapTotal"} `|
+|Memory|Free swap space|-|DEPENDENT|node_exporter.node_memory_swapfree_bytes </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"node_memory_SwapFree"} `|
+|Memory|Free swap space in %|-|CALCULATED|node_exporter.system.swap.pfree </br>**Expression**:</br>`((last(node_exporter.node_memory_swapfree_bytes))/last(node_exporter.node_memory_swaptotal_bytes))*100`|
+|Storage|{#FSNAME}: Free space|-|DEPENDENT|node_exporter.vfs.fs.free[{#FSNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_filesystem_avail(?:_bytes)?$", mountpoint="{#FSNAME}"} `|
+|Storage|{#FSNAME}: Total space|Total space in Bytes|DEPENDENT|node_exporter.vfs.fs.total[{#FSNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint="{#FSNAME}"} `|
+|Storage|{#FSNAME}: Used space|Used storage in Bytes|CALCULATED|node_exporter.vfs.fs.used[{#FSNAME}] </br>**Expression**:</br>`(last(node_exporter.vfs.fs.total[{#FSNAME}])-last(node_exporter.vfs.fs.free[{#FSNAME}]))`|
+|Storage|{#FSNAME}: Space utilization|Space utilization in % for {#FSNAME}|CALCULATED|node_exporter.vfs.fs.pused[{#FSNAME}] </br>**Expression**:</br>`(last(node_exporter.vfs.fs.used[{#FSNAME}])/(last(node_exporter.vfs.fs.free[{#FSNAME}])+last(node_exporter.vfs.fs.used[{#FSNAME}])))*100`|
+|Storage|{#FSNAME}: Free inodes in %|-|DEPENDENT|node_exporter.vfs.fs.inode.pfree[{#FSNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"node_filesystem_files.*",mountpoint="{#FSNAME}"}`</br> - JAVASCRIPT: `//count vfs.fs.inode.pfree var inode_free; var inode_total; JSON.parse(value).forEach(function(metric) {   if (metric['name'] == 'node_filesystem_files'){       inode_total = metric['value'];   } else if (metric['name'] == 'node_filesystem_files_free'){       inode_free = metric['value'];   } }); return (inode_free/inode_total)*100;`|
+|Storage|{#DEVNAME}: Disk read rate|r/s. The number (after merges) of read requests completed per second for the device.|DEPENDENT|node_exporter.vfs.dev.read.rate[{#DEVNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_reads_completed_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
+|Storage|{#DEVNAME}: Disk write rate|w/s. The number (after merges) of write requests completed per second for the device.|DEPENDENT|node_exporter.vfs.dev.write.rate[{#DEVNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_writes_completed_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
+|Storage|{#DEVNAME}: Disk read request avg waiting time (r_await)|This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.|CALCULATED|node_exporter.vfs.dev.read.await[{#DEVNAME}] </br>**Expression**:</br>`(last(node_exporter.vfs.dev.read.time.rate[{#DEVNAME}])/(last(node_exporter.vfs.dev.read.rate[{#DEVNAME}])+(last(node_exporter.vfs.dev.read.rate[{#DEVNAME}])=0)))*1000*(last(node_exporter.vfs.dev.read.rate[{#DEVNAME}]) > 0)`|
+|Storage|{#DEVNAME}: Disk write request avg waiting time (w_await)|This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.|CALCULATED|node_exporter.vfs.dev.write.await[{#DEVNAME}] </br>**Expression**:</br>`(last(node_exporter.vfs.dev.write.time.rate[{#DEVNAME}])/(last(node_exporter.vfs.dev.write.rate[{#DEVNAME}])+(last(node_exporter.vfs.dev.write.rate[{#DEVNAME}])=0)))*1000*(last(node_exporter.vfs.dev.write.rate[{#DEVNAME}]) > 0)`|
+|Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|-|DEPENDENT|node_exporter.vfs.dev.queue_size[{#DEVNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_io_time_weighted_seconds_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
+|Storage|{#DEVNAME}: Disk utilization|-|DEPENDENT|node_exporter.vfs.dev.util[{#DEVNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_io_time_seconds_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND</br> - MULTIPLIER: `100`|
+|Zabbix_raw_items|Get node_exporter metrics|-|HTTP_AGENT|node_exporter.get |
+|Zabbix_raw_items|{#DEVNAME}: Disk read time (rate)|Rate of total read time counter. Used in r_await calculation|DEPENDENT|node_exporter.vfs.dev.read.time.rate[{#DEVNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_read_time_seconds_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
+|Zabbix_raw_items|{#DEVNAME}: Disk write time (rate)|Rate of total write time counter. Used in w_await calculation|DEPENDENT|node_exporter.vfs.dev.write.time.rate[{#DEVNAME}] </br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_write_time_seconds_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
 
 ## Triggers
 
@@ -103,9 +102,9 @@ There are no template links in this template.
 |{#DEVNAME}: Disk read request response are too high (read > {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 5m or write > {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 5m)|Last value: {ITEM.LASTVALUE1}.</br>This trigger might indicate disk {#DEVNAME} saturation.|`{TEMPLATE_NAME:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} > {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {TEMPLATE_NAME:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} > {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}`|WARNING|
 
 ## Feedback
+
 Please report any issues with the template at https://support.zabbix.com
 
-
 ## References
-https://github.com/prometheus/node_exporter
 
+https://github.com/prometheus/node_exporter
