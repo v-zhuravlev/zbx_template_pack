@@ -83,7 +83,7 @@ There are no template links in this template.
 |----|-----------|----|----|----|
 |Nginx: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}].last()}=0`|HIGH|Manual close: YES</br>|
 |Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}].min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>|
-|Nginx: Version has changed (new version value received: {ITEM.VALUE})|Last value: {ITEM.LASTVALUE1}.</br>Nginx version has changed. Ack to close.|`{TEMPLATE_NAME:nginx.version.diff()}=1 and {TEMPLATE_NAME:nginx.version.strlen()}>0`|INFO|Manual close: YES</br>|
+|Nginx: Version has changed (new version: {ITEM.VALUE})|Last value: {ITEM.LASTVALUE1}.</br>Nginx version has changed. Ack to close.|`{TEMPLATE_NAME:nginx.version.diff()}=1 and {TEMPLATE_NAME:nginx.version.strlen()}>0`|INFO|Manual close: YES</br>|
 |Nginx: Failed to fetch stub status page (no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:nginx.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:nginx.get_stub_status.nodata(30m)}=1`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Service is down</br>|
 
 ## Feedback
