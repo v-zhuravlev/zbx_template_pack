@@ -9,12 +9,16 @@
             "_zbx_ver": "4.2",
             "description": "Official Linux template using node exporter.",
             "_documentation": {
-                "_overview": "This template collects Linux metrics from node_exporter 0.16 and above. Support for older node_exporter versions is provided as 'best effort'.",
-                "_setup": "Please refer to the node_exporter docs. Use node_exporter v0.16.0 or above",
+                "_overview": "This template collects Linux metrics from node_exporter 0.18 and above. Support for older node_exporter versions is provided as 'best effort'.",
+                "_setup": "Please refer to the node_exporter docs. Use node_exporter v0.18.0 or above",
                 "_issues": [
                     {
                         "version": "below 0.16.0",
                         "description": "node_exporter v0.16.0 renamed many metrics. CPU utilisation for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter < 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  \n See https://github.com/prometheus/node_exporter/releases/tag/v0.16.0 for details."
+                    },
+                    {
+                        "version": "below 0.18",
+                        "description": "metric node_network_info with label 'device' cannot be found, so network discovery is not possible."
                     }
                 ],
                 "_tested_on": [
@@ -30,6 +34,255 @@
                 "_ref": "https://github.com/prometheus/node_exporter"
             },
             "discovery_rules": [
+                {
+                    "name": "Network interface discovery",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "node_exporter.net.if.discovery",
+                    "description": "Discovery of network interfaces as defined in global regular expression \"Network interfaces for discovery\".\nFiltering:\n - interfaces with operstate != 'up'.\n - veth interfaces automatically created by Docker.",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_network_info$\"}"
+                        }
+                    ],
+                    "lld_macro_paths": [
+                        {
+                            "lld_macro": "{#IFNAME}",
+                            "path": "$.labels.device"
+                        },
+                        {
+                            "lld_macro": "{#HELP}",
+                            "path": "$.help"
+                        },
+                        {
+                            "lld_macro": "{#IFALIAS}",
+                            "path": "$.labels.ifalias"
+                        },
+                        {
+                            "lld_macro": "{#IFOPERSTATUS}",
+                            "path": "$.labels.operstate"
+                        }
+                    ],
+                    "filter": {
+                        "evaltype": "AND",
+                        "conditions": [
+                            {
+                                //TODO remove global regex in filter
+                                "macro": "{#IFNAME}",
+                                "value": "@Network interfaces for discovery",
+                                "formulaid": "A",
+                            },
+                            {
+                                //filter out docker veth links
+                                "macro": "{#IFNAME}",
+                                "value": "^veth[0-9a-z]+$",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            },
+                            {
+                                //find interfaces only with up
+                                "macro": "{#IFOPERSTATUS}",
+                                "value": "^up$",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "C"
+                            }
+                        ],
+                    },
+                    "items": [
+                        {
+                            "_prototype": "net.if.in",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.in[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "value_type": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_receive_bytes_total{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "8"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.out",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.out[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "value_type": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_transmit_bytes_total{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "8"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.out.errors",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.out.errors[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "value_type": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_transmit_errs_total{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.in.errors",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.in.errors[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "value_type": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_receive_errs_total{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.in.discards",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.in.discards[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "value_type": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_receive_drop_total{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.out.discards",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.out.discards[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "value_type": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_transmit_drop_total{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.speed",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.speed[\"{#IFNAME}\"]",
+                            "_vendor_description": "",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_speed_bytes{device=\"{#IFNAME}\"}\r\n"
+                                },
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "8"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.type",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.type[\"{#IFNAME}\"]",
+                            "_vendor_description": "node_network_protocol_type protocol_type value of /sys/class/net/<iface>.",
+                            "value_map": "Linux::Interface protocol types",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_protocol_type{device=\"{#IFNAME}\"}\r\n"
+                                }
+                            ],
+                            "triggers": [
+                                {
+                                    "_prototype": "trigger.if.speed.not_max",
+                                    "expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand\n({TEMPLATE_NAME:__net.if.type__.last()}=6\nor {TEMPLATE_NAME:__net.if.type__.last()}=1)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.status",
+                            "type": "DEPENDENT",
+                            "master_item": "node_exporter.get",
+                            "key": "node_exporter.net.if.status[\"{#IFNAME}\"]",
+                            "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
+                            "preprocessing": [
+                                {
+                                    "type": "PROMETHEUS_PATTERN",
+                                    "params": "node_network_info{device=\"{#IFNAME}\"}\r\noperstate"
+                                },
+                                /*
+                                var newvalue;
+                                switch(value) {
+                                case "up":
+                                    newvalue = 1;
+                                    break;
+                                case "down":
+                                    newvalue = 2;
+                                    break;
+                                case "testing":
+                                    newvalue = 4;
+                                    break;
+                                case "unknown":
+                                    newvalue = 5;
+                                    break;
+                                case "dormant":
+                                    newvalue = 6;
+                                    break;
+                                case "notPresent":
+                                    newvalue = 7;
+                                    break;
+                                default:
+                                    newvalue = "Problem parsing interface operstate in JS";
+                                }
+                                return newvalue;
+                                */
+                                {
+                                    "type": "JAVASCRIPT",
+                                    "params": "var newvalue;\nswitch(value) {\n  case \"up\":\n    newvalue = 1;\n    break;\n  case \"down\":\n    newvalue = 2;\n    break;\n  case \"testing\":\n    newvalue = 4;\n    break;\n  case \"unknown\":\n    newvalue = 5;\n    break;\n  case \"dormant\":\n    newvalue = 6;\n    break;\n  case \"notPresent\":\n    newvalue = 7;\n    break;\n  default:\n    newvalue = \"Problem parsing interface operstate in JS\";\n}\nreturn newvalue;"
+                                }
+                            ]
+                        }
+                    ],
+                },
                 {
                     "name": "CPU discovery",
                     "master_item": "node_exporter.get",
@@ -51,7 +304,7 @@
                             "path": "$.help"
                         }
                     ],
-                    "metrics": [
+                    "items": [
                         {
                             "_resource": "#{#CPUNUM}",
                             "_prototype": "system.cpu.util",
@@ -315,7 +568,7 @@
                             }
                         ],
                     },
-                    "metrics": [
+                    "items": [
                         {
                             "_resource": "{#FSNAME}",
                             "application_prototype": "Filesystem __RESOURCE__",
@@ -728,6 +981,301 @@
                     "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
                     "value": "20",
                     "_description": "Disk write average response time (in ms) before the trigger would fire"
+                }
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "IF-MIB::ifOperStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "up"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "down"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "dormant"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "notPresent"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "lowerLayerDown"
+                }
+            ]
+        },
+        {
+            "name": "Linux::Interface protocol types",
+            "mappings": [
+                //https://github.com/torvalds/linux/blob/master/include/uapi/linux/if_arp.h
+                /* ARP protocol HARDWARE identifiers. */
+                {
+                    "value": "0",
+                    "newvalue": "from KA9Q: NET/ROM pseudo"
+                },
+                {
+                    "value": "1",
+                    "newvalue": "Ethernet 10Mbps"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Experimental Ethernet"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "AX.25 Level 2"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "PROnet token ring"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "Chaosnet"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "IEEE 802.2 Ethernet/TR/TB"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "ARCnet"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "APPLEtalk"
+                },
+                {
+                    "value": "15",
+                    "newvalue": "Frame Relay DLCI"
+                },
+                {
+                    "value": "19",
+                    "newvalue": "ATM"
+                },
+                {
+                    "value": "23",
+                    "newvalue": "Metricom STRIP (new IANA id)"
+                },
+                {
+                    "value": "24",
+                    "newvalue": "IEEE 1394 IPv4 - RFC 2734"
+                },
+                {
+                    "value": "27",
+                    "newvalue": "EUI-64"
+                },
+                {
+                    "value": "32",
+                    "newvalue": "InfiniBand"
+                },
+                {
+                    "value": "256",
+                    "newvalue": "ARPHRD_SLIP"
+                },
+                {
+                    "value": "257",
+                    "newvalue": "ARPHRD_CSLIP"
+                },
+                {
+                    "value": "258",
+                    "newvalue": "ARPHRD_SLIP6"
+                },
+                {
+                    "value": "259",
+                    "newvalue": "ARPHRD_CSLIP6"
+                },
+                {
+                    "value": "260",
+                    "newvalue": "Notional KISS type"
+                },
+                {
+                    "value": "264",
+                    "newvalue": "ARPHRD_ADAPT"
+                },
+                {
+                    "value": "270",
+                    "newvalue": "ARPHRD_ROSE"
+                },
+                {
+                    "value": "271",
+                    "newvalue": "CCITT X.25"
+                },
+                {
+                    "value": "272",
+                    "newvalue": "Boards with X.25 in firmware"
+                },
+                {
+                    "value": "280",
+                    "newvalue": "Controller Area Network"
+                },
+                {
+                    "value": "512",
+                    "newvalue": "ARPHRD_PPP"
+                },
+                {
+                    "value": "513",
+                    "newvalue": "Cisco HDLC"
+                },
+                {
+                    "value": "516",
+                    "newvalue": "LAPB"
+                },
+                {
+                    "value": "517",
+                    "newvalue": "Digital's DDCMP protocol"
+                },
+                {
+                    "value": "518",
+                    "newvalue": "Raw HDLC"
+                },
+                {
+                    "value": "519",
+                    "newvalue": "Raw IP"
+                },
+                {
+                    "value": "768",
+                    "newvalue": "IPIP tunnel"
+                },
+                {
+                    "value": "769",
+                    "newvalue": "IP6IP6 tunnel"
+                },
+                {
+                    "value": "770",
+                    "newvalue": "Frame Relay Access Device"
+                },
+                {
+                    "value": "771",
+                    "newvalue": "SKIP vif"
+                },
+                {
+                    "value": "772",
+                    "newvalue": "Loopback device"
+                },
+                {
+                    "value": "773",
+                    "newvalue": "Localtalk device"
+                },
+                {
+                    "value": "774",
+                    "newvalue": "Fiber Distributed Data Interface"
+                },
+                {
+                    "value": "775",
+                    "newvalue": "AP1000 BIF"
+                },
+                {
+                    "value": "776",
+                    "newvalue": "sit0 device - IPv6-in-IPv4"
+                },
+                {
+                    "value": "777",
+                    "newvalue": "IP over DDP tunneller"
+                },
+                {
+                    "value": "778",
+                    "newvalue": "GRE over IP"
+                },
+                {
+                    "value": "779",
+                    "newvalue": "PIMSM register interface"
+                },
+                {
+                    "value": "780",
+                    "newvalue": "High Performance Parallel Interface"
+                },
+                {
+                    "value": "781",
+                    "newvalue": "Nexus 64Mbps Ash"
+                },
+                {
+                    "value": "782",
+                    "newvalue": "Acorn Econet"
+                },
+                {
+                    "value": "783",
+                    "newvalue": "Linux-IrDA"
+                },
+                {
+                    "value": "784",
+                    "newvalue": "Point to point fibrechannel"
+                },
+                {
+                    "value": "785",
+                    "newvalue": "Fibrechannel arbitrated loop"
+                },
+                {
+                    "value": "786",
+                    "newvalue": "Fibrechannel public loop"
+                },
+                {
+                    "value": "787",
+                    "newvalue": "Fibrechannel fabric"
+                },
+                /* 787->799 reserved for fibrechannel media types */
+                {
+                    "value": "800",
+                    "newvalue": "Magic type ident for TR"
+                },
+                {
+                    "value": "801",
+                    "newvalue": "IEEE 802.11"
+                },
+                {
+                    "value": "802",
+                    "newvalue": "IEEE 802.11 + Prism2 header"
+                },
+                {
+                    "value": "803",
+                    "newvalue": "IEEE 802.11 + radiotap header"
+                },
+                {
+                    "value": "804",
+                    "newvalue": "ARPHRD_IEEE802154"
+                },
+                {
+                    "value": "805",
+                    "newvalue": "IEEE 802.15.4 network monitor"
+                },
+                {
+                    "value": "820",
+                    "newvalue": "PhoNet media type"
+                },
+                {
+                    "value": "821",
+                    "newvalue": "PhoNet pipe header"
+                },
+                {
+                    "value": "822",
+                    "newvalue": "CAIF media type"
+                },
+                {
+                    "value": "823",
+                    "newvalue": "GRE over IPv6"
+                },
+                {
+                    "value": "824",
+                    "newvalue": "Netlink header"
+                },
+                {
+                    "value": "825",
+                    "newvalue": "IPv6 over LoWPAN"
+                },
+                {
+                    "value": "826",
+                    "newvalue": "Vsock monitor header"
                 }
             ]
         }
