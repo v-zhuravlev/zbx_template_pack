@@ -19,21 +19,13 @@
 		],
 		"triggers": [
 			{
-				"_id": "uptime.restarted",
-				"expression": "{TEMPLATE_NAME:METRIC.last()}<10m",
-				"manual_close": "YES",
-				"name": "{HOST.NAME} has been restarted",
+				"_prototype": "trigger.uptime.restarted",
 				"priority": "WARNING",
+				"name": "{HOST.NAME} has been restarted (uptime < 10m)",
 				"description": "The device uptime is less than 10 minutes",
 				"_depends_on": [
 					"nosnmp"
-				],
-				"_translations": {
-					"RU": {
-						"name": "{HOST.NAME} был только что перезагружен",
-						"description": "Аптайм устройства менее 10 минут"
-					}
-				}
+				]
 			}
 		]
 	},
@@ -153,16 +145,5 @@
 				}
 			}
 		]
-	},
-	{
-		"_id": "system.sw.os",
-		"name": "Operating system",
-		"_group": "Inventory",
-		"key": "system.sw.os",
-		"history": "2w",
-		"trends": "0",
-		"delay": "1h",
-		"value_type": "CHAR",
-		"inventory_link": "OS"
 	}
 ]
