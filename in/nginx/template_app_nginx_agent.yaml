@@ -20,10 +20,10 @@ templates:
           version: 1.17.2
       _overview: |
         The template to monitor Nginx by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  
         `Template App Nginx by Zabbix agent` collects metrics by polling [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) locally with Zabbix agent:
-
+        
         ```text
         Active connections: 291 
         server accepts handled requests
@@ -35,11 +35,10 @@ templates:
 
         It also uses Zabbix agent to collect `nginx` Linux process stats like CPU usage, memory usage and whether process is running or not.
       _setup: | 
-        Setup [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html).  
+        Setup [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html).
         Test availability of http_stub_status module with `nginx -V 2>&1 | grep -o with-http_stub_status_module`.
 
         Example configuration of Nginx:
-        
         ```text
         location = /basic_status {
             stub_status;
@@ -52,7 +51,8 @@ templates:
         Install and setup [Zabbix agent](https://www.zabbix.com/documentation/current/manual/installation/install_from_packages).
     items:
       - _prototype: nginx.get_stub_status
-        key: web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]
+        # key: web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]
+        key: web.page.get[{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PATH},{$NGINX.STUB_STATUS_PORT}]
         type: ZABBIX_PASSIVE
         delay: 1m
         _zbx_ver: "3.4"
