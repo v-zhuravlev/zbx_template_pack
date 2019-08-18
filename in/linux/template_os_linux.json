@@ -402,8 +402,25 @@
                 }
             ],
             "items": [
-                //master item for proc diskstats
                 {
+                    "_prototype": "system.uptime",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.uptime",
+                    "name": "System uptime",
+                    "triggers": [
+                        {
+                            "_prototype": "trigger.uptime.restarted",
+                            "priority": "WARNING",
+                            "name": "{HOST.NAME} has been restarted (uptime < 10m)",
+                            "description": "The device uptime is less than 10 minutes",
+                            // "_depends_on": [
+                            //     "nosnmp"
+                            // ]
+                        }
+                    ]
+                },
+                {
+                    //master item for proc diskstats
                     "_id": "vfs.dev.diskstats",
                     "key": "vfs.file.contents[/proc/diskstats]",
                     "type": "ZABBIX_PASSIVE",
