@@ -810,6 +810,35 @@
                     "value_type": "TEXT",
                     "url": "http://{HOST.CONN}:{$NODE_EXPORTER_PORT}/metrics"
                 },
+                //uptime
+                {
+                    "_prototype": "system.uptime",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.uptime",
+                    "name": "System uptime",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "{__name__=~\"^node_boot_time(?:_seconds)?$\"}\r\n"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//use boottime to calculate uptime\r\nreturn (Math.floor(Date.now()/1000)-Number(value));"
+                        }
+                    ],
+                    "triggers": [
+                        {
+                            "_prototype": "trigger.uptime.restarted",
+                            "priority": "WARNING",
+                            "name": "{HOST.NAME} has been restarted (uptime < 10m)",
+                            "description": "The device uptime is less than 10 minutes",
+                            // "_depends_on": [
+                            //     "nosnmp"
+                            // ]
+                        }
+                    ]
+                },
                 //CPU
                 {
                     "_prototype": "system.cpu.load.avg1",
