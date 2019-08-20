@@ -59,27 +59,45 @@ templates:
       - _id: nginx.ping
         name: Service status
         type: ZABBIX_PASSIVE
-        key: net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
-        value_type: FLOAT
+        key: net.tcp.service[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        value_type: UNSIGNED
         delay: 1m
-        # value_map: Service state
+        value_map: Service state
         _zbx_ver: "3.4"
         history: 7d
         _group: "Nginx"
         _resource: Nginx
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
         triggers:
-          - _id: trigger.perf
+          - _id: trigger.status
             name: Service is down
             expression: "{TEMPLATE_NAME:METRIC.last()}=0"
             manual_close: "YES"
             priority: HIGH
             _depends_on:
               - trigger.proc.not_running
+      - _id: nginx.perf
+        name: Service response time
+        type: ZABBIX_PASSIVE
+        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        value_type: FLOAT
+        delay: 1m
+        _zbx_ver: "3.4"
+        history: 7d
+        _group: "Nginx"
+        _resource: Nginx
+        triggers:
           - _id: trigger.perf.low
             name: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}"
             manual_close: "YES"
             priority: WARNING
+            _depends_on:
+              - trigger.proc.not_running
+              - trigger.status
       - _prototype: nginx.requests.total
       - _prototype: nginx.requests.total.rate
       - _prototype: nginx.connections.accepted.rate
@@ -115,9 +133,9 @@ templates:
         _resource: Nginx
       - _prototype: nginx.version
     macros:
-      - macro: "{$NGINX.STUB_STATUS_PROTOCOL}"
-        _description: The protocol http or https of Nginx stub_status host or container.
-        value: http
+      # - macro: "{$NGINX.STUB_STATUS_PROTOCOL}"
+      #   _description: The protocol http or https of Nginx stub_status host or container.
+      #   value: http
       - macro: "{$NGINX.STUB_STATUS_HOST}"
         _description: Hostname or IP of Nginx stub_status host or container.
         value: localhost
