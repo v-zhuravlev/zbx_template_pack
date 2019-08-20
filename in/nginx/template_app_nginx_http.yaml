@@ -1,4 +1,11 @@
 ---
+value_maps:
+  - name: Service state
+    mappings:
+      - value: "0"
+        newvalue: Down
+      - value: "1"
+        newvalue: Up
 templates:
   - name: Template App Nginx by HTTP
     _zbx_ver: "4.0"
@@ -50,26 +57,46 @@ templates:
         retrieve_mode: BODY_AND_HEADERS
       - _id: nginx.ping
         name: Service status
-        type: SIMPLE
-        key: net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}]
-        value_type: FLOAT
+        type: ZABBIX_PASSIVE
+        key: net.tcp.service[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        value_type: UNSIGNED
         delay: 1m
+        value_map: Service state
         _zbx_ver: "3.4"
         history: 7d
-        _group: Nginx
+        _group: "Nginx"
         _resource: Nginx
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
         triggers:
-          - _id: trigger.perf
+          - _id: trigger.status
             name: Service is down
             expression: "{TEMPLATE_NAME:METRIC.last()}=0"
             manual_close: "YES"
             priority: HIGH
-            # manual_close: "YES"
+            _depends_on:
+              - trigger.proc.not_running
+      - _id: nginx.perf
+        name: Service response time
+        type: ZABBIX_PASSIVE
+        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        value_type: FLOAT
+        delay: 1m
+        _zbx_ver: "3.4"
+        history: 7d
+        _group: "Nginx"
+        _resource: Nginx
+        triggers:
           - _id: trigger.perf.low
             name: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}"
             manual_close: "YES"
             priority: WARNING
+            _depends_on:
+              - trigger.proc.not_running
+              - trigger.status
       - _prototype: nginx.requests.total
       - _prototype: nginx.requests.total.rate
       - _prototype: nginx.connections.accepted.rate
