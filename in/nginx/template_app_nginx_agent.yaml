@@ -47,19 +47,19 @@ templates:
         }
         ```
 
-        If you use another location, then don't forget to change {$NGINX.STUB_STATUS_PATH} macro.
+        If you use another location, then don't forget to change {$NGINX.STUB_STATUS.PATH} macro.
         Install and setup [Zabbix agent](https://www.zabbix.com/documentation/current/manual/installation/install_from_packages).
     items:
       - _prototype: nginx.get_stub_status
-        # key: web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]
-        key: web.page.get[{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PATH},{$NGINX.STUB_STATUS_PORT}]
+        # key: web.page.get[{$NGINX.STUB_STATUS.SCHEME}://{$NGINX.STUB_STATUS.HOST}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}]
+        key: web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]
         type: ZABBIX_PASSIVE
         delay: 1m
         _zbx_ver: "3.4"
       - _id: nginx.ping
         name: Service status
         type: ZABBIX_PASSIVE
-        key: net.tcp.service[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        key: net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -81,8 +81,8 @@ templates:
       - _id: nginx.perf
         name: Service response time
         type: ZABBIX_PASSIVE
-        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
-        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS.SCHEME},{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
         value_type: FLOAT
         delay: 1m
         _zbx_ver: "3.4"
@@ -133,16 +133,16 @@ templates:
         _resource: Nginx
       - _prototype: nginx.version
     macros:
-      # - macro: "{$NGINX.STUB_STATUS_PROTOCOL}"
+      # - macro: "{$NGINX.STUB_STATUS.SCHEME}"
       #   _description: The protocol http or https of Nginx stub_status host or container.
       #   value: http
-      - macro: "{$NGINX.STUB_STATUS_HOST}"
+      - macro: "{$NGINX.STUB_STATUS.HOST}"
         _description: Hostname or IP of Nginx stub_status host or container.
         value: localhost
-      - macro: "{$NGINX.STUB_STATUS_PATH}"
+      - macro: "{$NGINX.STUB_STATUS.PATH}"
         _description: "The path of Nginx stub_status page."
         value: "basic_status"
-      - macro: "{$NGINX.STUB_STATUS_PORT}"
+      - macro: "{$NGINX.STUB_STATUS.PORT}"
         _description: "The port of Nginx stub_status host or container."
         value: "80"
       - macro: "{$NGINX.RESPONSE_TIME.MAX.WARN}"
