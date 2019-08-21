@@ -45,20 +45,20 @@ templates:
         }
         ```
 
-        If you use another location, don't forget to change {$NGINX.STUB_STATUS_PATH} macro.
+        If you use another location, don't forget to change {$NGINX.STUB_STATUS.PATH} macro.
     items:
       - _prototype: nginx.get_stub_status
         key: nginx.get_stub_status
         type: HTTP_AGENT
         _zbx_ver: "4.0"
-        url: "{$NGINX.STUB_STATUS_PROTOCOL}://{HOST.CONN}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}"
+        url: "{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}"
         status_codes:
         follow_redirects: 1
         retrieve_mode: BODY_AND_HEADERS
       - _id: nginx.ping
         name: Service status
         type: ZABBIX_PASSIVE
-        key: net.tcp.service[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        key: net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -80,8 +80,8 @@ templates:
       - _id: nginx.perf
         name: Service response time
         type: ZABBIX_PASSIVE
-        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
-        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]
+        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS.SCHEME},{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
         value_type: FLOAT
         delay: 1m
         _zbx_ver: "3.4"
@@ -107,13 +107,13 @@ templates:
       - _prototype: nginx.connections.writing
       - _prototype: nginx.version
     macros:
-      - macro: "{$NGINX.STUB_STATUS_PROTOCOL}"
+      - macro: "{$NGINX.STUB_STATUS.SCHEME}"
         _description: The protocol http or https of Nginx stub_status host or container.
         value: http
-      - macro: "{$NGINX.STUB_STATUS_PATH}"
+      - macro: "{$NGINX.STUB_STATUS.PATH}"
         _description: "The path of Nginx stub_status page."
         value: "basic_status"
-      - macro: "{$NGINX.STUB_STATUS_PORT}"
+      - macro: "{$NGINX.STUB_STATUS.PORT}"
         _description: "The port of Nginx stub_status host or container."
         value: "80"
       - macro: "{$NGINX.RESPONSE_TIME.MAX.WARN}"
