@@ -13,11 +13,11 @@
          <name>Template App Nginx by HTTP</name>
          <description>Get metrics from stub status module using HTTP agent&#13;
 https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html.&#13;
- version: 0.15&#13;
+ version: 0.20&#13;
 Overview: The template to monitor Nginx by Zabbix that work without any external scripts.&#13;
+Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.&#13;
 &#13;
-Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  &#13;
-`Template App Nginx by HTTP` collects metrics by polling [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) with HTTP agent remotely&#13;
+`Template App Nginx by HTTP` collects metrics by polling [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) with HTTP agent remotely:&#13;
 &#13;
 ```text&#13;
 Active connections: 291 &#13;
@@ -88,7 +88,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                <preprocessing/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
-               <url>{$NGINX.STUB_STATUS_PROTOCOL}://{HOST.CONN}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}</url>
+               <url>{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}</url>
                <query_fields/>
                <posts/>
                <status_codes>200</status_codes>
@@ -112,7 +112,68 @@ Waiting - the current number of idle client connections waiting for a request.</
                <type>3</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}]</key>
+               <key>net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap>
+                  <name>Service state</name>
+               </valuemap>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: Service response time</name>
+               <type>3</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>net.tcp.service.perf[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -648,7 +709,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </master_item>
             </item>
             <item>
-               <name>Nginx: Connectinos writing</name>
+               <name>Nginx: Connections writing</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -790,15 +851,15 @@ Waiting - the current number of idle client connections waiting for a request.</
                <value>10</value>
             </macro>
             <macro>
-               <macro>{$NGINX.STUB_STATUS_PATH}</macro>
+               <macro>{$NGINX.STUB_STATUS.PATH}</macro>
                <value>basic_status</value>
             </macro>
             <macro>
-               <macro>{$NGINX.STUB_STATUS_PORT}</macro>
+               <macro>{$NGINX.STUB_STATUS.PORT}</macro>
                <value>80</value>
             </macro>
             <macro>
-               <macro>{$NGINX.STUB_STATUS_PROTOCOL}</macro>
+               <macro>{$NGINX.STUB_STATUS.SCHEME}</macro>
                <value>http</value>
             </macro>
          </macros>
@@ -966,7 +1027,7 @@ Waiting - the current number of idle client connections waiting for a request.</
  {Template App Nginx by HTTP:nginx.get_stub_status.nodata(30m)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Nginx: Failed to fetch stub status page (no data for 30m)</name>
+         <name>Nginx: Failed to fetch stub status page (or no data for 30m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url>https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html</url>
@@ -976,17 +1037,11 @@ Waiting - the current number of idle client connections waiting for a request.</
 Zabbix has not received data for items for the last 30 minutes.</description>
          <type>0</type>
          <manual_close>1</manual_close>
-         <dependencies>
-            <dependency>
-               <name>Nginx: Service is down</name>
-               <expression>{Template App Nginx by HTTP:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}].last()}=0</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
+         <dependencies/>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by HTTP:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}].last()}=0</expression>
+         <expression>{Template App Nginx by HTTP:net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Service is down</name>
@@ -1002,7 +1057,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by HTTP:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{HOST.CONN},{$NGINX.STUB_STATUS_PORT}].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
+         <expression>{Template App Nginx by HTTP:net.tcp.service.perf[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
@@ -1014,7 +1069,13 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>1</manual_close>
-         <dependencies/>
+         <dependencies>
+            <dependency>
+               <name>Nginx: Service is down</name>
+               <expression>{Template App Nginx by HTTP:net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
          <tags/>
       </trigger>
       <trigger>
@@ -1035,5 +1096,19 @@ Nginx version has changed. Ack to close.</description>
          <tags/>
       </trigger>
    </triggers>
-   <value_maps/>
+   <value_maps>
+      <value_map>
+         <name>Service state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Down</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Up</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+   </value_maps>
 </zabbix_export>
