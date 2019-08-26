@@ -13,10 +13,10 @@
          <name>Template App Nginx by Zabbix agent</name>
          <description>Get metrics from stub status module using Zabbix agent running on Linux&#13;
 https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html&#13;
- version: 0.15&#13;
+ version: 0.20&#13;
 Overview: The template to monitor Nginx by Zabbix that work without any external scripts.&#13;
+Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.&#13;
 &#13;
-Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  &#13;
 `Template App Nginx by Zabbix agent` collects metrics by polling [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) locally with Zabbix agent:&#13;
 &#13;
 ```text&#13;
@@ -48,7 +48,7 @@ It also uses Zabbix agent to collect `nginx` Linux process stats like CPU usage,
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+               <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                <delay>1m</delay>
                <history>1h</history>
                <trends>0</trends>
@@ -96,7 +96,50 @@ Waiting - the current number of idle client connections waiting for a request.</
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}]</key>
+               <key>net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap>
+                  <name>Service state</name>
+               </valuemap>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: Service response time</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -178,7 +221,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -231,7 +274,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -284,7 +327,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -337,7 +380,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -386,7 +429,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -435,7 +478,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -484,11 +527,11 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
-               <name>Nginx: Connectinos writing</name>
+               <name>Nginx: Connections writing</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
@@ -533,7 +576,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
             <item>
@@ -746,7 +789,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                </preprocessing>
                <jmx_endpoint/>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}]</key>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
                </master_item>
             </item>
          </items>
@@ -758,20 +801,16 @@ Waiting - the current number of idle client connections waiting for a request.</
                <value>10</value>
             </macro>
             <macro>
-               <macro>{$NGINX.STUB_STATUS_HOST}</macro>
+               <macro>{$NGINX.STUB_STATUS.HOST}</macro>
                <value>localhost</value>
             </macro>
             <macro>
-               <macro>{$NGINX.STUB_STATUS_PATH}</macro>
+               <macro>{$NGINX.STUB_STATUS.PATH}</macro>
                <value>basic_status</value>
             </macro>
             <macro>
-               <macro>{$NGINX.STUB_STATUS_PORT}</macro>
+               <macro>{$NGINX.STUB_STATUS.PORT}</macro>
                <value>80</value>
-            </macro>
-            <macro>
-               <macro>{$NGINX.STUB_STATUS_PROTOCOL}</macro>
-               <value>http</value>
             </macro>
          </macros>
          <templates/>
@@ -978,11 +1017,11 @@ Waiting - the current number of idle client connections waiting for a request.</
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}].str("HTTP/1.1 200")}=0 or&#13;
- {Template App Nginx by Zabbix agent:web.page.get[{$NGINX.STUB_STATUS_PROTOCOL}://{$NGINX.STUB_STATUS_HOST}:{$NGINX.STUB_STATUS_PORT}/{$NGINX.STUB_STATUS_PATH}].nodata(30m)}=1</expression>
+         <expression>{Template App Nginx by Zabbix agent:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].str("HTTP/1.1 200")}=0 or&#13;
+ {Template App Nginx by Zabbix agent:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].nodata(30m)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Nginx: Failed to fetch stub status page (no data for 30m)</name>
+         <name>Nginx: Failed to fetch stub status page (or no data for 30m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url>https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html</url>
@@ -998,16 +1037,11 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
                <recovery_expression/>
             </dependency>
-            <dependency>
-               <name>Nginx: Service is down</name>
-               <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}].last()}=0</expression>
-               <recovery_expression/>
-            </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}].last()}=0</expression>
+         <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Service is down</name>
@@ -1029,7 +1063,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[{$NGINX.STUB_STATUS_PROTOCOL},{$NGINX.STUB_STATUS_HOST},{$NGINX.STUB_STATUS_PORT}].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
+         <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
@@ -1041,7 +1075,18 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>1</manual_close>
-         <dependencies/>
+         <dependencies>
+            <dependency>
+               <name>Nginx: Process is not running</name>
+               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Nginx: Service is down</name>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
          <tags/>
       </trigger>
       <trigger>
