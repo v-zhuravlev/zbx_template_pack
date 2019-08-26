@@ -48,17 +48,18 @@ templates:
         If you use another location, don't forget to change {$NGINX.STUB_STATUS.PATH} macro.
     items:
       - _prototype: nginx.get_stub_status
+        _zbx_ver: "4.0"
         key: nginx.get_stub_status
         type: HTTP_AGENT
-        _zbx_ver: "4.0"
+        history: 0h
         url: "{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}"
         status_codes:
         follow_redirects: 1
         retrieve_mode: BODY_AND_HEADERS
       - _id: nginx.ping
         name: Service status
-        type: ZABBIX_PASSIVE
-        key: net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        type: SIMPLE
+        key: net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -79,9 +80,9 @@ templates:
               - trigger.proc.not_running
       - _id: nginx.perf
         name: Service response time
-        type: ZABBIX_PASSIVE
+        type: SIMPLE
         # key: net.tcp.service.perf[{$NGINX.STUB_STATUS.SCHEME},{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
-        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service.perf[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]
         value_type: FLOAT
         delay: 1m
         _zbx_ver: "3.4"
