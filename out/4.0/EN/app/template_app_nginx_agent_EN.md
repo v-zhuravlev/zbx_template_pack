@@ -88,11 +88,11 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Nginx: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0`|HIGH|Manual close: YES</br>**Depends on**:</br> - Nginx: Process is not running</br>|
+|Nginx: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0`|AVERAGE|Manual close: YES</br>**Depends on**:</br> - Nginx: Process is not running</br>|
 |Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Process is not running</br> - Nginx: Service is down</br>|
 |Nginx: Process is not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num[nginx].last()}=0`|HIGH||
 |Nginx: Version has changed (new version: {ITEM.VALUE})|Last value: {ITEM.LASTVALUE1}.</br>Nginx version has changed. Ack to close.|`{TEMPLATE_NAME:nginx.version.diff()}=1 and {TEMPLATE_NAME:nginx.version.strlen()}>0`|INFO|Manual close: YES</br>|
-|Nginx: Failed to fetch stub status page (or no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].nodata(30m)}=1`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Process is not running</br>|
+|Nginx: Failed to fetch stub status page (or no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].nodata(30m)}=1`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Process is not running</br> - Nginx: Service is down</br>|
 
 ## Feedback
 
