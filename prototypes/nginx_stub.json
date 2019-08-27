@@ -52,6 +52,27 @@
 		]
 	},
 	{
+		"_id": "nginx.connections.dropped.rate",
+		"key": "nginx.connections.dropped.rate",
+		"type": "DEPENDENT",
+		"value_type": "FLOAT",
+		"name": "Connections dropped per second",
+		"history": "7d",
+		"_group": "Nginx",
+		"_resource": "Nginx",
+		"masterItem": "nginx.get_stub_status",
+		"description": "The total number of dropped client connections.",
+		"preprocessing": [
+			{
+				"type": "JAVASCRIPT",
+				"params": "var a = value.match(/server accepts handled requests\\s+([0-9]+) ([0-9]+) ([0-9]+)/)\nif (a) {\n    return a[1]-a[2]\n}"
+			},
+			{
+				"type": "CHANGE_PER_SECOND"
+			}
+		]
+	},
+	{
 		"_id": "nginx.connections.active",
 		"name": "Connections active",
 		"key": "nginx.connections.active",
@@ -96,11 +117,15 @@
 			},
 			{
 				"_id": "nginx.requests",
-				"name": "Requests per second",
+				"name": "Requests and drops per second",
 				"graph_items": [
 					{
 						"name": "nginx.requests.total.rate",
 						"drawtype": "GRADIENT_LINE"
+					},
+					{
+						"name": "nginx.connections.dropped.rate",
+						"drawtype": "GRADIENT_LINE",
 					}
 				]
 			}
