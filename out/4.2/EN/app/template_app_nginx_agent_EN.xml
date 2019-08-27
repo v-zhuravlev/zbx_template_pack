@@ -456,6 +456,83 @@ Waiting - the current number of idle client connections waiting for a request.</
                </master_item>
             </item>
             <item>
+               <name>Nginx: Connections dropped per second</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>nginx.connections.dropped.rate</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The total number of dropped client connections.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>var a = value.match(/server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)/)
+if (a) {
+    return a[1]-a[2]
+}</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>10</type>
+                     <params/>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item>
+                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+               </master_item>
+            </item>
+            <item>
                <name>Nginx: Connections handled per second</name>
                <type>18</type>
                <snmp_community/>
@@ -1183,7 +1260,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                      <dynamic>0</dynamic>
                      <sort_triggers>0</sort_triggers>
                      <resource>
-                        <name>Nginx: Requests per second</name>
+                        <name>Nginx: Requests and drops per second</name>
                         <host>Template App Nginx by Zabbix agent</host>
                      </resource>
                      <max_columns>3</max_columns>
@@ -1265,7 +1342,7 @@ Waiting - the current number of idle client connections waiting for a request.</
          </graph_items>
       </graph>
       <graph>
-         <name>Nginx: Requests per second</name>
+         <name>Nginx: Requests and drops per second</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
@@ -1292,6 +1369,18 @@ Waiting - the current number of idle client connections waiting for a request.</
                <item>
                   <host>Template App Nginx by Zabbix agent</host>
                   <key>nginx.requests.total.rate</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>5</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.dropped.rate</key>
                </item>
             </graph_item>
          </graph_items>
