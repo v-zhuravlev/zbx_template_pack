@@ -103,8 +103,8 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Apache|Apache: Service ping|-|ZABBIX_PASSIVE|net.tcp.service[http,{$APACHE.STATUS.HOST},{$APACHE.STATUS.PORT}]</br>**Preprocessing**:</br> - DISCARD_UNCHANGED_HEARTBEAT: `10m`|
-|Apache|Apache: Service response time|-|ZABBIX_PASSIVE|net.tcp.service.perf[http,{$APACHE.STATUS.HOST},{$APACHE.STATUS.PORT}]|
+|Apache|Apache: Service ping|-|ZABBIX_PASSIVE|net.tcp.service[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"]</br>**Preprocessing**:</br> - DISCARD_UNCHANGED_HEARTBEAT: `10m`|
+|Apache|Apache: Service response time|-|ZABBIX_PASSIVE|net.tcp.service.perf[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"]|
 |Apache|Apache: Total bytes|Total bytes served|DEPENDENT|apache.bytes</br>**Preprocessing**:</br> - JSONPATH: `$["Total kBytes"]`</br> - MULTIPLIER: `1024`|
 |Apache|Apache: Bytes per second||DEPENDENT|apache.bytes.rate</br>**Preprocessing**:</br> - JSONPATH: `$["Total kBytes"]`</br> - MULTIPLIER: `1024`</br> - CHANGE_PER_SECOND|
 |Apache|Apache: Bytes per request|Average number of client requests per second|DEPENDENT|apache.bytes_per_request</br>**Preprocessing**:</br> - JSONPATH: `$.BytesPerReq`|
@@ -139,8 +139,8 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Apache: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,{$APACHE.STATUS.HOST},{$APACHE.STATUS.PORT}].last()}=0`|AVERAGE|Manual close: YES</br>**Depends on**:</br> - Apache: Process is not running</br>|
-|Apache: Service response time is too high (over {$APACHE.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[http,{$APACHE.STATUS.HOST},{$APACHE.STATUS.PORT}].min(5m)}>{$APACHE.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>**Depends on**:</br> - Apache: Process is not running</br> - Apache: Service is down</br>|
+|Apache: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"].last()}=0`|AVERAGE|Manual close: YES</br>**Depends on**:</br> - Apache: Process is not running</br>|
+|Apache: Service response time is too high (over {$APACHE.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"].min(5m)}>{$APACHE.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>**Depends on**:</br> - Apache: Process is not running</br> - Apache: Service is down</br>|
 |Apache: Version has changed (new version: {ITEM.VALUE})|Last value: {ITEM.LASTVALUE1}.</br>Apache version has changed. Ack to close.|`{TEMPLATE_NAME:apache.version.diff()}=1 and {TEMPLATE_NAME:apache.version.strlen()}>0`|INFO|Manual close: YES</br>|
 |Apache: Process is not running|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:proc.num["{$APACHE.PROCESS_NAME}"].last()}=0`|HIGH||
 |Apache: Failed to fetch status page (or no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:web.page.get[{$APACHE.STATUS.HOST}:{$APACHE.STATUS.PORT}/{$APACHE.STATUS.PATH}].str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:web.page.get[{$APACHE.STATUS.HOST}:{$APACHE.STATUS.PORT}/{$APACHE.STATUS.PATH}].nodata(30m)}=1`|WARNING|Manual close: YES</br>**Depends on**:</br> - Apache: Process is not running</br>|
