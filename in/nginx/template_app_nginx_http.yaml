@@ -18,6 +18,10 @@ templates:
       _tested_on:
         - name: Nginx
           version: 1.17.2
+      _issues:
+        - description: test
+          version: 1111,2
+          device: mmm
       _overview: |
         The template to monitor Nginx by Zabbix that work without any external scripts.
         Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
@@ -59,7 +63,7 @@ templates:
       - _id: nginx.ping
         name: Service status
         type: SIMPLE
-        key: net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service[http,"{HOST.CONN}","{$NGINX.STUB_STATUS.PORT}"]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -82,7 +86,7 @@ templates:
         name: Service response time
         type: SIMPLE
         # key: net.tcp.service.perf[{$NGINX.STUB_STATUS.SCHEME},{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
-        key: net.tcp.service.perf[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service.perf[http,"{HOST.CONN}","{$NGINX.STUB_STATUS.PORT}"]
         value_type: FLOAT
         delay: 1m
         _zbx_ver: "3.4"
@@ -122,10 +126,13 @@ templates:
       - macro: "{$NGINX.RESPONSE_TIME.MAX.WARN}"
         _description: "The Nginx maximum response time in seconds for trigger expression."
         value: "10"
+      - macro: "{$NGINX.DROP_RATE.MAX.CRIT}"
+        _description: "The Nginx maximum response time in seconds for trigger expression."
+        value: "50"
     screens:
       - name: "Nginx performance"
         hsize: 2
-        vsize: 1
+        vsize: 2
         screen_items:
           - _graph_id: nginx.connections
             x: 0
@@ -133,3 +140,6 @@ templates:
           - _graph_id: nginx.requests
             x: 1
             y: 0
+          - _graph_id: nginx.connections.rate
+            x: 0
+            y: 1

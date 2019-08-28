@@ -48,6 +48,7 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
+|{$NGINX.DROP_RATE.MAX.CRIT}|The Nginx maximum response time in seconds for trigger expression.|50|
 |{$NGINX.RESPONSE_TIME.MAX.WARN}|The Nginx maximum response time in seconds for trigger expression.|10|
 |{$NGINX.STUB_STATUS.PATH}|The path of Nginx stub_status page.|basic_status|
 |{$NGINX.STUB_STATUS.PORT}|The port of Nginx stub_status host or container.|80|
@@ -64,8 +65,8 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Nginx|Nginx: Service status|-|SIMPLE|net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]</br>**Preprocessing**:</br> - DISCARD_UNCHANGED_HEARTBEAT: `10m`|
-|Nginx|Nginx: Service response time|-|SIMPLE|net.tcp.service.perf[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}]|
+|Nginx|Nginx: Service status|-|SIMPLE|net.tcp.service[http,"{HOST.CONN}","{$NGINX.STUB_STATUS.PORT}"]</br>**Preprocessing**:</br> - DISCARD_UNCHANGED_HEARTBEAT: `10m`|
+|Nginx|Nginx: Service response time|-|SIMPLE|net.tcp.service.perf[http,"{HOST.CONN}","{$NGINX.STUB_STATUS.PORT}"]|
 |Nginx|Nginx: Requests total|The total number of client requests.|DEPENDENT|nginx.requests.total</br>**Preprocessing**:</br> - REGEX: `server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+) \3`|
 |Nginx|Nginx: Requests per second|The total number of client requests.|DEPENDENT|nginx.requests.total.rate</br>**Preprocessing**:</br> - REGEX: `server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+) \3`</br> - CHANGE_PER_SECOND|
 |Nginx|Nginx: Connections accepted per second|The total number of accepted client connections.|DEPENDENT|nginx.connections.accepted.rate</br>**Preprocessing**:</br> - REGEX: `server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+) \1`</br> - CHANGE_PER_SECOND|
@@ -82,8 +83,9 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Nginx: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}].last()}=0`|AVERAGE|Manual close: YES</br>|
-|Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[http,{HOST.CONN},{$NGINX.STUB_STATUS.PORT}].min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Service is down</br>|
+|Nginx: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,"{HOST.CONN}","{$NGINX.STUB_STATUS.PORT}"].last()}=0`|AVERAGE|Manual close: YES</br>|
+|Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[http,"{HOST.CONN}","{$NGINX.STUB_STATUS.PORT}"].min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Service is down</br>|
+|Nginx: High connections drop rate ({$NGINX.DROP_RATE.MAX.CRIT}% for 5m)|Last value: {ITEM.LASTVALUE1}.</br>The dropping rate connections is greater than the handling connections for {$NGINX.DROP_RATE.MAX.CRIT} percent for the last 10 minutes.|`{TEMPLATE_NAME:nginx.connections.handled.rate.min(5m)} > 1 and  {TEMPLATE_NAME:nginx.connections.dropped.rate.min(5m)} / {TEMPLATE_NAME:nginx.connections.handled.rate.min(5m)} * 100 > {$NGINX.DROP_RATE.MAX.CRIT}`|WARNING|**Depends on**:</br> - Nginx: Service is down</br>|
 |Nginx: Version has changed (new version: {ITEM.VALUE})|Last value: {ITEM.LASTVALUE1}.</br>Nginx version has changed. Ack to close.|`{TEMPLATE_NAME:nginx.version.diff()}=1 and {TEMPLATE_NAME:nginx.version.strlen()}>0`|INFO|Manual close: YES</br>|
 |Nginx: Failed to fetch stub status page (or no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:nginx.get_stub_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:nginx.get_stub_status.nodata(30m)}=1`|WARNING|Manual close: YES</br>**Depends on**:</br> - Nginx: Service is down</br>|
 
