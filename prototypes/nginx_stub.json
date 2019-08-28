@@ -70,6 +70,19 @@
 			{
 				"type": "CHANGE_PER_SECOND"
 			}
+		],
+		"triggers": [
+			{
+				"_id": "trigger.connections.dropped",
+				"name": "High connections drop rate ({$NGINX.DROP_RATE.MAX.CRIT}% for 5m)",
+				"description": "The dropping rate connections is greater than the handling connections for {$NGINX.DROP_RATE.MAX.CRIT} percent for the last 10 minutes.",
+				"expression": "{TEMPLATE_NAME:nginx.connections.handled.rate.min(5m)} > 1 and \n{TEMPLATE_NAME:METRIC.min(5m)} / {TEMPLATE_NAME:nginx.connections.handled.rate.min(5m)} * 100 > {$NGINX.DROP_RATE.MAX.CRIT}",
+				"_depends_on": [
+					"trigger.proc.not_running",
+					"trigger.status"
+				],
+				"priority": "WARNING"
+			}
 		]
 	},
 	{
@@ -91,7 +104,7 @@
 		"graphs": [
 			{
 				"_id": "nginx.connections",
-				"name": "Current connections",
+				"name": "Connections by state",
 				"graph_items": [
 					{
 						"drawtype": "BOLD_LINE",
@@ -116,16 +129,33 @@
 				]
 			},
 			{
+				"_id": "nginx.connections.rate",
+				"name": "Connections per second",
+				"graph_items": [
+					{
+						"name": "nginx.connections.accepted.rate",
+						"drawtype": "SINGLE_LINE",
+						"yaxisside": "LEFT"
+					},
+					{
+						"name": "nginx.connections.handled.rate",
+						"drawtype": "SINGLE_LINE",
+						"yaxisside": "LEFT"
+					},
+					{
+						"name": "nginx.connections.dropped.rate",
+						"drawtype": "SINGLE_LINE",
+						"yaxisside": "LEFT"
+					}
+				]
+			},
+			{
 				"_id": "nginx.requests",
-				"name": "Requests and drops per second",
+				"name": "Requests per second",
 				"graph_items": [
 					{
 						"name": "nginx.requests.total.rate",
 						"drawtype": "GRADIENT_LINE"
-					},
-					{
-						"name": "nginx.connections.dropped.rate",
-						"drawtype": "GRADIENT_LINE",
 					}
 				]
 			}
