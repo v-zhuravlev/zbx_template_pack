@@ -149,3 +149,6 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+You can also provide feedback, discuss the template or ask for help with it at
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384764-discussion-thread-for-official-zabbix-template-apache).
+
