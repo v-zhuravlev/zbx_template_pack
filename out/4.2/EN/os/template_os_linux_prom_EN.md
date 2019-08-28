@@ -122,6 +122,17 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+
+## Known Issues
+
+- Description: node_exporter v0.16.0 renamed many metrics. CPU utilisation for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter < 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  
+ See https://github.com/prometheus/node_exporter/releases/tag/v0.16.0 for details.
+  - Version: below 0.16.0
+
+- Description: metric node_network_info with label 'device' cannot be found, so network discovery is not possible.
+  - Version: below 0.18
+
+
 ## References
 
 https://github.com/prometheus/node_exporter
