@@ -53,13 +53,13 @@ templates:
       - _prototype: nginx.get_stub_status
         _zbx_ver: "3.4"
         # key: web.page.get[{$NGINX.STUB_STATUS.SCHEME}://{$NGINX.STUB_STATUS.HOST}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}]
-        key: web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]
+        key: web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]
         type: ZABBIX_PASSIVE
         history: 1h
       - _id: nginx.ping
         name: Service status
         type: ZABBIX_PASSIVE
-        key: net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -82,7 +82,7 @@ templates:
         name: Service response time
         type: ZABBIX_PASSIVE
         # key: net.tcp.service.perf[{$NGINX.STUB_STATUS.SCHEME},{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
-        key: net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service.perf[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]
         value_type: FLOAT
         delay: 1m
         _zbx_ver: "3.4"
@@ -150,10 +150,13 @@ templates:
       - macro: "{$NGINX.RESPONSE_TIME.MAX.WARN}"
         _description: "The Nginx maximum response time in seconds for trigger expression."
         value: "10"
+      - macro: "{$NGINX.DROP_RATE.MAX.CRIT}"
+        _description: "The Nginx maximum response time in seconds for trigger expression."
+        value: "50"
     screens:
       - name: "Nginx performance"
         hsize: 2
-        vsize: 1
+        vsize: 2
         screen_items:
           - _graph_id: nginx.connections
             x: 0
@@ -161,3 +164,6 @@ templates:
           - _graph_id: nginx.requests
             x: 1
             y: 0
+          - _graph_id: nginx.connections.rate
+            x: 0
+            y: 1

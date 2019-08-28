@@ -13,22 +13,9 @@
          <name>Template App Nginx by Zabbix agent</name>
          <description>Get metrics from stub status module using Zabbix agent running on Linux&#13;
 https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html&#13;
- version: 0.20&#13;
-Overview: The template to monitor Nginx by Zabbix that work without any external scripts.&#13;
-Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.&#13;
 &#13;
-`Template App Nginx by Zabbix agent` collects metrics by polling [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) locally with Zabbix agent:&#13;
 &#13;
-```text&#13;
-Active connections: 291 &#13;
-server accepts handled requests&#13;
-16630948 16630948 31070465 &#13;
-Reading: 6 Writing: 179 Waiting: 106 &#13;
-```&#13;
-&#13;
-Note that this template doesn't support https and redirects (limitations of web.page.get).&#13;
-&#13;
-It also uses Zabbix agent to collect `nginx` Linux process stats like CPU usage, memory usage and whether process is running or not.</description>
+Template tooling version used: 0.21</description>
          <groups>
             <group>
                <name>Templates/Applications</name>
@@ -48,7 +35,7 @@ It also uses Zabbix agent to collect `nginx` Linux process stats like CPU usage,
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+               <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                <delay>1m</delay>
                <history>1h</history>
                <trends>0</trends>
@@ -114,7 +101,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]</key>
+               <key>net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -175,7 +162,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]</key>
+               <key>net.tcp.service.perf[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -293,7 +280,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -364,7 +351,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -435,7 +422,7 @@ Waiting - the current number of idle client connections waiting for a request.</
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -508,7 +495,7 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -579,7 +566,7 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -646,7 +633,7 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -713,7 +700,7 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -780,7 +767,7 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -847,7 +834,7 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -1150,13 +1137,17 @@ if (a) {
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
          </items>
          <discovery_rules/>
          <httptests/>
          <macros>
+            <macro>
+               <macro>{$NGINX.DROP_RATE.MAX.CRIT}</macro>
+               <value>50</value>
+            </macro>
             <macro>
                <macro>{$NGINX.RESPONSE_TIME.MAX.WARN}</macro>
                <value>10</value>
@@ -1179,7 +1170,7 @@ if (a) {
             <screen>
                <name>Nginx performance</name>
                <hsize>2</hsize>
-               <vsize>1</vsize>
+               <vsize>2</vsize>
                <screen_items>
                   <screen_item>
                      <resourcetype>0</resourcetype>
@@ -1197,7 +1188,7 @@ if (a) {
                      <dynamic>0</dynamic>
                      <sort_triggers>0</sort_triggers>
                      <resource>
-                        <name>Nginx: Current connections</name>
+                        <name>Nginx: Connections by state</name>
                         <host>Template App Nginx by Zabbix agent</host>
                      </resource>
                      <max_columns>3</max_columns>
@@ -1219,7 +1210,29 @@ if (a) {
                      <dynamic>0</dynamic>
                      <sort_triggers>0</sort_triggers>
                      <resource>
-                        <name>Nginx: Requests and drops per second</name>
+                        <name>Nginx: Requests per second</name>
+                        <host>Template App Nginx by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>0</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Nginx: Connections per second</name>
                         <host>Template App Nginx by Zabbix agent</host>
                      </resource>
                      <max_columns>3</max_columns>
@@ -1232,7 +1245,7 @@ if (a) {
    </templates>
    <graphs>
       <graph>
-         <name>Nginx: Current connections</name>
+         <name>Nginx: Connections by state</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
@@ -1300,7 +1313,63 @@ if (a) {
          </graph_items>
       </graph>
       <graph>
-         <name>Nginx: Requests and drops per second</name>
+         <name>Nginx: Connections per second</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>0</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>0</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.accepted.rate</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>0</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.handled.rate</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>2</sortorder>
+               <drawtype>0</drawtype>
+               <color>F63100</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.dropped.rate</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Nginx: Requests per second</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
@@ -1327,18 +1396,6 @@ if (a) {
                <item>
                   <host>Template App Nginx by Zabbix agent</host>
                   <key>nginx.requests.total.rate</key>
-               </item>
-            </graph_item>
-            <graph_item>
-               <sortorder>1</sortorder>
-               <drawtype>5</drawtype>
-               <color>2774A4</color>
-               <yaxisside>0</yaxisside>
-               <calc_fnc>2</calc_fnc>
-               <type>0</type>
-               <item>
-                  <host>Template App Nginx by Zabbix agent</host>
-                  <key>nginx.connections.dropped.rate</key>
                </item>
             </graph_item>
          </graph_items>
@@ -1390,8 +1447,8 @@ if (a) {
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].str("HTTP/1.1 200")}=0 or&#13;
- {Template App Nginx by Zabbix agent:web.page.get[{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PATH},{$NGINX.STUB_STATUS.PORT}].nodata(30m)}=1</expression>
+         <expression>{Template App Nginx by Zabbix agent:web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"].str("HTTP/1.1 200")}=0 or&#13;
+ {Template App Nginx by Zabbix agent:web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"].nodata(30m)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Failed to fetch stub status page (or no data for 30m)</name>
@@ -1412,14 +1469,14 @@ Zabbix has not received data for items for the last 30 minutes.</description>
             </dependency>
             <dependency>
                <name>Nginx: Service is down</name>
-               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
+         <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Service is down</name>
@@ -1441,7 +1498,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
+         <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
@@ -1461,7 +1518,36 @@ Zabbix has not received data for items for the last 30 minutes.</description>
             </dependency>
             <dependency>
                <name>Nginx: Service is down</name>
-               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}].last()}=0</expression>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template App Nginx by Zabbix agent:nginx.connections.handled.rate.min(5m)} &gt; 1 and &#13;
+{Template App Nginx by Zabbix agent:nginx.connections.dropped.rate.min(5m)} / {Template App Nginx by Zabbix agent:nginx.connections.handled.rate.min(5m)} * 100 &gt; {$NGINX.DROP_RATE.MAX.CRIT}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Nginx: High connections drop rate ({$NGINX.DROP_RATE.MAX.CRIT}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The dropping rate connections is greater than the handling connections for {$NGINX.DROP_RATE.MAX.CRIT} percent for the last 10 minutes.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Nginx: Process is not running</name>
+               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Nginx: Service is down</name>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
