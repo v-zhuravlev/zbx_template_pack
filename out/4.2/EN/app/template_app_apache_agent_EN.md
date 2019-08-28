@@ -1,12 +1,12 @@
 
-# Template App Apache Zabbix agent
+# Template App Apache by Zabbix agent
 
 ## Overview
 
 For Zabbix version: 4.2  
 The template to monitor Apache HTTPD by Zabbix that work without any external scripts.
 Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  
-`Template App Apache Zabbix agent` - (Zabbix version >= 4.2) - collects metrics by polling [mod_status](https://httpd.apache.org/docs/current/mod/mod_status.html) locally with Zabbix agent:
+`Template App Apache by Zabbix agent` - (Zabbix version >= 4.2) - collects metrics by polling [mod_status](https://httpd.apache.org/docs/current/mod/mod_status.html) locally with Zabbix agent:
 
 ```text
 127.0.0.1
