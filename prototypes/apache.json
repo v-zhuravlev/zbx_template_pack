@@ -1,179 +1,174 @@
 [
 	{
-		"_id": "apache.get_stub_status",
-		"name": "Get Apache HTTP status",
+		"_id": "apache.status",
+		"key": "apache.get_status",
+		"name": "Get status",
 		"delay": "1m",
 		"_zbx_ver": "3.4",
-		"history": "1d",
+		"history": "1h",
 		"trends": "0",
-		"_group": "Apache",
+		"_group": "Zabbix_raw_items",
 		"_resource": "Apache",
 		"value_type": "TEXT",
+		"description": "Getting data from a machine-readable version of the Apache status page",
 		"triggers": [
 			{
 				"_prototype": "trigger.http_get",
-				"name": "Failed to fetch Apache stub status page",
-				"url": "https://httpd.apache.org/docs/current/mod/mod_status.html"
+				"name": "Failed to fetch status page (or no data for 30m)",
+				"url": "https://httpd.apache.org/docs/current/mod/mod_status.html",
+				"description": "Zabbix has not received data for items for the last 30 minutes.",
+				"_depends_on": [
+					"trigger.service.down",
+					"trigger.proc.not_running"
+				]
 			}
 		]
 	},
 	{
-		"_id": "apache.bytes_per_second",
-		"key": "apache.bytes_per_second",
+		"_id": "apache.bytes.rate",
+		"key": "apache.bytes.rate",
 		"name": "Bytes per second",
+		"description": "Calculated as change rate for 'Total bytes' stat.\nBytesPerSec is not used, as it counts average since last Apache server start.",
 		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
 		"units": "Bps",
+		"value_type": "FLOAT",
+		"description": "",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$[\"Total kBytes\"]"
+			},
+			{
+				"type": "MULTIPLIER",
+				"params": "1024"
+			},
+			{
+				"type": "CHANGE_PER_SECOND"
+			}
+		]
+	},
+	{
+		"_id": "apache.bytes",
+		"key": "apache.bytes",
+		"name": "Total bytes",
+		"description": "Total bytes served",
+		"type": "DEPENDENT",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"units": "B",
 		"value_type": "FLOAT",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "BytesPerSec:\\s+([0-9\\.]+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$[\"Total kBytes\"]"
+			},
+			{
+				"type": "MULTIPLIER",
+				"params": "1024"
 			}
 		]
 	},
 	{
-		"_id": "apache.connections.async_closing",
-		"key": "apache.connections.async_closing",
-		"name": "Connections async closing",
+		"_id": "apache.bytes_per_request",
+		"key": "apache.bytes_per_request",
+		"name": "Bytes per request",
+		"description": "Average number of client requests per second",
 		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
+		"units": "B",
+		"value_type": "FLOAT",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "ConnsAsyncClosing:\\s+([0-9]+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$.BytesPerReq"
+			}
+		]
+	},
+	{
+		"_id": "apache.cpuload",
+		"key": "apache.cpuload",
+		"name": "CPU load",
+		"type": "DEPENDENT",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"value_type": "FLOAT",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.CPULoad"
 			}
 		],
 		"graphs": [
 			{
-				"name": "Current connections",
+				"name": "CPU load",
 				"graph_items": [
 					{
-						"name": "apache.connections.async_closing",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.connections.async_keep_alive",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.connections.async_writing",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.connections.total",
-						"drawtype": "BOLD_LINE"
-					}
-				]
-			},
-			{
-				"name": "Requests per second",
-				"graph_items": [
-					{
-						"name": "apache.requests.total.rate",
+						"name": "apache.cpuload",
 						"drawtype": "GRADIENT_LINE"
 					}
 				]
-			},
-			{
-				"name": "Workers",
-				"graphtype": "STACKED",
-				"graph_items": [
-					{
-						"name": "apache.workers.busy",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.workers.idle",
-						"drawtype": "SINGLE_LINE"
-					}
-				]
 			}
 		]
 	},
 	{
-		"_id": "apache.connections.async_keep_alive",
-		"key": "apache.connections.async_keep_alive",
-		"name": "Connections async keep alive",
-		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
-		"_group": "Apache",
-		"_resource": "Apache",
-		"preprocessing": [
-			{
-				"type": "REGEX",
-				"params": "ConnsAsyncKeepAlive:\\s+([0-9]+)\r\n\\1"
-			}
-		]
-	},
-	{
-		"_id": "apache.connections.async_writing",
-		"key": "apache.connections.async_writing",
-		"name": "Connections async writing",
-		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
-		"_group": "Apache",
-		"_resource": "Apache",
-		"preprocessing": [
-			{
-				"type": "REGEX",
-				"params": "ConnsAsyncWriting:\\s+([0-9]+)\r\n\\1"
-			}
-		]
-	},
-	{
-		"_id": "apache.connections.total",
-		"key": "apache.connections.total",
-		"name": "Connections total",
-		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
-		"_group": "Apache",
-		"_resource": "Apache",
-		"preprocessing": [
-			{
-				"type": "REGEX",
-				"params": "ConnsTotal:\\s+([0-9]+)\r\n\\1"
-			}
-		]
-	},
-	{
-		"_id": "apache.requests.total.rate",
-		"key": "apache.requests.total.rate",
+		"_id": "apache.requests.rate",
+		"key": "apache.requests.rate",
 		"name": "Requests per second",
-		"description": "Calculated as change rate for 'Total Accesses' stat.\nReqPerSec is not used, as it counts average since last Apache server start.",
+		"description": "Calculated as change rate for 'Total requests' stat.\nReqPerSec is not used, as it counts average since last Apache server start.",
 		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
 		"value_type": "FLOAT",
 		"units": "!rps",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "Total Accesses:\\s+([0-9]+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$[\"Total Accesses\"]"
 			},
 			{
-				"type": "CHANGE_PER_SECOND",
-				"params": ""
+				"type": "CHANGE_PER_SECOND"
+			}
+		],
+		"graphs": [
+			{
+				"_id": "apache.requests.rate",
+				"name": "Requests per second",
+				"graph_items": [
+					{
+						"name": "apache.requests.rate",
+						"drawtype": "GRADIENT_LINE"
+					}
+				]
 			}
 		]
 	},
 	{
-		"_id": "apache.requests.total",
-		"key": "apache.requests.total",
-		"name": "Total accesses (requests)",
+		"_id": "apache.requests",
+		"key": "apache.requests",
+		"name": "Total requests",
+		"description": "A total number of accesses",
 		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "Total Accesses:\\s+([0-9]+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$[\"Total Accesses\"]"
 			}
 		]
 	},
@@ -182,14 +177,16 @@
 		"key": "apache.uptime",
 		"name": "Uptime",
 		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
+		"description": "Service uptime in seconds",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
 		"units": "uptime",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "\\bUptime:\\s+([0-9.]+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$.ServerUptimeSeconds"
 			}
 		]
 	},
@@ -198,48 +195,418 @@
 		"key": "apache.version",
 		"name": "Version",
 		"type": "DEPENDENT",
+		"description": "Service version",
 		"value_type": "CHAR",
-		"masterItem": "apache.get_stub_status",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "ServerVersion:\\s+(.+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$.ServerVersion"
 			},
 			{
 				"type": "DISCARD_UNCHANGED_HEARTBEAT",
 				"params": "1d"
 			}
-		]
-	},
-	{
-		"_id": "apache.workers.busy",
-		"key": "apache.workers.busy",
-		"name": "Workers busy",
-		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
-		"_group": "Apache",
-		"_resource": "Apache",
-		"preprocessing": [
+		],
+		"triggers": [
 			{
-				"type": "REGEX",
-				"params": "BusyWorkers:\\s+([0-9]+)\r\n\\1"
+				"_id": "trigger.info",
+				"name": "Version has changed (new version: {ITEM.VALUE})",
+				"description": "Apache version has changed. Ack to close.",
+				"expression": "{TEMPLATE_NAME:METRIC.diff()}=1 and {TEMPLATE_NAME:METRIC.strlen()}>0",
+				"manual_close": "YES",
+				"priority": "INFO"
 			}
 		]
 	},
 	{
-		"_id": "apache.workers.idle",
-		"key": "apache.workers.idle",
-		"name": "Workers idle",
+		"_id": "apache.workers_total.busy",
+		"key": "apache.workers_total.busy",
+		"name": "Total workers busy",
 		"type": "DEPENDENT",
-		"masterItem": "apache.get_stub_status",
+		"description": "Total number of busy worker threads/processes",
+		"masterItem": "apache.status",
 		"_group": "Apache",
 		"_resource": "Apache",
+		"history": "7d",
 		"preprocessing": [
 			{
-				"type": "REGEX",
-				"params": "IdleWorkers:\\s+([0-9]+)\r\n\\1"
+				"type": "JSONPATH",
+				"params": "$.BusyWorkers"
+			}
+		],
+		"graphs": [
+			{
+				"_id": "apache.workers.total",
+				"name": "Workers total",
+				"graphtype": "STACKED",
+				"graph_items": [
+					{
+						"name": "apache.workers_total.busy",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers_total.idle",
+						"drawtype": "SINGLE_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "apache.workers_total.idle",
+		"key": "apache.workers_total.idle",
+		"name": "Total workers idle",
+		"type": "DEPENDENT",
+		"description": "Total number of idle worker threads/processes",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.IdleWorkers"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.closing",
+		"key": "apache.workers.closing",
+		"name": "Workers closing connection",
+		"type": "DEPENDENT",
+		"description": "Number of workers in closing state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.closing"
+			}
+		],
+		"graphs": [
+			{
+				"_id": "apache.workers.connections",
+				"name": "Worker connections",
+				"graph_items": [
+					{
+						"name": "apache.workers.closing",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.finishing",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.keepalive",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.slot",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.waiting",
+						"drawtype": "SINGLE_LINE"
+					}
+				]
+			},
+			{
+				"_id": "apache.workers.states",
+				"name": "Worker states",
+				"graph_items": [
+					{
+						"name": "apache.workers.dnslookup",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.cleanup",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.logging",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.reading",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.sending",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.starting",
+						"drawtype": "SINGLE_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.dnslookup",
+		"key": "apache.workers.dnslookup",
+		"name": "Workers DNS lookup",
+		"type": "DEPENDENT",
+		"description": "Number of workers in dnslookup state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.dnslookup"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.finishing",
+		"key": "apache.workers.finishing",
+		"name": "Workers finishing",
+		"type": "DEPENDENT",
+		"description": "Number of workers in finishing state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.finishing"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.cleanup",
+		"key": "apache.workers.cleanup",
+		"name": "Workers idle cleanup",
+		"type": "DEPENDENT",
+		"description": "Number of workers in cleanup state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.cleanup"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.keepalive",
+		"key": "apache.workers.keepalive",
+		"name": "Workers keepalive (read)",
+		"type": "DEPENDENT",
+		"description": "Number of workers in keepalive state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.keepalive"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.logging",
+		"key": "apache.workers.logging",
+		"name": "Workers logging",
+		"type": "DEPENDENT",
+		"description": "Number of workers in logging state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.logging"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.reading",
+		"key": "apache.workers.reading",
+		"name": "Workers reading request",
+		"type": "DEPENDENT",
+		"description": "Number of workers in reading state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.reading"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.sending",
+		"key": "apache.workers.sending",
+		"name": "Workers sending reply",
+		"type": "DEPENDENT",
+		"description": "Number of workers in sending state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.sending"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.slot",
+		"key": "apache.workers.slot",
+		"name": "Workers slot with no current process",
+		"type": "DEPENDENT",
+		"description": "Number of slots with no current process",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.slot"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.starting",
+		"key": "apache.workers.starting",
+		"name": "Workers starting up",
+		"type": "DEPENDENT",
+		"description": "Number of workers in starting state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.starting"
+			}
+		]
+	},
+	{
+		"_id": "apache.workers.waiting",
+		"key": "apache.workers.waiting",
+		"name": "Workers waiting for connection",
+		"type": "DEPENDENT",
+		"description": "Number of workers in waiting state",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Workers.waiting"
+			}
+		]
+	},
+
+	{
+		"_id": "apache.connections.async_closing",
+		"key": "apache.connections[async_closing{#SINGLETON}]",
+		"name": "Connections async closing",
+		"type": "DEPENDENT",
+		"description": "Number of async connections in closing state (only applicable to event MPM)",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.ConnsAsyncClosing"
+			}
+		],
+		"graphs": [
+			{
+				"name": "Current connections{#SINGLETON}",
+				"graph_items": [
+					{
+						"name": "apache.connections[async_closing{#SINGLETON}]",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.connections[async_keep_alive{#SINGLETON}]",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.connections[async_writing{#SINGLETON}]",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.connections[total{#SINGLETON}]",
+						"drawtype": "BOLD_LINE"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "apache.connections.async_keep_alive",
+		"key": "apache.connections[async_keep_alive{#SINGLETON}]",
+		"name": "Connections async keep alive",
+		"type": "DEPENDENT",
+		"description": "Number of async connections in keep-alive state (only applicable to event MPM)",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.ConnsAsyncKeepAlive"
+			}
+		]
+	},
+	{
+		"_id": "apache.connections.async_writing",
+		"key": "apache.connections[async_writing{#SINGLETON}]",
+		"name": "Connections async writing",
+		"type": "DEPENDENT",
+		"description": "Number of async connections in writing state (only applicable to event MPM)",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.ConnsAsyncWriting"
+			}
+		]
+	},
+	{
+		"_id": "apache.connections.total",
+		"key": "apache.connections[total{#SINGLETON}]",
+		"name": "Connections total",
+		"type": "DEPENDENT",
+		"description": "Number of total connections",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.ConnsTotal"
 			}
 		]
 	}
