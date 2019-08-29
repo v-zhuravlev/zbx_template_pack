@@ -11,17 +11,18 @@ templates:
     _zbx_ver: "4.0"
     _classes:
       - APP
+    # _issues:
+    #   - description: test
+    #     version: 1111,2
+    #     device: mmm
     description: |
       Get metrics from stub status module using HTTP agent
       https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html.
     _documentation:
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
       _tested_on:
         - name: Nginx
           version: 1.17.2
-      _issues:
-        - description: test
-          version: 1111,2
-          device: mmm
       _overview: |
         The template to monitor Nginx by Zabbix that work without any external scripts.
         Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
@@ -126,9 +127,9 @@ templates:
       - macro: "{$NGINX.RESPONSE_TIME.MAX.WARN}"
         _description: "The Nginx maximum response time in seconds for trigger expression."
         value: "10"
-      - macro: "{$NGINX.DROP_RATE.MAX.CRIT}"
-        _description: "The Nginx maximum response time in seconds for trigger expression."
-        value: "50"
+      - macro: "{$NGINX.DROP_RATE.MAX.WARN}"
+        _description: "The critical rate of the dropped connections for trigger expression."
+        value: "1"
     screens:
       - name: "Nginx performance"
         hsize: 2
