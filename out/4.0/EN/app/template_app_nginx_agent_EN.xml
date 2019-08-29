@@ -15,6 +15,8 @@
 https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html&#13;
 &#13;
 &#13;
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
+&#13;
 Template tooling version used: 0.21</description>
          <groups>
             <group>
@@ -1145,8 +1147,8 @@ if (a) {
          <httptests/>
          <macros>
             <macro>
-               <macro>{$NGINX.DROP_RATE.MAX.CRIT}</macro>
-               <value>50</value>
+               <macro>{$NGINX.DROP_RATE.MAX.WARN}</macro>
+               <value>1</value>
             </macro>
             <macro>
                <macro>{$NGINX.RESPONSE_TIME.MAX.WARN}</macro>
@@ -1525,18 +1527,17 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Nginx by Zabbix agent:nginx.connections.handled.rate.min(5m)} &gt; 1 and &#13;
-{Template App Nginx by Zabbix agent:nginx.connections.dropped.rate.min(5m)} / {Template App Nginx by Zabbix agent:nginx.connections.handled.rate.min(5m)} * 100 &gt; {$NGINX.DROP_RATE.MAX.CRIT}</expression>
+         <expression>{Template App Nginx by Zabbix agent:nginx.connections.dropped.rate.min(5m)} &gt; {$NGINX.DROP_RATE.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Nginx: High connections drop rate ({$NGINX.DROP_RATE.MAX.CRIT}% for 5m)</name>
+         <name>Nginx: High connections drop rate (more than {$NGINX.DROP_RATE.MAX.WARN} for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The dropping rate connections is greater than the handling connections for {$NGINX.DROP_RATE.MAX.CRIT} percent for the last 10 minutes.</description>
+The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
