@@ -74,9 +74,9 @@
 		"triggers": [
 			{
 				"_id": "trigger.connections.dropped",
-				"name": "High connections drop rate ({$NGINX.DROP_RATE.MAX.CRIT}% for 5m)",
-				"description": "The dropping rate connections is greater than the handling connections for {$NGINX.DROP_RATE.MAX.CRIT} percent for the last 10 minutes.",
-				"expression": "{TEMPLATE_NAME:nginx.connections.handled.rate.min(5m)} > 1 and \n{TEMPLATE_NAME:METRIC.min(5m)} / {TEMPLATE_NAME:nginx.connections.handled.rate.min(5m)} * 100 > {$NGINX.DROP_RATE.MAX.CRIT}",
+				"name": "High connections drop rate (more than {$NGINX.DROP_RATE.MAX.WARN} for 5m)",
+				"description": "The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)} > {$NGINX.DROP_RATE.MAX.WARN}",
 				"_depends_on": [
 					"trigger.proc.not_running",
 					"trigger.status"
