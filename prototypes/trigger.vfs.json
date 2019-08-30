@@ -2,9 +2,10 @@
 	{
 		"_id": "trigger.vfs.fs.crit_with_timeleft",
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"} and\n(({TEMPLATE_NAME:__vfs.fs.total__.last()}-{TEMPLATE_NAME:__vfs.fs.used__.last()})<5G or {TEMPLATE_NAME:METRIC.timeleft(1h,,100)}<1d)",
-		"name": "Disk space critical status (used > {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"})",
+		"name": "Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"})",
 		"priority": "AVERAGE",
-		"description": "Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.\nTwo conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"}.\n Second condition should be one of the following:\n - Disk free space is less than 5G.\n - The Disk will be full in less than 24hours.",
+		"manual_close": "YES",
+		"description": "Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.\nTwo conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"}.\n Second condition should be one of the following:\n - The disk free space is less than 5G.\n - The disk will be full in less than 24hours.",
 		"_translations": {
 			"RU": {
 				"name": "Мало свободного места (использовано > {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"})"
@@ -14,9 +15,10 @@
 	{
 		"_id": "trigger.vfs.fs.warn_with_timeleft",
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$VFS.FS.PUSED.MAX.WARN:\"__RESOURCE__\"} and\n(({TEMPLATE_NAME:__vfs.fs.total__.last()}-{TEMPLATE_NAME:__vfs.fs.used__.last()})<10G or {TEMPLATE_NAME:METRIC.timeleft(1h,,100)}<1d)",
-		"name": "Disk space warning (used > {$VFS.FS.PUSED.MAX.WARN:\"__RESOURCE__\"})",
+		"name": "Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:\"__RESOURCE__\"})",
 		"priority": "WARNING",
-		"description": "Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.\nTwo conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"}.\n Second condition should be one of the following:\n - Disk free space is less than 10G.\n - Disk will be full in less than 24hours.",
+		"manual_close": "YES",
+		"description": "Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.\nTwo conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"}.\n Second condition should be one of the following:\n - The disk free space is less than 10G.\n - The disk will be full in less than 24hours.",
 		"_depends_on": [
 			"trigger.vfs.fs.crit_with_timeleft"
 		],
@@ -31,6 +33,7 @@
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"}",
 		"name": "Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"})",
 		"priority": "AVERAGE",
+		"manual_close": "YES",
 		"_translations": {
 			"RU": {
 				"name": "Мало свободного места (использовано > {$VFS.FS.PUSED.MAX.CRIT:\"__RESOURCE__\"})"
@@ -42,6 +45,7 @@
 		"expression": "{TEMPLATE_NAME:METRIC.last()}>{$VFS.FS.PUSED.MAX.WARN:\"__RESOURCE__\"}",
 		"name": "Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:\"__RESOURCE__\"})",
 		"priority": "WARNING",
+		"manual_close": "YES",
 		"_depends_on": [
 			"trigger.vfs.fs.crit"
 		],
