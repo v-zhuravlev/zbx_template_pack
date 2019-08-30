@@ -1,0 +1,170 @@
+---
+value_maps:
+  - name: Service state
+    mappings:
+      - value: "0"
+        newvalue: Down
+      - value: "1"
+        newvalue: Up
+templates:
+  - name: Template App Nginx by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - APP
+    description: |
+      Get metrics from stub status module using Zabbix agent running on Linux
+      https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html
+    _documentation:
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
+      _tested_on:
+        - name: Nginx
+          version: 1.17.2
+      _overview: |
+        The template to monitor Nginx by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+        `Template App Nginx by Zabbix agent` collects metrics by polling [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html) locally with Zabbix agent:
+
+        ```text
+        Active connections: 291 
+        server accepts handled requests
+        16630948 16630948 31070465 
+        Reading: 6 Writing: 179 Waiting: 106 
+        ```
+
+        Note that this template doesn't support https and redirects (limitations of web.page.get).
+
+        It also uses Zabbix agent to collect `nginx` Linux process stats like CPU usage, memory usage and whether process is running or not.
+      _setup: |
+        Setup [ngx_http_stub_status_module](https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html).
+        Test availability of http_stub_status module with `nginx -V 2>&1 | grep -o with-http_stub_status_module`.
+
+        Example configuration of Nginx:
+        ```text
+        location = /basic_status {
+            stub_status;
+            allow localhost;
+            deny all;
+        }
+        ```
+
+        If you use another location, then don't forget to change {$NGINX.STUB_STATUS.PATH} macro.
+        Install and setup [Zabbix agent](https://www.zabbix.com/documentation/current/manual/installation/install_from_packages).
+    items:
+      - _prototype: nginx.get_stub_status
+        _zbx_ver: "3.4"
+        # key: web.page.get[{$NGINX.STUB_STATUS.SCHEME}://{$NGINX.STUB_STATUS.HOST}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}]
+        key: web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]
+        type: ZABBIX_PASSIVE
+        history: 1h
+      - _id: nginx.ping
+        name: Service status
+        type: ZABBIX_PASSIVE
+        key: net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]
+        value_type: UNSIGNED
+        delay: 1m
+        value_map: Service state
+        _zbx_ver: "3.4"
+        history: 7d
+        _group: "Nginx"
+        _resource: Nginx
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
+        triggers:
+          - _id: trigger.status
+            name: Service is down
+            expression: "{TEMPLATE_NAME:METRIC.last()}=0"
+            manual_close: "YES"
+            priority: AVERAGE
+            _depends_on:
+              - trigger.proc.not_running
+      - _id: nginx.perf
+        name: Service response time
+        type: ZABBIX_PASSIVE
+        # key: net.tcp.service.perf[{$NGINX.STUB_STATUS.SCHEME},{$NGINX.STUB_STATUS.HOST},{$NGINX.STUB_STATUS.PORT}]
+        key: net.tcp.service.perf[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]
+        value_type: FLOAT
+        delay: 1m
+        _zbx_ver: "3.4"
+        history: 7d
+        units: s
+        _group: "Nginx"
+        _resource: Nginx
+        triggers:
+          - _id: trigger.perf.low
+            name: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$NGINX.RESPONSE_TIME.MAX.WARN}"
+            manual_close: "YES"
+            priority: WARNING
+            _depends_on:
+              - trigger.proc.not_running
+              - trigger.status
+      - _prototype: nginx.requests.total
+      - _prototype: nginx.requests.total.rate
+      - _prototype: nginx.connections.accepted.rate
+      - _prototype: nginx.connections.dropped.rate
+      - _prototype: nginx.connections.handled.rate
+      - _prototype: nginx.connections.active
+      - _prototype: nginx.connections.reading
+      - _prototype: nginx.connections.waiting
+      - _prototype: nginx.connections.writing
+      - _id: nginx.proc.num
+        _prototype: proc.num
+        key: proc.num[nginx]
+        description: Number of the Nginx processes running.
+        history: 7d
+        _group: Nginx
+        _resource: Nginx
+      - _id: nginx.proc.mem.vsize
+        _prototype: proc.mem.vsize
+        key: proc.mem[nginx,,,,vsize]
+        history: 7d
+        _group: Nginx
+        _resource: Nginx
+      - _id: nginx.proc.mem.rss
+        _prototype: proc.mem.rss
+        key: proc.mem[nginx,,,,rss]
+        history: 7d
+        _group: Nginx
+        _resource: Nginx
+      - _id: nginx.proc.cpu.util
+        _prototype: proc.cpu.util
+        key: proc.cpu.util[nginx]
+        history: 7d
+        _group: Nginx
+        _resource: Nginx
+      - _prototype: nginx.version
+    macros:
+      # - macro: "{$NGINX.STUB_STATUS.SCHEME}"
+      #   _description: The protocol http or https of Nginx stub_status host or container.
+      #   value: http
+      - macro: "{$NGINX.STUB_STATUS.HOST}"
+        _description: Hostname or IP of Nginx stub_status host or container.
+        value: localhost
+      - macro: "{$NGINX.STUB_STATUS.PATH}"
+        _description: "The path of Nginx stub_status page."
+        value: "basic_status"
+      - macro: "{$NGINX.STUB_STATUS.PORT}"
+        _description: "The port of Nginx stub_status host or container."
+        value: "80"
+      - macro: "{$NGINX.RESPONSE_TIME.MAX.WARN}"
+        _description: "The Nginx maximum response time in seconds for trigger expression."
+        value: "10"
+      - macro: "{$NGINX.DROP_RATE.MAX.WARN}"
+        _description: "The critical rate of the dropped connections for trigger expression."
+        value: "1"
+    screens:
+      - name: "Nginx performance"
+        hsize: 2
+        vsize: 2
+        screen_items:
+          - _graph_id: nginx.connections
+            x: 0
+            y: 0
+          - _graph_id: nginx.requests
+            x: 1
+            y: 0
+          - _graph_id: nginx.connections.rate
+            x: 0
+            y: 1

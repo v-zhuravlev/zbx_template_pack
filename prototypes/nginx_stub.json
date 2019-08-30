@@ -6,15 +6,21 @@
 		"_zbx_ver": "3.4",
 		"history": "1h",
 		"trends": "0",
-		"_group": "Nginx",
+		"_group": "Zabbix_raw_items",
 		"_resource": "Nginx",
 		"value_type": "TEXT",
-		"description": "The following status information is provided:\nActive connections\nThe current number of active client connections including Waiting connections.\naccepts\nThe total number of accepted client connections.\nhandled\nThe total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).\nrequests\nThe total number of client requests.\nReading\nThe current number of connections where nginx is reading the request header.\nWriting\nThe current number of connections where nginx is writing the response back to the client.\nWaiting\nThe current number of idle client connections waiting for a request.",
+		"description": "The following status information is provided:\nActive connections - the current number of active client connections including Waiting connections.\nAccepts - the total number of accepted client connections.\nHandled - the total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).\nRequests - the total number of client requests.\nReading - the current number of connections where nginx is reading the request header.\nWriting - the current number of connections where nginx is writing the response back to the client.\nWaiting - the current number of idle client connections waiting for a request.",
 		"triggers": [
 			{
 				"_prototype": "trigger.http_get",
-				"name": "Failed to fetch stub status page",
-				"url": "https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html"
+				"name": "Failed to fetch stub status page (or no data for 30m)",
+				"url": "https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html",
+				"description": "Zabbix has not received data for items for the last 30 minutes.",
+				"_depends_on": [
+					"trigger.perf",
+					"trigger.proc.not_running",
+					"trigger.status"
+				]
 			}
 			/* Parsing:
 		Active connections: 1 
@@ -30,6 +36,7 @@
 		"type": "DEPENDENT",
 		"value_type": "FLOAT",
 		"name": "Connections accepted per second",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"masterItem": "nginx.get_stub_status",
@@ -45,11 +52,46 @@
 		]
 	},
 	{
+		"_id": "nginx.connections.dropped.rate",
+		"key": "nginx.connections.dropped.rate",
+		"type": "DEPENDENT",
+		"value_type": "FLOAT",
+		"name": "Connections dropped per second",
+		"history": "7d",
+		"_group": "Nginx",
+		"_resource": "Nginx",
+		"masterItem": "nginx.get_stub_status",
+		"description": "The total number of dropped client connections.",
+		"preprocessing": [
+			{
+				"type": "JAVASCRIPT",
+				"params": "var a = value.match(/server accepts handled requests\\s+([0-9]+) ([0-9]+) ([0-9]+)/)\nif (a) {\n    return a[1]-a[2]\n}"
+			},
+			{
+				"type": "CHANGE_PER_SECOND"
+			}
+		],
+		"triggers": [
+			{
+				"_id": "trigger.connections.dropped",
+				"name": "High connections drop rate (more than {$NGINX.DROP_RATE.MAX.WARN} for 5m)",
+				"description": "The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)} > {$NGINX.DROP_RATE.MAX.WARN}",
+				"_depends_on": [
+					"trigger.proc.not_running",
+					"trigger.status"
+				],
+				"priority": "WARNING"
+			}
+		]
+	},
+	{
 		"_id": "nginx.connections.active",
 		"name": "Connections active",
 		"key": "nginx.connections.active",
 		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"description": "The current number of active client connections including Waiting connections.",
@@ -61,7 +103,8 @@
 		],
 		"graphs": [
 			{
-				"name": "Current connections",
+				"_id": "nginx.connections",
+				"name": "Connections by state",
 				"graph_items": [
 					{
 						"drawtype": "BOLD_LINE",
@@ -86,6 +129,28 @@
 				]
 			},
 			{
+				"_id": "nginx.connections.rate",
+				"name": "Connections per second",
+				"graph_items": [
+					{
+						"name": "nginx.connections.accepted.rate",
+						"drawtype": "SINGLE_LINE",
+						"yaxisside": "LEFT"
+					},
+					{
+						"name": "nginx.connections.handled.rate",
+						"drawtype": "SINGLE_LINE",
+						"yaxisside": "LEFT"
+					},
+					{
+						"name": "nginx.connections.dropped.rate",
+						"drawtype": "SINGLE_LINE",
+						"yaxisside": "LEFT"
+					}
+				]
+			},
+			{
+				"_id": "nginx.requests",
 				"name": "Requests per second",
 				"graph_items": [
 					{
@@ -103,6 +168,7 @@
 		"type": "DEPENDENT",
 		"value_type": "FLOAT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"description": "The total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).",
 		"_resource": "Nginx",
@@ -123,10 +189,10 @@
 		"type": "DEPENDENT",
 		"value_type": "FLOAT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"description": "The total number of client requests.",
-		"units": "!rps",
 		"preprocessing": [
 			{
 				"type": "REGEX",
@@ -143,6 +209,7 @@
 		"name": "Requests total",
 		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"description": "The total number of client requests.",
@@ -159,6 +226,7 @@
 		"name": "Connections reading",
 		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"description": "The current number of connections where nginx is reading the request header.",
@@ -175,6 +243,7 @@
 		"name": "Connections waiting",
 		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"description": "The current number of idle client connections waiting for a request.",
@@ -188,9 +257,10 @@
 	{
 		"_id": "nginx.connections.writing",
 		"key": "nginx.connections.writing",
-		"name": "Connectinos writing",
+		"name": "Connections writing",
 		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"description": "The current number of connections where nginx is writing the response back to the client.",
@@ -208,6 +278,7 @@
 		"value_type": "CHAR",
 		"type": "DEPENDENT",
 		"masterItem": "nginx.get_stub_status",
+		"history": "7d",
 		"_group": "Nginx",
 		"_resource": "Nginx",
 		"preprocessing": [
@@ -218,6 +289,11 @@
 			{
 				"type": "DISCARD_UNCHANGED_HEARTBEAT",
 				"params": "1d"
+			}
+		],
+		"triggers": [
+			{
+				"_prototype": "trigger.version.changed"
 			}
 		]
 	}
