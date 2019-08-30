@@ -15,8 +15,6 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$INODE_PFREE_CRIT}|<p>-</p>|10|
-|{$INODE_PFREE_WARN}|<p>-</p>|20|
 |{$MEMORY_AVAILABLE_MIN}|<p>-</p>|20M|
 |{$SWAP_PFREE_WARN}|<p>-</p>|50|
 |{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overriden on the host or linked template level</p>|.+|
@@ -25,6 +23,8 @@ For Zabbix version: 4.2
 |{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
 |{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$|
 |{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^\s$|
+|{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|10|
+|{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|20|
 |{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
 |{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|80|
 
@@ -89,8 +89,8 @@ For Zabbix version: 4.2
 |High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:snmp.system.swap.pfree.last()}<{$SWAP_PFREE_WARN} and {Template OS Linux SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING||
 |{#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 5G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and (({Template OS Linux SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|AVERAGE|<p>Manual close: YES</p>|
 |{#FSNAME}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 10G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and (({Template OS Linux SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- {#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</p>|
-|{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}<{$INODE_PFREE_CRIT:"{#FSNAME}"}`|AVERAGE||
-|{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}%|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}<{$INODE_PFREE_WARN:"{#FSNAME}"}`|WARNING|<p>**Depends on**:</p><p>- {#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%</p>|
+|{#FSNAME}: Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>It may become impossible to write to disk if there are no index nodes left.</p><p>As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</p>|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].min(5m)}<{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}`|AVERAGE||
+|{#FSNAME}: Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>It may become impossible to write to disk if there are no index nodes left.</p><p>As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</p>|`{TEMPLATE_NAME:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].min(5m)}<{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}`|WARNING|<p>**Depends on**:</p><p>- {#FSNAME}: Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</p>|
 
 ## Feedback
 

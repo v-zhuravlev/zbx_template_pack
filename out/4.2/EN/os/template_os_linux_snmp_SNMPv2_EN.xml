@@ -2582,38 +2582,42 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}&lt;{$INODE_PFREE_CRIT:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%</name>
+                     <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+It may become impossible to write to disk if there are no index nodes left.&#13;
+As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}&lt;{$INODE_PFREE_WARN:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}%</name>
+                     <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+It may become impossible to write to disk if there are no index nodes left.&#13;
+As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%</name>
-                           <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}&lt;{$INODE_PFREE_CRIT:"{#FSNAME}"}</expression>
+                           <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
+                           <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2693,14 +2697,6 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
          <httptests/>
          <macros>
             <macro>
-               <macro>{$INODE_PFREE_CRIT}</macro>
-               <value>10</value>
-            </macro>
-            <macro>
-               <macro>{$INODE_PFREE_WARN}</macro>
-               <value>20</value>
-            </macro>
-            <macro>
                <macro>{$MEMORY_AVAILABLE_MIN}</macro>
                <value>20M</value>
             </macro>
@@ -2731,6 +2727,14 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
             <macro>
                <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
                <value>^\s$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.INODE.PFREE.MIN.CRIT}</macro>
+               <value>10</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.INODE.PFREE.MIN.WARN}</macro>
+               <value>20</value>
             </macro>
             <macro>
                <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>

@@ -44,8 +44,8 @@ Change those macros on host level if needed:
 |{$SWAP_PFREE_WARN}|Trigger(warning) if drops below this value, in % | 50 |
 |{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}|Disk space trigger(warning) if above this value, in % | 80 |
 |{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}|Disk space trigger(critical) if above this value, in % | 90 |
-|{$INODE_PFREE_CRIT:"{#FSNAME}"}|low percentage of free inode trigger(critical) if drops below this value, in % | 10 |
-|{$INODE_PFREE_WARN:"{#FSNAME}"}|low percentage of free inode trigger(warning) if drops below this value, in % | 20 |
+|{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}|low percentage of free inode trigger(critical) if drops below this value, in % | 10 |
+|{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}|low percentage of free inode trigger(warning) if drops below this value, in % | 20 |
 
 
 ## Items

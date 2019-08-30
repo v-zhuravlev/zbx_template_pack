@@ -24,8 +24,6 @@ No specific Zabbix configuration is required.
 |Name|Description|Default|
 |----|-----------|-------|
 |{$CPU_UTIL_MAX}|<p>-</p>|90|
-|{$INODE_PFREE_CRIT}|<p>-</p>|10|
-|{$INODE_PFREE_WARN}|<p>-</p>|20|
 |{$LOAD_AVG_CRIT}|<p>-</p>|1.5|
 |{$MEMORY_AVAILABLE_MIN}|<p>-</p>|20M|
 |{$NODE_EXPORTER_PORT}|<p>TCP Port node_exporter is listening on.</p>|9100|
@@ -38,6 +36,8 @@ No specific Zabbix configuration is required.
 |{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
 |{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$|
 |{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^\s$|
+|{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|10|
+|{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|20|
 |{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
 |{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|80|
 
@@ -120,8 +120,8 @@ There are no template links in this template.
 |{HOST.NAME} has been restarted (uptime < 10m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The device uptime is less than 10 minutes</p>|`{TEMPLATE_NAME:system.uptime.last()}<10m`|WARNING|<p>Manual close: YES</p>|
 |{#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 5G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:node_exporter.vfs.fs.pused[{#FSNAME}].last()}>{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and (({Template OS Linux Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})<5G or {TEMPLATE_NAME:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}<1d)`|AVERAGE|<p>Manual close: YES</p>|
 |{#FSNAME}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 10G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:node_exporter.vfs.fs.pused[{#FSNAME}].last()}>{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and (({Template OS Linux Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})<10G or {TEMPLATE_NAME:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}<1d)`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- {#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</p>|
-|{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].last()}<{$INODE_PFREE_CRIT:"{#FSNAME}"}`|AVERAGE||
-|{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}%|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].last()}<{$INODE_PFREE_WARN:"{#FSNAME}"}`|WARNING|<p>**Depends on**:</p><p>- {#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%</p>|
+|{#FSNAME}: Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>It may become impossible to write to disk if there are no index nodes left.</p><p>As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</p>|`{TEMPLATE_NAME:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}<{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}`|AVERAGE||
+|{#FSNAME}: Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>It may become impossible to write to disk if there are no index nodes left.</p><p>As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</p>|`{TEMPLATE_NAME:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}<{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}`|WARNING|<p>**Depends on**:</p><p>- {#FSNAME}: Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</p>|
 |{#DEVNAME}: Disk read request response are too high (read > {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 5m or write > {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger might indicate disk {#DEVNAME} saturation.</p>|`{TEMPLATE_NAME:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} > {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {TEMPLATE_NAME:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} > {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}`|WARNING|<p>Manual close: YES</p>|
 
 ## Feedback
