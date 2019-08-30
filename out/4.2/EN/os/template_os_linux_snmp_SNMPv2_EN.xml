@@ -2466,7 +2466,7 @@ For example, the amount of main storage allocated to a buffer pool might be modi
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2021.9.1.10["index","1.3.6.1.4.1.2021.9.1.2", "{#FSNAME}"]</snmp_oid>
-                     <key>vfs.fs.inode.pfree[dskPercentNode.{#FSNAME}]</key>
+                     <key>vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}]</key>
                      <delay>5m</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2598,7 +2598,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#FSNAME}].last()}&lt;{$INODE_PFREE_WARN:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}&lt;{$INODE_PFREE_WARN:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Free inodes is below {$INODE_PFREE_WARN:"{#FSNAME}"}%</name>
@@ -2613,7 +2613,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Free inodes is critically low, below {$INODE_PFREE_CRIT:"{#FSNAME}"}%</name>
-                           <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#FSNAME}].last()}&lt;{$INODE_PFREE_CRIT:"{#FSNAME}"}</expression>
+                           <expression>{Template OS Linux SNMPv2:vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}].last()}&lt;{$INODE_PFREE_CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
