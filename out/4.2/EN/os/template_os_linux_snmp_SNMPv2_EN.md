@@ -7,9 +7,28 @@ For Zabbix version: 4.2
 
 ## Setup
 
+Install snmpd agent on Linux OS, enable SNMPv2.  
+
+Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since,  
+by default, snmpd (for example, in Ubuntu) limits access to basic system information only:
+
+```text
+rocommunity public  default    -V systemonly
+```
+
+Make sure you change that in order to read metrics of UCD-SNMP-MIB and UCD-DISKIO-MIB. Please refer to the documentation:  
+http://www.net-snmp.org/wiki/index.php/Vacm  
+
+You can also try to use `snmpconf`:
+  
+http://www.net-snmp.org/wiki/index.php/TUT:snmpd_configuration
+
+Change {$SNMP_COMMUNITY} on the host level in Zabbix.
+
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
@@ -78,7 +97,7 @@ For Zabbix version: 4.2
 |Storage|{#FSNAME}: Used space|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
 |Storage|{#FSNAME}: Total space|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.</p>|SNMP|vfs.fs.total[hrStorageSize.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
 |Storage|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|CALCULATED|vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last(vfs.fs.used[hrStorageUsed.{#SNMPINDEX}])/last(vfs.fs.total[hrStorageSize.{#SNMPINDEX}]))*100`|
-|Storage|{#FSNAME}: Free inodes in %|<p>MIB: UCD-SNMP-MIB</p>|SNMP|vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return (100-value);`</p>|
+|Storage|{#FSNAME}: Free inodes in %|<p>MIB: UCD-SNMP-MIB</p><p>If having problems collecting this item make sure access to UCD-SNMP-MIB is allowed.</p>|SNMP|vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return (100-value);`</p>|
 
 ## Triggers
 
@@ -96,3 +115,7 @@ For Zabbix version: 4.2
 
 Please report any issues with the template at https://support.zabbix.com
 
+
+## References
+
+https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html

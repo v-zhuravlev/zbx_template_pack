@@ -8,6 +8,26 @@ templates:
       - SNMPv2
       - SNMP_DEVICE
       - INTERFACES
+    _documentation:
+      _setup: |
+        Install snmpd agent on Linux OS, enable SNMPv2.  
+
+        Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since,  
+        by default, snmpd (for example, in Ubuntu) limits access to basic system information only:
+
+        ```text
+        rocommunity public  default    -V systemonly
+        ```
+
+        Make sure you change that in order to read metrics of UCD-SNMP-MIB and UCD-DISKIO-MIB. Please refer to the documentation:  
+        http://www.net-snmp.org/wiki/index.php/Vacm  
+
+        You can also try to use `snmpconf`:
+          
+        http://www.net-snmp.org/wiki/index.php/TUT:snmpd_configuration
+
+        Change {$SNMP_COMMUNITY} on the host level in Zabbix.
+      _ref: https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
     macros:
       - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
         value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
@@ -271,6 +291,7 @@ templates:
             _snmpObject: dskPercentNode.{#SNMPINDEX}
             _mib: UCD-SNMP-MIB
             _zbx_ver: "4.2"
+            _vendor_description: If having problems collecting this item make sure access to UCD-SNMP-MIB is allowed.
             preprocessing:
               - type: JAVASCRIPT
                 params: return (100-value);

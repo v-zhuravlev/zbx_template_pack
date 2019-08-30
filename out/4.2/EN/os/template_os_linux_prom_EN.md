@@ -13,7 +13,7 @@ This template was tested on:
 
 ## Setup
 
-Please refer to the node_exporter docs. Use node_exporter v0.18.0 or above
+Please refer to the node_exporter docs. Use node_exporter v0.18.0 or above.
 
 ## Zabbix configuration
 

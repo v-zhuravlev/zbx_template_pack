@@ -8,7 +8,7 @@ New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or
 
 ## Setup
 
-Refer to the vendor documentation.
+Install Zabbix agent to Linux OS according to Zabbix documentation.
 
 ## Zabbix configuration
 
