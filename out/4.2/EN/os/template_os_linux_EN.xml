@@ -17,7 +17,7 @@ Known Issues:&#13;
 &#13;
   Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
 &#13;
-Template tooling version used: 0.21</description>
+Template tooling version used: 0.22</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -2612,11 +2612,11 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
+                     <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space critical status</name>
+                     <name>{#FSNAME}: Disk space critical status (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2624,21 +2624,21 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
-Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - Disk free space is less than 5G.&#13;
- - Disk will be full in less than 24hours.</description>
+ - The Disk will be full in less than 24hours.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_WARN:"{#FSNAME}"} and&#13;
+                     <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
 (({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space warning</name>
+                     <name>{#FSNAME}: Disk space warning (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2646,7 +2646,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
-Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - Disk free space is less than 10G.&#13;
  - Disk will be full in less than 24hours.</description>
@@ -2654,8 +2654,8 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Disk space critical status</name>
-                           <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
+                           <name>{#FSNAME}: Disk space critical status (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
+                           <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
@@ -3593,14 +3593,6 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <value>20M</value>
             </macro>
             <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
-            </macro>
-            <macro>
                <macro>{$SWAP_PFREE_WARN}</macro>
                <value>50</value>
             </macro>
@@ -3635,6 +3627,14 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
             <macro>
                <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
                <value>^\s$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
+               <value>80</value>
             </macro>
          </macros>
          <templates/>
