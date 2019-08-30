@@ -58,8 +58,8 @@ The following USER MACROS are defined in Device class template in order to allow
 * {$TEMP_WARN}=50  
 * {$TEMP_CRIT}=60  
 * {$TEMP_CRIT_LOW}=5  
-* {$STORAGE_UTIL_CRIT}=90  
-* {$STORAGE_UTIL_WARN}=80  
+* {$VFS.FS.PUSED.MAX.CRIT}=90  
+* {$VFS.FS.PUSED.MAX.WARN}=80  
 * {$SNMP_TIMEOUT}=600  
  And they can be redefined on host level if needed  
 
