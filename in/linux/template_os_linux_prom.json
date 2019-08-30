@@ -33,6 +33,57 @@
                 ],
                 "_ref": "https://github.com/prometheus/node_exporter"
             },
+            "macros": [
+                {
+                    "macro": "{$LOAD_AVG_CRIT}",
+                    "value": "1.5"
+                },
+                {
+                    "macro": "{$NODE_EXPORTER_PORT}",
+                    "_description": "TCP Port node_exporter is listening on.",
+                    "value": "9100"
+                },
+                {
+                    "macro": "{$VFS.DEV.READ.AWAIT.WARN}",
+                    "value": "20",
+                    "_description": "Disk read average response time (in ms) before the trigger would fire"
+                },
+                {
+                    "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
+                    "value": "20",
+                    "_description": "Disk write average response time (in ms) before the trigger would fire"
+                },
+                {
+                    "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
+                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)",
+                    "_description": "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.DEV.DEVNAME.MATCHES}",
+                    "value": ".+",
+                    "_description": "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSNAME.NOT_MATCHES}",
+                    "value": "^(/dev|/sys|/run|/proc|.+/shm$)",
+                    "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSNAME.MATCHES}",
+                    "value": ".+",
+                    "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSTYPE.MATCHES}",
+                    "value": "^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$",
+                    "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSTYPE.NOT_MATCHES}",
+                    "value": "^\\s$",
+                    "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
+                }
+            ],
             "discovery_rules": [
                 {
                     "name": "Network interface discovery",
@@ -530,7 +581,7 @@
                 {
                     "name": "Mounted filesystem discovery",
                     "key": "node_exporter.vfs.fs.discovery",
-                    "description": "Discovery of file systems of different types as defined in global regular expression \"File systems for discovery\".",
+                    "description": "Discovery of file systems of different types.",
                     "master_item": "node_exporter.get",
                     "type": "DEPENDENT",
                     "preprocessing": [
@@ -548,6 +599,7 @@
                             "lld_macro": "{#FSNAME}",
                             "path": "$.labels.mountpoint"
                         },
+                        //optional macros, not currently in use
                         {
                             "lld_macro": "{#FSDEVICE}",
                             "path": "$.labels.device"
@@ -558,15 +610,33 @@
                         }
                     ],
                     "filter": {
-                        "evalType": "AND",
+                        "evaltype": "AND",
                         "conditions": [
                             {
                                 "macro": "{#FSTYPE}",
-                                "value": "@File systems for discovery",
+                                "value": "{$VFS.FS.FSTYPE.MATCHES}",
                                 "operator": "MATCHES_REGEX",
                                 "formulaid": "A"
+                            },
+                            {
+                                "macro": "{#FSTYPE}",
+                                "value": "{$VFS.FS.FSTYPE.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            },
+                            {
+                                "macro": "{#FSNAME}",
+                                "value": "{$VFS.FS.FSNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "C"
+                            },
+                            {
+                                "macro": "{#FSNAME}",
+                                "value": "{$VFS.FS.FSNAME.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "D"
                             }
-                        ],
+                        ]
                     },
                     "items": [
                         {
@@ -575,7 +645,7 @@
                             "_prototype": "vfs.fs.free",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.vfs.fs.free[{#FSNAME}]",
+                            "key": "vfs.fs.free[{#FSNAME}]",
                             "value_type": "FLOAT",
                             "preprocessing": [
                                 {
@@ -656,6 +726,23 @@
                             "path": "$.help"
                         }
                     ],
+                    "filter": {
+                        "evaltype": "AND",
+                        "conditions": [
+                            {
+                                "macro": "{#DEVNAME}",
+                                "value": "{$VFS.DEV.DEVNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "A"
+                            },
+                            {
+                                "macro": "{#DEVNAME}",
+                                "value": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            }
+                        ]
+                    },
                     "items": [
                         {
                             "_resource": "{#DEVNAME}",
@@ -989,27 +1076,6 @@
                     "_prototype": "system.swap.pfree",
                     "type": "CALCULATED",
                     "key": "node_exporter.system.swap.pfree"
-                }
-            ],
-            "macros": [
-                {
-                    "macro": "{$LOAD_AVG_CRIT}",
-                    "value": "1.5"
-                },
-                {
-                    "macro": "{$NODE_EXPORTER_PORT}",
-                    "_description": "TCP Port node_exporter is listening on.",
-                    "value": "9100"
-                },
-                {
-                    "macro": "{$VFS.DEV.READ.AWAIT.WARN}",
-                    "value": "20",
-                    "_description": "Disk read average response time (in ms) before the trigger would fire"
-                },
-                {
-                    "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
-                    "value": "20",
-                    "_description": "Disk write average response time (in ms) before the trigger would fire"
                 }
             ]
         }

@@ -32,8 +32,14 @@ No specific Zabbix configuration is required.
 |{$STORAGE_UTIL_CRIT}|-|90|
 |{$STORAGE_UTIL_WARN}|-|80|
 |{$SWAP_PFREE_WARN}|-|50|
+|{$VFS.DEV.DEVNAME.MATCHES}|This macro is used in block devices discovery. Can be overriden on the host or linked template level|.+|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|This macro is used in block devices discovery. Can be overriden on the host or linked template level|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
 |{$VFS.DEV.READ.AWAIT.WARN}|Disk read average response time (in ms) before the trigger would fire|20|
 |{$VFS.DEV.WRITE.AWAIT.WARN}|Disk write average response time (in ms) before the trigger would fire|20|
+|{$VFS.FS.FSNAME.MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|.+|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|^(/dev|/sys|/run|/proc|.+/shm$)|
+|{$VFS.FS.FSTYPE.MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|^\s$|
 
 ## Template links
 
@@ -45,8 +51,8 @@ There are no template links in this template.
 |----|-----------|----|----|
 |Network interface discovery|Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".</br>Filtering:</br> - interfaces with operstate != 'up'.</br> - veth interfaces automatically created by Docker.|DEPENDENT|node_exporter.net.if.discovery</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"^node_network_info$"}`</br>**Filter**: AND </br> - A: {#IFNAME} MATCHES_REGEX `@Network interfaces for discovery`</br> - B: {#IFNAME} NOT_MATCHES_REGEX `^veth[0-9a-z]+$`</br> - C: {#IFOPERSTATUS} MATCHES_REGEX `^up$`|
 |CPU discovery|-|DEPENDENT|node_exporter.cpu.discovery</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"^node_cpu(?:_seconds_total)?$",cpu=~".+",mode="idle"}`|
-|Mounted filesystem discovery|Discovery of file systems of different types as defined in global regular expression "File systems for discovery".|DEPENDENT|node_exporter.vfs.fs.discovery</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint=~".+"}`</br>**Filter**: AND </br> - A: {#FSTYPE} MATCHES_REGEX `@File systems for discovery`|
-|Block devices discovery|-|DEPENDENT|node_exporter.vfs.dev.discovery</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `node_disk_io_now{device=~".+"}`|
+|Mounted filesystem discovery|Discovery of file systems of different types.|DEPENDENT|node_exporter.vfs.fs.discovery</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint=~".+"}`</br>**Filter**: AND </br> - A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</br> - B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</br> - C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</br> - D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`|
+|Block devices discovery|-|DEPENDENT|node_exporter.vfs.dev.discovery</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `node_disk_io_now{device=~".+"}`</br>**Filter**: AND </br> - A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</br> - B: {#DEVNAME} NOT_MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`|
 
 ## Items collected
 
@@ -84,10 +90,10 @@ There are no template links in this template.
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Interface type|node_network_protocol_type protocol_type value of /sys/class/net/<iface>.|DEPENDENT|node_exporter.net.if.type["{#IFNAME}"]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_network_protocol_type{device="{#IFNAME}"} `|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Operational status|Indicates the interface RFC2863 operational state as a string.</br>Possible values are:"unknown", "notpresent", "down", "lowerlayerdown", "testing","dormant", "up".</br>Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net|DEPENDENT|node_exporter.net.if.status["{#IFNAME}"]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_network_info{device="{#IFNAME}"} operstate`</br> - JAVASCRIPT: `var newvalue; switch(value) {   case "up":     newvalue = 1;     break;   case "down":     newvalue = 2;     break;   case "testing":     newvalue = 4;     break;   case "unknown":     newvalue = 5;     break;   case "dormant":     newvalue = 6;     break;   case "notPresent":     newvalue = 7;     break;   default:     newvalue = "Problem parsing interface operstate in JS"; } return newvalue;`|
 |Status|System uptime|-|DEPENDENT|system.uptime</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_boot_time(?:_seconds)?$"} `</br> - JAVASCRIPT: `//use boottime to calculate uptime return (Math.floor(Date.now()/1000)-Number(value));`|
-|Storage|{#FSNAME}: Free space|-|DEPENDENT|node_exporter.vfs.fs.free[{#FSNAME}]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_filesystem_avail(?:_bytes)?$", mountpoint="{#FSNAME}"} `|
+|Storage|{#FSNAME}: Free space|-|DEPENDENT|vfs.fs.free[{#FSNAME}]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_filesystem_avail(?:_bytes)?$", mountpoint="{#FSNAME}"} `|
 |Storage|{#FSNAME}: Total space|Total space in Bytes|DEPENDENT|node_exporter.vfs.fs.total[{#FSNAME}]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint="{#FSNAME}"} `|
-|Storage|{#FSNAME}: Used space|Used storage in Bytes|CALCULATED|node_exporter.vfs.fs.used[{#FSNAME}]</br>**Expression**:</br>`(last(node_exporter.vfs.fs.total[{#FSNAME}])-last(node_exporter.vfs.fs.free[{#FSNAME}]))`|
-|Storage|{#FSNAME}: Space utilization|Space utilization in % for {#FSNAME}|CALCULATED|node_exporter.vfs.fs.pused[{#FSNAME}]</br>**Expression**:</br>`(last(node_exporter.vfs.fs.used[{#FSNAME}])/(last(node_exporter.vfs.fs.free[{#FSNAME}])+last(node_exporter.vfs.fs.used[{#FSNAME}])))*100`|
+|Storage|{#FSNAME}: Used space|Used storage in Bytes|CALCULATED|node_exporter.vfs.fs.used[{#FSNAME}]</br>**Expression**:</br>`(last(node_exporter.vfs.fs.total[{#FSNAME}])-last(vfs.fs.free[{#FSNAME}]))`|
+|Storage|{#FSNAME}: Space utilization|Space utilization in % for {#FSNAME}|CALCULATED|node_exporter.vfs.fs.pused[{#FSNAME}]</br>**Expression**:</br>`(last(node_exporter.vfs.fs.used[{#FSNAME}])/(last(vfs.fs.free[{#FSNAME}])+last(node_exporter.vfs.fs.used[{#FSNAME}])))*100`|
 |Storage|{#FSNAME}: Free inodes in %|-|DEPENDENT|node_exporter.vfs.fs.inode.pfree[{#FSNAME}]</br>**Preprocessing**:</br> - PROMETHEUS_TO_JSON: `{__name__=~"node_filesystem_files.*",mountpoint="{#FSNAME}"}`</br> - JAVASCRIPT: `//count vfs.fs.inode.pfree var inode_free; var inode_total; JSON.parse(value).forEach(function(metric) {   if (metric['name'] == 'node_filesystem_files'){       inode_total = metric['value'];   } else if (metric['name'] == 'node_filesystem_files_free'){       inode_free = metric['value'];   } }); return (inode_free/inode_total)*100;`|
 |Storage|{#DEVNAME}: Disk read rate|r/s. The number (after merges) of read requests completed per second for the device.|DEPENDENT|node_exporter.vfs.dev.read.rate[{#DEVNAME}]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_reads_completed_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
 |Storage|{#DEVNAME}: Disk write rate|w/s. The number (after merges) of write requests completed per second for the device.|DEPENDENT|node_exporter.vfs.dev.write.rate[{#DEVNAME}]</br>**Preprocessing**:</br> - PROMETHEUS_PATTERN: `node_disk_writes_completed_total{device="{#DEVNAME}"} `</br> - CHANGE_PER_SECOND|
@@ -121,7 +127,6 @@ There are no template links in this template.
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
-
 
 ## Known Issues
 

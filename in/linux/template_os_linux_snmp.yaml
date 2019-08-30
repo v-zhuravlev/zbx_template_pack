@@ -1,26 +1,56 @@
-
 templates:
-    - name: Template OS Linux
-      _zbx_ver: "4.2"
-      description: Template OS Linux
-      _classes:
-        - Interfaces EtherLike Extension
-        - OS
-        - SNMPv2
-        - SNMP_DEVICE
-        - INTERFACES
-      discovery_rules:
+  - name: Template OS Linux
+    _zbx_ver: "4.2"
+    description: Template OS Linux
+    _classes:
+      - Interfaces EtherLike Extension
+      - OS
+      - SNMPv2
+      - SNMP_DEVICE
+      - INTERFACES
+    macros:
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
+        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
+        value: ".+"
+        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+      - macro: "{$VFS.FS.FSNAME.MATCHES}"
+        value: ".+"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
+        value: ".*(\\.4|\\.9|hrStorageFixedDisk|hrStorageFlashMemory)$"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+    discovery_rules:
       - name: Block devices discovery
         key: snmp.vfs.dev.discovery
         type: SNMP
         oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
-        filter: 
+        filter:
           evaltype: AND
-          conditions: 
+          conditions:
             - macro: "{#DEVNAME}"
-              value: "(loop[\\d]*|sda([\\d])+)"
-              operator: NOT_MATCHES_REGEX
+              value: "{$VFS.DEV.DEVNAME.MATCHES}"
+              operator: MATCHES_REGEX
               formulaid: A
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: B
         items:
           - _prototype: vfs.dev.read.rate
             _resource: "{#DEVNAME}"
@@ -49,7 +79,7 @@ templates:
             _snmpObject: diskIOLA1.{#SNMPINDEX}
             _mib: UCD-DISKIO-MIB
             _vendor_description: The 1 minute average load of disk (%)
-            
+
       - name: CPU discovery
         type: DEPENDENT
         master_item: system.cpu.num
@@ -74,8 +104,7 @@ templates:
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
-          - 
-            _prototype: system.cpu.system
+          - _prototype: system.cpu.system
             oid: 1.3.6.1.4.1.2021.11.52.0
             type: SNMP
             _snmpObject: ssCpuRawSystem.{#SNMPINDEX}
@@ -86,8 +115,7 @@ templates:
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
-          - 
-            _prototype: system.cpu.user
+          - _prototype: system.cpu.user
             oid: 1.3.6.1.4.1.2021.11.50.0
             type: SNMP
             _snmpObject: ssCpuRawUser.{#SNMPINDEX}
@@ -98,8 +126,7 @@ templates:
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
-          - 
-            _prototype: system.cpu.steal
+          - _prototype: system.cpu.steal
             oid: 1.3.6.1.4.1.2021.11.64.0
             type: SNMP
             _snmpObject: ssCpuRawSteal.{#SNMPINDEX}
@@ -111,7 +138,7 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
           - _prototype: system.cpu.softirq
-            
+
             oid: 1.3.6.1.4.1.2021.11.61.0
             type: SNMP
             _snmpObject: ssCpuRawSoftIRQ.{#SNMPINDEX}
@@ -123,7 +150,7 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
           - _prototype: system.cpu.nice
-            
+
             oid: 1.3.6.1.4.1.2021.11.51.0
             type: SNMP
             key: "{#CPUNUM}"
@@ -136,7 +163,7 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
           - _prototype: system.cpu.iowait
-            
+
             oid: 1.3.6.1.4.1.2021.11.54.0
             type: SNMP
             _snmpObject: ssCpuRawWait.{#SNMPINDEX}
@@ -148,7 +175,7 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
           - _prototype: system.cpu.interrupt
-            
+
             oid: 1.3.6.1.4.1.2021.11.56.0
             type: SNMP
             _snmpObject: ssCpuRawInterrupt.{#SNMPINDEX}
@@ -160,7 +187,7 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
           - _prototype: system.cpu.guest
-            
+
             oid: 1.3.6.1.4.1.2021.11.65.0
             type: SNMP
             _snmpObject: ssCpuRawGuest.{#SNMPINDEX}
@@ -172,7 +199,7 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
           - _prototype: system.cpu.guest_nice
-            
+
             oid: 1.3.6.1.4.1.2021.11.66.0
             type: SNMP
             _snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
@@ -183,176 +210,168 @@ templates:
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
-      - name: Filesystems discovery
-        oid: "discovery[{#STORAGE_DESCR},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
+      - name: Mounted filesystem discovery
+        oid: "discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
         key: "snmp.vfs.fs.discovery"
         description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
-        filter: 
-          evaltype: FORMULA
-          formula: (A or B) and C
-          conditions: 
-          - macro: "{#STORAGE_TYPE}"
-            value: ".+(4)"
-            # OID: 1.3.6.1.2.1.25.2.1.4
-            operator: MATCHES_REGEX
-            formulaid: B
-          - macro: "{#STORAGE_TYPE}"
-            value: ".+(hrStorageFixedDisk)"
-            operator: MATCHES_REGEX
-            formulaid: A
-          - macro: "{#STORAGE_DESCR}"
-            value: "(.+/shm$|/dev/run|/sys/fs/cgroup|/run.*)"
-            operator: NOT_MATCHES_REGEX
-            formulaid: C
+        # https://tools.ietf.org/html/rfc2790 hrFSTypes may be used in discovery too
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#FSTYPE}"
+              value: "{$VFS.FS.FSTYPE.MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: A
+            - macro: "{#FSTYPE}"
+              value: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: B
+            - macro: "{#FSNAME}"
+              value: "{$VFS.FS.FSNAME.MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: C
+            - macro: "{#FSNAME}"
+              value: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: D
         items:
-          - _prototype: vfs.fs.units
-            oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
-            _snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
-            _mib: "HOST-RESOURCES-MIB"
-            _vendor_description: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
-            _resource: "{#STORAGE_DESCR}"
-
-          - _prototype: vfs.fs.units.used
+          - _prototype: vfs.fs.used
             oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
             _snmpObject: "hrStorageUsed.{#SNMPINDEX}"
             _mib: "HOST-RESOURCES-MIB"
             _vendor_description: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
-            _resource: "{#STORAGE_DESCR}"
-    
-          - _prototype: vfs.fs.units.total
+            _resource: "{#FSNAME}"
+            application_prototype: Filesystem __RESOURCE__
+            preprocessing:
+              - type: MULTIPLIER
+                params: "{#ALLOC_UNITS}"
+
+          - _prototype: vfs.fs.total
             oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
             _snmpObject: "hrStorageSize.{#SNMPINDEX}"
             _mib: "HOST-RESOURCES-MIB"
             _vendor_description: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
-            _resource: "{#STORAGE_DESCR}"
-    
-          - _prototype: vfs.fs.used
+            _resource: "{#FSNAME}"
             application_prototype: Filesystem __RESOURCE__
-            _snmpObject: "storageUsed.{#SNMPINDEX}"
-            type: CALCULATED
-            _resource: "{#STORAGE_DESCR}"
-    
-          - _prototype: vfs.fs.total
-            application_prototype: Filesystem __RESOURCE__
-            _snmpObject: "storageTotal.{#SNMPINDEX}"
-            type: CALCULATED
-            _resource: "{#STORAGE_DESCR}"
-    
+            preprocessing:
+              - type: MULTIPLIER
+                params: "{#ALLOC_UNITS}"
+
           - _prototype: vfs.fs.pused
             application_prototype: Filesystem __RESOURCE__
             _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
             type: CALCULATED
-            _resource: "{#STORAGE_DESCR}"
-          
+            _resource: "{#FSNAME}"
+
           - _prototype: vfs.fs.inode.pfree
-            _resource: "{#STORAGE_DESCR}"
+            _resource: "{#FSNAME}"
             application_prototype: Filesystem __RESOURCE__
-            oid: "1.3.6.1.4.1.2021.9.1.10[\"index\",\"1.3.6.1.4.1.2021.9.1.2\", \"{#STORAGE_DESCR}\"]"
+            oid: '1.3.6.1.4.1.2021.9.1.10["index","1.3.6.1.4.1.2021.9.1.2", "{#FSNAME}"]'
             type: SNMP
-            _snmpObject: dskPercentNode.{#STORAGE_DESCR}
+            _snmpObject: dskPercentNode.{#FSNAME}
             _mib: UCD-SNMP-MIB
             _zbx_ver: "4.2"
             preprocessing:
               - type: JAVASCRIPT
                 params: return (100-value);
 
-      items:
-        - _prototype: system.cpu.load.avg1
-          oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-1\"]"
-          type: SNMP
-          _snmpObject: laLoad.1
-          _mib: UCD-SNMP-MIB
-          _zbx_ver: "4.2"
-        - _prototype: system.cpu.load.avg5
-          oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-5\"]"
-          type: SNMP
-          _snmpObject: laLoad.2
-          _mib: UCD-SNMP-MIB
-          _zbx_ver: "4.2"
-        - _prototype: system.cpu.load.avg15
-          oid: "1.3.6.1.4.1.2021.10.1.3[\"index\",\"1.3.6.1.4.1.2021.10.1.2\", \"Load-15\"]"
-          type: SNMP
-          _snmpObject: laLoad.3
-          _mib: UCD-SNMP-MIB
-          _zbx_ver: "4.2"
-        - _prototype: system.cpu.num
-          oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
-          type: SNMP
-          key: snmp.system.cpu.num
-          _mib: HOST-RESOURCES-MIB
-          _zbx_ver: "4.2"
-          preprocessing:
-            - type: JAVASCRIPT
-              params: |
-                //count the number of cores
-                return JSON.parse(value).length;
-          _vendor_description: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
-        - _prototype: "system.cpu.intr"
-          type: SNMP
-          _snmpObject: ssRawInterrupts.0
-          oid: 1.3.6.1.4.1.2021.11.59.0
-          preprocessing:
-            - type: CHANGE_PER_SECOND
-        - _prototype: "system.cpu.switches"
-          type: SNMP
-          _snmpObject: ssRawContexts.0
-          oid: 1.3.6.1.4.1.2021.11.60.0
-          preprocessing:
-            - type: CHANGE_PER_SECOND
-        - _prototype: vm.memory.free
-          _snmpObject: memAvailReal.0
-          oid: 1.3.6.1.4.1.2021.4.6.0
-          _mib: UCD-SNMP-MIB
-          type: SNMP
-          preprocessing:
-            - type: MULTIPLIER
-              params: "1024"
-        - _prototype: vm.memory.buffers
-          _snmpObject: memBuffer.0
-          oid: 1.3.6.1.4.1.2021.4.14.0
-          _mib: UCD-SNMP-MIB
-          type: SNMP
-          preprocessing:
-            - type: MULTIPLIER
-              params: "1024"
-        - _prototype: vm.memory.cached
-          _snmpObject: memCached.0
-          oid: 1.3.6.1.4.1.2021.4.15.0
-          _mib: UCD-SNMP-MIB
-          type: SNMP
-          preprocessing:
-            - type: MULTIPLIER
-              params: "1024"
-        - _prototype: vm.memory.total
-          _snmpObject: memTotalReal.0
-          oid: 1.3.6.1.4.1.2021.4.5.0
-          _mib: UCD-SNMP-MIB
-          type: SNMP
-          preprocessing:
-            - type: MULTIPLIER
-              params: "1024"
-        - _prototype: vm.memory.available
-          type: CALCULATED
-          key: snmp.vm.memory.available
-          expressionFormula: last(__vm.memory.free__)+last(__vm.memory.buffers__)+last(__vm.memory.cached__)
-        - _prototype: system.swap.total
-          oid: 1.3.6.1.4.1.2021.4.3.0
-          type: SNMP
-          _snmpObject: memTotalSwap.0
-          _mib: UCD-SNMP-MIB
-          _vendor_description: The total amount of swap space configured for this host.
-          preprocessing:
-            - type: MULTIPLIER
-              params: "1024"
-        - _prototype: system.swap.free
-          oid: 1.3.6.1.4.1.2021.4.4.0
-          type: SNMP
-          _snmpObject: memAvailSwap.0
-          _mib: UCD-SNMP-MIB
-          _vendor_description: The amount of swap space currently unused or available.
-          preprocessing:
-            - type: MULTIPLIER
-              params: "1024"
-        - _prototype: system.swap.pfree
-          key: snmp.system.swap.pfree
-          type: CALCULATED
+    items:
+      - _prototype: system.cpu.load.avg1
+        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-1"]'
+        type: SNMP
+        _snmpObject: laLoad.1
+        _mib: UCD-SNMP-MIB
+        _zbx_ver: "4.2"
+      - _prototype: system.cpu.load.avg5
+        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-5"]'
+        type: SNMP
+        _snmpObject: laLoad.2
+        _mib: UCD-SNMP-MIB
+        _zbx_ver: "4.2"
+      - _prototype: system.cpu.load.avg15
+        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-15"]'
+        type: SNMP
+        _snmpObject: laLoad.3
+        _mib: UCD-SNMP-MIB
+        _zbx_ver: "4.2"
+      - _prototype: system.cpu.num
+        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+        type: SNMP
+        key: snmp.system.cpu.num
+        _mib: HOST-RESOURCES-MIB
+        _zbx_ver: "4.2"
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |
+              //count the number of cores
+              return JSON.parse(value).length;
+        _vendor_description: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
+      - _prototype: "system.cpu.intr"
+        type: SNMP
+        _snmpObject: ssRawInterrupts.0
+        oid: 1.3.6.1.4.1.2021.11.59.0
+        preprocessing:
+          - type: CHANGE_PER_SECOND
+      - _prototype: "system.cpu.switches"
+        type: SNMP
+        _snmpObject: ssRawContexts.0
+        oid: 1.3.6.1.4.1.2021.11.60.0
+        preprocessing:
+          - type: CHANGE_PER_SECOND
+      - _prototype: vm.memory.free
+        _snmpObject: memAvailReal.0
+        oid: 1.3.6.1.4.1.2021.4.6.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.buffers
+        _snmpObject: memBuffer.0
+        oid: 1.3.6.1.4.1.2021.4.14.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.cached
+        _snmpObject: memCached.0
+        oid: 1.3.6.1.4.1.2021.4.15.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.total
+        _snmpObject: memTotalReal.0
+        oid: 1.3.6.1.4.1.2021.4.5.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.available
+        type: CALCULATED
+        key: snmp.vm.memory.available
+        expressionFormula: last(__vm.memory.free__)+last(__vm.memory.buffers__)+last(__vm.memory.cached__)
+      - _prototype: system.swap.total
+        oid: 1.3.6.1.4.1.2021.4.3.0
+        type: SNMP
+        _snmpObject: memTotalSwap.0
+        _mib: UCD-SNMP-MIB
+        _vendor_description: The total amount of swap space configured for this host.
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: system.swap.free
+        oid: 1.3.6.1.4.1.2021.4.4.0
+        type: SNMP
+        _snmpObject: memAvailSwap.0
+        _mib: UCD-SNMP-MIB
+        _vendor_description: The amount of swap space currently unused or available.
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: system.swap.pfree
+        key: snmp.system.swap.pfree
+        type: CALCULATED

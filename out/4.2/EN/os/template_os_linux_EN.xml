@@ -2282,14 +2282,32 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                   <conditions>
                      <condition>
                         <macro>{#FSTYPE}</macro>
-                        <value>@File systems for discovery</value>
+                        <value>{$VFS.FS.FSTYPE.MATCHES}</value>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSTYPE}</macro>
+                        <value>{$VFS.FS.FSTYPE.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSNAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSNAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>D</formulaid>
                      </condition>
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
-               <description>Discovery of file systems of different types as defined in global regular expression "File systems for discovery".</description>
+               <description>Discovery of file systems of different types.</description>
                <item_prototypes>
                   <item_prototype>
                      <name>{#FSNAME}: Used space</name>
@@ -2782,9 +2800,15 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                   <conditions>
                      <condition>
                         <macro>{#DEVNAME}</macro>
-                        <value>(loop[\d]*|sda([\d])+)</value>
-                        <operator>9</operator>
+                        <value>{$VFS.DEV.DEVNAME.MATCHES}</value>
+                        <operator>8</operator>
                         <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#DEVNAME}</macro>
+                        <value>{$VFS.DEV.DEVNAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
                      </condition>
                   </conditions>
                </filter>
@@ -3581,12 +3605,36 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <value>50</value>
             </macro>
             <macro>
+               <macro>{$VFS.DEV.DEVNAME.MATCHES}</macro>
+               <value>.+</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.DEV.DEVNAME.NOT_MATCHES}</macro>
+               <value>(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)</value>
+            </macro>
+            <macro>
                <macro>{$VFS.DEV.READ.AWAIT.WARN}</macro>
                <value>20</value>
             </macro>
             <macro>
                <macro>{$VFS.DEV.WRITE.AWAIT.WARN}</macro>
                <value>20</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
+               <value>.+</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
+               <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
+               <value>^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
+               <value>^\s$</value>
             </macro>
          </macros>
          <templates/>

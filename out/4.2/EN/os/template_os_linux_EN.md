@@ -29,8 +29,14 @@ No specific Zabbix configuration is required.
 |{$STORAGE_UTIL_CRIT}|-|90|
 |{$STORAGE_UTIL_WARN}|-|80|
 |{$SWAP_PFREE_WARN}|-|50|
+|{$VFS.DEV.DEVNAME.MATCHES}|This macro is used in block devices discovery. Can be overriden on the host or linked template level|.+|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|This macro is used in block devices discovery. Can be overriden on the host or linked template level|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
 |{$VFS.DEV.READ.AWAIT.WARN}|Disk read average response time (in ms) before the trigger would fire|20|
 |{$VFS.DEV.WRITE.AWAIT.WARN}|Disk write average response time (in ms) before the trigger would fire|20|
+|{$VFS.FS.FSNAME.MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|.+|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|^(/dev|/sys|/run|/proc|.+/shm$)|
+|{$VFS.FS.FSTYPE.MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|This macro is used in filesystems discovery. Can be overriden on the host or linked template level|^\s$|
 
 ## Template links
 
@@ -41,8 +47,8 @@ There are no template links in this template.
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
 |Network interface discovery|Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".</br>Filtering veth interfaces automatically created by Docker.|ZABBIX_PASSIVE|net.if.discovery</br>**Filter**: AND </br> - A: {#IFNAME} MATCHES_REGEX `@Network interfaces for discovery`</br> - B: {#IFNAME} NOT_MATCHES_REGEX `^veth[0-9a-z]+$`|
-|Mounted filesystem discovery|Discovery of file systems of different types as defined in global regular expression "File systems for discovery".|ZABBIX_PASSIVE|vfs.fs.discovery</br>**Filter**: AND </br> - A: {#FSTYPE} MATCHES_REGEX `@File systems for discovery`|
-|Block devices discovery|-|DEPENDENT|vfs.dev.discovery</br>**Preprocessing**:</br> - JSONPATH: `$.lld`</br> - DISCARD_UNCHANGED_HEARTBEAT: `1h`</br>**Filter**: AND </br> - A: {#DEVNAME} NOT_MATCHES_REGEX `(loop[\d]*|sda([\d])+)`|
+|Mounted filesystem discovery|Discovery of file systems of different types.|ZABBIX_PASSIVE|vfs.fs.discovery</br>**Filter**: AND </br> - A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</br> - B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</br> - C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</br> - D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`|
+|Block devices discovery|-|DEPENDENT|vfs.dev.discovery</br>**Preprocessing**:</br> - JSONPATH: `$.lld`</br> - DISCARD_UNCHANGED_HEARTBEAT: `1h`</br>**Filter**: AND </br> - A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</br> - B: {#DEVNAME} NOT_MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`|
 
 ## Items collected
 
@@ -113,4 +119,8 @@ There are no template links in this template.
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
+
+## Known Issues
+
+- Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.
 
