@@ -76,8 +76,8 @@
 		]
 	},
 	{
-		"_id": "apache.bytes_per_request",
-		"key": "apache.bytes_per_request",
+		"_id": "apache.bytes.per_request",
+		"key": "apache.bytes[per_request{#SINGLETON}]",
 		"name": "Bytes per request",
 		"description": "Average number of client requests per second",
 		"type": "DEPENDENT",
@@ -91,6 +91,36 @@
 			{
 				"type": "JSONPATH",
 				"params": "$.BytesPerReq"
+			}
+		]
+	},
+	{
+		"_id": "apache.process.num",
+		"key": "apache.process[num{#SINGLETON}]",
+		"name": "Number of async processes",
+		"description": "Number of async processes",
+		"type": "DEPENDENT",
+		"masterItem": "apache.status",
+		"_group": "Apache",
+		"_resource": "Apache",
+		"history": "7d",
+		"value_type": "FLOAT",
+		"preprocessing": [
+			{
+				"type": "JSONPATH",
+				"params": "$.Processes"
+			}
+		],
+		"graphs": [
+			{
+				"_id": "apache.process.num",
+				"name": "Current async processes{#SINGLETON}",
+				"graph_items": [
+					{
+						"name": "apache.process.num",
+						"drawtype": "GRADIENT_LINE"
+					}
+				]
 			}
 		]
 	},
@@ -188,7 +218,13 @@
 				"type": "JSONPATH",
 				"params": "$.ServerUptimeSeconds"
 			}
+		],
+		"triggers": [
+			{
+				"_prototype": "trigger.uptime.restarted"
+			}
 		]
+
 	},
 	{
 		"_id": "apache.version",
