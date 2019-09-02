@@ -196,7 +196,9 @@ templates:
   
   discovery_rules:
   - name: Event MPM discovery
-    description: ''
+    description: |
+      Additional metrics if event MPM is used
+      https://httpd.apache.org/docs/current/mod/event.html
     key: apache.mpm.event.discovery
     type: DEPENDENT
     masterItem: apache.status
@@ -230,7 +232,7 @@ templates:
     _description: Maximum Apache response time in seconds for trigger expression
 
   screens:
-  - name: Apache stat
+  - name: Apache performance
     hsize: 2
     vsize: 2
     screen_items:
@@ -240,9 +242,9 @@ templates:
     - _graph_id: apache.workers.total
       x: 1
       y: 0
-    - _graph_id: apache.workers.connections
-      x: 0
-      y: 1
+    # - _graph_id: apache.workers.connections
+    #   x: 0
+    #   y: 1
     - _graph_id: apache.workers.states
       x: 1
       y: 1

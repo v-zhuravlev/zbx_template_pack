@@ -92,7 +92,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Event MPM discovery||DEPENDENT|apache.mpm.event.discovery</br>**Preprocessing**:</br> - JSONPATH: `$.ServerMPM`</br> - JAVASCRIPT: `return JSON.stringify(value === 'event' ? [{'{#SINGLETON}': ''}] : []);`|
+|Event MPM discovery|Additional metrics if event MPM is used</br>https://httpd.apache.org/docs/current/mod/event.html</br>|DEPENDENT|apache.mpm.event.discovery</br>**Preprocessing**:</br> - JSONPATH: `$.ServerMPM`</br> - JAVASCRIPT: `return JSON.stringify(value === 'event' ? [{'{#SINGLETON}': ''}] : []);`|
 
 ## Items collected
 
@@ -133,7 +133,7 @@ There are no template links in this template.
 |Apache: Service is down|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"].last()}=0`|AVERAGE|Manual close: YES</br>|
 |Apache: Service response time is too high (over {$APACHE.RESPONSE_TIME.MAX.WARN}s for 5m)|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:net.tcp.service.perf[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"].min(5m)}>{$APACHE.RESPONSE_TIME.MAX.WARN}`|WARNING|Manual close: YES</br>**Depends on**:</br> - Apache: Service is down</br>|
 |Apache: Version has changed (new version: {ITEM.VALUE})|Last value: {ITEM.LASTVALUE1}.</br>Apache version has changed. Ack to close.|`{TEMPLATE_NAME:apache.version.diff()}=1 and {TEMPLATE_NAME:apache.version.strlen()}>0`|INFO|Manual close: YES</br>|
-|Apache: Failed to fetch status page (or no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:apache.get_status.str("HTTP/1.1 200")}=0 or  {TEMPLATE_NAME:apache.get_status.nodata(30m)}=1`|WARNING|Manual close: YES</br>|
+|Apache: Failed to fetch status page (or no data for 30m)|Last value: {ITEM.LASTVALUE1}.</br>Zabbix has not received data for items for the last 30 minutes.|`{TEMPLATE_NAME:apache.get_status.nodata(30m)}=1`|WARNING|Manual close: YES</br>**Depends on**:</br> - Apache: Service is down</br>|
 
 ## Feedback
 

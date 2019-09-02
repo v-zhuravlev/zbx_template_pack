@@ -14,11 +14,12 @@
 		"triggers": [
 			{
 				"_prototype": "trigger.http_get",
+				"expression": "{TEMPLATE_NAME:METRIC.nodata(30m)}=1",
 				"name": "Failed to fetch status page (or no data for 30m)",
 				"url": "https://httpd.apache.org/docs/current/mod/mod_status.html",
 				"description": "Zabbix has not received data for items for the last 30 minutes.",
 				"_depends_on": [
-					"trigger.service.down",
+					"trigger.status",
 					"trigger.proc.not_running"
 				]
 			}
@@ -132,7 +133,6 @@
 		"_resource": "Apache",
 		"history": "7d",
 		"value_type": "FLOAT",
-		"units": "!rps",
 		"preprocessing": [
 			{
 				"type": "JSONPATH",
@@ -286,32 +286,6 @@
 		],
 		"graphs": [
 			{
-				"_id": "apache.workers.connections",
-				"name": "Worker connections",
-				"graph_items": [
-					{
-						"name": "apache.workers.closing",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.workers.finishing",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.workers.keepalive",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.workers.slot",
-						"drawtype": "SINGLE_LINE"
-					},
-					{
-						"name": "apache.workers.waiting",
-						"drawtype": "SINGLE_LINE"
-					}
-				]
-			},
-			{
 				"_id": "apache.workers.states",
 				"name": "Worker states",
 				"graph_items": [
@@ -337,6 +311,26 @@
 					},
 					{
 						"name": "apache.workers.starting",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.closing",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.finishing",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.keepalive",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.slot",
+						"drawtype": "SINGLE_LINE"
+					},
+					{
+						"name": "apache.workers.waiting",
 						"drawtype": "SINGLE_LINE"
 					}
 				]
@@ -532,7 +526,7 @@
 		],
 		"graphs": [
 			{
-				"name": "Current connections{#SINGLETON}",
+				"name": "Current async connections{#SINGLETON}",
 				"graph_items": [
 					{
 						"name": "apache.connections[async_closing{#SINGLETON}]",
