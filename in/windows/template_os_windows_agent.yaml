@@ -1,0 +1,251 @@
+---
+# value_maps:
+#   - name: Service state
+#     mappings:
+#       - value: "0"
+#         newvalue: Down
+#       - value: "1"
+#         newvalue: Up
+templates:
+  - name: Template OS Windows CPU by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - OS
+    items:
+      - _id: system.cpu.util
+        _group: "CPU"
+        name: CPU utilisation, in %
+        type: ZABBIX_PASSIVE
+        key: system.cpu.util
+        value_type: FLOAT
+        units: "%"
+      - _id: wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        _group: "CPU"
+        name: Interrupt Time, %
+        type: ZABBIX_PASSIVE
+        key: wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        value_type: FLOAT
+        units: "%"
+      - _id: wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']
+        _group: "CPU"
+        name: Load, %
+        type: ZABBIX_PASSIVE
+        key: wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']
+        value_type: FLOAT
+        units: "%"
+      - _id: wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        _group: "CPU"
+        name: Privileged time, %
+        type: ZABBIX_PASSIVE
+        key: wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        value_type: FLOAT
+        units: "%"
+      - _id: wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        _group: "CPU"
+        name: User time, %
+        type: ZABBIX_PASSIVE
+        key: wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        value_type: FLOAT
+        units: "%"
+      - _id: wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]
+        _group: "CPU"
+        name: Queue Length
+        type: ZABBIX_PASSIVE
+        key: wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]
+        value_type: FLOAT
+
+  - name: Template OS Windows Filesystems by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - OS
+    discovery_rules:
+      - name: Mounted filesystem discovery
+        key: vfs.fs.discovery
+        type: ZABBIX_PASSIVE
+        description: Discovery of file systems of different types as defined in MACRO
+        items:
+          - _id: vfs.fs.size[{#FSNAME},total]
+            _group: "Filesystems"
+            _resource: Filesystem {#FSNAME}
+            name: "{#FSNAME}: Total disk space"
+            key: vfs.fs.size[{#FSNAME},total]
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: B
+            update: 1h
+            application_prototype: __RESOURCE__
+            description: .
+          - _id: vfs.fs.size[{#FSNAME},used]
+            _group: "Filesystems"
+            _resource: Filesystem {#FSNAME}
+            name: "{#FSNAME}: Used disk space"
+            key: vfs.fs.size[{#FSNAME},used]
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: B
+            application_prototype: __RESOURCE__
+            description: .
+          - _id: vfs.fs.size[{#FSNAME},pused]
+            _group: "Filesystems"
+            _resource: Filesystem {#FSNAME}
+            name: "{#FSNAME}: Used disk space, %"
+            key: vfs.fs.size[{#FSNAME},pused]
+            type: ZABBIX_PASSIVE
+            value_type: FLOAT
+            units: "%"
+            application_prototype: __RESOURCE__
+            description: .
+          - _id: vfs.fs.size[{#FSNAME},free]
+            _group: "Filesystems"
+            _resource: Filesystem {#FSNAME}
+            name: "{#FSNAME}: Free disk space"
+            key: vfs.fs.size[{#FSNAME},free]
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: B
+            application_prototype: __RESOURCE__
+            description: .
+
+  # - name: Template OS Windows Disk Performance by Zabbix agent
+  #   _zbx_ver: "3.4"
+  #   _classes:
+  #     - OS
+  - name: Template OS Windows Inventory by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - OS
+    items:
+      - _id: system.uname
+        _group: "General"
+        name: System information
+        type: ZABBIX_PASSIVE
+        key: system.uname
+        value_type: CHAR
+        delay: 1h
+      - _id: system.uptime
+        _group: "General"
+        name: System uptime
+        type: ZABBIX_PASSIVE
+        key: system.uptime
+        value_type: UNSIGNED
+        delay: 1m
+        units: uptime
+        triggers:
+          - _prototype: trigger.uptime.restarted
+            priority: WARNING
+            name: Host has been restarted (uptime < 10m)
+            description: The device uptime is less than 10 minutes
+            # _depends_on:
+      - _id: custom.os.updates.latestupdatesinstalled
+        _group: "General"
+        name: latest update installed days ago
+        type: ZABBIX_PASSIVE
+        key: custom.os.updates.latestupdatesinstalled
+        value_type: UNSIGNED
+        delay: 1d
+        units: s
+      - _id: proc.num[]
+        _group: "General"
+        name: number of processes
+        type: ZABBIX_PASSIVE
+        key: proc.num[]
+        value_type: UNSIGNED
+      - _id: custom.os.pendingreboot
+        _group: "General"
+        name: pending reboot
+        type: ZABBIX_PASSIVE
+        key: custom.os.pendingreboot
+        value_type: UNSIGNED
+        delay: 1d
+
+  - name: Template OS Windows Memory by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - OS
+    items:
+      - _id: vm.memory.size[free]
+        _group: "Memory"
+        name: Free memory
+        type: ZABBIX_PASSIVE
+        key: vm.memory.size[free]
+        value_type: UNSIGNED
+        delay: 1m
+        units: B
+      - _id: system.swap.size[,free]
+        _group: "Memory"
+        name: Free swap space
+        type: ZABBIX_PASSIVE
+        key: system.swap.size[,free]
+        value_type: UNSIGNED
+        delay: 1m
+        units: B
+      - _id: vm.vmemory.size[pavailable]
+        _group: "Memory"
+        name: Free virtual memory, in %
+        type: ZABBIX_PASSIVE
+        key: vm.vmemory.size[pavailable]
+        value_type: FLOAT
+        delay: 1m
+        units: "%"
+      - _id: vm.memory.size[total]
+        _group: "Memory"
+        name: Total memory
+        type: ZABBIX_PASSIVE
+        key: vm.memory.size[total]
+        value_type: UNSIGNED
+        delay: 1h
+        units: B
+      - _id: system.swap.size[,total]
+        _group: "Memory"
+        name: Total swap space
+        type: ZABBIX_PASSIVE
+        key: system.swap.size[,total]
+        value_type: UNSIGNED
+        delay: 1h
+        units: B
+
+  # - name: Template OS Windows Network by Zabbix agent
+  #   _zbx_ver: "3.4"
+  #   _classes:
+  #     - OS
+
+  - name: Template OS Windows by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - OS
+    description: |
+      Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+    _documentation:
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
+      _tested_on:
+        - name: Windows
+          version: "10"
+      _overview: |
+        New official Windows template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+      _setup: |
+        Install Zabbix agent to Windows OS according to Zabbix documentation.
+    templates:
+      - Template OS Windows CPU by Zabbix agent
+      - Template OS Windows Filesystems by Zabbix agent
+      - Template OS Windows Inventory by Zabbix agent
+      - Template OS Windows Memory by Zabbix agent
+      # - Template OS Windows Disk Performance by Zabbix agent
+      # - Template OS Windows Network by Zabbix agent
+    # macros:
+    #   - macro: "{$NGINX.STUB_STATUS.HOST}"
+    #     _description: Hostname or IP of Nginx stub_status host or container.
+    #     value: localhost
+    # screens:
+    #   - name: "Nginx performance"
+    #     hsize: 2
+    #     vsize: 2
+    #     screen_items:
+    #       - _graph_id: nginx.connections
+    #         x: 0
+    #         y: 0
+    #       - _graph_id: nginx.requests
+    #         x: 1
+    #         y: 0
+    #       - _graph_id: nginx.connections.rate
+    #         x: 0
+    #         y: 1
