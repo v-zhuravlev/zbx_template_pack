@@ -71,10 +71,10 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Filesystems|Filesystem {#FSNAME}: {#FSNAME}: Total disk space|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},total]|
-|Filesystems|Filesystem {#FSNAME}: {#FSNAME}: Used disk space|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},used]|
-|Filesystems|Filesystem {#FSNAME}: {#FSNAME}: Used disk space, %|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]|
-|Filesystems|Filesystem {#FSNAME}: {#FSNAME}: Free disk space|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},free]|
+|Filesystems|Volume: {#FSNAME}: Total disk space|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},total]|
+|Filesystems|Volume: {#FSNAME}: Used disk space|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},used]|
+|Filesystems|Volume: {#FSNAME}: Used disk space, %|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]|
+|Filesystems|Volume: {#FSNAME}: Free disk space|<p>.</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},free]|
 
 ## Triggers
 
@@ -164,6 +164,50 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+# Template OS Windows Network by Zabbix agent
+
+## Overview
+
+For Zabbix version: 4.2  
+
+## Setup
+
+
+## Zabbix configuration
+
+
+
+## Template links
+
+There are no template links in this template.
+
+## Discovery rules
+
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|Network interface discovery|<p>Discovery of network interfaces as defined in MACRO</p>|ZABBIX_PASSIVE|net.if.discovery|
+
+## Items collected
+
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Network_interfaces|Interface: {#IFNAME}: Incoming network traffic|<p>.</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,select BytesReceivedPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']|
+|Network_interfaces|Interface: {#IFNAME}: Outgoing network traffic|<p>.</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,select BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']|
+|Network_interfaces|Interface: {#IFNAME}: Network carrier|<p>.</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,select NetConnectionStatus from win32_networkadapter where InterfaceIndex='{#IFINDEX}']|
+|Network_interfaces|Interface: {#IFNAME}: Output queue length|<p>.</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,select OutputQueueLength from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']|
+|Network_interfaces|Interface: {#IFNAME}: Total network traffic|<p>.</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,select BytesTotalPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']|
+|Network_interfaces|Interface: Incoming network traffic on {#IFNAME}|<p>.</p>|ZABBIX_PASSIVE|net.if.in[{#IFNAME}]|
+|Network_interfaces|Interface: Outgoing network traffic on {#IFNAME}|<p>.</p>|ZABBIX_PASSIVE|net.if.out[{#IFNAME}]|
+
+## Triggers
+
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
+
 # Template OS Windows by Zabbix agent
 
 ## Overview
@@ -194,6 +238,7 @@ No specific Zabbix configuration is required.
 |Template OS Windows Filesystems by Zabbix agent|
 |Template OS Windows Inventory by Zabbix agent|
 |Template OS Windows Memory by Zabbix agent|
+|Template OS Windows Network by Zabbix agent|
 
 ## Discovery rules
 

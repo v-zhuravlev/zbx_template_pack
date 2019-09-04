@@ -66,50 +66,47 @@ templates:
         items:
           - _id: vfs.fs.size[{#FSNAME},total]
             _group: "Filesystems"
-            _resource: Filesystem {#FSNAME}
+            _resource: Volume
             name: "{#FSNAME}: Total disk space"
             key: vfs.fs.size[{#FSNAME},total]
             type: ZABBIX_PASSIVE
             value_type: UNSIGNED
             units: B
             update: 1h
-            application_prototype: __RESOURCE__
             description: .
           - _id: vfs.fs.size[{#FSNAME},used]
             _group: "Filesystems"
-            _resource: Filesystem {#FSNAME}
+            _resource: Volume
             name: "{#FSNAME}: Used disk space"
             key: vfs.fs.size[{#FSNAME},used]
             type: ZABBIX_PASSIVE
             value_type: UNSIGNED
             units: B
-            application_prototype: __RESOURCE__
             description: .
           - _id: vfs.fs.size[{#FSNAME},pused]
             _group: "Filesystems"
-            _resource: Filesystem {#FSNAME}
+            _resource: Volume
             name: "{#FSNAME}: Used disk space, %"
             key: vfs.fs.size[{#FSNAME},pused]
             type: ZABBIX_PASSIVE
             value_type: FLOAT
             units: "%"
-            application_prototype: __RESOURCE__
             description: .
           - _id: vfs.fs.size[{#FSNAME},free]
             _group: "Filesystems"
-            _resource: Filesystem {#FSNAME}
+            _resource: Volume
             name: "{#FSNAME}: Free disk space"
             key: vfs.fs.size[{#FSNAME},free]
             type: ZABBIX_PASSIVE
             value_type: UNSIGNED
             units: B
-            application_prototype: __RESOURCE__
             description: .
 
   # - name: Template OS Windows Disk Performance by Zabbix agent
   #   _zbx_ver: "3.4"
   #   _classes:
   #     - OS
+
   - name: Template OS Windows Inventory by Zabbix agent
     _zbx_ver: "3.4"
     _classes:
@@ -204,10 +201,77 @@ templates:
         delay: 1h
         units: B
 
-  # - name: Template OS Windows Network by Zabbix agent
-  #   _zbx_ver: "3.4"
-  #   _classes:
-  #     - OS
+  - name: Template OS Windows Network by Zabbix agent
+    _zbx_ver: "3.4"
+    _classes:
+      - OS
+    discovery_rules:
+      - name: Network interface discovery
+        key: net.if.discovery
+        type: ZABBIX_PASSIVE
+        description: Discovery of network interfaces as defined in MACRO
+        items:
+          - _id: wmi.get[root\cimv2,select BytesReceivedPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "{#IFNAME}: Incoming network traffic"
+            key: wmi.get[root\cimv2,select BytesReceivedPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: Bps
+            description: .
+          - _id: wmi.get[root\cimv2,select BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "{#IFNAME}: Outgoing network traffic"
+            key: wmi.get[root\cimv2,select BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: Bps
+            description: .
+          - _id: wmi.get[root\cimv2,select NetConnectionStatus from win32_networkadapter where InterfaceIndex='{#IFINDEX}']
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "{#IFNAME}: Network carrier"
+            key: wmi.get[root\cimv2,select NetConnectionStatus from win32_networkadapter where InterfaceIndex='{#IFINDEX}']
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            description: .
+          - _id: wmi.get[root\cimv2,select OutputQueueLength from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "{#IFNAME}: Output queue length"
+            key: wmi.get[root\cimv2,select OutputQueueLength from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            description: .
+          - _id: wmi.get[root\cimv2,select BytesTotalPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "{#IFNAME}: Total network traffic"
+            key: wmi.get[root\cimv2,select BytesTotalPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: Bps
+            description: .
+          - _id: net.if.in[{#IFNAME}]
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "Incoming network traffic on {#IFNAME}"
+            key: net.if.in[{#IFNAME}]
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: Bps
+            description: .
+          - _id: net.if.out[{#IFNAME}]
+            _group: "Network_interfaces"
+            _resource: Interface
+            name: "Outgoing network traffic on {#IFNAME}"
+            key: net.if.out[{#IFNAME}]
+            type: ZABBIX_PASSIVE
+            value_type: UNSIGNED
+            units: Bps
+            description: .
 
   - name: Template OS Windows by Zabbix agent
     _zbx_ver: "3.4"
@@ -229,8 +293,8 @@ templates:
       - Template OS Windows Filesystems by Zabbix agent
       - Template OS Windows Inventory by Zabbix agent
       - Template OS Windows Memory by Zabbix agent
+      - Template OS Windows Network by Zabbix agent
       # - Template OS Windows Disk Performance by Zabbix agent
-      # - Template OS Windows Network by Zabbix agent
     # macros:
     #   - macro: "{$NGINX.STUB_STATUS.HOST}"
     #     _description: Hostname or IP of Nginx stub_status host or container.
