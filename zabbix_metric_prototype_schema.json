@@ -230,12 +230,11 @@
         "default": "__RESOURCE__",
         "pattern": ".*\\{#.+\\}.*|__RESOURCE__"
       },
-      "update": {
-        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/update",
-        "description": "Update interval",
+      "delay": {
+        "$id": "http://zabbix.com/template_gen_metric_prototype.json/items/properties/delay",
         "type": "string",
-        "title": "The Update Schema",
-        "default": "5m",
+        "default": "1m",
+        "description": "Update interval of the item. Accepts seconds or a time unit with suffix (30s,1m,2h,1d).\nOptionally one or more custom intervals can be specified either as flexible intervals or scheduling.\n        Multiple intervals are separated by a semicolon.\n        User macros may be used. A single macro has to fill the whole field. Multiple macros in a field or macros mixed with text are not supported.\n        Flexible intervals may be written as two macros separated by a forward slash (e.g. {$FLEX_INTERVAL}/{$FLEX_PERIOD}).\n\nOptional for Zabbix trapper or dependent items.",
         "examples": [
           "30s",
           "1m",
@@ -304,6 +303,12 @@
         "examples": [
           "DLINK-AGENT-MIB"
         ]
+      },
+      "params": {
+        "$id": "/properties/templates/items/properties/items/items/properties/params",
+        "type": "string",
+        "title": "Use params to define expression formula",
+        "description": "Additional parameters depending on the type of the item:\n- executed script for SSH and Telnet items;\n- SQL query for database monitor items;\n- formula for calculated items."
       },
       "_vendor_description": {
         "$id": "/properties/templates/items/properties/items/items/properties/_vendor_description",
