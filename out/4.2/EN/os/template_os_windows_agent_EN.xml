@@ -24,7 +24,7 @@
          </applications>
          <items>
             <item>
-               <name>CPU utilisation, in %</name>
+               <name>CPU utilization</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
@@ -51,7 +51,7 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>CPU utilization in %</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1888,8 +1888,57 @@ Template tooling version used: 0.22</description>
          <tags/>
       </template>
    </templates>
-   <graphs/>
+   <graphs>
+      <graph>
+         <name>CPU utilization</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>1</ymin_type_1>
+         <ymax_type_1>1</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>5</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows CPU by Zabbix agent</host>
+                  <key>system.cpu.util</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+   </graphs>
    <triggers>
+      <trigger>
+         <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High CPU utilization</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>3</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
       <trigger>
          <expression>{Template OS Windows Inventory by Zabbix agent:system.uptime.last()}&lt;10m</expression>
          <recovery_mode>0</recovery_mode>

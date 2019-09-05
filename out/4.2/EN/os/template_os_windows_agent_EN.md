@@ -28,7 +28,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|CPU|CPU utilisation, in %|<p>-</p>|ZABBIX_PASSIVE|system.cpu.util|
+|CPU|CPU utilization|<p>CPU utilization in %</p>|ZABBIX_PASSIVE|system.cpu.util|
 |CPU|Interrupt Time, %|<p>-</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]|
 |CPU|Load, %|<p>-</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']|
 |CPU|Privileged time, %|<p>-</p>|ZABBIX_PASSIVE|wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]|
@@ -39,6 +39,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
+|High CPU utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util.avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE||
 
 ## Feedback
 
