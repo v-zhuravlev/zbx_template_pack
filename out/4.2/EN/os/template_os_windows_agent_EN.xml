@@ -11,7 +11,7 @@
       <template>
          <template>Template OS Windows CPU by Zabbix agent</template>
          <name>Template OS Windows CPU by Zabbix agent</name>
-         <description>Template tooling version used: 0.22</description>
+         <description>Template tooling version used: 0.23</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -24,71 +24,12 @@
          </applications>
          <items>
             <item>
-               <name>CPU utilization</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.cpu.util</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>0</value_type>
-               <allowed_hosts/>
-               <units>%</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>CPU utilization in %</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>CPU</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
                <name>Interrupt Time, %</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
                <key>wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]</key>
-               <delay>1m</delay>
+               <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -147,7 +88,7 @@
                <snmp_community/>
                <snmp_oid/>
                <key>wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']</key>
-               <delay>1m</delay>
+               <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -206,7 +147,7 @@
                <snmp_community/>
                <snmp_oid/>
                <key>wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]</key>
-               <delay>1m</delay>
+               <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -265,7 +206,7 @@
                <snmp_community/>
                <snmp_oid/>
                <key>wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor]</key>
-               <delay>1m</delay>
+               <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -324,7 +265,7 @@
                <snmp_community/>
                <snmp_oid/>
                <key>wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]</key>
-               <delay>1m</delay>
+               <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -377,10 +318,259 @@
                <verify_host>0</verify_host>
                <master_item/>
             </item>
+            <item>
+               <name>CPU utilization</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.cpu.util</key>
+               <delay>0;m0-59</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>CPU utilization in %</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
          </items>
-         <discovery_rules/>
+         <discovery_rules>
+            <discovery_rule>
+               <name>CPU core discovery</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.cpu.discovery</key>
+               <delay>1d</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>1</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#CPU.NUMBER}</macro>
+                        <value>{$CPU.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#CPU.NUMBER}</macro>
+                        <value>{$CPU.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description>Discovery of CPU as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>#{#CPU.NUMBER}: CPU utilization</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>system.cpu.util[{#CPU.NUMBER}]</key>
+                     <delay>0;m0-59</delay>
+                     <history>7d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>0</value_type>
+                     <allowed_hosts/>
+                     <units>%</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>CPU utilization in %</description>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>CPU</name>
+                        </application>
+                     </applications>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util[{#CPU.NUMBER}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#CPU.NUMBER}: High CPU utilization</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>#{#CPU.NUMBER}: CPU utilization</name>
+                     <width>900</width>
+                     <height>200</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>0</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>0</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>1</ymin_type_1>
+                     <ymax_type_1>1</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>5</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows CPU by Zabbix agent</host>
+                              <key>system.cpu.util[{#CPU.NUMBER}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
+               <host_prototypes/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <lld_macro_paths/>
+               <preprocessing/>
+               <master_item/>
+            </discovery_rule>
+         </discovery_rules>
          <httptests/>
          <macros>
+            <macro>
+               <macro>{$CPU.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$CPU.NOT_MATCHES}</macro>
+               <value>\s</value>
+            </macro>
             <macro>
                <macro>{$CPU_UTIL_MAX}</macro>
                <value>90</value>
@@ -393,7 +583,7 @@
       <template>
          <template>Template OS Windows Filesystems by Zabbix agent</template>
          <name>Template OS Windows Filesystems by Zabbix agent</name>
-         <description>Template tooling version used: 0.22</description>
+         <description>Template tooling version used: 0.23</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -431,81 +621,58 @@
                <privatekey/>
                <port/>
                <filter>
-                  <evaltype>0</evaltype>
+                  <evaltype>1</evaltype>
                   <formula/>
-                  <conditions/>
+                  <conditions>
+                     <condition>
+                        <macro>{#FSTYPE}</macro>
+                        <value>{$VFS.FS.FSTYPE.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSTYPE}</macro>
+                        <value>{$VFS.FS.FSTYPE.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSNAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSNAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>D</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSDRIVETYPE}</macro>
+                        <value>{$VFS.FS.FSDRIVETYPE.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>E</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSDRIVETYPE}</macro>
+                        <value>{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>F</formulaid>
+                     </condition>
+                  </conditions>
                </filter>
                <lifetime>30d</lifetime>
-               <description>Discovery of file systems of different types as defined in MACRO</description>
+               <description>Discovery of file systems of different types.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Volume: {#FSNAME}: Total disk space</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>vfs.fs.size[{#FSNAME},total]</key>
-                     <delay>1h</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>B</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Filesystems</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Volume: {#FSNAME}: Used disk space</name>
+                     <name>{#FSNAME}: Used space</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>vfs.fs.size[{#FSNAME},used]</key>
                      <delay>1m</delay>
-                     <history>7d</history>
+                     <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -518,7 +685,7 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params/>
+                     <params>(last(vfs.fs.size[{#FSNAME},total])-last(vfs.fs.size[{#FSNAME},free]))</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -526,18 +693,18 @@
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>.</description>
+                     <description>Used storage in Bytes</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Filesystems</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
                      <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -559,13 +726,133 @@
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Volume: {#FSNAME}: Used disk space, %</name>
+                     <name>{#FSNAME}: Free space</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>vfs.fs.size[{#FSNAME},free]</key>
+                     <delay>1m</delay>
+                     <history>30d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>B</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#FSNAME}: Total space</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>vfs.fs.size[{#FSNAME},total]</key>
+                     <delay>1m</delay>
+                     <history>30d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>B</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>Total space in Bytes</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#FSNAME}: Space utilization</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>vfs.fs.size[{#FSNAME},pused]</key>
                      <delay>1m</delay>
-                     <history>7d</history>
+                     <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -578,7 +865,7 @@
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params/>
+                     <params>(last(vfs.fs.size[{#FSNAME},used])/(last(vfs.fs.size[{#FSNAME},free])+last(vfs.fs.size[{#FSNAME},used])))*100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -586,78 +873,18 @@
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>.</description>
+                     <description>Space utilization in % for {#FSNAME}</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Filesystems</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
                      <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Volume: {#FSNAME}: Free disk space</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>vfs.fs.size[{#FSNAME},free]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>B</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Filesystems</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -679,8 +906,105 @@
                      <master_item/>
                   </item_prototype>
                </item_prototypes>
-               <trigger_prototypes/>
-               <graph_prototypes/>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#FSNAME}: Disk space critical status</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - Disk free space is less than 5G.&#13;
+ - Disk will be full in less than 24hours.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_WARN:"{#FSNAME}"} and&#13;
+(({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#FSNAME}: Disk space warning</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - Disk free space is less than 10G.&#13;
+ - Disk will be full in less than 24hours.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#FSNAME}: Disk space critical status</name>
+                           <expression>{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                           <recovery_expression/>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>{#FSNAME}: Disk space usage</name>
+                     <width>600</width>
+                     <height>340</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>2</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>1</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>969696</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>2</type>
+                           <item>
+                              <host>Template OS Windows Filesystems by Zabbix agent</host>
+                              <key>vfs.fs.size[{#FSNAME},total]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>C80000</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows Filesystems by Zabbix agent</host>
+                              <key>vfs.fs.size[{#FSNAME},used]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <host_prototypes/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -706,7 +1030,40 @@
             </discovery_rule>
          </discovery_rules>
          <httptests/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$VFS.FS.FSDRIVETYPE.MATCHES}</macro>
+               <value>fixed</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}</macro>
+               <value>^\s$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
+               <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
+               <value>^\s$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
+               <value>80</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
          <tags/>
@@ -714,7 +1071,7 @@
       <template>
          <template>Template OS Windows Inventory by Zabbix agent</template>
          <name>Template OS Windows Inventory by Zabbix agent</name>
-         <description>Template tooling version used: 0.22</description>
+         <description>Template tooling version used: 0.23</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -1032,7 +1389,7 @@
       <template>
          <template>Template OS Windows Memory by Zabbix agent</template>
          <name>Template OS Windows Memory by Zabbix agent</name>
-         <description>Template tooling version used: 0.22</description>
+         <description>Template tooling version used: 0.23</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -1045,12 +1402,248 @@
          </applications>
          <items>
             <item>
-               <name>Free memory</name>
+               <name>Total memory</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>vm.memory.size[free]</key>
-               <delay>1m</delay>
+               <key>vm.memory.size[total]</key>
+               <delay>3m</delay>
+               <history>30d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Total memory in Bytes</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Available memory</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vm.memory.size[available]</key>
+               <delay>3m</delay>
+               <history>30d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Used memory</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vm.memory.size[used]</key>
+               <delay>3m</delay>
+               <history>30d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Used memory in Bytes</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory utilization</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vm.memory.size[pused]</key>
+               <delay>3m</delay>
+               <history>30d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params>(last(vm.memory.size[used])/last(vm.memory.size[total]))*100</params>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Memory utilization in %</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Total swap space</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.swap.size[,total]</key>
+               <delay>5m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1109,7 +1702,7 @@
                <snmp_community/>
                <snmp_oid/>
                <key>system.swap.size[,free]</key>
-               <delay>1m</delay>
+               <delay>5m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1163,11 +1756,330 @@
                <master_item/>
             </item>
             <item>
-               <name>Free virtual memory, in %</name>
+               <name>Free swap space in %</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>vm.vmemory.size[pavailable]</key>
+               <key>system.swap.size[,pfree]</key>
+               <delay>5m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params>((last(system.swap.size[,free]))/last(system.swap.size[,total]))*100</params>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Available</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT AvailableBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Performance counter measures the amount of physical memory (RAM), in megabytes, that is immediately &#13;
+available for allocation either to a process or for system use. It is the sum of the Zero, Free, &#13;
+and Standby page lists discussed earlier. When the Available MBytes counter is low, it is a primary &#13;
+indicator of a low RAM condition. This is when aggressive working set trims will occur which may or &#13;
+may not result in a hard page fault where the pages on the Modified list are written to disk.&#13;
+The \Memory\Pages/sec counter measures hard page faults, but it does not distinguish between hard &#13;
+page faults that result from normal file reads or writes and page file reads or writes. Therefore, &#13;
+use Pages/sec together with the Available MBytes counter, and do not use Pages/sec by itself.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Cache bytes</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT CacheBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>\Memory\Cache Bytes&#13;
+Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, &#13;
+Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays &#13;
+the last observed value only; it is not an average.&#13;
+The Memory performance object consists of counters that describe the behavior of physical and virtual &#13;
+memory on the computer. Physical memory is the amount of random access memory on the computer. Virtual &#13;
+memory consists of the space in physical memory and on disk. Many of the memory counters monitor paging, &#13;
+which is the movement of pages of code and data between disk and physical memory. Excessive paging, &#13;
+a symptom of a memory shortage, can cause delays which interfere with all system processes.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Commit limit</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT CommitLimit FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Commit Limit is the amount of virtual memory that can be committed without having to extend &#13;
+the paging file(s). It is measured in bytes. Committed memory is the physical memory which &#13;
+has space reserved on the disk paging files. There can be one paging file on each logical drive). &#13;
+If the paging file(s) are be expanded, this limit increases accordingly. This counter displays &#13;
+the last observed value only; it is not an average.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Committed</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT CommittedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>\Memory\Committed Bytes&#13;
+The system commit charge is the total amount of committed memory that is in use by all processes &#13;
+and by the kernel. This memory might have been guaranteed or written to by a process or by the kernel.&#13;
+Memory Available Megabytes in Use This measures the ratio of Committed Bytes to the Commit Limit—in other &#13;
+words, the amount of virtual memory in use. This indicates insufficient memory if the number is greater &#13;
+than 80 percent. The obvious solution for this is to add more memory.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Committed in use, %</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT PercentCommittedBytesInUse FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -1190,7 +2102,14 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The \Memory\% Committed Bytes In Use counter calculates the ratio of committed bytes (system commit charge) &#13;
+to the system commit limit, and the system can perform poorly when the system commit limit is reached. &#13;
+Therefore, when % Committed Bytes In Use is greater than 80%, use the \Process(*)\Private Bytes counter &#13;
+to identify the processes that are consuming the most committed memory.&#13;
+The Debug Diagnostic Tool (DebugDiag) is designed to assist in troubleshooting issues such as hangs,  &#13;
+slow performance, memory leaks or fragmentation, and crashes in any user-mode process. The tool includes &#13;
+additional debugging scripts focused on Internet Information Services (IIS) applications, web data access &#13;
+components, COM+ and related Microsoft technologies.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1222,12 +2141,257 @@
                <master_item/>
             </item>
             <item>
-               <name>Total memory</name>
+               <name>Memory: Free system page table entries</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>vm.memory.size[total]</key>
-               <delay>1h</delay>
+               <key>wmi.get[root\cimv2,SELECT FreeSystemPageTableEntries FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>This indicates the number of page table entries not currently in use by the system. If the number is less &#13;
+than 5,000, there may well be a memory leak.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Page file usage, %</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2, SELECT PercentUsagePeak FROM Win32_PerfFormattedData_PerfOS_PagingFile]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The peak usage of the Page File instance in percent. &#13;
+The Paging File performance object consists of counters that monitor the paging file(s) on the computer. &#13;
+The paging file is a reserved space on disk that backs up committed physical memory on the computer.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Pages faults per/sec</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT PageFaultsPersec FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Page Faults/sec is the average number of pages faulted per second. It is measured in number of pages &#13;
+faulted per second because only one page is faulted in each fault operation, hence this is also equal &#13;
+to the number of page fault operations. This counter includes both hard faults (those that require &#13;
+disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most &#13;
+processors can handle large numbers of soft faults without significant consequence. However, hard faults, &#13;
+which require disk access, can cause significant delays.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Pages per/sec</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2, select PagesPersec FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>This measures the rate at which pages are read from or written to disk to resolve hard page faults. &#13;
+If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Pool non-paged</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,SELECT PoolNonpagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1249,7 +2413,10 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>This measures the size, in bytes, of the non-paged pool. This is an area of system memory for objects &#13;
+that cannot be written to disk but instead must remain in physical memory as long as they are allocated. &#13;
+There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch). &#13;
+A typical Event ID 2019 is recorded in the system event log.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1281,12 +2448,73 @@
                <master_item/>
             </item>
             <item>
-               <name>Total swap space</name>
+               <name>Memory: Pool paged</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>system.swap.size[,total]</key>
-               <delay>1h</delay>
+               <key>wmi.get[root\cimv2,SELECT PoolPagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>This measures the size, in bytes, of the paged pool. This is an area of system memory used for objects &#13;
+that can be written to disk when they are not being used. There may be a memory leak if this value is &#13;
+greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is recorded in the system event log.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Memory: Total</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>wmi.get[root\cimv2,select TotalPhysicalMemory from Win32_ComputerSystem]</key>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1342,7 +2570,20 @@
          </items>
          <discovery_rules/>
          <httptests/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$MEMORY_AVAILABLE_MIN}</macro>
+               <value>20M</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$SWAP_PFREE_WARN}</macro>
+               <value>50</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
          <tags/>
@@ -1350,7 +2591,7 @@
       <template>
          <template>Template OS Windows Network by Zabbix agent</template>
          <name>Template OS Windows Network by Zabbix agent</name>
-         <description>Template tooling version used: 0.22</description>
+         <description>Template tooling version used: 0.23</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -1388,26 +2629,39 @@
                <privatekey/>
                <port/>
                <filter>
-                  <evaltype>0</evaltype>
+                  <evaltype>1</evaltype>
                   <formula/>
-                  <conditions/>
+                  <conditions>
+                     <condition>
+                        <macro>{#IFNAME}</macro>
+                        <value>{$NET.IFNAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFNAME}</macro>
+                        <value>{$NET.IFNAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                  </conditions>
                </filter>
                <lifetime>30d</lifetime>
-               <description>Discovery of network interfaces as defined in MACRO</description>
+               <description>Discovery of network interfaces as defined in {$NET.IFNAME.MATCHES} and {$NET.IFNAME.NOT_MATCHES}.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Interface: {#IFNAME}: Incoming network traffic</name>
+                     <name>Interface {#IFNAME}: Bits received</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>wmi.get[root\cimv2,select BytesReceivedPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']</key>
+                     <key>net.if.in["{#IFNAME}"]</key>
                      <delay>1m</delay>
                      <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
-                     <units>Bps</units>
+                     <units>bps</units>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1423,7 +2677,7 @@
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>.</description>
+                     <description/>
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
@@ -1456,18 +2710,18 @@
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface: {#IFNAME}: Outgoing network traffic</name>
+                     <name>Interface {#IFNAME}: Bits sent</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>wmi.get[root\cimv2,select BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']</key>
+                     <key>net.if.out["{#IFNAME}"]</key>
                      <delay>1m</delay>
                      <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
-                     <units>Bps</units>
+                     <units>bps</units>
                      <snmpv3_contextname/>
                      <snmpv3_securityname/>
                      <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -1483,307 +2737,7 @@
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface: {#IFNAME}: Network carrier</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>wmi.get[root\cimv2,select NetConnectionStatus from win32_networkadapter where InterfaceIndex='{#IFINDEX}']</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface: {#IFNAME}: Output queue length</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>wmi.get[root\cimv2,select OutputQueueLength from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface: {#IFNAME}: Total network traffic</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>wmi.get[root\cimv2,select BytesTotalPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>Bps</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface: Incoming network traffic on {#IFNAME}</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.in[{#IFNAME}]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>Bps</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface: Outgoing network traffic on {#IFNAME}</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.out[{#IFNAME}]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>Bps</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>.</description>
+                     <description/>
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
@@ -1817,7 +2771,52 @@
                   </item_prototype>
                </item_prototypes>
                <trigger_prototypes/>
-               <graph_prototypes/>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Interface {#IFNAME}: Network traffic</name>
+                     <width>900</width>
+                     <height>200</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>0</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>0</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>5</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows Network by Zabbix agent</host>
+                              <key>net.if.in["{#IFNAME}"]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>2</drawtype>
+                           <color>2774A4</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows Network by Zabbix agent</host>
+                              <key>net.if.out["{#IFNAME}"]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <host_prototypes/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -1843,7 +2842,16 @@
             </discovery_rule>
          </discovery_rules>
          <httptests/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$NET.IFNAME.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IFNAME.NOT_MATCHES}</macro>
+               <value>Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer</value>
+            </macro>
+         </macros>
          <templates/>
          <screens/>
          <tags/>
@@ -1856,7 +2864,7 @@
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
 &#13;
-Template tooling version used: 0.22</description>
+Template tooling version used: 0.23</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -1921,6 +2929,82 @@ Template tooling version used: 0.22</description>
             </graph_item>
          </graph_items>
       </graph>
+      <graph>
+         <name>Memory usage</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>1</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>2</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows Memory by Zabbix agent</host>
+                  <key>vm.memory.size[total]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>5</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows Memory by Zabbix agent</host>
+                  <key>vm.memory.size[available]</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Memory utilization</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>1</ymin_type_1>
+         <ymax_type_1>1</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>5</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows Memory by Zabbix agent</host>
+                  <key>vm.memory.size[pused]</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
    </graphs>
    <triggers>
       <trigger>
@@ -1953,6 +3037,55 @@ Template tooling version used: 0.22</description>
 The device uptime is less than 10 minutes</description>
          <type>0</type>
          <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows Memory by Zabbix agent:vm.memory.size[available].last(0)}&lt;{$MEMORY_AVAILABLE_MIN} and {Template OS Windows Memory by Zabbix agent:vm.memory.size[total].last(0)}&gt;0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>3</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows Memory by Zabbix agent:vm.memory.size[pused].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High memory utilization</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>3</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows Memory by Zabbix agent:system.swap.size[,pfree].last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Windows Memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger is ignored, if there is no swap configured</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
          <dependencies/>
          <tags/>
       </trigger>
