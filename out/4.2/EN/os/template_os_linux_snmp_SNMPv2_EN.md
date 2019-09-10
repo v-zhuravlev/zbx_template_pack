@@ -33,17 +33,17 @@ There are no template links in this template.
 |Memory|Memory (buffers)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by kernel buffers (Buffers in /proc/meminfo)</p>|SNMP|vm.memory.buffers[memBuffer.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (cached)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)</p>|SNMP|vm.memory.cached[memCached.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Total memory|<p>MIB: UCD-SNMP-MIB</p><p>Total memory in Bytes</p>|SNMP|vm.memory.total[memTotalReal.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
-|Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|CALCULATED|snmp.vm.memory.available<p>**Expression**:</p>`last(vm.memory.free[memAvailReal.0])+last(vm.memory.buffers[memBuffer.0])+last(vm.memory.cached[memCached.0])`|
+|Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|CALCULATED|vm.memory.available[snmp]<p>**Expression**:</p>`last(vm.memory.free[memAvailReal.0])+last(vm.memory.buffers[memBuffer.0])+last(vm.memory.cached[memCached.0])`|
 |Memory|Total swap space|<p>MIB: UCD-SNMP-MIB</p><p>The total amount of swap space configured for this host.</p>|SNMP|system.swap.total[memTotalSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Free swap space|<p>MIB: UCD-SNMP-MIB</p><p>The amount of swap space currently unused or available.</p>|SNMP|system.swap.free[memAvailSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
-|Memory|Free swap space in %|<p>-</p>|CALCULATED|snmp.system.swap.pfree<p>**Expression**:</p>`((last(system.swap.free[memAvailSwap.0]))/last(system.swap.total[memTotalSwap.0]))*100`|
+|Memory|Free swap space in %|<p>-</p>|CALCULATED|system.swap.pfree[snmp]<p>**Expression**:</p>`((last(system.swap.free[memAvailSwap.0]))/last(system.swap.total[memTotalSwap.0]))*100`|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:snmp.vm.memory.available.last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux Memory SNMPv2:vm.memory.total[memTotalReal.0].last(0)}>0`|AVERAGE||
-|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:snmp.system.swap.pfree.last()}<{$SWAP_PFREE_WARN} and {Template OS Linux Memory SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING||
+|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.available[snmp].last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux Memory SNMPv2:vm.memory.total[memTotalReal.0].last(0)}>0`|AVERAGE||
+|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[snmp].last()}<{$SWAP_PFREE_WARN} and {Template OS Linux Memory SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING||
 
 ## Feedback
 
@@ -76,7 +76,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Block devices discovery|<p>-</p>|SNMP|snmp.vfs.dev.discovery<p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
+|Block devices discovery|<p>-</p>|SNMP|vfs.dev.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -116,7 +116,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|CPU discovery|<p>This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.</p>|DEPENDENT|snmp.cpu.discovery<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of CPU cores return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}":""}]) `</p>|
+|CPU discovery|<p>This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.</p>|DEPENDENT|cpu.discovery[snmp]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of CPU cores return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}":""}]) `</p>|
 
 ## Items collected
 
@@ -125,7 +125,7 @@ There are no template links in this template.
 |CPU|Load average (1m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg1[laLoad.1]|
 |CPU|Load average (5m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg5[laLoad.2]|
 |CPU|Load average (15m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg15[laLoad.3]|
-|CPU|Number of CPUs|<p>MIB: HOST-RESOURCES-MIB</p><p>Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD</p>|SNMP|snmp.system.cpu.num<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of cores return JSON.parse(value).length; `</p>|
+|CPU|Number of CPUs|<p>MIB: HOST-RESOURCES-MIB</p><p>Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD</p>|SNMP|system.cpu.num[snmp]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of cores return JSON.parse(value).length; `</p>|
 |CPU|Interrupts per second|<p>-</p>|SNMP|system.cpu.intr[ssRawInterrupts.0]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
 |CPU|Context switches per second|<p>-</p>|SNMP|system.cpu.switches[ssRawContexts.0]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
 |CPU|CPU idle time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent doing nothing.</p>|SNMP|system.cpu.idle[ssCpuRawIdle.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
@@ -143,7 +143,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux CPU SNMPv2:snmp.system.cpu.num.last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
+|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux CPU SNMPv2:system.cpu.num[snmp].last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
 
 ## Feedback
 
@@ -182,7 +182,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Mounted filesystem discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter</p>|SNMP|snmp.vfs.fs.discovery<p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
+|Mounted filesystem discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter</p>|SNMP|vfs.fs.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 

@@ -39,7 +39,7 @@ templates:
             params: "1024"
       - _prototype: vm.memory.available
         type: CALCULATED
-        key: snmp.vm.memory.available
+        key: vm.memory.available[snmp]
         expressionFormula: last(__vm.memory.free__)+last(__vm.memory.buffers__)+last(__vm.memory.cached__)
       - _prototype: system.swap.total
         oid: 1.3.6.1.4.1.2021.4.3.0
@@ -60,7 +60,7 @@ templates:
           - type: MULTIPLIER
             params: "1024"
       - _prototype: system.swap.pfree
-        key: snmp.system.swap.pfree
+        key: system.swap.pfree[snmp]
         type: CALCULATED
 
   - name: Template OS Linux VFS.DEV
@@ -77,7 +77,7 @@ templates:
 
     discovery_rules:
       - name: Block devices discovery
-        key: snmp.vfs.dev.discovery
+        key: vfs.dev.discovery[snmp]
         type: SNMP
         oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
         filter:
@@ -128,7 +128,7 @@ templates:
       - name: CPU discovery
         type: DEPENDENT
         master_item: system.cpu.num
-        key: snmp.cpu.discovery
+        key: cpu.discovery[snmp]
         description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.
         _singleton: true
         _zbx_ver: "4.2"
@@ -256,7 +256,6 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
     items:
-    items:
       - _prototype: system.cpu.load.avg1
         oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-1"]'
         type: SNMP
@@ -278,7 +277,7 @@ templates:
       - _prototype: system.cpu.num
         oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
         type: SNMP
-        key: snmp.system.cpu.num
+        key: system.cpu.num[snmp]
         _mib: HOST-RESOURCES-MIB
         _zbx_ver: "4.2"
         preprocessing:
@@ -326,10 +325,9 @@ templates:
           This macro is used in filesystems discovery. Can be overriden on the host
           or linked template level
     discovery_rules:
-
       - name: Mounted filesystem discovery
         oid: "discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
-        key: "snmp.vfs.fs.discovery"
+        key: "vfs.fs.discovery[snmp]"
         description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
         # https://tools.ietf.org/html/rfc2790 hrFSTypes may be used in discovery too
         filter:
@@ -435,16 +433,16 @@ templates:
         screen_items:
           - resourcetype: GRAPH
             resource:
-            - name: System load
+              - name: System load
             x: 0
             y: 0
           - resourcetype: GRAPH_PROTOTYPE
             resource:
-            - name: CPU usage{#SINGLETON}
+              - name: CPU usage{#SINGLETON}
             x: 1
             y: 0
           - resourcetype: GRAPH
             resource:
-            - name: Memory usage
+              - name: Memory usage
             x: 0
             y: 1
