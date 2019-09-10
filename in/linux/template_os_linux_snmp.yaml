@@ -281,8 +281,6 @@ templates:
             _snmpObject: diskIOLA1.{#SNMPINDEX}
             _mib: UCD-DISKIO-MIB
             _vendor_description: The 1 minute average load of disk (%)
-
-      
       - name: Mounted filesystem discovery
         oid: "discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
         key: "snmp.vfs.fs.discovery"
@@ -407,3 +405,18 @@ templates:
       - _prototype: system.swap.pfree
         key: snmp.system.swap.pfree
         type: CALCULATED
+    screens:
+      - name: System performance
+        hsize: 2
+        vsize: 4
+        screen_items:
+          - resourcetype: GRAPH
+            resource:
+            - name: System load
+            x: 0
+            y: 0
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+            - name: CPU usage{#SINGLETON}
+            x: 1
+            y: 0
