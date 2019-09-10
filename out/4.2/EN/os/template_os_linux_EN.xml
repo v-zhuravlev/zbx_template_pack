@@ -9,175 +9,20 @@
    </groups>
    <templates>
       <template>
-         <template>Template OS Linux Zabbix agent</template>
-         <name>Template OS Linux Zabbix agent</name>
-         <description>Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.&#13;
-&#13;
-Known Issues:&#13;
-&#13;
-  Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
-&#13;
-Template tooling version used: 0.24beta</description>
+         <template>Template OS Linux CPU by Zabbix agent</template>
+         <name>Template OS Linux CPU by Zabbix agent</name>
+         <description>Template tooling version used: 0.25beta</description>
          <groups>
             <group>
-               <name>Templates/Operating systems</name>
+               <name>Templates/Modules</name>
             </group>
          </groups>
          <applications>
             <application>
                <name>CPU</name>
             </application>
-            <application>
-               <name>Filesystems</name>
-            </application>
-            <application>
-               <name>Memory</name>
-            </application>
-            <application>
-               <name>Network interfaces</name>
-            </application>
-            <application>
-               <name>Status</name>
-            </application>
-            <application>
-               <name>Storage</name>
-            </application>
-            <application>
-               <name>Zabbix raw items</name>
-            </application>
          </applications>
          <items>
-            <item>
-               <name>System uptime</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.uptime</key>
-               <delay>30s</delay>
-               <history>2w</history>
-               <trends>0d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>uptime</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Status</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Get /proc/diskstats</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>vfs.file.contents[/proc/diskstats]</key>
-               <delay>1m</delay>
-               <history>1h</history>
-               <trends>0</trends>
-               <status>0</status>
-               <value_type>4</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Zabbix raw items</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>21</type>
-                     <params>var parsed = value.split("\n").reduce(function(acc, x, i) {
-  acc["values"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)
-  acc["lld"].push({"{#DEVNAME}":x.split(/ +/)[3]});
-  return acc;
-}, {"values":{}, "lld": []});
-
-return JSON.stringify(parsed);</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
             <item>
                <name>Load average (1m avg per core)</name>
                <type>0</type>
@@ -1146,1112 +991,39 @@ return (100 - value)</params>
                <verify_host>0</verify_host>
                <master_item/>
             </item>
-            <item>
-               <name>Total memory</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>vm.memory.size[total]</key>
-               <delay>15m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>Total memory in Bytes</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Memory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Available memory</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>vm.memory.size[available]</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Memory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Total swap space</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.swap.size[,total]</key>
-               <delay>15m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Memory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Free swap space</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.swap.size[,free]</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Memory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Free swap space in %</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.swap.size[,pfree]</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>0</value_type>
-               <allowed_hosts/>
-               <units>%</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params>((last(system.swap.size[,free]))/last(system.swap.size[,total]))*100</params>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Memory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
          </items>
+         <discovery_rules/>
+         <httptests/>
+         <macros>
+            <macro>
+               <macro>{$CPU_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$LOAD_AVG_CRIT}</macro>
+               <value>1.5</value>
+            </macro>
+         </macros>
+         <templates/>
+         <screens/>
+         <tags/>
+      </template>
+      <template>
+         <template>Template OS Linux filesystems by Zabbix agent</template>
+         <name>Template OS Linux filesystems by Zabbix agent</name>
+         <description>Template tooling version used: 0.25beta</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Filesystems</name>
+            </application>
+         </applications>
+         <items/>
          <discovery_rules>
-            <discovery_rule>
-               <name>Network interface discovery</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>net.if.discovery</key>
-               <delay>1h</delay>
-               <status>0</status>
-               <allowed_hosts/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <filter>
-                  <evaltype>1</evaltype>
-                  <formula/>
-                  <conditions>
-                     <condition>
-                        <macro>{#IFNAME}</macro>
-                        <value>@Network interfaces for discovery</value>
-                        <operator>8</operator>
-                        <formulaid>A</formulaid>
-                     </condition>
-                     <condition>
-                        <macro>{#IFNAME}</macro>
-                        <value>^veth[0-9a-z]+$</value>
-                        <operator>9</operator>
-                        <formulaid>B</formulaid>
-                     </condition>
-                  </conditions>
-               </filter>
-               <lifetime>30d</lifetime>
-               <description>Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".&#13;
-Filtering veth interfaces automatically created by Docker.</description>
-               <item_prototypes>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Bits received</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.in["{#IFNAME}"]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>bps</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>10</type>
-                           <params/>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                        <step>
-                           <type>1</type>
-                           <params>8</params>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Bits sent</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.out["{#IFNAME}"]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>bps</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>10</type>
-                           <params/>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                        <step>
-                           <type>1</type>
-                           <params>8</params>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Outbound packets with errors</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.out["{#IFNAME}",errors]</key>
-                     <delay>3m</delay>
-                     <history>1w</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>10</type>
-                           <params/>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Inbound packets with errors</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.in["{#IFNAME}",errors]</key>
-                     <delay>3m</delay>
-                     <history>1w</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>10</type>
-                           <params/>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Outbound packets discarded</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.out["{#IFNAME}",dropped]</key>
-                     <delay>5m</delay>
-                     <history>1w</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>10</type>
-                           <params/>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Inbound packets discarded</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.in["{#IFNAME}",dropped]</key>
-                     <delay>5m</delay>
-                     <history>1w</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>10</type>
-                           <params/>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Operational status</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"]</key>
-                     <delay>1m</delay>
-                     <history>2w</history>
-                     <trends>0d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>Indicates the interface RFC2863 operational state as a string.&#13;
-Possible values are:"unknown", "notpresent", "down", "lowerlayerdown", "testing","dormant", "up".&#13;
-Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</description>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap>
-                        <name>IF-MIB::ifOperStatus</name>
-                     </valuemap>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>21</type>
-                           <params>var newvalue;
-switch(value) {
-  case "up":
-    newvalue = 1;
-    break;
-  case "down":
-    newvalue = 2;
-    break;
-  case "testing":
-    newvalue = 4;
-    break;
-  case "unknown":
-    newvalue = 5;
-    break;
-  case "dormant":
-    newvalue = 6;
-    break;
-  case "notPresent":
-    newvalue = 7;
-    break;
-  default:
-    newvalue = "Problem parsing interface operstate in JS";
-}
-return newvalue;</params>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: Interface type</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>vfs.file.contents["/sys/class/net/{#IFNAME}/type"]</key>
-                     <delay>1h</delay>
-                     <history>1w</history>
-                     <trends>0d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>Indicates the interface protocol type as a decimal value.&#13;
-See include/uapi/linux/if_arp.h for all possible values.&#13;
-Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</description>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap>
-                        <name>Linux::Interface protocol types</name>
-                     </valuemap>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-               </item_prototypes>
-               <trigger_prototypes>
-                  <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
-or {Template OS Linux Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
-                     <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
-and {Template OS Linux Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
-                     <name>Interface {#IFNAME}: High error rate</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
-                     <type>0</type>
-                     <manual_close>1</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>Interface {#IFNAME}: Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
-                     <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
-                     <name>Interface {#IFNAME}: Link down</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Interface is down</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies/>
-                     <tags/>
-                  </trigger_prototype>
-                  <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&lt;0 and {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}&gt;0&#13;
-and&#13;
-({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=6&#13;
-or {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=1)&#13;
-and&#13;
-({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2)</expression>
-                     <recovery_mode>1</recovery_mode>
-                     <recovery_expression>({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&gt;0 and {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].prev()}&gt;0) or&#13;
-({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2)</recovery_expression>
-                     <name>Interface {#IFNAME}: Ethernet has changed to lower speed than it was before</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>1</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
-                     <type>0</type>
-                     <manual_close>1</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>Interface {#IFNAME}: Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
-                        </dependency>
-                     </dependencies>
-                     <tags/>
-                  </trigger_prototype>
-               </trigger_prototypes>
-               <graph_prototypes>
-                  <graph_prototype>
-                     <name>Interface {#IFNAME}: Network traffic</name>
-                     <width>900</width>
-                     <height>200</height>
-                     <yaxismin>0</yaxismin>
-                     <yaxismax>100</yaxismax>
-                     <show_work_period>1</show_work_period>
-                     <show_triggers>1</show_triggers>
-                     <type>0</type>
-                     <show_legend>1</show_legend>
-                     <show_3d>0</show_3d>
-                     <percent_left>0.0000</percent_left>
-                     <percent_right>0.0000</percent_right>
-                     <ymin_type_1>0</ymin_type_1>
-                     <ymax_type_1>0</ymax_type_1>
-                     <ymin_item_1>0</ymin_item_1>
-                     <ymax_item_1>0</ymax_item_1>
-                     <graph_items>
-                        <graph_item>
-                           <sortorder>0</sortorder>
-                           <drawtype>5</drawtype>
-                           <color>1A7C11</color>
-                           <yaxisside>0</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Linux Zabbix agent</host>
-                              <key>net.if.in["{#IFNAME}"]</key>
-                           </item>
-                        </graph_item>
-                        <graph_item>
-                           <sortorder>1</sortorder>
-                           <drawtype>2</drawtype>
-                           <color>2774A4</color>
-                           <yaxisside>0</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Linux Zabbix agent</host>
-                              <key>net.if.out["{#IFNAME}"]</key>
-                           </item>
-                        </graph_item>
-                        <graph_item>
-                           <sortorder>2</sortorder>
-                           <drawtype>0</drawtype>
-                           <color>F63100</color>
-                           <yaxisside>1</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Linux Zabbix agent</host>
-                              <key>net.if.out["{#IFNAME}",errors]</key>
-                           </item>
-                        </graph_item>
-                        <graph_item>
-                           <sortorder>3</sortorder>
-                           <drawtype>0</drawtype>
-                           <color>A54F10</color>
-                           <yaxisside>1</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Linux Zabbix agent</host>
-                              <key>net.if.in["{#IFNAME}",errors]</key>
-                           </item>
-                        </graph_item>
-                        <graph_item>
-                           <sortorder>4</sortorder>
-                           <drawtype>0</drawtype>
-                           <color>FC6EA3</color>
-                           <yaxisside>1</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Linux Zabbix agent</host>
-                              <key>net.if.out["{#IFNAME}",dropped]</key>
-                           </item>
-                        </graph_item>
-                        <graph_item>
-                           <sortorder>5</sortorder>
-                           <drawtype>0</drawtype>
-                           <color>6C59DC</color>
-                           <yaxisside>1</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Linux Zabbix agent</host>
-                              <key>net.if.in["{#IFNAME}",dropped]</key>
-                           </item>
-                        </graph_item>
-                     </graph_items>
-                  </graph_prototype>
-               </graph_prototypes>
-               <host_prototypes/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <lld_macro_paths/>
-               <preprocessing/>
-               <master_item/>
-            </discovery_rule>
             <discovery_rule>
                <name>Mounted filesystem discovery</name>
                <type>0</type>
@@ -2612,8 +1384,8 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
@@ -2634,8 +1406,8 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
-(({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
+(({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})</name>
@@ -2655,15 +1427,15 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
-                           <expression>{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                           <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
@@ -2681,7 +1453,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
@@ -2698,7 +1470,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
-                           <expression>{Template OS Linux Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
+                           <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -2732,7 +1504,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <calc_fnc>9</calc_fnc>
                            <type>2</type>
                            <item>
-                              <host>Template OS Linux Zabbix agent</host>
+                              <host>Template OS Linux filesystems by Zabbix agent</host>
                               <key>vfs.fs.size[{#FSNAME},total]</key>
                            </item>
                         </graph_item>
@@ -2744,7 +1516,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <calc_fnc>9</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Zabbix agent</host>
+                              <host>Template OS Linux filesystems by Zabbix agent</host>
                               <key>vfs.fs.size[{#FSNAME},used]</key>
                            </item>
                         </graph_item>
@@ -2774,6 +1546,465 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <preprocessing/>
                <master_item/>
             </discovery_rule>
+         </discovery_rules>
+         <httptests/>
+         <macros>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
+               <value>.+</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
+               <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
+               <value>^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
+               <value>^\s$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.INODE.PFREE.MIN.CRIT}</macro>
+               <value>10</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.INODE.PFREE.MIN.WARN}</macro>
+               <value>20</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
+               <value>80</value>
+            </macro>
+         </macros>
+         <templates/>
+         <screens/>
+         <tags/>
+      </template>
+      <template>
+         <template>Template OS Linux memory by Zabbix agent</template>
+         <name>Template OS Linux memory by Zabbix agent</name>
+         <description>Template tooling version used: 0.25beta</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Memory</name>
+            </application>
+         </applications>
+         <items>
+            <item>
+               <name>Total memory</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vm.memory.size[total]</key>
+               <delay>15m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Total memory in Bytes</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Available memory</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vm.memory.size[available]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Total swap space</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.swap.size[,total]</key>
+               <delay>15m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Free swap space</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.swap.size[,free]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Free swap space in %</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.swap.size[,pfree]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params>((last(system.swap.size[,free]))/last(system.swap.size[,total]))*100</params>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Memory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+         </items>
+         <discovery_rules/>
+         <httptests/>
+         <macros>
+            <macro>
+               <macro>{$MEMORY_AVAILABLE_MIN}</macro>
+               <value>20M</value>
+            </macro>
+            <macro>
+               <macro>{$SWAP_PFREE_WARN}</macro>
+               <value>50</value>
+            </macro>
+         </macros>
+         <templates/>
+         <screens/>
+         <tags/>
+      </template>
+      <template>
+         <template>Template OS Linux block devices by Zabbix agent</template>
+         <name>Template OS Linux block devices by Zabbix agent</name>
+         <description>Template tooling version used: 0.25beta</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Storage</name>
+            </application>
+            <application>
+               <name>Zabbix raw items</name>
+            </application>
+         </applications>
+         <items>
+            <item>
+               <name>Get /proc/diskstats</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vfs.file.contents[/proc/diskstats]</key>
+               <delay>1m</delay>
+               <history>1h</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>4</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>var parsed = value.split("\n").reduce(function(acc, x, i) {
+  acc["values"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)
+  acc["lld"].push({"{#DEVNAME}":x.split(/ +/)[3]});
+  return acc;
+}, {"values":{}, "lld": []});
+
+return JSON.stringify(parsed);</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+         </items>
+         <discovery_rules>
             <discovery_rule>
                <name>Block devices discovery</name>
                <type>18</type>
@@ -3416,7 +2647,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
+                     <expression>{Template OS Linux block devices by Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux block devices by Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DEVNAME}: Disk read request response are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 5m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 5m)</name>
@@ -3460,7 +2691,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Zabbix agent</host>
+                              <host>Template OS Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.read.rate[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -3472,7 +2703,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Zabbix agent</host>
+                              <host>Template OS Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.write.rate[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -3504,7 +2735,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Zabbix agent</host>
+                              <host>Template OS Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.read.await[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -3516,7 +2747,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Zabbix agent</host>
+                              <host>Template OS Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.write.await[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -3565,34 +2796,6 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$IFCONTROL}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$IF_ERRORS_WARN}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$IF_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$LOAD_AVG_CRIT}</macro>
-               <value>1.5</value>
-            </macro>
-            <macro>
-               <macro>{$MEMORY_AVAILABLE_MIN}</macro>
-               <value>20M</value>
-            </macro>
-            <macro>
-               <macro>{$SWAP_PFREE_WARN}</macro>
-               <value>50</value>
-            </macro>
-            <macro>
                <macro>{$VFS.DEV.DEVNAME.MATCHES}</macro>
                <value>.+</value>
             </macro>
@@ -3608,41 +2811,1032 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <macro>{$VFS.DEV.WRITE.AWAIT.WARN}</macro>
                <value>20</value>
             </macro>
-            <macro>
-               <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
-               <value>.+</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
-               <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
-               <value>^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
-               <value>^\s$</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.INODE.PFREE.MIN.CRIT}</macro>
-               <value>10</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.INODE.PFREE.MIN.WARN}</macro>
-               <value>20</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
-               <value>80</value>
-            </macro>
          </macros>
          <templates/>
          <screens/>
+         <tags/>
+      </template>
+      <template>
+         <template>Template OS Linux network interfaces by Zabbix agent</template>
+         <name>Template OS Linux network interfaces by Zabbix agent</name>
+         <description>Template tooling version used: 0.25beta</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Network interfaces</name>
+            </application>
+         </applications>
+         <items/>
+         <discovery_rules>
+            <discovery_rule>
+               <name>Network interface discovery</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>net.if.discovery</key>
+               <delay>1h</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>1</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#IFNAME}</macro>
+                        <value>@Network interfaces for discovery</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFNAME}</macro>
+                        <value>^veth[0-9a-z]+$</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description>Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".&#13;
+Filtering veth interfaces automatically created by Docker.</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Bits received</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.in["{#IFNAME}"]</key>
+                     <delay>3m</delay>
+                     <history>30d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>bps</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                        <step>
+                           <type>1</type>
+                           <params>8</params>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Bits sent</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.out["{#IFNAME}"]</key>
+                     <delay>3m</delay>
+                     <history>30d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>bps</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                        <step>
+                           <type>1</type>
+                           <params>8</params>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Outbound packets with errors</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.out["{#IFNAME}",errors]</key>
+                     <delay>3m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Inbound packets with errors</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.in["{#IFNAME}",errors]</key>
+                     <delay>3m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Outbound packets discarded</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.out["{#IFNAME}",dropped]</key>
+                     <delay>5m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Inbound packets discarded</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.in["{#IFNAME}",dropped]</key>
+                     <delay>5m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Operational status</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"]</key>
+                     <delay>1m</delay>
+                     <history>2w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>Indicates the interface RFC2863 operational state as a string.&#13;
+Possible values are:"unknown", "notpresent", "down", "lowerlayerdown", "testing","dormant", "up".&#13;
+Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap>
+                        <name>IF-MIB::ifOperStatus</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>21</type>
+                           <params>var newvalue;
+switch(value) {
+  case "up":
+    newvalue = 1;
+    break;
+  case "down":
+    newvalue = 2;
+    break;
+  case "testing":
+    newvalue = 4;
+    break;
+  case "unknown":
+    newvalue = 5;
+    break;
+  case "dormant":
+    newvalue = 6;
+    break;
+  case "notPresent":
+    newvalue = 7;
+    break;
+  default:
+    newvalue = "Problem parsing interface operstate in JS";
+}
+return newvalue;</params>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Interface type</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>vfs.file.contents["/sys/class/net/{#IFNAME}/type"]</key>
+                     <delay>1h</delay>
+                     <history>1w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>Indicates the interface protocol type as a decimal value.&#13;
+See include/uapi/linux/if_arp.h for all possible values.&#13;
+Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap>
+                        <name>Linux::Interface protocol types</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
+or {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
+and {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <name>Interface {#IFNAME}: High error rate</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Interface {#IFNAME}: Link down</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
+                           <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
+                     <name>Interface {#IFNAME}: Link down</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Interface is down</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&lt;0 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}&gt;0&#13;
+and&#13;
+({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=6&#13;
+or {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=1)&#13;
+and&#13;
+({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2)</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&gt;0 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].prev()}&gt;0) or&#13;
+({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2)</recovery_expression>
+                     <name>Interface {#IFNAME}: Ethernet has changed to lower speed than it was before</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Interface {#IFNAME}: Link down</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
+                           <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Interface {#IFNAME}: Network traffic</name>
+                     <width>900</width>
+                     <height>200</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>0</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>0</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>5</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <key>net.if.in["{#IFNAME}"]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>2</drawtype>
+                           <color>2774A4</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <key>net.if.out["{#IFNAME}"]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>2</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>F63100</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <key>net.if.out["{#IFNAME}",errors]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>3</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>A54F10</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <key>net.if.in["{#IFNAME}",errors]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>4</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>FC6EA3</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <key>net.if.out["{#IFNAME}",dropped]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>5</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>6C59DC</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <key>net.if.in["{#IFNAME}",dropped]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
+               <host_prototypes/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <lld_macro_paths/>
+               <preprocessing/>
+               <master_item/>
+            </discovery_rule>
+         </discovery_rules>
+         <httptests/>
+         <macros/>
+         <templates/>
+         <screens/>
+         <tags/>
+      </template>
+      <template>
+         <template>Template OS Linux by Zabbix agent</template>
+         <name>Template OS Linux by Zabbix agent</name>
+         <description>Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.&#13;
+&#13;
+Known Issues:&#13;
+&#13;
+  Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
+&#13;
+Template tooling version used: 0.25beta</description>
+         <groups>
+            <group>
+               <name>Templates/Operating systems</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Status</name>
+            </application>
+         </applications>
+         <items>
+            <item>
+               <name>System uptime</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.uptime</key>
+               <delay>30s</delay>
+               <history>2w</history>
+               <trends>0d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>uptime</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Status</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+         </items>
+         <discovery_rules/>
+         <httptests/>
+         <macros>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
+            </macro>
+            <macro>
+               <macro>{$IF_ERRORS_WARN}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$IF_UTIL_MAX}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
+         <templates>
+            <template>
+               <name>Template OS Linux CPU by Zabbix agent</name>
+            </template>
+            <template>
+               <name>Template OS Linux block devices by Zabbix agent</name>
+            </template>
+            <template>
+               <name>Template OS Linux filesystems by Zabbix agent</name>
+            </template>
+            <template>
+               <name>Template OS Linux memory by Zabbix agent</name>
+            </template>
+            <template>
+               <name>Template OS Linux network interfaces by Zabbix agent</name>
+            </template>
+         </templates>
+         <screens>
+            <screen>
+               <name>System performance</name>
+               <hsize>2</hsize>
+               <vsize>4</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>System load</name>
+                        <host>Template OS Linux by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>1</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>CPU utilization</name>
+                        <host>Template OS Linux by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>0</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Memory usage</name>
+                        <host>Template OS Linux by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+               </screen_items>
+            </screen>
+         </screens>
          <tags/>
       </template>
    </templates>
@@ -3673,7 +3867,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.load[percpu,avg1]</key>
                </item>
             </graph_item>
@@ -3685,7 +3879,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.load[percpu,avg5]</key>
                </item>
             </graph_item>
@@ -3697,7 +3891,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.load[percpu,avg15]</key>
                </item>
             </graph_item>
@@ -3729,7 +3923,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util</key>
                </item>
             </graph_item>
@@ -3761,7 +3955,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,system]</key>
                </item>
             </graph_item>
@@ -3773,7 +3967,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,user]</key>
                </item>
             </graph_item>
@@ -3785,7 +3979,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,nice]</key>
                </item>
             </graph_item>
@@ -3797,7 +3991,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,iowait]</key>
                </item>
             </graph_item>
@@ -3809,7 +4003,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,steal]</key>
                </item>
             </graph_item>
@@ -3821,7 +4015,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,interrupt]</key>
                </item>
             </graph_item>
@@ -3833,7 +4027,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,softirq]</key>
                </item>
             </graph_item>
@@ -3845,7 +4039,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,guest]</key>
                </item>
             </graph_item>
@@ -3857,7 +4051,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,guest_nice]</key>
                </item>
             </graph_item>
@@ -3889,7 +4083,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.switches</key>
                </item>
             </graph_item>
@@ -3901,7 +4095,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
                   <key>system.cpu.intr</key>
                </item>
             </graph_item>
@@ -3933,7 +4127,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux memory by Zabbix agent</host>
                   <key>vm.memory.size[total]</key>
                </item>
             </graph_item>
@@ -3945,7 +4139,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Zabbix agent</host>
+                  <host>Template OS Linux memory by Zabbix agent</host>
                   <key>vm.memory.size[available]</key>
                </item>
             </graph_item>
@@ -3954,24 +4148,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template OS Linux Zabbix agent:system.uptime.last()}&lt;10m</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>{HOST.NAME} has been restarted (uptime &lt; 10m)</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>2</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The device uptime is less than 10 minutes</description>
-         <type>0</type>
-         <manual_close>1</manual_close>
-         <dependencies/>
-         <tags/>
-      </trigger>
-      <trigger>
-         <expression>{Template OS Linux Zabbix agent:system.cpu.load[percpu,avg1].avg(5m)}&gt;{$LOAD_AVG_CRIT}</expression>
+         <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.load[percpu,avg1].avg(5m)}&gt;{$LOAD_AVG_CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Load average is too high</name>
@@ -3987,7 +4164,7 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux Zabbix agent:vm.memory.size[available].last(0)}&lt;{$MEMORY_AVAILABLE_MIN} and {Template OS Linux Zabbix agent:vm.memory.size[total].last(0)}&gt;0</expression>
+         <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[available].last(0)}&lt;{$MEMORY_AVAILABLE_MIN} and {Template OS Linux memory by Zabbix agent:vm.memory.size[total].last(0)}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})</name>
@@ -4003,7 +4180,7 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux Zabbix agent:system.swap.size[,pfree].last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Linux Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
+         <expression>{Template OS Linux memory by Zabbix agent:system.swap.size[,pfree].last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Linux memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})</name>
@@ -4016,6 +4193,23 @@ The device uptime is less than 10 minutes</description>
 This trigger is ignored, if there is no swap configured</description>
          <type>0</type>
          <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Linux by Zabbix agent:system.uptime.last()}&lt;10m</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>{HOST.NAME} has been restarted (uptime &lt; 10m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The device uptime is less than 10 minutes</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
          <dependencies/>
          <tags/>
       </trigger>

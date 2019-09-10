@@ -1,48 +1,134 @@
 {
     "templates": [
         {
+            "name": "Template OS Linux CPU by Zabbix agent",
             "_zbx_ver": "4.2",
-            "name": "Template OS Linux Zabbix agent",
-            "_classes": [
-                "OS",
-                "PERFORMANCE",
-                "IF_MIB"
-            ],
-            "_documentation": {
-                "_setup": "Install Zabbix agent to Linux OS according to Zabbix documentation.",
-                "_issues": [
-                    {
-                        "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
-                    }
-                ],
-                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
-            },
-            "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
             "macros": [
                 {
                     "macro": "{$LOAD_AVG_CRIT}",
                     "value": "1.5"
+                }
+            ],
+            "items": [
+                //CPU
+                {
+                    "_prototype": "system.cpu.load.avg1",
+                    "key": "system.cpu.load[percpu,avg1]",
+                    "type": "ZABBIX_PASSIVE",
+                    "name": "Load average (1m avg per core)",
+                    "description": "The load average is calculated as system CPU load divided by number of CPU cores.",
+                    "triggers": [
+                        {
+                            "_id": "trigger.cpu.load.warn",
+                            "name": "Load average is too high",
+                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$LOAD_AVG_CRIT}",
+                            "priority": "AVERAGE"
+                        }
+                    ]
                 },
                 {
-                    "macro": "{$VFS.DEV.READ.AWAIT.WARN}",
-                    "value": "20",
-                    "_description": "Disk read average response time (in ms) before the trigger would fire"
+                    "_prototype": "system.cpu.load.avg5",
+                    "key": "system.cpu.load[percpu,avg5]",
+                    "type": "ZABBIX_PASSIVE",
+                    "name": "Load average (5m avg per core)",
+                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
                 },
                 {
-                    "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
-                    "value": "20",
-                    "_description": "Disk write average response time (in ms) before the trigger would fire"
+                    "_prototype": "system.cpu.load.avg15",
+                    "key": "system.cpu.load[percpu,avg15]",
+                    "type": "ZABBIX_PASSIVE",
+                    "name": "Load average (15m avg per core)",
+                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
                 },
                 {
-                    "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
-                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)",
-                    "_description": "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+                    "_prototype": "system.cpu.util",
+                    "type": "DEPENDENT",
+                    "master_item": "system.cpu.idle",
+                    "key": "system.cpu.util",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//Calculate utilization\nreturn (100 - value)"
+                        },
+                    ],
+                    "triggers": []
                 },
                 {
-                    "macro": "{$VFS.DEV.DEVNAME.MATCHES}",
-                    "value": ".+",
-                    "_description": "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+                    "_prototype": "system.cpu.idle",
+                    "key": "system.cpu.util[,idle]",
+                    "type": "ZABBIX_PASSIVE"
                 },
+                {
+                    "_prototype": "system.cpu.system",
+                    "key": "system.cpu.util[,system]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.user",
+                    "key": "system.cpu.util[,user]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.nice",
+                    "key": "system.cpu.util[,nice]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.iowait",
+                    "key": "system.cpu.util[,iowait]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.steal",
+                    "key": "system.cpu.util[,steal]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.interrupt",
+                    "key": "system.cpu.util[,interrupt]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.softirq",
+                    "key": "system.cpu.util[,softirq]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.guest",
+                    "key": "system.cpu.util[,guest]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.guest_nice",
+                    "key": "system.cpu.util[,guest_nice]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.switches",
+                    "key": "system.cpu.switches",
+                    "type": "ZABBIX_PASSIVE",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.intr",
+                    "key": "system.cpu.intr",
+                    "type": "ZABBIX_PASSIVE",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Template OS Linux filesystems by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [
                 {
                     "macro": "{$VFS.FS.FSNAME.NOT_MATCHES}",
                     "value": "^(/dev|/sys|/run|/proc|.+/shm$)",
@@ -65,148 +151,6 @@
                 }
             ],
             "discovery_rules": [
-                {
-                    "name": "Network interface discovery",
-                    "type": "ZABBIX_PASSIVE",
-                    "key": "net.if.discovery",
-                    "description": "Discovery of network interfaces as defined in global regular expression \"Network interfaces for discovery\".\nFiltering veth interfaces automatically created by Docker.",
-                    "filter": {
-                        "evaltype": "AND",
-                        "conditions": [
-                            {
-                                //TODO remove global regex in filter
-                                "macro": "{#IFNAME}",
-                                "value": "@Network interfaces for discovery",
-                                "formulaid": "A",
-                            },
-                            {
-                                //filter out docker veth links
-                                "macro": "{#IFNAME}",
-                                "value": "^veth[0-9a-z]+$",
-                                "operator": "NOT_MATCHES_REGEX",
-                                "formulaid": "B"
-                            }
-                        ],
-                    },
-                    "items": [
-                        {
-                            "_prototype": "net.if.in",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.in[\"{#IFNAME}\"]",
-                            //removing trigger if.util_high since there is no net.if.speed to evaluate it properly.
-                            "triggers": [],
-                            "_vendor_description": ""
-                        },
-                        {
-                            "_prototype": "net.if.out",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.out[\"{#IFNAME}\"]",
-                            "_vendor_description": ""
-                        },
-                        {
-                            "_prototype": "net.if.out.errors",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.out[\"{#IFNAME}\",errors]",
-                            "_vendor_description": ""
-                        },
-                        {
-                            "_prototype": "net.if.in.errors",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.in[\"{#IFNAME}\",errors]",
-                            "_vendor_description": ""
-                        },
-                        {
-                            "_prototype": "net.if.out.discards",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.out[\"{#IFNAME}\",dropped]",
-                            "_vendor_description": ""
-                        },
-                        {
-                            "_prototype": "net.if.in.discards",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "net.if.in[\"{#IFNAME}\",dropped]",
-                            "_vendor_description": ""
-                        },
-                        {
-                            "_prototype": "net.if.status",
-                            "type": "ZABBIX_PASSIVE",
-                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/operstate\"]",
-                            "_resource": "Interface {#IFNAME}",
-                            "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
-                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
-                            "preprocessing": [
-                                /*
-                                var newvalue;
-                                switch(value) {
-                                case "up":
-                                    newvalue = 1;
-                                    break;
-                                case "down":
-                                    newvalue = 2;
-                                    break;
-                                case "testing":
-                                    newvalue = 4;
-                                    break;
-                                case "unknown":
-                                    newvalue = 5;
-                                    break;
-                                case "dormant":
-                                    newvalue = 6;
-                                    break;
-                                case "notPresent":
-                                    newvalue = 7;
-                                    break;
-                                default:
-                                    newvalue = "Problem parsing interface operstate in JS";
-                                }
-                                return newvalue;
-                                */
-                                {
-                                    "type": "JAVASCRIPT",
-                                    "params": "var newvalue;\nswitch(value) {\n  case \"up\":\n    newvalue = 1;\n    break;\n  case \"down\":\n    newvalue = 2;\n    break;\n  case \"testing\":\n    newvalue = 4;\n    break;\n  case \"unknown\":\n    newvalue = 5;\n    break;\n  case \"dormant\":\n    newvalue = 6;\n    break;\n  case \"notPresent\":\n    newvalue = 7;\n    break;\n  default:\n    newvalue = \"Problem parsing interface operstate in JS\";\n}\nreturn newvalue;"
-                                }
-                            ]
-                        },
-                        {
-                            "_prototype": "net.if.type",
-                            "type": "ZABBIX_PASSIVE",
-                            "_resource": "Interface {#IFNAME}",
-                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/type\"]",
-                            "_vendor_description": "Indicates the interface protocol type as a decimal value.\nSee include/uapi/linux/if_arp.h for all possible values.",
-                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
-                            "value_map": "Linux::Interface protocol types",
-                            "triggers": [
-                                {
-                                    "_prototype": "trigger.if.speed.not_max",
-                                    "expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand\n({TEMPLATE_NAME:__net.if.type__.last()}=6\nor {TEMPLATE_NAME:__net.if.type__.last()}=1)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
-                                }
-                            ]
-                        }
-                        // add these metrics
-                        // net.if.duplex is ethernet only
-                        // {
-                        //     "_prototype": "net.if.duplex",
-                        //     "type": "ZABBIX_PASSIVE",
-                        //     "_resource": "Interface {#IFNAME}",
-                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/duplex\"]",
-                        //     "_vendor_description": "Indicates the interface latest or current duplex value. Possible\nvalues are:\nhalf: half duplex\nfull: full duplex\n\nNote: This attribute is only valid for interfaces that implement\nthe ethtool get_link_ksettings method (mostly Ethernet)."
-                        // }
-                        // unable to add net.if.speed, since sometimes(for eth like bridges...) it return "File is too large for this check."
-                        // {
-                        //     "_prototype": "net.if.speed",
-                        //     "type": "ZABBIX_PASSIVE",
-                        //     "_resource": "Interface {#IFNAME}",
-                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/speed\"]",
-                        //     "_vendor_description": "Indicates the interface latest or current speed value.\nValue is an integer representing the link speed in Mbits/sec. \nNote: this attribute is only valid for interfaces that implement \nthe ethtool get_link_ksettings method (mostly Ethernet)."
-                        // },
-                    ]
-                },
                 {
                     "name": "Mounted filesystem discovery",
                     "key": "vfs.fs.discovery",
@@ -284,6 +228,68 @@
                         }
                     ]
                 },
+            ]
+        },
+        {
+            "name": "Template OS Linux memory by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [],
+            "items": [
+                //MEMORY
+                {
+                    "_prototype": "vm.memory.total",
+                    "key": "vm.memory.size[total]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "vm.memory.available",
+                    "key": "vm.memory.size[available]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                //SWAP,
+                {
+                    "_prototype": "system.swap.total",
+                    "key": "system.swap.size[,total]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.swap.free",
+                    "key": "system.swap.size[,free]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.swap.pfree",
+                    "key": "system.swap.size[,pfree]",
+                    "type": "ZABBIX_PASSIVE"
+                }
+            ]
+        },
+        {
+            "name": "Template OS Linux block devices by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [
+                {
+                    "macro": "{$VFS.DEV.READ.AWAIT.WARN}",
+                    "value": "20",
+                    "_description": "Disk read average response time (in ms) before the trigger would fire"
+                },
+                {
+                    "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
+                    "value": "20",
+                    "_description": "Disk write average response time (in ms) before the trigger would fire"
+                },
+                {
+                    "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
+                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)",
+                    "_description": "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.DEV.DEVNAME.MATCHES}",
+                    "value": ".+",
+                    "_description": "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+                },
+            ],
+            "discovery_rules": [
                 {
                     "name": "Block devices discovery",
                     "key": "vfs.dev.discovery",
@@ -474,6 +480,199 @@
             ],
             "items": [
                 {
+                    //master item for proc diskstats
+                    "_id": "vfs.dev.diskstats",
+                    "key": "vfs.file.contents[/proc/diskstats]",
+                    "type": "ZABBIX_PASSIVE",
+                    "valueType": "TEXT",
+                    "name": "Get /proc/diskstats",
+                    "_group": "Zabbix_raw_items",
+                    "update": "1m",
+                    "history": "1h",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "var parsed = value.split(\"\\n\").reduce(function(acc, x, i) {\n  acc[\"values\"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)\n  acc[\"lld\"].push({\"{#DEVNAME}\":x.split(/ +/)[3]});\n  return acc;\n}, {\"values\":{}, \"lld\": []});\n\nreturn JSON.stringify(parsed);"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Template OS Linux network interfaces by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "discovery_rules": [
+                {
+                    "name": "Network interface discovery",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "net.if.discovery",
+                    "description": "Discovery of network interfaces as defined in global regular expression \"Network interfaces for discovery\".\nFiltering veth interfaces automatically created by Docker.",
+                    "filter": {
+                        "evaltype": "AND",
+                        "conditions": [
+                            {
+                                //TODO remove global regex in filter
+                                "macro": "{#IFNAME}",
+                                "value": "@Network interfaces for discovery",
+                                "formulaid": "A",
+                            },
+                            {
+                                //filter out docker veth links
+                                "macro": "{#IFNAME}",
+                                "value": "^veth[0-9a-z]+$",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            }
+                        ],
+                    },
+                    "items": [
+                        {
+                            "_prototype": "net.if.in",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\"]",
+                            //removing trigger if.util_high since there is no net.if.speed to evaluate it properly.
+                            "triggers": [],
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.out",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\"]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.out.errors",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\",errors]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.in.errors",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\",errors]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.out.discards",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\",dropped]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.in.discards",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\",dropped]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.status",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/operstate\"]",
+                            "_resource": "Interface {#IFNAME}",
+                            "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
+                            "preprocessing": [
+                                /*
+                                var newvalue;
+                                switch(value) {
+                                case "up":
+                                    newvalue = 1;
+                                    break;
+                                case "down":
+                                    newvalue = 2;
+                                    break;
+                                case "testing":
+                                    newvalue = 4;
+                                    break;
+                                case "unknown":
+                                    newvalue = 5;
+                                    break;
+                                case "dormant":
+                                    newvalue = 6;
+                                    break;
+                                case "notPresent":
+                                    newvalue = 7;
+                                    break;
+                                default:
+                                    newvalue = "Problem parsing interface operstate in JS";
+                                }
+                                return newvalue;
+                                */
+                                {
+                                    "type": "JAVASCRIPT",
+                                    "params": "var newvalue;\nswitch(value) {\n  case \"up\":\n    newvalue = 1;\n    break;\n  case \"down\":\n    newvalue = 2;\n    break;\n  case \"testing\":\n    newvalue = 4;\n    break;\n  case \"unknown\":\n    newvalue = 5;\n    break;\n  case \"dormant\":\n    newvalue = 6;\n    break;\n  case \"notPresent\":\n    newvalue = 7;\n    break;\n  default:\n    newvalue = \"Problem parsing interface operstate in JS\";\n}\nreturn newvalue;"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.type",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/type\"]",
+                            "_vendor_description": "Indicates the interface protocol type as a decimal value.\nSee include/uapi/linux/if_arp.h for all possible values.",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
+                            "value_map": "Linux::Interface protocol types",
+                            "triggers": [
+                                {
+                                    "_prototype": "trigger.if.speed.not_max",
+                                    "expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand\n({TEMPLATE_NAME:__net.if.type__.last()}=6\nor {TEMPLATE_NAME:__net.if.type__.last()}=1)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
+                                }
+                            ]
+                        }
+                        // add these metrics
+                        // net.if.duplex is ethernet only
+                        // {
+                        //     "_prototype": "net.if.duplex",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "_resource": "Interface {#IFNAME}",
+                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/duplex\"]",
+                        //     "_vendor_description": "Indicates the interface latest or current duplex value. Possible\nvalues are:\nhalf: half duplex\nfull: full duplex\n\nNote: This attribute is only valid for interfaces that implement\nthe ethtool get_link_ksettings method (mostly Ethernet)."
+                        // }
+                        // unable to add net.if.speed, since sometimes(for eth like bridges...) it return "File is too large for this check."
+                        // {
+                        //     "_prototype": "net.if.speed",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "_resource": "Interface {#IFNAME}",
+                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/speed\"]",
+                        //     "_vendor_description": "Indicates the interface latest or current speed value.\nValue is an integer representing the link speed in Mbits/sec. \nNote: this attribute is only valid for interfaces that implement \nthe ethtool get_link_ksettings method (mostly Ethernet)."
+                        // },
+                    ]
+                }
+            ]
+        },
+        {
+            "_zbx_ver": "4.2",
+            "name": "Template OS Linux by Zabbix agent",
+            "_classes": [
+                "OS",
+                "PERFORMANCE",
+                "IF_MIB"
+            ],
+            "templates": [
+                "Template OS Linux CPU by Zabbix agent",
+                "Template OS Linux memory by Zabbix agent",
+                "Template OS Linux filesystems by Zabbix agent",
+                "Template OS Linux block devices by Zabbix agent",
+                "Template OS Linux network interfaces by Zabbix agent"
+            ],
+            "_documentation": {
+                "_setup": "Install Zabbix agent to Linux OS according to Zabbix documentation.",
+                "_issues": [
+                    {
+                        "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
+                    }
+                ],
+                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
+            },
+            "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
+            "items": [
+                {
                     "_prototype": "system.uptime",
                     "type": "ZABBIX_PASSIVE",
                     "key": "system.uptime",
@@ -490,162 +689,44 @@
                         }
                     ]
                 },
+            ],
+            "screens": [
                 {
-                    //master item for proc diskstats
-                    "_id": "vfs.dev.diskstats",
-                    "key": "vfs.file.contents[/proc/diskstats]",
-                    "type": "ZABBIX_PASSIVE",
-                    "valueType": "TEXT",
-                    "name": "Get /proc/diskstats",
-                    "_group": "Zabbix_raw_items",
-                    "update": "1m",
-                    "history": "1h",
-                    "preprocessing": [
+                    "name": "System performance",
+                    "hsize": 2,
+                    "vsize": 4,
+                    "screen_items": [
                         {
-                            "type": "JAVASCRIPT",
-                            "params": "var parsed = value.split(\"\\n\").reduce(function(acc, x, i) {\n  acc[\"values\"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)\n  acc[\"lld\"].push({\"{#DEVNAME}\":x.split(/ +/)[3]});\n  return acc;\n}, {\"values\":{}, \"lld\": []});\n\nreturn JSON.stringify(parsed);"
-                        }
-                    ]
-                },
-                //CPU
-                {
-                    "_prototype": "system.cpu.load.avg1",
-                    "key": "system.cpu.load[percpu,avg1]",
-                    "type": "ZABBIX_PASSIVE",
-                    "name": "Load average (1m avg per core)",
-                    "description": "The load average is calculated as system CPU load divided by number of CPU cores.",
-                    "triggers": [
-                        {
-                            "_id": "trigger.cpu.load.warn",
-                            "name": "Load average is too high",
-                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$LOAD_AVG_CRIT}",
-                            "priority": "AVERAGE"
-                        }
-                    ]
-                },
-                {
-                    "_prototype": "system.cpu.load.avg5",
-                    "key": "system.cpu.load[percpu,avg5]",
-                    "type": "ZABBIX_PASSIVE",
-                    "name": "Load average (5m avg per core)",
-                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
-                },
-                {
-                    "_prototype": "system.cpu.load.avg15",
-                    "key": "system.cpu.load[percpu,avg15]",
-                    "type": "ZABBIX_PASSIVE",
-                    "name": "Load average (15m avg per core)",
-                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
-                },
-                {
-                    "_prototype": "system.cpu.util",
-                    "type": "DEPENDENT",
-                    "master_item": "system.cpu.idle",
-                    "key": "system.cpu.util",
-                    "preprocessing": [
-                        {
-                            "type": "JAVASCRIPT",
-                            "params": "//Calculate utilization\nreturn (100 - value)"
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "System load"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 0
                         },
-                    ],
-                    "triggers": []
-                },
-                {
-                    "_prototype": "system.cpu.idle",
-                    "key": "system.cpu.util[,idle]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.system",
-                    "key": "system.cpu.util[,system]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.user",
-                    "key": "system.cpu.util[,user]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.nice",
-                    "key": "system.cpu.util[,nice]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.iowait",
-                    "key": "system.cpu.util[,iowait]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.steal",
-                    "key": "system.cpu.util[,steal]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.interrupt",
-                    "key": "system.cpu.util[,interrupt]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.softirq",
-                    "key": "system.cpu.util[,softirq]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.guest",
-                    "key": "system.cpu.util[,guest]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.guest_nice",
-                    "key": "system.cpu.util[,guest_nice]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.cpu.switches",
-                    "key": "system.cpu.switches",
-                    "type": "ZABBIX_PASSIVE",
-                    "preprocessing": [
                         {
-                            "type": "CHANGE_PER_SECOND"
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "CPU utilization"
+                                }
+                            ],
+                            "x": 1,
+                            "y": 0
+                        },
+                        {
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "Memory usage"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 1
                         }
                     ]
-                },
-                {
-                    "_prototype": "system.cpu.intr",
-                    "key": "system.cpu.intr",
-                    "type": "ZABBIX_PASSIVE",
-                    "preprocessing": [
-                        {
-                            "type": "CHANGE_PER_SECOND"
-                        }
-                    ]
-                },
-                //MEMORY
-                {
-                    "_prototype": "vm.memory.total",
-                    "key": "vm.memory.size[total]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "vm.memory.available",
-                    "key": "vm.memory.size[available]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                //SWAP,
-                {
-                    "_prototype": "system.swap.total",
-                    "key": "system.swap.size[,total]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.swap.free",
-                    "key": "system.swap.size[,free]",
-                    "type": "ZABBIX_PASSIVE"
-                },
-                {
-                    "_prototype": "system.swap.pfree",
-                    "key": "system.swap.size[,pfree]",
-                    "type": "ZABBIX_PASSIVE"
                 }
             ]
         }
