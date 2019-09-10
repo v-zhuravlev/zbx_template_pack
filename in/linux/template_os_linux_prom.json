@@ -89,7 +89,7 @@
                     "name": "Network interface discovery",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
-                    "key": "node_exporter.net.if.discovery",
+                    "key": "net.if.discovery[node_exporter]",
                     "description": "Discovery of network interfaces as defined in global regular expression \"Network interfaces for discovery\".\nFiltering:\n - interfaces with operstate != 'up'.\n - veth interfaces automatically created by Docker.",
                     "preprocessing": [
                         {
@@ -145,7 +145,7 @@
                             "_prototype": "net.if.in",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.in[\"{#IFNAME}\"]",
+                            "key": "net.if.in[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "value_type": "FLOAT",
                             "preprocessing": [
@@ -166,7 +166,7 @@
                             "_prototype": "net.if.out",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.out[\"{#IFNAME}\"]",
+                            "key": "net.if.out[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "value_type": "FLOAT",
                             "preprocessing": [
@@ -187,7 +187,7 @@
                             "_prototype": "net.if.out.errors",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.out.errors[\"{#IFNAME}\"]",
+                            "key": "net.if.out.errors[node_exporter\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "value_type": "FLOAT",
                             "preprocessing": [
@@ -204,7 +204,7 @@
                             "_prototype": "net.if.in.errors",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.in.errors[\"{#IFNAME}\"]",
+                            "key": "net.if.in.errors[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "value_type": "FLOAT",
                             "preprocessing": [
@@ -221,7 +221,7 @@
                             "_prototype": "net.if.in.discards",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.in.discards[\"{#IFNAME}\"]",
+                            "key": "net.if.in.discards[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "value_type": "FLOAT",
                             "preprocessing": [
@@ -238,7 +238,7 @@
                             "_prototype": "net.if.out.discards",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.out.discards[\"{#IFNAME}\"]",
+                            "key": "net.if.out.discards[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "value_type": "FLOAT",
                             "preprocessing": [
@@ -255,7 +255,7 @@
                             "_prototype": "net.if.speed",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.speed[\"{#IFNAME}\"]",
+                            "key": "net.if.speed[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "",
                             "preprocessing": [
                                 {
@@ -272,7 +272,7 @@
                             "_prototype": "net.if.type",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.type[\"{#IFNAME}\"]",
+                            "key": "net.if.type[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "node_network_protocol_type protocol_type value of /sys/class/net/<iface>.",
                             "value_map": "Linux::Interface protocol types",
                             "preprocessing": [
@@ -292,7 +292,7 @@
                             "_prototype": "net.if.status",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.net.if.status[\"{#IFNAME}\"]",
+                            "key": "net.if.status[node_exporter,\"{#IFNAME}\"]",
                             "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
                             "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
                             "preprocessing": [
@@ -338,7 +338,7 @@
                     "name": "CPU discovery",
                     "master_item": "node_exporter.get",
                     "type": "DEPENDENT",
-                    "key": "node_exporter.cpu.discovery",
+                    "key": "system.cpu.discovery[node_exporter]",
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_TO_JSON",
@@ -361,7 +361,7 @@
                             "_prototype": "system.cpu.util",
                             "type": "DEPENDENT",
                             "master_item": "system.cpu.idle",
-                            "key": "node_exporter.system.cpu.util[{#CPUNUM}]",
+                            "key": "system.cpu.util[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "JAVASCRIPT",
@@ -375,7 +375,7 @@
                             "_prototype": "system.cpu.idle",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.idle[{#CPUNUM}]",
+                            "key": "system.cpu.idle[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -395,7 +395,7 @@
                             "_prototype": "system.cpu.system",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.system[{#CPUNUM}]",
+                            "key": "system.cpu.system[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -415,7 +415,7 @@
                             "_prototype": "system.cpu.user",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.user[{#CPUNUM}]",
+                            "key": "system.cpu.user[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -435,7 +435,7 @@
                             "_prototype": "system.cpu.steal",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.steal[{#CPUNUM}]",
+                            "key": "system.cpu.steal[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -455,7 +455,7 @@
                             "_prototype": "system.cpu.softirq",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.softirq[{#CPUNUM}]",
+                            "key": "system.cpu.softirq[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -475,7 +475,7 @@
                             "_prototype": "system.cpu.nice",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.nice[{#CPUNUM}]",
+                            "key": "system.cpu.nice[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -495,7 +495,7 @@
                             "_prototype": "system.cpu.iowait",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.iowait[{#CPUNUM}]",
+                            "key": "system.cpu.iowait[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -515,7 +515,7 @@
                             "_prototype": "system.cpu.interrupt",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.interrupt[{#CPUNUM}]",
+                            "key": "system.cpu.interrupt[node_exporter,\"{#CPUNUM}\"]",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
@@ -535,7 +535,7 @@
                             "_prototype": "system.cpu.guest",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.guest[{#CPUNUM}]",
+                            "key": "system.cpu.guest[node_exporter,\"{#CPUNUM}\"]",
                             // this metric is only supported for 0.16.0 or above
                             // node_cpu{cpu=""cpu0"",mode="guest"} 0 (pre 0.16.0)
                             // node_cpu_guest_seconds_total{cpu="1",mode="user"} 0 (after 0.16.0)
@@ -558,7 +558,7 @@
                             "_prototype": "system.cpu.guest_nice",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.system.cpu.guest_nice[{#CPUNUM}]",
+                            "key": "system.cpu.guest_nice[node_exporter,\"{#CPUNUM}\"]",
                             // this metric is only supported for 0.16.0 or above
                             // node_cpu{cpu=""cpu0"",mode="guest_nice} 0 (pre 0.16.0)
                             // node_cpu_guest_seconds_total{cpu="1",mode="nice"} 0 (after 0.16.0)
@@ -580,7 +580,7 @@
                 },
                 {
                     "name": "Mounted filesystem discovery",
-                    "key": "node_exporter.vfs.fs.discovery",
+                    "key": "vfs.fs.discovery[node_exporter]",
                     "description": "Discovery of file systems of different types.",
                     "master_item": "node_exporter.get",
                     "type": "DEPENDENT",
@@ -645,7 +645,7 @@
                             "_prototype": "vfs.fs.free",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "vfs.fs.free[{#FSNAME}]",
+                            "key": "vfs.fs.free[node_exporter,\"{#FSNAME}\"]",
                             "value_type": "FLOAT",
                             "preprocessing": [
                                 {
@@ -660,7 +660,7 @@
                             "_prototype": "vfs.fs.total",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.vfs.fs.total[{#FSNAME}]",
+                            "key": "vfs.fs.total[node_exporter,\"{#FSNAME}\"]",
                             "value_type": "FLOAT",
                             "preprocessing": [
                                 {
@@ -674,7 +674,7 @@
                             "application_prototype": "Filesystem __RESOURCE__",
                             "_prototype": "vfs.fs.used",
                             "type": "CALCULATED",
-                            "key": "node_exporter.vfs.fs.used[{#FSNAME}]",
+                            "key": "vfs.fs.used[node_exporter,\"{#FSNAME}\"]",
                             "value_type": "FLOAT"
                         },
                         {
@@ -682,14 +682,14 @@
                             "application_prototype": "Filesystem __RESOURCE__",
                             "_prototype": "vfs.fs.pused",
                             "type": "CALCULATED",
-                            "key": "node_exporter.vfs.fs.pused[{#FSNAME}]",
+                            "key": "vfs.fs.pused[node_exporter,\"{#FSNAME}\"]",
                             "value_type": "FLOAT"
                         },
                         {
                             "_resource": "{#FSNAME}",
                             "application_prototype": "Filesystem __RESOURCE__",
                             "_prototype": "vfs.fs.inode.pfree",
-                            "key": "node_exporter.vfs.fs.inode.pfree[{#FSNAME}]",
+                            "key": "vfs.fs.inode.pfree[node_exporter,\"{#FSNAME}\"]",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
                             "preprocessing": [
@@ -707,7 +707,7 @@
                 },
                 {
                     "name": "Block devices discovery",
-                    "key": "node_exporter.vfs.dev.discovery",
+                    "key": "vfs.dev.discovery[node_exporter]",
                     "master_item": "node_exporter.get",
                     "type": "DEPENDENT",
                     "preprocessing": [
@@ -750,7 +750,7 @@
                             "_prototype": "vfs.dev.read.rate",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.vfs.dev.read.rate[{#DEVNAME}]",
+                            "key": "vfs.dev.read.rate[node_exporter,\"{#DEVNAME}\"]",
                             "value_type": "FLOAT",
                             "units": "!r/s",
                             "preprocessing": [
@@ -770,7 +770,7 @@
                             "_prototype": "vfs.dev.write.rate",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.vfs.dev.write.rate[{#DEVNAME}]",
+                            "key": "vfs.dev.write.rate[node_exporter,\"{#DEVNAME}\"]",
                             "value_type": "FLOAT",
                             "units": "!w/s",
                             "preprocessing": [
@@ -791,7 +791,7 @@
                             "_prototype": "vfs.dev.read.time.rate",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.vfs.dev.read.time.rate[{#DEVNAME}]",
+                            "key": "vfs.dev.read.time.rate[node_exporter,\"{#DEVNAME}\"]",
                             "value_type": "FLOAT",
                             "preprocessing": [
                                 {
@@ -811,7 +811,7 @@
                             "_prototype": "vfs.dev.write.time.rate",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
-                            "key": "node_exporter.vfs.dev.write.time.rate[{#DEVNAME}]",
+                            "key": "vfs.dev.write.time.rate[node_exporter,\"{#DEVNAME}\"]",
                             "value_type": "FLOAT",
                             "preprocessing": [
                                 {
@@ -827,7 +827,7 @@
                         {
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.read.await",
-                            "key": "node_exporter.vfs.dev.read.await[{#DEVNAME}]",
+                            "key": "vfs.dev.read.await[node_exporter,\"{#DEVNAME}\"]",
                             "application_prototype": "Disk __RESOURCE__",
                             "type": "CALCULATED",
                             "expression_formula": "(last(__vfs.dev.read.time.rate__)/(last(__vfs.dev.read.rate__)+(last(__vfs.dev.read.rate__)=0)))*1000*(last(__vfs.dev.read.rate__) > 0)",
@@ -836,7 +836,7 @@
                         {
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.write.await",
-                            "key": "node_exporter.vfs.dev.write.await[{#DEVNAME}]",
+                            "key": "vfs.dev.write.await[node_exporter,\"{#DEVNAME}\"]",
                             "application_prototype": "Disk __RESOURCE__",
                             "type": "CALCULATED",
                             "expression_formula": "(last(__vfs.dev.write.time.rate__)/(last(__vfs.dev.write.rate__)+(last(__vfs.dev.write.rate__)=0)))*1000*(last(__vfs.dev.write.rate__) > 0)",
@@ -845,7 +845,7 @@
                         {
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.queue_size",
-                            "key": "node_exporter.vfs.dev.queue_size[{#DEVNAME}]",
+                            "key": "vfs.dev.queue_size[node_exporter,\"{#DEVNAME}\"]",
                             "application_prototype": "Disk __RESOURCE__",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
@@ -862,7 +862,7 @@
                         {
                             "_resource": "{#DEVNAME}",
                             "_prototype": "vfs.dev.util",
-                            "key": "node_exporter.vfs.dev.util[{#DEVNAME}]",
+                            "key": "vfs.dev.util[node_exporter,\"{#DEVNAME}\"]",
                             "application_prototype": "Disk __RESOURCE__",
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
@@ -902,7 +902,7 @@
                     "_prototype": "system.uptime",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
-                    "key": "system.uptime",
+                    "key": "system.uptime[node_exporter]",
                     "name": "System uptime",
                     "preprocessing": [
                         {
@@ -929,7 +929,7 @@
                 //CPU
                 {
                     "_prototype": "system.cpu.load.avg1",
-                    "key": "node_exporter.node_load1",
+                    "key": "system.cpu.load.avg1[node_exporter]",
                     "name": "Load average (1m avg)",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
@@ -942,7 +942,7 @@
                 },
                 {
                     "_prototype": "system.cpu.load.avg5",
-                    "key": "node_exporter.node_load5",
+                    "key": "system.cpu.load.avg5[node_exporter]",
                     "name": "Load average (5m avg)",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
@@ -955,7 +955,7 @@
                 },
                 {
                     "_prototype": "system.cpu.load.avg15",
-                    "key": "node_exporter.node_load15",
+                    "key": "system.cpu.load.avg15[node_exporter]",
                     "name": "Load average (15m avg)",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
@@ -968,7 +968,7 @@
                 },
                 {
                     "_prototype": "system.cpu.num",
-                    "key": "node_exporter.system.cpu.num",
+                    "key": "system.cpu.num[node_exporter]",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
                     "preprocessing": [
@@ -990,7 +990,7 @@
                 //"jumps", context switches and interrupts
                 {
                     "_prototype": "system.cpu.intr",
-                    "key": "node_exporter.system.cpu.intr",
+                    "key": "system.cpu.intr[node_exporter]",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
                     "preprocessing": [
@@ -1005,7 +1005,7 @@
                 },
                 {
                     "_prototype": "system.cpu.switches",
-                    "key": "node_exporter.system.cpu.switches",
+                    "key": "system.cpu.switches[node_exporter]",
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
                     "preprocessing": [
@@ -1021,7 +1021,7 @@
                 //MEMORY
                 {
                     "_prototype": "vm.memory.total",
-                    "key": "node_exporter.node_memory_memtotal_bytes",
+                    "key": "vm.memory.total[node_exporter]",
                     "type": "DEPENDENT",
                     "value_type": "FLOAT",
                     "master_item": "node_exporter.get",
@@ -1034,7 +1034,7 @@
                 },
                 {
                     "_prototype": "vm.memory.available",
-                    "key": "node_exporter.node_memory_memavailable_bytes",
+                    "key": "vm.memory.available[node_exporter]",
                     "type": "DEPENDENT",
                     "value_type": "FLOAT",
                     "master_item": "node_exporter.get",
@@ -1048,7 +1048,7 @@
                 //SWAP
                 {
                     "_prototype": "system.swap.total",
-                    "key": "node_exporter.node_memory_swaptotal_bytes",
+                    "key": "system.swap.total[node_exporter]",
                     "type": "DEPENDENT",
                     "value_type": "FLOAT",
                     "master_item": "node_exporter.get",
@@ -1061,7 +1061,7 @@
                 },
                 {
                     "_prototype": "system.swap.free",
-                    "key": "node_exporter.node_memory_swapfree_bytes",
+                    "key": "system.swap.free[node_exporter]",
                     "type": "DEPENDENT",
                     "value_type": "FLOAT",
                     "master_item": "node_exporter.get",
@@ -1075,7 +1075,7 @@
                 {
                     "_prototype": "system.swap.pfree",
                     "type": "CALCULATED",
-                    "key": "node_exporter.system.swap.pfree"
+                    "key": "system.swap.pfree[node_exporter]"
                 }
             ]
         }
