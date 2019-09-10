@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template OS Linux Prom</template>
-         <name>Template OS Linux Prom</name>
+         <template>Template OS Linux by Prom</template>
+         <name>Template OS Linux by Prom</name>
          <description>Official Linux template using node exporter.&#13;
 &#13;
 Known Issues:&#13;
@@ -1736,12 +1736,12 @@ return newvalue;</params>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>({Template OS Linux Prom:node_exporter.net.if.in["{#IFNAME}"].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].last()} or&#13;
-{Template OS Linux Prom:node_exporter.net.if.out["{#IFNAME}"].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}) and&#13;
-{Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}&gt;0</expression>
+                     <expression>({Template OS Linux by Prom:node_exporter.net.if.in["{#IFNAME}"].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].last()} or&#13;
+{Template OS Linux by Prom:node_exporter.net.if.out["{#IFNAME}"].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}) and&#13;
+{Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}&gt;0</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.in["{#IFNAME}"].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].last()} and&#13;
-{Template OS Linux Prom:node_exporter.net.if.out["{#IFNAME}"].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}</recovery_expression>
+                     <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.in["{#IFNAME}"].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].last()} and&#13;
+{Template OS Linux by Prom:node_exporter.net.if.out["{#IFNAME}"].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}</recovery_expression>
                      <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1754,18 +1754,18 @@ return newvalue;</params>
                      <dependencies>
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.net.if.in.errors["{#IFNAME}"].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
-or {Template OS Linux Prom:node_exporter.net.if.out.errors["{#IFNAME}"].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template OS Linux by Prom:node_exporter.net.if.in.errors["{#IFNAME}"].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
+or {Template OS Linux by Prom:node_exporter.net.if.out.errors["{#IFNAME}"].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.in.errors["{#IFNAME}"].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
-and {Template OS Linux Prom:node_exporter.net.if.out.errors["{#IFNAME}"].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.in.errors["{#IFNAME}"].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
+and {Template OS Linux by Prom:node_exporter.net.if.out.errors["{#IFNAME}"].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
                      <name>Interface {#IFNAME}({#IFALIAS}): High error rate</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1779,27 +1779,27 @@ Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
                      <dependencies>
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].change()}&lt;0 and {Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}&gt;0&#13;
+                     <expression>{Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].change()}&lt;0 and {Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].last()}&gt;0&#13;
 and (&#13;
-{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=6 or&#13;
-{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=7 or&#13;
-{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=11 or&#13;
-{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=62 or&#13;
-{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=69 or&#13;
-{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=117&#13;
+{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=6 or&#13;
+{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=7 or&#13;
+{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=11 or&#13;
+{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=62 or&#13;
+{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=69 or&#13;
+{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=117&#13;
 )&#13;
 and&#13;
-({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2)</expression>
+({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2)</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>({Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].change()}&gt;0 and {Template OS Linux Prom:node_exporter.net.if.speed["{#IFNAME}"].prev()}&gt;0) or&#13;
-({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2)</recovery_expression>
+                     <recovery_expression>({Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].change()}&gt;0 and {Template OS Linux by Prom:node_exporter.net.if.speed["{#IFNAME}"].prev()}&gt;0) or&#13;
+({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2)</recovery_expression>
                      <name>Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1813,22 +1813,22 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <dependencies>
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].change()}&lt;0 and {Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}&gt;0&#13;
+                     <expression>{Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].change()}&lt;0 and {Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}&gt;0&#13;
 and&#13;
-({Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=6&#13;
-or {Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=1)&#13;
+({Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=6&#13;
+or {Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].last()}=1)&#13;
 and&#13;
-({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2)</expression>
+({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2)</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>({Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].change()}&gt;0 and {Template OS Linux Prom:node_exporter.net.if.type["{#IFNAME}"].prev()}&gt;0) or&#13;
-({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2)</recovery_expression>
+                     <recovery_expression>({Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].change()}&gt;0 and {Template OS Linux by Prom:node_exporter.net.if.type["{#IFNAME}"].prev()}&gt;0) or&#13;
+({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2)</recovery_expression>
                      <name>Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1842,16 +1842,16 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <dependencies>
                         <dependency>
                            <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}=2 and {Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].diff()}=1)</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                     <recovery_expression>{Template OS Linux by Prom:node_exporter.net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
                      <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -1893,7 +1893,7 @@ Interface is down</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.net.if.in["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -1905,7 +1905,7 @@ Interface is down</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.net.if.out["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -1917,7 +1917,7 @@ Interface is down</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.net.if.out.errors["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -1929,7 +1929,7 @@ Interface is down</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.net.if.in.errors["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -1941,7 +1941,7 @@ Interface is down</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.net.if.out.discards["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -1953,7 +1953,7 @@ Interface is down</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.net.if.in.discards["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -2960,7 +2960,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.util[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -2992,7 +2992,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.system[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3004,7 +3004,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.user[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3016,7 +3016,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.nice[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3028,7 +3028,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.iowait[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3040,7 +3040,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.steal[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3052,7 +3052,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.interrupt[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3064,7 +3064,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.softirq[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3076,7 +3076,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.guest[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3088,7 +3088,7 @@ return (100 - value)</params>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.system.cpu.guest_nice[{#CPUNUM}]</key>
                            </item>
                         </graph_item>
@@ -3541,8 +3541,8 @@ return (inode_free/inode_total)*100;</params>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.vfs.fs.pused[{#FSNAME}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Linux Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})&lt;5G or {Template OS Linux Prom:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template OS Linux by Prom:node_exporter.vfs.fs.pused[{#FSNAME}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Linux by Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux by Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})&lt;5G or {Template OS Linux by Prom:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
@@ -3563,8 +3563,8 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.vfs.fs.pused[{#FSNAME}].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
-(({Template OS Linux Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})&lt;10G or {Template OS Linux Prom:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template OS Linux by Prom:node_exporter.vfs.fs.pused[{#FSNAME}].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
+(({Template OS Linux by Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux by Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})&lt;10G or {Template OS Linux by Prom:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})</name>
@@ -3584,15 +3584,15 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
-                           <expression>{Template OS Linux Prom:node_exporter.vfs.fs.pused[{#FSNAME}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Linux Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})&lt;5G or {Template OS Linux Prom:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}&lt;1d)</expression>
+                           <expression>{Template OS Linux by Prom:node_exporter.vfs.fs.pused[{#FSNAME}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Linux by Prom:node_exporter.vfs.fs.total[{#FSNAME}].last()}-{Template OS Linux by Prom:node_exporter.vfs.fs.used[{#FSNAME}].last()})&lt;5G or {Template OS Linux by Prom:node_exporter.vfs.fs.pused[{#FSNAME}].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux by Prom:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
@@ -3610,7 +3610,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
+                     <expression>{Template OS Linux by Prom:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
@@ -3627,7 +3627,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
-                           <expression>{Template OS Linux Prom:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
+                           <expression>{Template OS Linux by Prom:node_exporter.vfs.fs.inode.pfree[{#FSNAME}].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -3661,7 +3661,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <calc_fnc>9</calc_fnc>
                            <type>2</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.vfs.fs.total[{#FSNAME}]</key>
                            </item>
                         </graph_item>
@@ -3673,7 +3673,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <calc_fnc>9</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.vfs.fs.used[{#FSNAME}]</key>
                            </item>
                         </graph_item>
@@ -4359,7 +4359,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux Prom:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux Prom:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
+                     <expression>{Template OS Linux by Prom:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux by Prom:node_exporter.vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DEVNAME}: Disk read request response are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 5m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 5m)</name>
@@ -4403,7 +4403,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.vfs.dev.read.rate[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -4415,7 +4415,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.vfs.dev.write.rate[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -4447,7 +4447,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.vfs.dev.read.await[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -4459,7 +4459,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux Prom</host>
+                              <host>Template OS Linux by Prom</host>
                               <key>node_exporter.vfs.dev.write.await[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -4611,7 +4611,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.node_load1</key>
                </item>
             </graph_item>
@@ -4623,7 +4623,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.node_load5</key>
                </item>
             </graph_item>
@@ -4635,7 +4635,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.node_load15</key>
                </item>
             </graph_item>
@@ -4667,7 +4667,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.system.cpu.switches</key>
                </item>
             </graph_item>
@@ -4679,7 +4679,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.system.cpu.intr</key>
                </item>
             </graph_item>
@@ -4711,7 +4711,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.node_memory_memtotal_bytes</key>
                </item>
             </graph_item>
@@ -4723,7 +4723,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux Prom</host>
+                  <host>Template OS Linux by Prom</host>
                   <key>node_exporter.node_memory_memavailable_bytes</key>
                </item>
             </graph_item>
@@ -4732,7 +4732,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template OS Linux Prom:system.uptime.last()}&lt;10m</expression>
+         <expression>{Template OS Linux by Prom:system.uptime.last()}&lt;10m</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>{HOST.NAME} has been restarted (uptime &lt; 10m)</name>
@@ -4749,7 +4749,7 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux Prom:node_exporter.node_load1.avg(5m)}/{Template OS Linux Prom:node_exporter.system.cpu.num.last()}&gt;{$LOAD_AVG_CRIT}</expression>
+         <expression>{Template OS Linux by Prom:node_exporter.node_load1.avg(5m)}/{Template OS Linux by Prom:node_exporter.system.cpu.num.last()}&gt;{$LOAD_AVG_CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Load average is too high</name>
@@ -4765,7 +4765,7 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux Prom:node_exporter.node_memory_memavailable_bytes.last(0)}&lt;{$MEMORY_AVAILABLE_MIN} and {Template OS Linux Prom:node_exporter.node_memory_memtotal_bytes.last(0)}&gt;0</expression>
+         <expression>{Template OS Linux by Prom:node_exporter.node_memory_memavailable_bytes.last(0)}&lt;{$MEMORY_AVAILABLE_MIN} and {Template OS Linux by Prom:node_exporter.node_memory_memtotal_bytes.last(0)}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})</name>
@@ -4781,7 +4781,7 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux Prom:node_exporter.system.swap.pfree.last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Linux Prom:node_exporter.node_memory_swaptotal_bytes.last()}&gt;0</expression>
+         <expression>{Template OS Linux by Prom:node_exporter.system.swap.pfree.last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Linux by Prom:node_exporter.node_memory_swaptotal_bytes.last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})</name>
