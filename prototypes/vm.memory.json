@@ -5,8 +5,8 @@
 		"description": "Used memory in Bytes",
 		"_group": "Memory",
 		"units": "B",
-		"update": "3m",
-		"history": "30d",
+		"update": "1m",
+		"history": "7d",
 		"trends": "365d"
 	},
 	{
@@ -14,8 +14,8 @@
 		"name": "Free memory",
 		"_group": "Memory",
 		"units": "B",
-		"update": "3m",
-		"history": "30d",
+		"update": "1m",
+		"history": "7d",
 		"trends": "365d"
 	},
 	{
@@ -23,8 +23,8 @@
 		"name": "Memory (buffers)",
 		"_group": "Memory",
 		"units": "B",
-		"update": "3m",
-		"history": "30d",
+		"update": "1m",
+		"history": "7d",
 		"trends": "365d",
 		"description": "Memory used by kernel buffers (Buffers in /proc/meminfo)"
 	},
@@ -33,8 +33,8 @@
 		"name": "Memory (cached)",
 		"_group": "Memory",
 		"units": "B",
-		"update": "3m",
-		"history": "30d",
+		"update": "1m",
+		"history": "7d",
 		"trends": "365d",
 		"description": "Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)"
 	},
@@ -43,8 +43,8 @@
 		"name": "Available memory",
 		"_group": "Memory",
 		"units": "B",
-		"update": "3m",
-		"history": "30d",
+		"update": "1m",
+		"history": "7d",
 		"trends": "365d",
 		"description": "Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params",
 		"triggers": [
@@ -78,8 +78,8 @@
 		"name": "Total memory",
 		"_group": "Memory",
 		"units": "B",
-		"update": "3m",
-		"history": "30d",
+		"update": "15m",
+		"history": "7d",
 		"trends": "365d",
 		"description": "Total memory in Bytes"
 	},
@@ -90,8 +90,8 @@
 		"value_type": "FLOAT",
 		"units": "%",
 		"description": "Memory utilization in %",
-		"update": "3m",
-		"history": "30d",
+		"update": "1m",
+		"history": "7d",
 		"trends": "365d",
 		"triggers": [
 			{
@@ -116,18 +116,18 @@
 		"_id": "vm.memory.units",
 		"name": "Memory units",
 		"_group": "Internal_items",
-		"delay": "3m",
+		"delay": "1m",
 		"trends": "0",
-		"history": "1w"
+		"history": "7d"
 	},
 	{
 		"_id": "vm.memory.units.used",
 		"name": "Used memory in units",
 		"_group": "Internal_items",
 		"units": "units",
-		"delay": "3m",
+		"delay": "1m",
 		"trends": "0",
-		"history": "1w",
+		"history": "7d",
 		"description": "Used memory in units"
 	},
 	{
@@ -135,9 +135,9 @@
 		"name": "Total memory in units",
 		"_group": "Internal_items",
 		"units": "units",
-		"delay": "3m",
+		"delay": "15m",
 		"trends": "0",
-		"history": "1w",
+		"history": "7d",
 		"description": "Total memory in units"
 	},
 	{
@@ -145,14 +145,16 @@
 		"name": "Total swap space",
 		"group": "Memory",
 		"units": "B",
-		"delay": "5m"
+		"delay": "15m",
+		"history": "7d"
 	},
 	{
 		"_id": "system.swap.free",
 		"name": "Free swap space",
 		"group": "Memory",
 		"units": "B",
-		"delay": "5m"
+		"delay": "1m",
+		"history": "7d"
 	},
 	{
 		"_id": "system.swap.pfree",
@@ -160,7 +162,8 @@
 		"group": "Memory",
 		"units": "%",
 		"valueType": "FLOAT",
-		"update": "5m",
+		"update": "1m",
+		"history": "7d",
 		"triggers": [
 			{
 				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$SWAP_PFREE_WARN} and {TEMPLATE_NAME:__system.swap.total__.last()}>0",
