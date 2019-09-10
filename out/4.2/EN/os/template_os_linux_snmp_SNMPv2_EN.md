@@ -1,4 +1,58 @@
 
+# Template OS Linux CPU SNMPv2
+
+## Overview
+
+For Zabbix version: 4.2  
+
+## Setup
+
+
+## Zabbix configuration
+
+
+
+## Template links
+
+There are no template links in this template.
+
+## Discovery rules
+
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|CPU discovery|<p>This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.</p>|DEPENDENT|snmp.cpu.discovery<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of CPU cores return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}":""}]) `</p>|
+
+## Items collected
+
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|Load average (1m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg1[laLoad.1]|
+|CPU|Load average (5m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg5[laLoad.2]|
+|CPU|Load average (15m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg15[laLoad.3]|
+|CPU|Number of CPUs|<p>MIB: HOST-RESOURCES-MIB</p><p>Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD</p>|SNMP|snmp.system.cpu.num<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of cores return JSON.parse(value).length; `</p>|
+|CPU|Interrupts per second|<p>-</p>|SNMP|system.cpu.intr[ssRawInterrupts.0]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
+|CPU|Context switches per second|<p>-</p>|SNMP|system.cpu.switches[ssRawContexts.0]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
+|CPU|CPU idle time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent doing nothing.</p>|SNMP|system.cpu.idle[ssCpuRawIdle.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU system time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent running the kernel and its processes.</p>|SNMP|system.cpu.system[ssCpuRawSystem.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU user time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent running users' processes that are not niced.</p>|SNMP|system.cpu.user[ssCpuRawUser.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU steal time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of CPU 'stolen' from this virtual machine by the hypervisor for other tasks (such as running another virtual machine).</p>|SNMP|system.cpu.steal[ssCpuRawSteal.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU softirq time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of time the CPU has been servicing software interrupts.</p>|SNMP|system.cpu.softirq[ssCpuRawSoftIRQ.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU nice time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent running users' processes that have been niced.</p>|SNMP|system.cpu.nice[ssCpuRawNice.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU iowait time|<p>MIB: UCD-SNMP-MIB</p><p>Amount of time the CPU has been waiting for I/O to complete.</p>|SNMP|system.cpu.iowait[ssCpuRawWait.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU interrupt time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of time the CPU has been servicing hardware interrupts.</p>|SNMP|system.cpu.interrupt[ssCpuRawInterrupt.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU guest time|<p>MIB: UCD-SNMP-MIB</p><p>Guest  time (time  spent  running  a  virtual  CPU  for  a  guest  operating  system)</p>|SNMP|system.cpu.guest[ssCpuRawGuest.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+|CPU|CPU guest nice time|<p>MIB: UCD-SNMP-MIB</p><p>Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)</p>|SNMP|system.cpu.guest_nice[ssCpuRawGuestNice.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
+
+## Triggers
+
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux CPU SNMPv2:snmp.system.cpu.num.last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
+
 # Template OS Linux SNMPv2
 
 ## Overview
@@ -54,35 +108,19 @@ No specific Zabbix configuration is required.
 |Template Module EtherLike-MIB SNMPv2|
 |Template Module Generic SNMPv2|
 |Template Module Interfaces SNMPv2|
+|Template OS Linux CPU SNMPv2|
 
 ## Discovery rules
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
 |Block devices discovery|<p>-</p>|SNMP|snmp.vfs.dev.discovery<p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
-|CPU discovery|<p>This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.</p>|DEPENDENT|snmp.cpu.discovery<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of CPU cores return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}":""}]) `</p>|
 |Mounted filesystem discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter</p>|SNMP|snmp.vfs.fs.discovery<p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|CPU|Load average (1m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg1[laLoad.1]|
-|CPU|Load average (5m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg5[laLoad.2]|
-|CPU|Load average (15m avg)|<p>MIB: UCD-SNMP-MIB</p>|SNMP|system.cpu.load.avg15[laLoad.3]|
-|CPU|Number of CPUs|<p>MIB: HOST-RESOURCES-MIB</p><p>Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD</p>|SNMP|snmp.system.cpu.num<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//count the number of cores return JSON.parse(value).length; `</p>|
-|CPU|Interrupts per second|<p>-</p>|SNMP|system.cpu.intr[ssRawInterrupts.0]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
-|CPU|Context switches per second|<p>-</p>|SNMP|system.cpu.switches[ssRawContexts.0]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
-|CPU|CPU idle time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent doing nothing.</p>|SNMP|system.cpu.idle[ssCpuRawIdle.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU system time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent running the kernel and its processes.</p>|SNMP|system.cpu.system[ssCpuRawSystem.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU user time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent running users' processes that are not niced.</p>|SNMP|system.cpu.user[ssCpuRawUser.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU steal time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of CPU 'stolen' from this virtual machine by the hypervisor for other tasks (such as running another virtual machine).</p>|SNMP|system.cpu.steal[ssCpuRawSteal.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU softirq time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of time the CPU has been servicing software interrupts.</p>|SNMP|system.cpu.softirq[ssCpuRawSoftIRQ.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU nice time|<p>MIB: UCD-SNMP-MIB</p><p>The time the CPU has spent running users' processes that have been niced.</p>|SNMP|system.cpu.nice[ssCpuRawNice.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU iowait time|<p>MIB: UCD-SNMP-MIB</p><p>Amount of time the CPU has been waiting for I/O to complete.</p>|SNMP|system.cpu.iowait[ssCpuRawWait.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU interrupt time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of time the CPU has been servicing hardware interrupts.</p>|SNMP|system.cpu.interrupt[ssCpuRawInterrupt.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU guest time|<p>MIB: UCD-SNMP-MIB</p><p>Guest  time (time  spent  running  a  virtual  CPU  for  a  guest  operating  system)</p>|SNMP|system.cpu.guest[ssCpuRawGuest.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
-|CPU|CPU guest nice time|<p>MIB: UCD-SNMP-MIB</p><p>Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)</p>|SNMP|system.cpu.guest_nice[ssCpuRawGuestNice.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPUNUM} `</p>|
 |Memory|Free memory|<p>MIB: UCD-SNMP-MIB</p>|SNMP|vm.memory.free[memAvailReal.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (buffers)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by kernel buffers (Buffers in /proc/meminfo)</p>|SNMP|vm.memory.buffers[memBuffer.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (cached)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)</p>|SNMP|vm.memory.cached[memCached.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
@@ -103,7 +141,6 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux SNMPv2:snmp.system.cpu.num.last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
 |Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:snmp.vm.memory.available.last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux SNMPv2:vm.memory.total[memTotalReal.0].last(0)}>0`|AVERAGE||
 |High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:snmp.system.swap.pfree.last()}<{$SWAP_PFREE_WARN} and {Template OS Linux SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING||
 |{#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 5G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and (({Template OS Linux SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template OS Linux SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|AVERAGE|<p>Manual close: YES</p>|

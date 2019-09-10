@@ -1,105 +1,10 @@
+---
 templates:
-  - name: Template OS Linux
-    _zbx_ver: "4.2"
-    description: Template OS Linux
+  - name: Template OS Linux CPU
     _classes:
-      - Interfaces EtherLike Extension
-      - OS
       - SNMPv2
-      - SNMP_DEVICE
-      - INTERFACES
-    _documentation:
-      _setup: |
-        Install snmpd agent on Linux OS, enable SNMPv2.  
-
-        Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since,  
-        by default, snmpd (for example, in Ubuntu) limits access to basic system information only:
-
-        ```text
-        rocommunity public  default    -V systemonly
-        ```
-
-        Make sure you change that in order to read metrics of UCD-SNMP-MIB and UCD-DISKIO-MIB. Please refer to the documentation:  
-        http://www.net-snmp.org/wiki/index.php/Vacm  
-
-        You can also try to use `snmpconf`:
-          
-        http://www.net-snmp.org/wiki/index.php/TUT:snmpd_configuration
-
-        Change {$SNMP_COMMUNITY} on the host level in Zabbix.
-      _ref: https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
-    macros:
-      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
-        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
-        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
-      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
-        value: ".+"
-        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
-      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
-        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
-        _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
-          or linked template level
-      - macro: "{$VFS.FS.FSNAME.MATCHES}"
-        value: ".+"
-        _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
-          or linked template level
-      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
-        value: "^\\s$"
-        _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
-          or linked template level
-      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
-        value: ".*(\\.4|\\.9|hrStorageFixedDisk|hrStorageFlashMemory)$"
-        _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
-          or linked template level
+    _zbx_ver: "4.2"
     discovery_rules:
-      - name: Block devices discovery
-        key: snmp.vfs.dev.discovery
-        type: SNMP
-        oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
-        filter:
-          evaltype: AND
-          conditions:
-            - macro: "{#DEVNAME}"
-              value: "{$VFS.DEV.DEVNAME.MATCHES}"
-              operator: MATCHES_REGEX
-              formulaid: A
-            - macro: "{#DEVNAME}"
-              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
-              operator: MATCHES_REGEX
-              formulaid: B
-        items:
-          - _prototype: vfs.dev.read.rate
-            _resource: "{#DEVNAME}"
-            application_prototype: "Disk __RESOURCE__"
-            oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
-            _snmpObject: diskIOReads.{#SNMPINDEX}
-            _mib: UCD-DISKIO-MIB
-            _vendor_description: The number of read accesses from this device since boot.
-            units: "!r/s"
-            preprocessing:
-              - type: CHANGE_PER_SECOND
-          - _prototype: vfs.dev.write.rate
-            _resource: "{#DEVNAME}"
-            application_prototype: "Disk __RESOURCE__"
-            oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
-            _snmpObject: diskIOWrites.{#SNMPINDEX}
-            _mib: UCD-DISKIO-MIB
-            _vendor_description: The number of write accesses from this device since boot.
-            units: "!w/s"
-            preprocessing:
-              - type: CHANGE_PER_SECOND
-          - _prototype: vfs.dev.util
-            _resource: "{#DEVNAME}"
-            application_prototype: "Disk __RESOURCE__"
-            oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
-            _snmpObject: diskIOLA1.{#SNMPINDEX}
-            _mib: UCD-DISKIO-MIB
-            _vendor_description: The 1 minute average load of disk (%)
-
       - name: CPU discovery
         type: DEPENDENT
         master_item: system.cpu.num
@@ -230,6 +135,154 @@ templates:
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPUNUM}
+    items:
+    items:
+      - _prototype: system.cpu.load.avg1
+        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-1"]'
+        type: SNMP
+        _snmpObject: laLoad.1
+        _mib: UCD-SNMP-MIB
+        _zbx_ver: "4.2"
+      - _prototype: system.cpu.load.avg5
+        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-5"]'
+        type: SNMP
+        _snmpObject: laLoad.2
+        _mib: UCD-SNMP-MIB
+        _zbx_ver: "4.2"
+      - _prototype: system.cpu.load.avg15
+        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-15"]'
+        type: SNMP
+        _snmpObject: laLoad.3
+        _mib: UCD-SNMP-MIB
+        _zbx_ver: "4.2"
+      - _prototype: system.cpu.num
+        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+        type: SNMP
+        key: snmp.system.cpu.num
+        _mib: HOST-RESOURCES-MIB
+        _zbx_ver: "4.2"
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |
+              //count the number of cores
+              return JSON.parse(value).length;
+        _vendor_description: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
+      - _prototype: "system.cpu.intr"
+        type: SNMP
+        _snmpObject: ssRawInterrupts.0
+        oid: 1.3.6.1.4.1.2021.11.59.0
+        preprocessing:
+          - type: CHANGE_PER_SECOND
+      - _prototype: "system.cpu.switches"
+        type: SNMP
+        _snmpObject: ssRawContexts.0
+        oid: 1.3.6.1.4.1.2021.11.60.0
+        preprocessing:
+          - type: CHANGE_PER_SECOND
+  - name: Template OS Linux
+    _zbx_ver: "4.2"
+    description: Template OS Linux
+    templates:
+      - Template OS Linux CPU SNMPvX
+    _classes:
+      - Interfaces EtherLike Extension
+      - OS
+      - SNMPv2
+      - SNMP_DEVICE
+      - INTERFACES
+    _documentation:
+      _setup: |
+        Install snmpd agent on Linux OS, enable SNMPv2.  
+
+        Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since,  
+        by default, snmpd (for example, in Ubuntu) limits access to basic system information only:
+
+        ```text
+        rocommunity public  default    -V systemonly
+        ```
+
+        Make sure you change that in order to read metrics of UCD-SNMP-MIB and UCD-DISKIO-MIB. Please refer to the documentation:  
+        http://www.net-snmp.org/wiki/index.php/Vacm  
+
+        You can also try to use `snmpconf`:
+          
+        http://www.net-snmp.org/wiki/index.php/TUT:snmpd_configuration
+
+        Change {$SNMP_COMMUNITY} on the host level in Zabbix.
+      _ref: https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
+    macros:
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
+        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
+        value: ".+"
+        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+      - macro: "{$VFS.FS.FSNAME.MATCHES}"
+        value: ".+"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
+        value: ".*(\\.4|\\.9|hrStorageFixedDisk|hrStorageFlashMemory)$"
+        _description:
+          This macro is used in filesystems discovery. Can be overriden on the host
+          or linked template level
+    discovery_rules:
+      - name: Block devices discovery
+        key: snmp.vfs.dev.discovery
+        type: SNMP
+        oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: A
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: B
+        items:
+          - _prototype: vfs.dev.read.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: "Disk __RESOURCE__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
+            _snmpObject: diskIOReads.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The number of read accesses from this device since boot.
+            units: "!r/s"
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+          - _prototype: vfs.dev.write.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: "Disk __RESOURCE__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
+            _snmpObject: diskIOWrites.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The number of write accesses from this device since boot.
+            units: "!w/s"
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+          - _prototype: vfs.dev.util
+            _resource: "{#DEVNAME}"
+            application_prototype: "Disk __RESOURCE__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
+            _snmpObject: diskIOLA1.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The 1 minute average load of disk (%)
+
+      
       - name: Mounted filesystem discovery
         oid: "discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
         key: "snmp.vfs.fs.discovery"
@@ -297,48 +350,6 @@ templates:
                 params: return (100-value);
 
     items:
-      - _prototype: system.cpu.load.avg1
-        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-1"]'
-        type: SNMP
-        _snmpObject: laLoad.1
-        _mib: UCD-SNMP-MIB
-        _zbx_ver: "4.2"
-      - _prototype: system.cpu.load.avg5
-        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-5"]'
-        type: SNMP
-        _snmpObject: laLoad.2
-        _mib: UCD-SNMP-MIB
-        _zbx_ver: "4.2"
-      - _prototype: system.cpu.load.avg15
-        oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-15"]'
-        type: SNMP
-        _snmpObject: laLoad.3
-        _mib: UCD-SNMP-MIB
-        _zbx_ver: "4.2"
-      - _prototype: system.cpu.num
-        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
-        type: SNMP
-        key: snmp.system.cpu.num
-        _mib: HOST-RESOURCES-MIB
-        _zbx_ver: "4.2"
-        preprocessing:
-          - type: JAVASCRIPT
-            params: |
-              //count the number of cores
-              return JSON.parse(value).length;
-        _vendor_description: Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
-      - _prototype: "system.cpu.intr"
-        type: SNMP
-        _snmpObject: ssRawInterrupts.0
-        oid: 1.3.6.1.4.1.2021.11.59.0
-        preprocessing:
-          - type: CHANGE_PER_SECOND
-      - _prototype: "system.cpu.switches"
-        type: SNMP
-        _snmpObject: ssRawContexts.0
-        oid: 1.3.6.1.4.1.2021.11.60.0
-        preprocessing:
-          - type: CHANGE_PER_SECOND
       - _prototype: vm.memory.free
         _snmpObject: memAvailReal.0
         oid: 1.3.6.1.4.1.2021.4.6.0
