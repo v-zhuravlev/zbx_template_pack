@@ -1,5 +1,125 @@
 ---
 templates:
+  - name: Template OS Linux Memory
+    _zbx_ver: "4.2"
+    _classes:
+      - SNMPv2
+    items:
+      - _prototype: vm.memory.free
+        _snmpObject: memAvailReal.0
+        oid: 1.3.6.1.4.1.2021.4.6.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.buffers
+        _snmpObject: memBuffer.0
+        oid: 1.3.6.1.4.1.2021.4.14.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.cached
+        _snmpObject: memCached.0
+        oid: 1.3.6.1.4.1.2021.4.15.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.total
+        _snmpObject: memTotalReal.0
+        oid: 1.3.6.1.4.1.2021.4.5.0
+        _mib: UCD-SNMP-MIB
+        type: SNMP
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.available
+        type: CALCULATED
+        key: snmp.vm.memory.available
+        expressionFormula: last(__vm.memory.free__)+last(__vm.memory.buffers__)+last(__vm.memory.cached__)
+      - _prototype: system.swap.total
+        oid: 1.3.6.1.4.1.2021.4.3.0
+        type: SNMP
+        _snmpObject: memTotalSwap.0
+        _mib: UCD-SNMP-MIB
+        _vendor_description: The total amount of swap space configured for this host.
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: system.swap.free
+        oid: 1.3.6.1.4.1.2021.4.4.0
+        type: SNMP
+        _snmpObject: memAvailSwap.0
+        _mib: UCD-SNMP-MIB
+        _vendor_description: The amount of swap space currently unused or available.
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: system.swap.pfree
+        key: snmp.system.swap.pfree
+        type: CALCULATED
+
+  - name: Template OS Linux VFS.DEV
+    _classes:
+      - SNMPv2
+    _zbx_ver: "4.2"
+    macros:
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
+        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
+        value: ".+"
+        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+
+    discovery_rules:
+      - name: Block devices discovery
+        key: snmp.vfs.dev.discovery
+        type: SNMP
+        oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: A
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: B
+        items:
+          - _prototype: vfs.dev.read.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: "Disk __RESOURCE__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
+            _snmpObject: diskIOReads.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The number of read accesses from this device since boot.
+            units: "!r/s"
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+          - _prototype: vfs.dev.write.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: "Disk __RESOURCE__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
+            _snmpObject: diskIOWrites.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The number of write accesses from this device since boot.
+            units: "!w/s"
+            preprocessing:
+              - type: CHANGE_PER_SECOND
+          - _prototype: vfs.dev.util
+            _resource: "{#DEVNAME}"
+            application_prototype: "Disk __RESOURCE__"
+            oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
+            _snmpObject: diskIOLA1.{#SNMPINDEX}
+            _mib: UCD-DISKIO-MIB
+            _vendor_description: The 1 minute average load of disk (%)
+
   - name: Template OS Linux CPU
     _classes:
       - SNMPv2
@@ -179,44 +299,12 @@ templates:
         oid: 1.3.6.1.4.1.2021.11.60.0
         preprocessing:
           - type: CHANGE_PER_SECOND
-  - name: Template OS Linux
+
+  - name: Template OS Linux Filesystems
     _zbx_ver: "4.2"
-    description: Template OS Linux
-    templates:
-      - Template OS Linux CPU SNMPvX
     _classes:
-      - Interfaces EtherLike Extension
-      - OS
       - SNMPv2
-      - SNMP_DEVICE
-      - INTERFACES
-    _documentation:
-      _setup: |
-        Install snmpd agent on Linux OS, enable SNMPv2.  
-
-        Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since,  
-        by default, snmpd (for example, in Ubuntu) limits access to basic system information only:
-
-        ```text
-        rocommunity public  default    -V systemonly
-        ```
-
-        Make sure you change that in order to read metrics of UCD-SNMP-MIB and UCD-DISKIO-MIB. Please refer to the documentation:  
-        http://www.net-snmp.org/wiki/index.php/Vacm  
-
-        You can also try to use `snmpconf`:
-          
-        http://www.net-snmp.org/wiki/index.php/TUT:snmpd_configuration
-
-        Change {$SNMP_COMMUNITY} on the host level in Zabbix.
-      _ref: https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
     macros:
-      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
-        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
-        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
-      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
-        value: ".+"
-        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
       - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
         value: "^(/dev|/sys|/run|/proc|.+/shm$)"
         _description:
@@ -238,49 +326,7 @@ templates:
           This macro is used in filesystems discovery. Can be overriden on the host
           or linked template level
     discovery_rules:
-      - name: Block devices discovery
-        key: snmp.vfs.dev.discovery
-        type: SNMP
-        oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
-        filter:
-          evaltype: AND
-          conditions:
-            - macro: "{#DEVNAME}"
-              value: "{$VFS.DEV.DEVNAME.MATCHES}"
-              operator: MATCHES_REGEX
-              formulaid: A
-            - macro: "{#DEVNAME}"
-              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
-              operator: MATCHES_REGEX
-              formulaid: B
-        items:
-          - _prototype: vfs.dev.read.rate
-            _resource: "{#DEVNAME}"
-            application_prototype: "Disk __RESOURCE__"
-            oid: 1.3.6.1.4.1.2021.13.15.1.1.5.{#SNMPINDEX}
-            _snmpObject: diskIOReads.{#SNMPINDEX}
-            _mib: UCD-DISKIO-MIB
-            _vendor_description: The number of read accesses from this device since boot.
-            units: "!r/s"
-            preprocessing:
-              - type: CHANGE_PER_SECOND
-          - _prototype: vfs.dev.write.rate
-            _resource: "{#DEVNAME}"
-            application_prototype: "Disk __RESOURCE__"
-            oid: 1.3.6.1.4.1.2021.13.15.1.1.6.{#SNMPINDEX}
-            _snmpObject: diskIOWrites.{#SNMPINDEX}
-            _mib: UCD-DISKIO-MIB
-            _vendor_description: The number of write accesses from this device since boot.
-            units: "!w/s"
-            preprocessing:
-              - type: CHANGE_PER_SECOND
-          - _prototype: vfs.dev.util
-            _resource: "{#DEVNAME}"
-            application_prototype: "Disk __RESOURCE__"
-            oid: 1.3.6.1.4.1.2021.13.15.1.1.9.{#SNMPINDEX}
-            _snmpObject: diskIOLA1.{#SNMPINDEX}
-            _mib: UCD-DISKIO-MIB
-            _vendor_description: The 1 minute average load of disk (%)
+
       - name: Mounted filesystem discovery
         oid: "discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
         key: "snmp.vfs.fs.discovery"
@@ -347,64 +393,41 @@ templates:
               - type: JAVASCRIPT
                 params: return (100-value);
 
-    items:
-      - _prototype: vm.memory.free
-        _snmpObject: memAvailReal.0
-        oid: 1.3.6.1.4.1.2021.4.6.0
-        _mib: UCD-SNMP-MIB
-        type: SNMP
-        preprocessing:
-          - type: MULTIPLIER
-            params: "1024"
-      - _prototype: vm.memory.buffers
-        _snmpObject: memBuffer.0
-        oid: 1.3.6.1.4.1.2021.4.14.0
-        _mib: UCD-SNMP-MIB
-        type: SNMP
-        preprocessing:
-          - type: MULTIPLIER
-            params: "1024"
-      - _prototype: vm.memory.cached
-        _snmpObject: memCached.0
-        oid: 1.3.6.1.4.1.2021.4.15.0
-        _mib: UCD-SNMP-MIB
-        type: SNMP
-        preprocessing:
-          - type: MULTIPLIER
-            params: "1024"
-      - _prototype: vm.memory.total
-        _snmpObject: memTotalReal.0
-        oid: 1.3.6.1.4.1.2021.4.5.0
-        _mib: UCD-SNMP-MIB
-        type: SNMP
-        preprocessing:
-          - type: MULTIPLIER
-            params: "1024"
-      - _prototype: vm.memory.available
-        type: CALCULATED
-        key: snmp.vm.memory.available
-        expressionFormula: last(__vm.memory.free__)+last(__vm.memory.buffers__)+last(__vm.memory.cached__)
-      - _prototype: system.swap.total
-        oid: 1.3.6.1.4.1.2021.4.3.0
-        type: SNMP
-        _snmpObject: memTotalSwap.0
-        _mib: UCD-SNMP-MIB
-        _vendor_description: The total amount of swap space configured for this host.
-        preprocessing:
-          - type: MULTIPLIER
-            params: "1024"
-      - _prototype: system.swap.free
-        oid: 1.3.6.1.4.1.2021.4.4.0
-        type: SNMP
-        _snmpObject: memAvailSwap.0
-        _mib: UCD-SNMP-MIB
-        _vendor_description: The amount of swap space currently unused or available.
-        preprocessing:
-          - type: MULTIPLIER
-            params: "1024"
-      - _prototype: system.swap.pfree
-        key: snmp.system.swap.pfree
-        type: CALCULATED
+  - name: Template OS Linux
+    _zbx_ver: "4.2"
+    description: Template OS Linux
+    templates:
+      - Template OS Linux CPU SNMPvX
+      - Template OS Linux VFS.DEV SNMPvX
+      - Template OS Linux Memory SNMPvX
+      - Template OS Linux Filesystems SNMPvX
+    _classes:
+      - Interfaces EtherLike Extension
+      - OS
+      - SNMPv2
+      - SNMP_DEVICE
+      - INTERFACES
+    _documentation:
+      _setup: |
+        Install snmpd agent on Linux OS, enable SNMPv2.  
+
+        Make sure access to UCD-SNMP-MIB is allowed from Zabbix server/proxy host, since,  
+        by default, snmpd (for example, in Ubuntu) limits access to basic system information only:
+
+        ```text
+        rocommunity public  default    -V systemonly
+        ```
+
+        Make sure you change that in order to read metrics of UCD-SNMP-MIB and UCD-DISKIO-MIB. Please refer to the documentation:  
+        http://www.net-snmp.org/wiki/index.php/Vacm  
+
+        You can also try to use `snmpconf`:
+          
+        http://www.net-snmp.org/wiki/index.php/TUT:snmpd_configuration
+
+        Change {$SNMP_COMMUNITY} on the host level in Zabbix.
+      _ref: https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
+
     screens:
       - name: System performance
         hsize: 2
@@ -420,3 +443,8 @@ templates:
             - name: CPU usage{#SINGLETON}
             x: 1
             y: 0
+          - resourcetype: GRAPH
+            resource:
+            - name: Memory usage
+            x: 0
+            y: 1
