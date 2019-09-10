@@ -1,39 +1,79 @@
+---
 templates:
-  - 
-    name: "Template Module HOST-RESOURCES-MIB"
-    description: "HOST-RESOURCES-MIB: CPU, Memory and Storage"
+  - name: "Template Module HOST-RESOURCES-MIB storage"
     _classes:
-     - SNMPv1
-     - SNMPv2
+      - SNMPv1
+      - SNMPv2
     discovery_rules:
-      - name: CPU Discovery
-        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
-        key: hrProcessorLoad.discovery
-        description: HOST-RESOURCES-MIB::hrProcessorTable discovery
+      - name: "Storage Discovery"
+        oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
+        key: "storage.discovery"
+        description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
+        filter:
+          evaltype: OR
+          conditions:
+            - macro: "{#STORAGE_TYPE}"
+              value: ".+(4|9)"
+              # OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9
+              formulaid: B
+            - macro: "{#STORAGE_TYPE}"
+              value: ".+(hrStorageFixedDisk|hrStorageFlashMemory)"
+              formulaid: A
         items:
-          - _prototype: system.cpu.util
-            oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
-            _snmpObject: hrProcessorLoad.{#SNMPINDEX}
-            _mib: HOST-RESOURCES-MIB
-            _resource: "#{#SNMPINDEX}"
-            _vendor_description: |
-             The average, over the last minute, of the percentage of time that this processor was not idle.
-             Implementations may approximate this one minute smoothing period if necessary.
+          - _prototype: vfs.fs.units
+            oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
+            _snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
+            _mib: "HOST-RESOURCES-MIB"
+            _vendor_description: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
+            _resource: "{#SNMPVALUE}"
+
+          - _prototype: vfs.fs.units.used
+            oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
+            _snmpObject: "hrStorageUsed.{#SNMPINDEX}"
+            _mib: "HOST-RESOURCES-MIB"
+            _vendor_description: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
+            _resource: "{#SNMPVALUE}"
+
+          - _prototype: vfs.fs.units.total
+            oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
+            _snmpObject: "hrStorageSize.{#SNMPINDEX}"
+            _mib: "HOST-RESOURCES-MIB"
+            _vendor_description: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
+            _resource: "{#SNMPVALUE}"
+
+          - _prototype: vfs.fs.used
+            _snmpObject: "storageUsed.{#SNMPINDEX}"
+            type: CALCULATED
+            _resource: "{#SNMPVALUE}"
+
+          - _prototype: vfs.fs.total
+            _snmpObject: "storageTotal.{#SNMPINDEX}"
+            type: CALCULATED
+            _resource: "{#SNMPVALUE}"
+
+          - _prototype: vfs.fs.pused
+            _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
+            type: CALCULATED
+            _resource: "{#SNMPVALUE}"
+
+  - name: "Template Module HOST-RESOURCES-MIB memory"
+    _classes:
+      - SNMPv1
+      - SNMPv2
+    discovery_rules:
       - name: "Memory Discovery"
         oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
         key: "memory.discovery"
         description: "HOST-RESOURCES-MIB::hrStorage discovery with memory filter"
-        filter: 
+        filter:
           evaltype: OR
-          conditions: 
-          - 
-            macro: "{#STORAGE_TYPE}"
-            value: ".+2$"
-            formulaid: B
-          - 
-            macro: "{#STORAGE_TYPE}"
-            value: ".+hrStorageRam"
-            formulaid: A
+          conditions:
+            - macro: "{#STORAGE_TYPE}"
+              value: ".+2$"
+              formulaid: B
+            - macro: "{#STORAGE_TYPE}"
+              value: ".+hrStorageRam"
+              formulaid: A
         items:
           - _prototype: "vm.memory.units"
             oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
@@ -65,58 +105,31 @@ templates:
             _snmpObject: "memoryUsedPercentage.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "#{#SNMPINDEX}"
-      - name: "Storage Discovery"
-        oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
-        key: "storage.discovery"
-        description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter"
-        filter: 
-          evaltype: OR
-          conditions: 
-          - 
-            macro: "{#STORAGE_TYPE}"
-            value: ".+(4|9)"
-            # OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9
-            formulaid: B
-          - 
-            macro: "{#STORAGE_TYPE}"
-            value: ".+(hrStorageFixedDisk|hrStorageFlashMemory)"
-            formulaid: A
+  - name: "Template Module HOST-RESOURCES-MIB CPU"
+    _classes:
+      - SNMPv1
+      - SNMPv2
+    discovery_rules:
+      - name: CPU Discovery
+        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+        key: hrProcessorLoad.discovery
+        description: HOST-RESOURCES-MIB::hrProcessorTable discovery
         items:
-          - _prototype: vfs.fs.units
-            oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
-            _snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
-            _mib: "HOST-RESOURCES-MIB"
-            _vendor_description: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
-            _resource: "{#SNMPVALUE}"
- 
-          - _prototype: vfs.fs.units.used
-            oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
-            _snmpObject: "hrStorageUsed.{#SNMPINDEX}"
-            _mib: "HOST-RESOURCES-MIB"
-            _vendor_description: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
-            _resource: "{#SNMPVALUE}"
-    
-          - _prototype: vfs.fs.units.total
-            oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
-            _snmpObject: "hrStorageSize.{#SNMPINDEX}"
-            _mib: "HOST-RESOURCES-MIB"
-            _vendor_description: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
-            _resource: "{#SNMPVALUE}"
-    
-          - _prototype: vfs.fs.used
-            _snmpObject: "storageUsed.{#SNMPINDEX}"
-            type: CALCULATED
-            _resource: "{#SNMPVALUE}"
-    
-          - _prototype: vfs.fs.total
-            _snmpObject: "storageTotal.{#SNMPINDEX}"
-            type: CALCULATED
-            _resource: "{#SNMPVALUE}"
-    
-          - _prototype: vfs.fs.pused
-            _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
-            type: CALCULATED
-            _resource: "{#SNMPVALUE}"
-    
-    
+          - _prototype: system.cpu.util
+            oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
+            _snmpObject: hrProcessorLoad.{#SNMPINDEX}
+            _mib: HOST-RESOURCES-MIB
+            _resource: "#{#SNMPINDEX}"
+            _vendor_description: |
+              The average, over the last minute, of the percentage of time that this processor was not idle.
+              Implementations may approximate this one minute smoothing period if necessary.
 
+  - name: "Template Module HOST-RESOURCES-MIB"
+    description: "HOST-RESOURCES-MIB: CPU, memory and storage"
+    templates:
+      - Template Module HOST-RESOURCES-MIB CPU SNMPvX
+      - Template Module HOST-RESOURCES-MIB memory SNMPvX
+      - Template Module HOST-RESOURCES-MIB storage SNMPvX
+    _classes:
+      - SNMPv1
+      - SNMPv2
