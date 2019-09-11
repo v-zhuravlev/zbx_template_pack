@@ -36,7 +36,8 @@
             "macros": [
                 {
                     "macro": "{$LOAD_AVG_PER_CPU.MAX.WARN}",
-                    "value": "1.5"
+                    "value": "1.5",
+                    "_description": "Load per CPU considered sustainable. Tune if needed."
                 },
                 {
                     "macro": "{$NODE_EXPORTER_PORT}",
@@ -334,250 +335,250 @@
                         }
                     ],
                 },
-                {
-                    "name": "CPU discovery",
-                    "master_item": "node_exporter.get",
-                    "type": "DEPENDENT",
-                    "key": "system.cpu.discovery[node_exporter]",
-                    "preprocessing": [
-                        {
-                            "type": "PROMETHEUS_TO_JSON",
-                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"idle\"}"
-                        }
-                    ],
-                    "lld_macro_paths": [
-                        {
-                            "lld_macro": "{#CPU.NUMBER}",
-                            "path": "$.labels.cpu"
-                        },
-                        {
-                            "lld_macro": "{#HELP}",
-                            "path": "$.help"
-                        }
-                    ],
-                    "items": [
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.util",
-                            "type": "DEPENDENT",
-                            "master_item": "system.cpu.idle",
-                            "key": "system.cpu.util[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "JAVASCRIPT",
-                                    "params": "//Calculate utilization\nreturn (100 - value)"
-                                },
-                            ],
-                            "triggers": []
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.idle",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.idle[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"idle\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.system",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.system[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"system\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.user",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.user[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"user\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.steal",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.steal[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"steal\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.softirq",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.softirq[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"softirq\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.nice",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.nice[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"nice\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.iowait",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.iowait[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"iowait\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.interrupt",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.interrupt[node_exporter,\"{#CPU.NUMBER}\"]",
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"irq\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.guest",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.guest[node_exporter,\"{#CPU.NUMBER}\"]",
-                            // this metric is only supported for 0.16.0 or above
-                            // node_cpu{cpu=""cpu0"",mode="guest"} 0 (pre 0.16.0)
-                            // node_cpu_guest_seconds_total{cpu="1",mode="user"} 0 (after 0.16.0)
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=~\"^(?:user|guest)$\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                        {
-                            "_resource": "#{#CPU.NUMBER}",
-                            "_prototype": "system.cpu.guest_nice",
-                            "type": "DEPENDENT",
-                            "master_item": "node_exporter.get",
-                            "key": "system.cpu.guest_nice[node_exporter,\"{#CPU.NUMBER}\"]",
-                            // this metric is only supported for 0.16.0 or above
-                            // node_cpu{cpu=""cpu0"",mode="guest_nice} 0 (pre 0.16.0)
-                            // node_cpu_guest_seconds_total{cpu="1",mode="nice"} 0 (after 0.16.0)
-                            "preprocessing": [
-                                {
-                                    "type": "PROMETHEUS_PATTERN",
-                                    "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=~\"^(?:nice|guest_nice)$\"}\r\n"
-                                },
-                                {
-                                    "type": "CHANGE_PER_SECOND"
-                                },
-                                {
-                                    "type": "MULTIPLIER",
-                                    "params": "100"
-                                }
-                            ]
-                        },
-                    ]
-                },
+                // {
+                //     "name": "CPU discovery",
+                //     "master_item": "node_exporter.get",
+                //     "type": "DEPENDENT",
+                //     "key": "system.cpu.discovery[node_exporter]",
+                //     "preprocessing": [
+                //         {
+                //             "type": "PROMETHEUS_TO_JSON",
+                //             "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"idle\"}"
+                //         }
+                //     ],
+                //     "lld_macro_paths": [
+                //         {
+                //             "lld_macro": "{#CPU.NUMBER}",
+                //             "path": "$.labels.cpu"
+                //         },
+                //         {
+                //             "lld_macro": "{#HELP}",
+                //             "path": "$.help"
+                //         }
+                //     ],
+                //     "items": [
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.util",
+                //             "type": "DEPENDENT",
+                //             "master_item": "system.cpu.idle",
+                //             "key": "system.cpu.util[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "JAVASCRIPT",
+                //                     "params": "//Calculate utilization\nreturn (100 - value)"
+                //                 },
+                //             ],
+                //             "triggers": []
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.idle",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.idle[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"idle\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.system",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.system[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"system\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.user",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.user[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"user\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.steal",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.steal[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"steal\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.softirq",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.softirq[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"softirq\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.nice",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.nice[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"nice\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.iowait",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.iowait[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"iowait\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.interrupt",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.interrupt[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=\"irq\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.guest",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.guest[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             // this metric is only supported for 0.16.0 or above
+                //             // node_cpu{cpu=""cpu0"",mode="guest"} 0 (pre 0.16.0)
+                //             // node_cpu_guest_seconds_total{cpu="1",mode="user"} 0 (after 0.16.0)
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=~\"^(?:user|guest)$\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         },
+                //         {
+                //             "_resource": "#{#CPU.NUMBER}",
+                //             "_prototype": "system.cpu.guest_nice",
+                //             "type": "DEPENDENT",
+                //             "master_item": "node_exporter.get",
+                //             "key": "system.cpu.guest_nice[node_exporter,\"{#CPU.NUMBER}\"]",
+                //             // this metric is only supported for 0.16.0 or above
+                //             // node_cpu{cpu=""cpu0"",mode="guest_nice} 0 (pre 0.16.0)
+                //             // node_cpu_guest_seconds_total{cpu="1",mode="nice"} 0 (after 0.16.0)
+                //             "preprocessing": [
+                //                 {
+                //                     "type": "PROMETHEUS_PATTERN",
+                //                     "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=\"{#CPU.NUMBER}\",mode=~\"^(?:nice|guest_nice)$\"}\r\n"
+                //                 },
+                //                 {
+                //                     "type": "CHANGE_PER_SECOND"
+                //                 },
+                //                 {
+                //                     "type": "MULTIPLIER",
+                //                     "params": "100"
+                //                 }
+                //             ]
+                //         }
+                //     ]
+                // },
                 {
                     "name": "Mounted filesystem discovery",
                     "key": "vfs.fs.discovery[node_exporter]",
@@ -987,6 +988,256 @@
                         }
                     ]
                 },
+                //CPU modes
+                {
+                    "_prototype": "system.cpu.util",
+                    "type": "DEPENDENT",
+                    "master_item": "system.cpu.idle",
+                    "key": "system.cpu.util[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//Calculate utilization\nreturn (100 - value)"
+                        },
+                    ],
+                    "triggers": []
+                },
+                {
+                    "_prototype": "system.cpu.idle",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.idle[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"idle\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.system",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.system[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"system\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.user",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.user[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"user\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.steal",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.steal[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"steal\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.softirq",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.softirq[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"softirq\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.nice",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.nice[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"nice\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.iowait",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.iowait[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"iowait\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.interrupt",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.interrupt[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_seconds_total)?$\",cpu=~\".+\",mode=\"irq\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.guest",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.guest[node_exporter]",
+                    // this metric is only supported for 0.16.0 or above
+                    // node_cpu{cpu=""cpu0"",mode="guest"} 0 (pre 0.16.0)
+                    // node_cpu_guest_seconds_total{cpu="1",mode="user"} 0 (after 0.16.0)
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=~\".+\",mode=~\"^(?:user|guest)$\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.guest_nice",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.cpu.guest_nice[node_exporter]",
+                    // this metric is only supported for 0.16.0 or above
+                    // node_cpu{cpu=""cpu0"",mode="guest_nice} 0 (pre 0.16.0)
+                    // node_cpu_guest_seconds_total{cpu="1",mode="nice"} 0 (after 0.16.0)
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "{__name__=~\"^node_cpu(?:_guest_seconds_total)?$\",cpu=~\".+\",mode=~\"^(?:nice|guest_nice)$\"}"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//calculates average, all cpu utilization\nvar valueArr = JSON.parse(value);\nreturn valueArr.reduce(function(acc,obj){\n   return acc + parseFloat(obj['value'])\n},0)/valueArr.length;"
+                        },
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        },
+                        {
+                            "type": "MULTIPLIER",
+                            "params": "100"
+                        }
+                    ]
+                },
                 //"jumps", context switches and interrupts
                 {
                     "_prototype": "system.cpu.intr",
@@ -1095,10 +1346,10 @@
                             "y": 0
                         },
                         {
-                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resourcetype": "GRAPH",
                             "resource": [
                                 {
-                                    "name": "#{#CPU.NUMBER}: CPU usage"
+                                    "name": "CPU usage"
                                 }
                             ],
                             "x": 1,
