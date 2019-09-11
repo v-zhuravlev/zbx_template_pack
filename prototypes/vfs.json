@@ -1,4 +1,5 @@
 [
+	//units not needed anymore
 	{
 		"name": "Storage units",
 		"_id": "vfs.fs.units",
@@ -29,14 +30,12 @@
 		"name": "Used space",
 		"description": "Used storage in Bytes",
 		"_group": "Storage",
-		"history": "30d",
 		"units": "B"
 	},
 	{
 		"_id": "vfs.fs.total",
 		"name": "Total space",
 		"_group": "Storage",
-		"history": "30d",
 		"units": "B",
 		"description": "Total space in Bytes",
 		"graphs": [
@@ -67,14 +66,12 @@
 		"_id": "vfs.fs.free",
 		"name": "Free space",
 		"_group": "Storage",
-		"history": "30d",
 		"units": "B"
 	},
 	{
 		"_id": "vfs.fs.pused",
 		"name": "Space utilization",
 		"_group": "Storage",
-		"history": "30d",
 		"value_type": "FLOAT",
 		"units": "%",
 		"description": "Space utilization in % for __RESOURCE__",
@@ -96,26 +93,28 @@
 		"triggers": [
 			{
 				"_id": "trigger.inode.pfree.crit",
-				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_CRIT:\"__RESOURCE__\"}",
-				"name": "Free inodes is critically low, below {$INODE_PFREE_CRIT:\"__RESOURCE__\"}%",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}<{$VFS.FS.INODE.PFREE.MIN.CRIT:\"__RESOURCE__\"}",
+				"name": "Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.CRIT:\"__RESOURCE__\"}%)",
 				"priority": "AVERAGE",
+				"description": "It may become impossible to write to disk if there are no index nodes left.\nAs symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.",
 				"translations": {
 					"RU": {
-						"name": "Мало inodes на диске! (< {$INODE_PFREE_CRIT:\"__RESOURCE__\"}%)"
+						"name": "Мало inodes на диске! (< {$VFS.FS.INODE.PFREE.MIN.CRIT:\"__RESOURCE__\"}%)"
 					}
 				}
 			},
 			{
 				"_id": "trigger.inode.pfree.warn",
-				"expression": "{TEMPLATE_NAME:METRIC.last()}<{$INODE_PFREE_WARN:\"__RESOURCE__\"}",
-				"name": "Free inodes is below {$INODE_PFREE_WARN:\"__RESOURCE__\"}%",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}<{$VFS.FS.INODE.PFREE.MIN.WARN:\"__RESOURCE__\"}",
+				"name": "Running out of free inodes (free < {$VFS.FS.INODE.PFREE.MIN.WARN:\"__RESOURCE__\"}%)",
 				"priority": "WARNING",
+				"description": "It may become impossible to write to disk if there are no index nodes left.\nAs symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.",
 				"dependsOn": [
 					"trigger.inode.pfree.crit"
 				],
 				"translations": {
 					"RU": {
-						"name": "Мало inodes на диске! (< {$INODE_PFREE_WARN:\"__RESOURCE__\"}%)"
+						"name": "Мало inodes на диске! (< {$VFS.FS.INODE.PFREE.MIN.WARN:\"__RESOURCE__\"}%)"
 					}
 				}
 			}
@@ -126,7 +125,23 @@
 		"_id": "vfs.dev.read.rate",
 		"name": "Disk read rate",
 		"_group": "Storage",
-		"value_type": "FLOAT"
+		"value_type": "FLOAT",
+		"graphs": [
+			{
+				"name": "Disk read/write rates",
+				"graphtype": "NORMAL",
+				"graph_items": [
+					{
+						"drawtype": "SINGLE_LINE",
+						"name": "vfs.dev.read.rate"
+					},
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "vfs.dev.write.rate"
+					}
+				]
+			}
+		]
 	},
 	{
 		"_id": "vfs.dev.write.rate",
@@ -153,7 +168,32 @@
 		"units": "!ms",
 		"update": "1m",
 		"value_type": "FLOAT",
-		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
+		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.",
+		"triggers": [
+			{
+				"name": "Disk read request response are too high (read > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} ms for 5m or write > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"} ms for 5m)",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)} > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} or {TEMPLATE_NAME:METRIC.min(5m)} > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"}",
+				"description": "This trigger might indicate disk __RESOURCE__ saturation.",
+				"manual_close": "YES",
+				"priority": "WARNING"
+			}
+		],
+		"graphs": [
+			{
+				"name": "Disk average waiting time",
+				"graphtype": "NORMAL",
+				"graph_items": [
+					{
+						"drawtype": "SINGLE_LINE",
+						"name": "vfs.dev.read.await"
+					},
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "vfs.dev.write.await"
+					}
+				]
+			}
+		]
 	},
 	{
 		"_id": "vfs.dev.write.await",

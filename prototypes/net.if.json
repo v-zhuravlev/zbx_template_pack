@@ -1,4 +1,5 @@
 [
+	//move SNMP specific stuff outa here
 	{
 		"oid": "1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}",
 		"_snmpObject": "ifOperStatus.{#SNMPINDEX}",
@@ -293,22 +294,7 @@
 		"units": "bps",
 		"triggers": [
 			{
-				"_documentation": "Might be problems with Mikrotik. Also checked:\n - That type is Ethernet\n- That interfaces is not in down status (issue on HP Procurve)",
-				"_id": "if.speed.not_max",
-				"expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand (\n{TEMPLATE_NAME:__net.if.type__.last()}=6 or\n{TEMPLATE_NAME:__net.if.type__.last()}=7 or\n{TEMPLATE_NAME:__net.if.type__.last()}=11 or\n{TEMPLATE_NAME:__net.if.type__.last()}=62 or\n{TEMPLATE_NAME:__net.if.type__.last()}=69 or\n{TEMPLATE_NAME:__net.if.type__.last()}=117\n)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)",
-				"recovery_expression": "({TEMPLATE_NAME:METRIC.change()}>0 and {TEMPLATE_NAME:METRIC.prev()}>0) or\n({TEMPLATE_NAME:__net.if.status__.last()}=2)",
-				"manual_close": "YES",
-				"name": "Ethernet has changed to lower speed than it was before",
-				"priority": "INFO",
-				"description": "This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.",
-				"_depends_on": [
-					"if.down"
-				],
-				"_translations": {
-					"RU": {
-						"name": "Интерфейс перешел на более низкую скорость, чем был ранее"
-					}
-				}
+				"_prototype": "trigger.if.speed.not_max"
 			}
 		],
 		"_translations": {
@@ -337,5 +323,36 @@
 				"name": "Тип интерфейса"
 			}
 		}
+	},
+	{
+		//"_documentation":"net.if.duplex",
+		"_id": "net.if.duplex",
+		"name": "Duplex status",
+		"_group": "Network_interfaces",
+		"application_prototype": "__RESOURCE__",
+		"history": "1w",
+		"trends": "0d",
+		"value_type": "UNSIGNED",
+		"_translations": {
+			"RU": {
+				"name": "Duplex-статус интерфейса"
+			}
+		},
+		"triggers": [
+			{
+				"_prototype": "none",
+				"_id": "if.halfduplex",
+				"expression": "{TEMPLATE_NAME:METRIC.last()}=2",
+				"manual_close": "YES",
+				"name": "In half-duplex mode",
+				"priority": "WARNING",
+				"description": "Please check autonegotiation settings and cabling",
+				"_translations": {
+					"RU": {
+						"name": "Интерфейс в режиме half-duplex"
+					}
+				}
+			}
+		]
 	}
 ]
