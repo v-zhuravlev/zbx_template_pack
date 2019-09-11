@@ -232,7 +232,6 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPU.COUNT}
           - _prototype: system.cpu.guest
-
             oid: 1.3.6.1.4.1.2021.11.65.0
             type: SNMP
             _snmpObject: ssCpuRawGuest.{#SNMPINDEX}
@@ -244,7 +243,6 @@ templates:
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPU.COUNT}
           - _prototype: system.cpu.guest_nice
-
             oid: 1.3.6.1.4.1.2021.11.66.0
             type: SNMP
             _snmpObject: ssCpuRawGuestNice.{#SNMPINDEX}
@@ -255,6 +253,16 @@ templates:
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
                   return value/{#CPU.COUNT}
+          - _prototype: system.cpu.util
+            type: DEPENDENT
+            key: system.cpu.util[snmp,{#SNMPINDEX}]
+            master_item: system.cpu.idle
+            preprocessing:
+              - type: JAVASCRIPT
+                params: |
+                  //Calculate utilization
+                  return (100 - value)
+
     items:
       - _prototype: system.cpu.load.avg1
         oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-1"]'

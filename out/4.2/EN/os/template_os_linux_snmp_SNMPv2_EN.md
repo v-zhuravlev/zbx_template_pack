@@ -107,6 +107,11 @@ For Zabbix version: 4.2
 ## Zabbix configuration
 
 
+### Macros used
+
+|Name|Description|Default|
+|----|-----------|-------|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
 
 ## Template links
 
@@ -138,12 +143,14 @@ There are no template links in this template.
 |CPU|CPU interrupt time|<p>MIB: UCD-SNMP-MIB</p><p>The amount of time the CPU has been servicing hardware interrupts.</p>|SNMP|system.cpu.interrupt[ssCpuRawInterrupt.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPU.COUNT} `</p>|
 |CPU|CPU guest time|<p>MIB: UCD-SNMP-MIB</p><p>Guest  time (time  spent  running  a  virtual  CPU  for  a  guest  operating  system)</p>|SNMP|system.cpu.guest[ssCpuRawGuest.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPU.COUNT} `</p>|
 |CPU|CPU guest nice time|<p>MIB: UCD-SNMP-MIB</p><p>Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)</p>|SNMP|system.cpu.guest_nice[ssCpuRawGuestNice.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- JAVASCRIPT: `//to get utilization in %, divide by N, where N is number of cores. return value/{#CPU.COUNT} `</p>|
+|CPU|CPU utilization|<p>CPU utilization in %</p>|DEPENDENT|system.cpu.util[snmp,{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//Calculate utilization return (100 - value) `</p>|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux CPU SNMPv2:system.cpu.num[snmp].last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
+|High CPU utilization (over {$CPU.UTIL.CRIT:"__RESOURCE__"} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT:"__RESOURCE__"}`|AVERAGE||
 
 ## Feedback
 
