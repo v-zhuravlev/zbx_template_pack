@@ -22,7 +22,7 @@ Known Issues:&#13;
   Description: metric node_network_info with label 'device' cannot be found, so network discovery is not possible.&#13;
   Version: below 0.18&#13;
 &#13;
-Template tooling version used: 0.26</description>
+Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -2042,11 +2042,11 @@ Interface is down</description>
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU utilization</name>
+                     <name>#{#CPU.NUMBER}: CPU utilization</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.util[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.util[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>30d</history>
                      <trends>365d</trends>
@@ -2108,15 +2108,15 @@ return (100 - value)</params>
                      <verify_peer>0</verify_peer>
                      <verify_host>0</verify_host>
                      <master_item>
-                        <key>system.cpu.idle[node_exporter,"{#CPUNUM}"]</key>
+                        <key>system.cpu.idle[node_exporter,"{#CPU.NUMBER}"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU idle time</name>
+                     <name>#{#CPU.NUMBER}: CPU idle time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.idle[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.idle[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2151,7 +2151,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="idle"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="idle"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2194,11 +2194,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU system time</name>
+                     <name>#{#CPU.NUMBER}: CPU system time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.system[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.system[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2233,7 +2233,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="system"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="system"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2276,11 +2276,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU user time</name>
+                     <name>#{#CPU.NUMBER}: CPU user time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.user[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.user[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2315,7 +2315,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="user"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="user"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2358,11 +2358,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU steal time</name>
+                     <name>#{#CPU.NUMBER}: CPU steal time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.steal[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.steal[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2397,7 +2397,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="steal"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="steal"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2440,11 +2440,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU softirq time</name>
+                     <name>#{#CPU.NUMBER}: CPU softirq time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.softirq[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.softirq[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2479,7 +2479,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="softirq"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="softirq"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2522,11 +2522,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU nice time</name>
+                     <name>#{#CPU.NUMBER}: CPU nice time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.nice[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.nice[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2561,7 +2561,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="nice"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="nice"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2604,11 +2604,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU iowait time</name>
+                     <name>#{#CPU.NUMBER}: CPU iowait time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.iowait[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.iowait[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2643,7 +2643,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="iowait"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="iowait"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2686,11 +2686,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU interrupt time</name>
+                     <name>#{#CPU.NUMBER}: CPU interrupt time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.interrupt[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.interrupt[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2725,7 +2725,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPUNUM}",mode="irq"}
+                           <params>{__name__=~"^node_cpu(?:_seconds_total)?$",cpu="{#CPU.NUMBER}",mode="irq"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2768,11 +2768,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU guest time</name>
+                     <name>#{#CPU.NUMBER}: CPU guest time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.guest[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.guest[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2807,7 +2807,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPUNUM}",mode=~"^(?:user|guest)$"}
+                           <params>{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPU.NUMBER}",mode=~"^(?:user|guest)$"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2850,11 +2850,11 @@ return (100 - value)</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>#{#CPUNUM}: CPU guest nice time</name>
+                     <name>#{#CPU.NUMBER}: CPU guest nice time</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>system.cpu.guest_nice[node_exporter,"{#CPUNUM}"]</key>
+                     <key>system.cpu.guest_nice[node_exporter,"{#CPU.NUMBER}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>365d</trends>
@@ -2889,7 +2889,7 @@ return (100 - value)</params>
                      <preprocessing>
                         <step>
                            <type>22</type>
-                           <params>{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPUNUM}",mode=~"^(?:nice|guest_nice)$"}
+                           <params>{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu="{#CPU.NUMBER}",mode=~"^(?:nice|guest_nice)$"}
 </params>
                            <error_handler>0</error_handler>
                            <error_handler_params/>
@@ -2935,7 +2935,7 @@ return (100 - value)</params>
                <trigger_prototypes/>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>#{#CPUNUM}: CPU utilization</name>
+                     <name>#{#CPU.NUMBER}: CPU utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -2961,13 +2961,13 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.util[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.util[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                      </graph_items>
                   </graph_prototype>
                   <graph_prototype>
-                     <name>#{#CPUNUM}: CPU usage</name>
+                     <name>#{#CPU.NUMBER}: CPU usage</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -2993,7 +2993,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.system[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.system[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3005,7 +3005,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.user[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.user[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3017,7 +3017,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.nice[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.nice[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3029,7 +3029,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.iowait[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.iowait[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3041,7 +3041,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.steal[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.steal[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3053,7 +3053,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.interrupt[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.interrupt[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3065,7 +3065,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.softirq[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.softirq[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3077,7 +3077,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.guest[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.guest[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                         <graph_item>
@@ -3089,7 +3089,7 @@ return (100 - value)</params>
                            <type>0</type>
                            <item>
                               <host>Template OS Linux by Prom</host>
-                              <key>system.cpu.guest_nice[node_exporter,"{#CPUNUM}"]</key>
+                              <key>system.cpu.guest_nice[node_exporter,"{#CPU.NUMBER}"]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -3116,7 +3116,7 @@ return (100 - value)</params>
                <verify_host>0</verify_host>
                <lld_macro_paths>
                   <lld_macro_path>
-                     <lld_macro>{#CPUNUM}</lld_macro>
+                     <lld_macro>{#CPU.NUMBER}</lld_macro>
                      <path>$.labels.cpu</path>
                   </lld_macro_path>
                   <lld_macro_path>
@@ -3933,7 +3933,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <snmp_oid/>
                      <key>vfs.dev.read.time.rate[node_exporter,"{#DEVNAME}"]</key>
                      <delay>0</delay>
-                     <history>0</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -4009,7 +4009,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <snmp_oid/>
                      <key>vfs.dev.write.time.rate[node_exporter,"{#DEVNAME}"]</key>
                      <delay>0</delay>
-                     <history>0</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -4511,7 +4511,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -4624,7 +4624,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                      <dynamic>0</dynamic>
                      <sort_triggers>0</sort_triggers>
                      <resource>
-                        <name>#{#CPUNUM}: CPU usage</name>
+                        <name>#{#CPU.NUMBER}: CPU usage</name>
                         <host>Template OS Linux by Prom</host>
                      </resource>
                      <max_columns>3</max_columns>
