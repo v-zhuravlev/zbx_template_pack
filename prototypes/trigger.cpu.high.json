@@ -3,11 +3,14 @@
 		"_id": "trigger.cpu.high",
 		"name": "High CPU utilization (over {$CPU.UTIL.CRIT:\"__RESOURCE__\"}% for 5m)",
 		"expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.UTIL.CRIT:\"__RESOURCE__\"}",
-		"priority": "AVERAGE",
+		"priority": "WARNING",
 		"_translations": {
 			"RU": {
 				"name": "Высокая загрузка процессора ( > {$CPU.UTIL.CRIT:\"__RESOURCE__\"}% за 5m)"
 			}
-		}
+		},
+		"_depends_on": [
+			"trigger.cpu.load.warn"
+		]
 	}
 ]
