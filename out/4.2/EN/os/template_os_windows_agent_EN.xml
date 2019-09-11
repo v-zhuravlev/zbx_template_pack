@@ -28,7 +28,7 @@
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]</key>
+               <key>perf_counter_en["\Processor Information(_total)\% Interrupt Time"]</key>
                <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -87,7 +87,7 @@
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']</key>
+               <key>perf_counter_en["\Processor Information(_total)\% Processor Time"]</key>
                <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -110,7 +110,7 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The Processor Information(_total)\% Processor Time shows how much the processor(s) is being utilized.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -146,7 +146,7 @@
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]</key>
+               <key>perf_counter_en["\Processor Information(_total)\% Privileged Time"]</key>
                <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -169,7 +169,10 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The Processor(_total)\% Privileged Time counter shows the percent of time that the processor is spent &#13;
+executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt &#13;
+Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode &#13;
+functions of the Windows® Operating System.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -205,7 +208,7 @@
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor]</key>
+               <key>perf_counter_en["\Processor Information(_total)\% User Time"]</key>
                <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -228,7 +231,8 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The Processor(_total)\% User Time counter shows the percent of time that the processor(s) is spent executing &#13;
+in User mode.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -264,7 +268,7 @@
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]</key>
+               <key>perf_counter_en["\System\Processor Queue Length"]</key>
                <delay>0;m0-59</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -287,7 +291,8 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue &#13;
+and are waiting to be executed.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -422,7 +427,7 @@
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
-               <description>Discovery of CPU as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}</description>
+               <description>Discovery of CPU cores as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}</description>
                <item_prototypes>
                   <item_prototype>
                      <name>#{#CPU.NUMBER}: CPU utilization</name>
@@ -452,7 +457,7 @@
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>CPU utilization in %</description>
+                     <description>CPU core #{#CPU.NUMBER} utilization in %</description>
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
@@ -1084,6 +1089,72 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
          </applications>
          <items>
             <item>
+               <name>System uptime</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.uptime</key>
+               <delay>30s</delay>
+               <history>2w</history>
+               <trends>0d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>uptime</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The time (in hundredths of a second) since the network management portion of the system was last re-initialized.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>1</type>
+                     <params>0.01</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
                <name>System information</name>
                <type>0</type>
                <snmp_community/>
@@ -1143,125 +1214,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <master_item/>
             </item>
             <item>
-               <name>System uptime</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.uptime</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>uptime</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>General</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>latest update installed days ago</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>custom.os.updates.latestupdatesinstalled</key>
-               <delay>1d</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>s</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>General</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>number of processes</name>
+               <name>Number of processes</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
@@ -1320,12 +1273,12 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <master_item/>
             </item>
             <item>
-               <name>pending reboot</name>
+               <name>Number of threads</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>custom.os.pendingreboot</key>
-               <delay>1d</delay>
+               <key>perf_counter_en["\System\Threads"]</key>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1347,7 +1300,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The number of threads used by all running processes.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1407,8 +1360,8 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>vm.memory.size[total]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>15m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -1466,8 +1419,8 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>vm.memory.size[available]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -1525,8 +1478,8 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>vm.memory.size[used]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -1584,8 +1537,8 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>vm.memory.size[pused]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -1643,7 +1596,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>system.swap.size[,total]</key>
-               <delay>5m</delay>
+               <delay>15m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1702,7 +1655,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>system.swap.size[,free]</key>
-               <delay>5m</delay>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1761,7 +1714,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmp_community/>
                <snmp_oid/>
                <key>system.swap.size[,pfree]</key>
-               <delay>5m</delay>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -1819,7 +1772,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT AvailableBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Available Bytes"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -1885,7 +1838,7 @@ use Pages/sec together with the Available MBytes counter, and do not use Pages/s
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT CacheBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Cache Bytes"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -1908,8 +1861,7 @@ use Pages/sec together with the Available MBytes counter, and do not use Pages/s
                <publickey/>
                <privatekey/>
                <port/>
-               <description>\Memory\Cache Bytes&#13;
-Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, &#13;
+               <description>Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, &#13;
 Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays &#13;
 the last observed value only; it is not an average.&#13;
 The Memory performance object consists of counters that describe the behavior of physical and virtual &#13;
@@ -1952,7 +1904,7 @@ a symptom of a memory shortage, can cause delays which interfere with all system
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT CommitLimit FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Commit Limit"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2015,7 +1967,7 @@ the last observed value only; it is not an average.</description>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT CommittedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Committed Bytes"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2038,8 +1990,7 @@ the last observed value only; it is not an average.</description>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>\Memory\Committed Bytes&#13;
-The system commit charge is the total amount of committed memory that is in use by all processes &#13;
+               <description>The system commit charge is the total amount of committed memory that is in use by all processes &#13;
 and by the kernel. This memory might have been guaranteed or written to by a process or by the kernel.&#13;
 Memory Available Megabytes in Use This measures the ratio of Committed Bytes to the Commit Limit—in other &#13;
 words, the amount of virtual memory in use. This indicates insufficient memory if the number is greater &#13;
@@ -2079,7 +2030,7 @@ than 80 percent. The obvious solution for this is to add more memory.</descripti
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT PercentCommittedBytesInUse FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\% Committed Bytes In Use"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2145,7 +2096,7 @@ components, COM+ and related Microsoft technologies.</description>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT FreeSystemPageTableEntries FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Free System Page Table Entries"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2205,7 +2156,7 @@ than 5,000, there may well be a memory leak.</description>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2, SELECT PercentUsagePeak FROM Win32_PerfFormattedData_PerfOS_PagingFile]</key>
+               <key>perf_counter_en["\Paging File(_total)\% Usage Peak"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2266,7 +2217,7 @@ The paging file is a reserved space on disk that backs up committed physical mem
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT PageFaultsPersec FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Page Faults/sec"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2330,7 +2281,7 @@ which require disk access, can cause significant delays.</description>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2, select PagesPersec FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Pages/sec"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2390,7 +2341,7 @@ If the value is greater than 1,000, as a result of excessive paging, there may b
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT PoolNonpagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Pool Nonpaged Bytes"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2452,7 +2403,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>wmi.get[root\cimv2,SELECT PoolPagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]</key>
+               <key>perf_counter_en["\Memory\Pool Paged Bytes"]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -2478,65 +2429,6 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <description>This measures the size, in bytes, of the paged pool. This is an area of system memory used for objects &#13;
 that can be written to disk when they are not being used. There may be a memory leak if this value is &#13;
 greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is recorded in the system event log.</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Memory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Memory: Total</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>wmi.get[root\cimv2,select TotalPhysicalMemory from Win32_ComputerSystem]</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -3034,7 +2926,7 @@ Template tooling version used: 0.23</description>
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The device uptime is less than 10 minutes</description>
+The device uptime is less than 10 minutes.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>

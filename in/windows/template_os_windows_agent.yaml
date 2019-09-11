@@ -5,45 +5,99 @@ templates:
     _classes:
       - OS
     items:
-      - _id: wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+      # WMI counters
+      # - _id: w
+      #   _group: "CPU"
+      #   name: Interrupt Time, %
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor where Name='_Total']
+      #   value_type: FLOAT
+      #   units: "%"
+      #   delay: 0;m0-59
+      # - _id: w
+      #   _group: "CPU"
+      #   name: Load, %
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']
+      #   value_type: FLOAT
+      #   units: "%"
+      #   delay: 0;m0-59
+      # - _id: w
+      #   _group: "CPU"
+      #   name: Privileged time, %
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor where Name='_Total']
+      #   value_type: FLOAT
+      #   units: "%"
+      #   delay: 0;m0-59
+      # - _id: w
+      #   _group: "CPU"
+      #   name: User time, %
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor where Name='_Total']
+      #   value_type: FLOAT
+      #   units: "%"
+      #   delay: 0;m0-59
+      # - _id: w
+      #   _group: "CPU"
+      #   name: Queue Length
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]
+      #   value_type: FLOAT
+      #   delay: 0;m0-59
+      # Performance counters
+      - _id: p
         _group: "CPU"
         name: Interrupt Time, %
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT PercentInterruptTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        key: perf_counter_en["\Processor Information(_total)\% Interrupt Time"]
         value_type: FLOAT
         units: "%"
         delay: 0;m0-59
-      - _id: wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']
+      - _id: p
         _group: "CPU"
         name: Load, %
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,select PercentProcessorTime from Win32_PerfformattedData_PerfOS_Processor where Name='_Total']
+        key: perf_counter_en["\Processor Information(_total)\% Processor Time"]
         value_type: FLOAT
         units: "%"
         delay: 0;m0-59
-      - _id: wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        description: |
+          The Processor Information(_total)\% Processor Time shows how much the processor(s) is being utilized.
+      - _id: p
         _group: "CPU"
         name: Privileged time, %
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2, SELECT PercentPrivilegedTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        key: perf_counter_en["\Processor Information(_total)\% Privileged Time"]
         value_type: FLOAT
         units: "%"
         delay: 0;m0-59
-      - _id: wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        description: |
+          The Processor(_total)\% Privileged Time counter shows the percent of time that the processor is spent 
+          executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt 
+          Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode 
+          functions of the Windows® Operating System.
+      - _id: p
         _group: "CPU"
         name: User time, %
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT PercentUserTime FROM Win32_PerfFormattedData_PerfOS_Processor]
+        key: perf_counter_en["\Processor Information(_total)\% User Time"]
         value_type: FLOAT
         units: "%"
         delay: 0;m0-59
-      - _id: wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]
+        description: |
+          The Processor(_total)\% User Time counter shows the percent of time that the processor(s) is spent executing 
+          in User mode.
+      - _id: p
         _group: "CPU"
         name: Queue Length
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2, SELECT ProcessorQueueLength FROM Win32_PerfFormattedData_PerfOS_System]
+        key: perf_counter_en["\System\Processor Queue Length"]
         value_type: FLOAT
         delay: 0;m0-59
+        description: |
+          The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue 
+          and are waiting to be executed.
       #       - _id: system.cpu.util.avg
       #         _group: "CPU"
       #         name: CPU utilisation, in %
@@ -68,7 +122,7 @@ templates:
       - name: CPU core discovery
         key: system.cpu.discovery
         type: ZABBIX_PASSIVE
-        description: Discovery of CPU as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}
+        description: Discovery of CPU cores as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}
         delay: 1d
         items:
           - _prototype: system.cpu.util
@@ -77,6 +131,7 @@ templates:
             type: ZABBIX_PASSIVE
             key: system.cpu.util[{#CPU.NUMBER}]
             delay: 0;m0-59
+            description: "CPU core #{#CPU.NUMBER} utilization in %"
             # {#CPU.STATUS}":"online"} 0;1h/1-7,00:00-24:00
         filter:
           evaltype: AND
@@ -188,6 +243,16 @@ templates:
     _classes:
       - OS
     items:
+      - _prototype: "system.uptime"
+        _group: "General"
+        type: "ZABBIX_PASSIVE"
+        key: "system.uptime"
+        name: "System uptime"
+        triggers:
+          - _prototype: "trigger.uptime.restarted"
+            priority: "WARNING"
+            name: "Host has been restarted (uptime < 10m)"
+            description: "The device uptime is less than 10 minutes."
       - _id: system.uname
         _group: "General"
         name: System information
@@ -195,41 +260,48 @@ templates:
         key: system.uname
         value_type: CHAR
         delay: 1h
-      - _id: system.uptime
-        _group: "General"
-        name: System uptime
-        type: ZABBIX_PASSIVE
-        key: system.uptime
-        value_type: UNSIGNED
-        delay: 1m
-        units: uptime
-        triggers:
-          - _prototype: trigger.uptime.restarted
-            priority: WARNING
-            name: Host has been restarted (uptime < 10m)
-            description: The device uptime is less than 10 minutes
-            # _depends_on:
-      - _id: custom.os.updates.latestupdatesinstalled
-        _group: "General"
-        name: latest update installed days ago
-        type: ZABBIX_PASSIVE
-        key: custom.os.updates.latestupdatesinstalled
-        value_type: UNSIGNED
-        delay: 1d
-        units: s
       - _id: proc.num[]
         _group: "General"
-        name: number of processes
+        name: Number of processes
         type: ZABBIX_PASSIVE
         key: proc.num[]
         value_type: UNSIGNED
-      - _id: custom.os.pendingreboot
+      - _id: sys.threads
         _group: "General"
-        name: pending reboot
+        name: Number of threads
         type: ZABBIX_PASSIVE
-        key: custom.os.pendingreboot
+        key: perf_counter_en["\System\Threads"]
         value_type: UNSIGNED
-        delay: 1d
+        description: "The number of threads used by all running processes."
+      # - _id: system.uptime
+      #   _group: "General"
+      #   name: System uptime
+      #   type: ZABBIX_PASSIVE
+      #   key: system.uptime
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: uptime
+      #   triggers:
+      #     - _prototype: trigger.uptime.restarted
+      #       priority: WARNING
+      #       name: Host has been restarted (uptime < 10m)
+      #       description: The device uptime is less than 10 minutes.
+      # _depends_on:
+      # - _id: custom.os.updates.latestupdatesinstalled
+      #   _group: "General"
+      #   name: Latest update installed days ago
+      #   type: ZABBIX_PASSIVE
+      #   key: custom.os.updates.latestupdatesinstalled
+      #   value_type: UNSIGNED
+      #   delay: 1d
+      #   units: s
+      # - _id: custom.os.pendingreboot
+      #   _group: "General"
+      #   name: Pending reboot
+      #   type: ZABBIX_PASSIVE
+      #   key: custom.os.pendingreboot
+      #   value_type: UNSIGNED
+      #   delay: 1d
 
   - name: Template OS Windows Memory by Zabbix agent
     _zbx_ver: "3.4"
@@ -257,12 +329,186 @@ templates:
       - _prototype: "system.swap.pfree"
         key: "system.swap.size[,pfree]"
         type: "ZABBIX_PASSIVE"
-      - _id: M
+      # WMI counters
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Available
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT AvailableBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     Performance counter measures the amount of physical memory (RAM), in megabytes, that is immediately
+      #     available for allocation either to a process or for system use. It is the sum of the Zero, Free,
+      #     and Standby page lists discussed earlier. When the Available MBytes counter is low, it is a primary
+      #     indicator of a low RAM condition. This is when aggressive working set trims will occur which may or
+      #     may not result in a hard page fault where the pages on the Modified list are written to disk.
+      #     The \Memory\Pages/sec counter measures hard page faults, but it does not distinguish between hard
+      #     page faults that result from normal file reads or writes and page file reads or writes. Therefore,
+      #     use Pages/sec together with the Available MBytes counter, and do not use Pages/sec by itself.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Cache bytes
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT CacheBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     \Memory\Cache Bytes
+      #     Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes,
+      #     Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays
+      #     the last observed value only; it is not an average.
+      #     The Memory performance object consists of counters that describe the behavior of physical and virtual
+      #     memory on the computer. Physical memory is the amount of random access memory on the computer. Virtual
+      #     memory consists of the space in physical memory and on disk. Many of the memory counters monitor paging,
+      #     which is the movement of pages of code and data between disk and physical memory. Excessive paging,
+      #     a symptom of a memory shortage, can cause delays which interfere with all system processes.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Commit limit
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT CommitLimit FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     Commit Limit is the amount of virtual memory that can be committed without having to extend
+      #     the paging file(s). It is measured in bytes. Committed memory is the physical memory which
+      #     has space reserved on the disk paging files. There can be one paging file on each logical drive).
+      #     If the paging file(s) are be expanded, this limit increases accordingly. This counter displays
+      #     the last observed value only; it is not an average.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Committed
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT CommittedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     \Memory\Committed Bytes
+      #     The system commit charge is the total amount of committed memory that is in use by all processes
+      #     and by the kernel. This memory might have been guaranteed or written to by a process or by the kernel.
+      #     Memory Available Megabytes in Use This measures the ratio of Committed Bytes to the Commit Limit—in other
+      #     words, the amount of virtual memory in use. This indicates insufficient memory if the number is greater
+      #     than 80 percent. The obvious solution for this is to add more memory.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Committed in use, %
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT PercentCommittedBytesInUse FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: FLOAT
+      #   delay: 1m
+      #   units: "%"
+      #   description: |
+      #     The \Memory\% Committed Bytes In Use counter calculates the ratio of committed bytes (system commit charge)
+      #     to the system commit limit, and the system can perform poorly when the system commit limit is reached.
+      #     Therefore, when % Committed Bytes In Use is greater than 80%, use the \Process(*)\Private Bytes counter
+      #     to identify the processes that are consuming the most committed memory.
+      #     The Debug Diagnostic Tool (DebugDiag) is designed to assist in troubleshooting issues such as hangs,
+      #     slow performance, memory leaks or fragmentation, and crashes in any user-mode process. The tool includes
+      #     additional debugging scripts focused on Internet Information Services (IIS) applications, web data access
+      #     components, COM+ and related Microsoft technologies.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Free system page table entries
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT FreeSystemPageTableEntries FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   description: |
+      #     This indicates the number of page table entries not currently in use by the system. If the number is less
+      #     than 5,000, there may well be a memory leak.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Page file usage, %
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2, SELECT PercentUsagePeak FROM Win32_PerfFormattedData_PerfOS_PagingFile]
+      #   value_type: FLOAT
+      #   delay: 1m
+      #   units: "%"
+      #   description: |
+      #     The peak usage of the Page File instance in percent.
+      #     The Paging File performance object consists of counters that monitor the paging file(s) on the computer.
+      #     The paging file is a reserved space on disk that backs up committed physical memory on the computer.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Pages faults per/sec
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT PageFaultsPersec FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: FLOAT
+      #   delay: 1m
+      #   description: |
+      #     Page Faults/sec is the average number of pages faulted per second. It is measured in number of pages
+      #     faulted per second because only one page is faulted in each fault operation, hence this is also equal
+      #     to the number of page fault operations. This counter includes both hard faults (those that require
+      #     disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most
+      #     processors can handle large numbers of soft faults without significant consequence. However, hard faults,
+      #     which require disk access, can cause significant delays.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Pages per/sec
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2, select PagesPersec FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: FLOAT
+      #   delay: 1m
+      #   description: |
+      #     This measures the rate at which pages are read from or written to disk to resolve hard page faults.
+      #     If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Pool non-paged
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT PoolNonpagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     This measures the size, in bytes, of the non-paged pool. This is an area of system memory for objects
+      #     that cannot be written to disk but instead must remain in physical memory as long as they are allocated.
+      #     There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch).
+      #     A typical Event ID 2019 is recorded in the system event log.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Pool paged
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,SELECT PoolPagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     This measures the size, in bytes, of the paged pool. This is an area of system memory used for objects
+      #     that can be written to disk when they are not being used. There may be a memory leak if this value is
+      #     greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is recorded in the system event log.
+      # - _id: M
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Total
+      #   type: ZABBIX_PASSIVE
+      #   key: wmi.get[root\cimv2,select TotalPhysicalMemory from Win32_ComputerSystem]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      # Performance counters
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Available
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT AvailableBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Available Bytes"]
         value_type: UNSIGNED
         delay: 1m
         units: B
@@ -275,17 +521,16 @@ templates:
           The \Memory\Pages/sec counter measures hard page faults, but it does not distinguish between hard 
           page faults that result from normal file reads or writes and page file reads or writes. Therefore, 
           use Pages/sec together with the Available MBytes counter, and do not use Pages/sec by itself.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Cache bytes
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT CacheBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Cache Bytes"]
         value_type: UNSIGNED
         delay: 1m
         units: B
         description: |
-          \Memory\Cache Bytes
           Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, 
           Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays 
           the last observed value only; it is not an average.
@@ -294,12 +539,12 @@ templates:
           memory consists of the space in physical memory and on disk. Many of the memory counters monitor paging, 
           which is the movement of pages of code and data between disk and physical memory. Excessive paging, 
           a symptom of a memory shortage, can cause delays which interfere with all system processes.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Commit limit
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT CommitLimit FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Commit Limit"]
         value_type: UNSIGNED
         delay: 1m
         units: B
@@ -309,28 +554,27 @@ templates:
           has space reserved on the disk paging files. There can be one paging file on each logical drive). 
           If the paging file(s) are be expanded, this limit increases accordingly. This counter displays 
           the last observed value only; it is not an average.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Committed
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT CommittedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Committed Bytes"]
         value_type: UNSIGNED
         delay: 1m
         units: B
         description: |
-          \Memory\Committed Bytes
           The system commit charge is the total amount of committed memory that is in use by all processes 
           and by the kernel. This memory might have been guaranteed or written to by a process or by the kernel.
           Memory Available Megabytes in Use This measures the ratio of Committed Bytes to the Commit Limit—in other 
           words, the amount of virtual memory in use. This indicates insufficient memory if the number is greater 
           than 80 percent. The obvious solution for this is to add more memory.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Committed in use, %
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT PercentCommittedBytesInUse FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\% Committed Bytes In Use"]
         value_type: FLOAT
         delay: 1m
         units: "%"
@@ -343,23 +587,23 @@ templates:
           slow performance, memory leaks or fragmentation, and crashes in any user-mode process. The tool includes 
           additional debugging scripts focused on Internet Information Services (IIS) applications, web data access 
           components, COM+ and related Microsoft technologies.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Free system page table entries
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT FreeSystemPageTableEntries FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Free System Page Table Entries"]
         value_type: UNSIGNED
         delay: 1m
         description: |
           This indicates the number of page table entries not currently in use by the system. If the number is less 
           than 5,000, there may well be a memory leak.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Page file usage, %
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2, SELECT PercentUsagePeak FROM Win32_PerfFormattedData_PerfOS_PagingFile]
+        key: perf_counter_en["\Paging File(_total)\% Usage Peak"]
         value_type: FLOAT
         delay: 1m
         units: "%"
@@ -367,12 +611,12 @@ templates:
           The peak usage of the Page File instance in percent. 
           The Paging File performance object consists of counters that monitor the paging file(s) on the computer. 
           The paging file is a reserved space on disk that backs up committed physical memory on the computer.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Pages faults per/sec
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT PageFaultsPersec FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Page Faults/sec"]
         value_type: FLOAT
         delay: 1m
         description: |
@@ -382,23 +626,23 @@ templates:
           disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most 
           processors can handle large numbers of soft faults without significant consequence. However, hard faults, 
           which require disk access, can cause significant delays.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Pages per/sec
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2, select PagesPersec FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Pages/sec"]
         value_type: FLOAT
         delay: 1m
         description: |
           This measures the rate at which pages are read from or written to disk to resolve hard page faults. 
           If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Pool non-paged
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT PoolNonpagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Pool Nonpaged Bytes"]
         value_type: UNSIGNED
         delay: 1m
         units: B
@@ -407,12 +651,12 @@ templates:
           that cannot be written to disk but instead must remain in physical memory as long as they are allocated. 
           There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch). 
           A typical Event ID 2019 is recorded in the system event log.
-      - _id: M
+      - _id: p
         _group: "Memory"
         _resource: "Memory"
         name: Pool paged
         type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,SELECT PoolPagedBytes FROM Win32_PerfFormattedData_PerfOS_Memory]
+        key: perf_counter_en["\Memory\Pool Paged Bytes"]
         value_type: UNSIGNED
         delay: 1m
         units: B
@@ -420,15 +664,6 @@ templates:
           This measures the size, in bytes, of the paged pool. This is an area of system memory used for objects 
           that can be written to disk when they are not being used. There may be a memory leak if this value is 
           greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is recorded in the system event log.
-      - _id: M
-        _group: "Memory"
-        _resource: "Memory"
-        name: Total
-        type: ZABBIX_PASSIVE
-        key: wmi.get[root\cimv2,select TotalPhysicalMemory from Win32_ComputerSystem]
-        value_type: UNSIGNED
-        delay: 1m
-        units: B
       # - _id: vm.memory.size[free]
       #   _group: "Memory"
       #   name: Free memory
@@ -606,16 +841,16 @@ templates:
       - Template OS Windows Network by Zabbix agent
       # - Template OS Windows Disk Performance by Zabbix agent
     # screens:
-    #   - name: "Nginx performance"
+    #   - name: "System performance"
     #     hsize: 2
     #     vsize: 2
     #     screen_items:
-    #       - _graph_id: nginx.connections
+    #       - _graph_id: memory.usage
     #         x: 0
     #         y: 0
-    #       - _graph_id: nginx.requests
+    #       - _graph_id: cpu.usage
     #         x: 1
     #         y: 0
-    #       - _graph_id: nginx.connections.rate
+    #       - _graph_id:
     #         x: 0
     #         y: 1
