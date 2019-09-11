@@ -11,7 +11,7 @@
       <template>
          <template>Template OS Linux CPU by Zabbix agent</template>
          <name>Template OS Linux CPU by Zabbix agent</name>
-         <description>Template tooling version used: 0.26</description>
+         <description>Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -24,11 +24,77 @@
          </applications>
          <items>
             <item>
-               <name>Load average (1m avg per core)</name>
+               <name>Number of CPUs</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>system.cpu.load[percpu,avg1]</key>
+               <key>system.cpu.num</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Load average (1m avg)</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.cpu.load[all,avg1]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -51,7 +117,7 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description>The load average is calculated as system CPU load divided by number of CPU cores.</description>
+               <description/>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -83,11 +149,11 @@
                <master_item/>
             </item>
             <item>
-               <name>Load average (5m avg per core)</name>
+               <name>Load average (5m avg)</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>system.cpu.load[percpu,avg5]</key>
+               <key>system.cpu.load[all,avg5]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -110,7 +176,7 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description>The load average is calculated as system CPU load divided by number of CPU cores.</description>
+               <description/>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -142,11 +208,11 @@
                <master_item/>
             </item>
             <item>
-               <name>Load average (15m avg per core)</name>
+               <name>Load average (15m avg)</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>system.cpu.load[percpu,avg15]</key>
+               <key>system.cpu.load[all,avg15]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -169,7 +235,7 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description>The load average is calculated as system CPU load divided by number of CPU cores.</description>
+               <description/>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -996,11 +1062,11 @@ return (100 - value)</params>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$LOAD_AVG_CRIT}</macro>
+               <macro>{$LOAD_AVG_PER_CPU.MAX.WARN}</macro>
                <value>1.5</value>
             </macro>
          </macros>
@@ -1011,7 +1077,7 @@ return (100 - value)</params>
       <template>
          <template>Template OS Linux filesystems by Zabbix agent</template>
          <name>Template OS Linux filesystems by Zabbix agent</name>
-         <description>Template tooling version used: 0.26</description>
+         <description>Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1589,7 +1655,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <template>
          <template>Template OS Linux memory by Zabbix agent</template>
          <name>Template OS Linux memory by Zabbix agent</name>
-         <description>Template tooling version used: 0.26</description>
+         <description>Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1916,7 +1982,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <template>
          <template>Template OS Linux block devices by Zabbix agent</template>
          <name>Template OS Linux block devices by Zabbix agent</name>
-         <description>Template tooling version used: 0.26</description>
+         <description>Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -2207,7 +2273,7 @@ return JSON.stringify(parsed);</params>
                      <snmp_oid/>
                      <key>vfs.dev.read.time.rate[{#DEVNAME}]</key>
                      <delay>0</delay>
-                     <history>0</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -2288,7 +2354,7 @@ return JSON.stringify(parsed);</params>
                      <snmp_oid/>
                      <key>vfs.dev.write.time.rate[{#DEVNAME}]</key>
                      <delay>0</delay>
-                     <history>0</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -2819,7 +2885,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
       <template>
          <template>Template OS Linux network interfaces by Zabbix agent</template>
          <name>Template OS Linux network interfaces by Zabbix agent</name>
-         <description>Template tooling version used: 0.26</description>
+         <description>Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -3657,7 +3723,7 @@ Known Issues:&#13;
 &#13;
   Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
 &#13;
-Template tooling version used: 0.26</description>
+Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -3868,7 +3934,7 @@ Template tooling version used: 0.26</description>
                <type>0</type>
                <item>
                   <host>Template OS Linux CPU by Zabbix agent</host>
-                  <key>system.cpu.load[percpu,avg1]</key>
+                  <key>system.cpu.load[all,avg1]</key>
                </item>
             </graph_item>
             <graph_item>
@@ -3880,7 +3946,7 @@ Template tooling version used: 0.26</description>
                <type>0</type>
                <item>
                   <host>Template OS Linux CPU by Zabbix agent</host>
-                  <key>system.cpu.load[percpu,avg5]</key>
+                  <key>system.cpu.load[all,avg5]</key>
                </item>
             </graph_item>
             <graph_item>
@@ -3892,7 +3958,19 @@ Template tooling version used: 0.26</description>
                <type>0</type>
                <item>
                   <host>Template OS Linux CPU by Zabbix agent</host>
-                  <key>system.cpu.load[percpu,avg15]</key>
+                  <key>system.cpu.load[all,avg15]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>3</sortorder>
+               <drawtype>0</drawtype>
+               <color>A54F10</color>
+               <yaxisside>1</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <key>system.cpu.num</key>
                </item>
             </graph_item>
          </graph_items>
@@ -4148,19 +4226,42 @@ Template tooling version used: 0.26</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.load[percpu,avg1].avg(5m)}&gt;{$LOAD_AVG_CRIT}</expression>
+         <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.load[all,avg1].min(5m)}/{Template OS Linux CPU by Zabbix agent:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Load average is too high</name>
+         <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Per CPU load average is too high. Your system may be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
+               <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.load[all,avg1].min(5m)}/{Template OS Linux CPU by Zabbix agent:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
          <tags/>
       </trigger>
       <trigger>

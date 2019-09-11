@@ -112,6 +112,7 @@ For Zabbix version: 4.2
 |Name|Description|Default|
 |----|-----------|-------|
 |{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$LOAD_AVG_PER_CPU.MAX.CRIT}|<p>Load per CPU considered sustainable. Tune if needed.</p>|1.5|
 
 ## Template links
 
@@ -149,8 +150,8 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux CPU SNMPv2:system.cpu.num[snmp].last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
-|High CPU utilization (over {$CPU.UTIL.CRIT:"__RESOURCE__"} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT:"__RESOURCE__"}`|AVERAGE||
+|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].min(5m)}/{Template OS Linux CPU SNMPv2:system.cpu.num[snmp].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 

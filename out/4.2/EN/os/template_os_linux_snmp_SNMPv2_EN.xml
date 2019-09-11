@@ -2175,15 +2175,15 @@ return (100 - value)
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux CPU SNMPv2:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT:"__RESOURCE__"}</expression>
+                     <expression>{Template OS Linux CPU SNMPv2:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>High CPU utilization (over {$CPU.UTIL.CRIT:"__RESOURCE__"} for 5m)</name>
+                     <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
+                     <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -2393,6 +2393,10 @@ return JSON.stringify([{"{#CPU.COUNT}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}"
             <macro>
                <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$LOAD_AVG_PER_CPU.MAX.CRIT}</macro>
+               <value>1.5</value>
             </macro>
          </macros>
          <templates/>
@@ -3163,6 +3167,18 @@ Template tooling version used: 0.27</description>
                   <key>system.cpu.load.avg15[laLoad.3]</key>
                </item>
             </graph_item>
+            <graph_item>
+               <sortorder>3</sortorder>
+               <drawtype>0</drawtype>
+               <color>A54F10</color>
+               <yaxisside>1</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Linux CPU SNMPv2</host>
+                  <key>system.cpu.num[snmp]</key>
+               </item>
+            </graph_item>
          </graph_items>
       </graph>
       <graph>
@@ -3245,16 +3261,17 @@ This trigger is ignored, if there is no swap configured</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux CPU SNMPv2:system.cpu.load.avg1[laLoad.1].avg(5m)}/{Template OS Linux CPU SNMPv2:system.cpu.num[snmp].last()}&gt;{$LOAD_AVG_CRIT}</expression>
+         <expression>{Template OS Linux CPU SNMPv2:system.cpu.load.avg1[laLoad.1].min(5m)}/{Template OS Linux CPU SNMPv2:system.cpu.num[snmp].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Load average is too high</name>
+         <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Per CPU load average is too high. Your system may be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>

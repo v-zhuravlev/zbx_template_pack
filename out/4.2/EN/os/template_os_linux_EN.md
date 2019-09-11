@@ -15,8 +15,8 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|<p>-</p>|90|
-|{$LOAD_AVG_CRIT}|<p>-</p>|1.5|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>-</p>|1.5|
 
 ## Template links
 
@@ -29,9 +29,10 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|CPU|Load average (1m avg per core)|<p>The load average is calculated as system CPU load divided by number of CPU cores.</p>|ZABBIX_PASSIVE|system.cpu.load[percpu,avg1]|
-|CPU|Load average (5m avg per core)|<p>The load average is calculated as system CPU load divided by number of CPU cores.</p>|ZABBIX_PASSIVE|system.cpu.load[percpu,avg5]|
-|CPU|Load average (15m avg per core)|<p>The load average is calculated as system CPU load divided by number of CPU cores.</p>|ZABBIX_PASSIVE|system.cpu.load[percpu,avg15]|
+|CPU|Number of CPUs|<p>-</p>|ZABBIX_PASSIVE|system.cpu.num<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|CPU|Load average (1m avg)|<p>-</p>|ZABBIX_PASSIVE|system.cpu.load[all,avg1]|
+|CPU|Load average (5m avg)|<p>-</p>|ZABBIX_PASSIVE|system.cpu.load[all,avg5]|
+|CPU|Load average (15m avg)|<p>-</p>|ZABBIX_PASSIVE|system.cpu.load[all,avg15]|
 |CPU|CPU utilization|<p>CPU utilization in %</p>|DEPENDENT|system.cpu.util<p>**Preprocessing**:</p><p>- JAVASCRIPT: `//Calculate utilization return (100 - value)`</p>|
 |CPU|CPU idle time|<p>The time the CPU has spent doing nothing.</p>|ZABBIX_PASSIVE|system.cpu.util[,idle]|
 |CPU|CPU system time|<p>The time the CPU has spent running the kernel and its processes.</p>|ZABBIX_PASSIVE|system.cpu.util[,system]|
@@ -50,7 +51,8 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load[percpu,avg1].avg(5m)}>{$LOAD_AVG_CRIT}`|AVERAGE||
+|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load[all,avg1].min(5m)}/{Template OS Linux CPU by Zabbix agent:system.cpu.num.last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util.min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
 
 ## Feedback
 

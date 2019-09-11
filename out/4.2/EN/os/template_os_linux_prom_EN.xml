@@ -4515,7 +4515,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$LOAD_AVG_CRIT}</macro>
+               <macro>{$LOAD_AVG_PER_CPU.MAX.WARN}</macro>
                <value>1.5</value>
             </macro>
             <macro>
@@ -4823,10 +4823,10 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].avg(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_CRIT}</expression>
+         <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Load average is too high</name>
+         <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.CRIT} for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

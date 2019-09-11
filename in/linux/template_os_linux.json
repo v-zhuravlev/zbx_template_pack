@@ -5,40 +5,31 @@
             "_zbx_ver": "4.2",
             "macros": [
                 {
-                    "macro": "{$LOAD_AVG_CRIT}",
+                    "macro": "{$LOAD_AVG_PER_CPU.MAX.WARN}",
                     "value": "1.5"
                 }
             ],
             "items": [
                 //CPU
                 {
+                    "_prototype": "system.cpu.num",
+                    "key": "system.cpu.num",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
                     "_prototype": "system.cpu.load.avg1",
-                    "key": "system.cpu.load[percpu,avg1]",
-                    "type": "ZABBIX_PASSIVE",
-                    "name": "Load average (1m avg per core)",
-                    "description": "The load average is calculated as system CPU load divided by number of CPU cores.",
-                    "triggers": [
-                        {
-                            "_id": "trigger.cpu.load.warn",
-                            "name": "Load average is too high",
-                            "expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$LOAD_AVG_CRIT}",
-                            "priority": "AVERAGE"
-                        }
-                    ]
+                    "key": "system.cpu.load[all,avg1]",
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
                     "_prototype": "system.cpu.load.avg5",
-                    "key": "system.cpu.load[percpu,avg5]",
-                    "type": "ZABBIX_PASSIVE",
-                    "name": "Load average (5m avg per core)",
-                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
+                    "key": "system.cpu.load[all,avg5]",
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
                     "_prototype": "system.cpu.load.avg15",
-                    "key": "system.cpu.load[percpu,avg15]",
-                    "type": "ZABBIX_PASSIVE",
-                    "name": "Load average (15m avg per core)",
-                    "description": "The load average is calculated as system CPU load divided by number of CPU cores."
+                    "key": "system.cpu.load[all,avg15]",
+                    "type": "ZABBIX_PASSIVE"
                 },
                 {
                     "_prototype": "system.cpu.util",
@@ -50,8 +41,7 @@
                             "type": "JAVASCRIPT",
                             "params": "//Calculate utilization\nreturn (100 - value)"
                         },
-                    ],
-                    "triggers": []
+                    ]
                 },
                 {
                     "_prototype": "system.cpu.idle",

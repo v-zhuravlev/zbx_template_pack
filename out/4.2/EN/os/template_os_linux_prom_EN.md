@@ -24,7 +24,7 @@ No specific Zabbix configuration is required.
 |Name|Description|Default|
 |----|-----------|-------|
 |{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$LOAD_AVG_CRIT}|<p>-</p>|1.5|
+|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>-</p>|1.5|
 |{$MEMORY_AVAILABLE_MIN}|<p>-</p>|20M|
 |{$NODE_EXPORTER_PORT}|<p>TCP Port node_exporter is listening on.</p>|9100|
 |{$SWAP_PFREE_WARN}|<p>-</p>|50|
@@ -109,7 +109,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].avg(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_CRIT}`|AVERAGE||
+|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.CRIT} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_PER_CPU.MAX.CRIT}`|AVERAGE||
 |Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.available[node_exporter].last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux by Prom:vm.memory.total[node_exporter].last(0)}>0`|AVERAGE||
 |High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[node_exporter].last()}<{$SWAP_PFREE_WARN} and {Template OS Linux by Prom:system.swap.total[node_exporter].last()}>0`|WARNING||
 |Interface {#IFNAME}({#IFALIAS}): High bandwidth usage >{$IF_UTIL_MAX:"{#IFNAME}"}%|<p>Last value: {ITEM.LASTVALUE1}.</p>|`({TEMPLATE_NAME:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} or {Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}) and {Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}>0`<p>Recovery expression:</p>`{TEMPLATE_NAME:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}<(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} and {Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}<(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Interface {#IFNAME}({#IFALIAS}): Link down</p>|
