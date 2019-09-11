@@ -129,14 +129,14 @@ templates:
         type: DEPENDENT
         master_item: system.cpu.num
         key: cpu.discovery[snmp]
-        description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPUNUM} in preprocessing. That's the only reason why LLD is used.
+        description: This discovery will create set of per core CPU metrics from UCD-SNMP-MIB, using {#CPU.COUNT} in preprocessing. That's the only reason why LLD is used.
         _singleton: true
         _zbx_ver: "4.2"
         preprocessing:
           - type: JAVASCRIPT
             params: |
               //count the number of CPU cores
-              return JSON.stringify([{"{#CPUNUM}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}":""}])
+              return JSON.stringify([{"{#CPU.COUNT}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}":""}])
         items:
           - _prototype: system.cpu.idle
             oid: 1.3.6.1.4.1.2021.11.53.0
@@ -148,7 +148,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.system
             oid: 1.3.6.1.4.1.2021.11.52.0
             type: SNMP
@@ -159,7 +159,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.user
             oid: 1.3.6.1.4.1.2021.11.50.0
             type: SNMP
@@ -170,7 +170,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.steal
             oid: 1.3.6.1.4.1.2021.11.64.0
             type: SNMP
@@ -181,7 +181,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.softirq
 
             oid: 1.3.6.1.4.1.2021.11.61.0
@@ -193,12 +193,12 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.nice
 
             oid: 1.3.6.1.4.1.2021.11.51.0
             type: SNMP
-            key: "{#CPUNUM}"
+            key: "{#CPU.COUNT}"
             _snmpObject: ssCpuRawNice.{#SNMPINDEX}
             _mib: UCD-SNMP-MIB
             preprocessing:
@@ -206,7 +206,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.iowait
 
             oid: 1.3.6.1.4.1.2021.11.54.0
@@ -218,7 +218,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.interrupt
 
             oid: 1.3.6.1.4.1.2021.11.56.0
@@ -230,7 +230,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.guest
 
             oid: 1.3.6.1.4.1.2021.11.65.0
@@ -242,7 +242,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
           - _prototype: system.cpu.guest_nice
 
             oid: 1.3.6.1.4.1.2021.11.66.0
@@ -254,7 +254,7 @@ templates:
               - type: JAVASCRIPT
                 params: |
                   //to get utilization in %, divide by N, where N is number of cores.
-                  return value/{#CPUNUM}
+                  return value/{#CPU.COUNT}
     items:
       - _prototype: system.cpu.load.avg1
         oid: '1.3.6.1.4.1.2021.10.1.3["index","1.3.6.1.4.1.2021.10.1.2", "Load-1"]'
