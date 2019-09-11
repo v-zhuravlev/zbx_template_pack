@@ -1,13 +1,16 @@
 [
 	{
 		"_id": "trigger.memory.high",
-		"name": "High memory utilization",
-		"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$MEMORY_UTIL_MAX}",
+		"name": "High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)",
+		"expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$MEMORY.UTIL.MAX}",
 		"priority": "AVERAGE",
 		"_translations": {
 			"RU": {
-				"name": "Мало свободной памяти ОЗУ"
+				"name": "Мало свободной памяти ОЗУ ( >{$MEMORY.UTIL.MAX}% for 5m)"
 			}
-		}
+		},
+		"_depends_on": [
+			"trigger.memory.available.min"
+		]
 	}
 ]
