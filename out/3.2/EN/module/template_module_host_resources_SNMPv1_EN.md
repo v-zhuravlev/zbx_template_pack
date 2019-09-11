@@ -115,7 +115,7 @@ For Zabbix version: 3.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|<p>-</p>|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
 
 ## Template links
 
@@ -137,7 +137,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|#{#SNMPINDEX}: High CPU utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE||
+|#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 

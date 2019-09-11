@@ -14,7 +14,7 @@
          <description>MIBs used:&#13;
 HOST-RESOURCES-MIB&#13;
 &#13;
-Template tooling version used: 0.26</description>
+Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -583,7 +583,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
          <description>MIBs used:&#13;
 HOST-RESOURCES-MIB&#13;
 &#13;
-Template tooling version used: 0.26</description>
+Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1101,7 +1101,7 @@ For example, the amount of main memory allocated to a buffer pool might be modif
          <description>MIBs used:&#13;
 HOST-RESOURCES-MIB&#13;
 &#13;
-Template tooling version used: 0.26</description>
+Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1211,15 +1211,15 @@ Implementations may approximate this one minute smoothing period if necessary.</
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module HOST-RESOURCES-MIB CPU SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Module HOST-RESOURCES-MIB CPU SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: High CPU utilization</name>
+                     <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
+                     <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1285,7 +1285,7 @@ Implementations may approximate this one minute smoothing period if necessary.</
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -1297,7 +1297,7 @@ Implementations may approximate this one minute smoothing period if necessary.</
          <name>Template Module HOST-RESOURCES-MIB SNMPv1</name>
          <description>HOST-RESOURCES-MIB: CPU, memory and storage&#13;
 &#13;
-Template tooling version used: 0.26</description>
+Template tooling version used: 0.27</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
