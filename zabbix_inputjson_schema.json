@@ -103,6 +103,60 @@
                       "_graph_id": {
                         "type": "string",
                         "description": "Define graph _id For graphs (and graph prototypes)"
+                      },
+                      "resourcetype": {
+                        "enum": [
+                          "GRAPH",
+                          "SIMPLE_GRAPH",
+                          "MAP",
+                          "PLAIN_TEXT",
+                          "HOSTS_INFO",
+                          "TRIGGERS_INFO",
+                          "SYSTEM_INFORMATION",
+                          "CLOCK",
+                          "SCREEN",
+                          "TRIGGERS_OVERVIEW",
+                          "DATA_OVERVIEW",
+                          "URL",
+                          "HISTORY_OF_ACTIONS",
+                          "HISTORY_OF_EVENTS",
+                          "LATEST_HOST_GROUP_ISSUES",
+                          "PROBLEMS_BY_SEVERITY",
+                          "LATEST_HOST_ISSUES",
+                          "SIMPLE_GRAPH_PROTOTYPE",
+                          "GRAPH_PROTOTYPE"
+                        ]
+                      },
+                      "resource": {
+                        "type": "array",
+                        "maxItems": 1,
+                        "minItems": 1,
+                        "items": {
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "Static graph name or item key"
+                            },
+                            "key": {
+                              "type": "string",
+                              "description": "Static graph name or item key"
+                            },
+                            "host": {
+                              "type": "string",
+                              "description": "Provide template name here"
+                            }
+                          }
+                        },
+                        "defaultSnippets": [
+                          {
+                            "label": "New resource",
+                            "description": "Add new static resource reference. Used if when referencing items or graphs from linked templates",
+                            "body": {
+                              "host": "$1",
+                              "name": "$2"
+                            }
+                          }
+                        ]
                       }
                     }
                   }
@@ -139,43 +193,6 @@
                   "type": "string",
                   "title": "The Description Schema",
                   "description": "Used in macros table in README file"
-                }
-              }
-            }
-          },
-          "_issues": {
-            "$id": "/properties/templates/items/properties/documentation/properties/_issues",
-            "type": "array",
-            "items": {
-              "$id": "/properties/templates/items/properties/documentation/properties/issues/items",
-              "type": "object",
-              "properties": {
-                "description": {
-                  "$id": "/properties/templates/items/properties/documentation/properties/issues/items/properties/description",
-                  "type": "string",
-                  "title": "The Description Schema",
-                  "default": "",
-                  "examples": [
-                    "D-Link reports missing PSU as fail(4)"
-                  ]
-                },
-                "version": {
-                  "$id": "/properties/templates/items/properties/documentation/properties/issues/items/properties/version",
-                  "type": "string",
-                  "title": "The Version Schema",
-                  "default": "",
-                  "examples": [
-                    "Firmware: 1.73R008,hardware revision: B1"
-                  ]
-                },
-                "device": {
-                  "$id": "/properties/templates/items/properties/documentation/properties/issues/items/properties/device",
-                  "type": "string",
-                  "title": "The Device Schema",
-                  "default": "",
-                  "examples": [
-                    "DGS-3420-26SC Gigabit Ethernet Switch"
-                  ]
                 }
               }
             }
@@ -365,7 +382,7 @@
                 "key": {
                   "$id": "/properties/templates/items/properties/discovery_rules/items/properties/key",
                   "type": "string",
-                  "pattern": "\\.discovery$",
+                  "pattern": "\\.discovery$|discovery\\[.*\\]$",
                   "title": "The Key Schema",
                   "default": "",
                   "examples": [
@@ -449,6 +466,10 @@
           "_zbx_ver": {
             "$ref": "./zabbix_metric_prototype_schema.json#/definitions/_zbx_ver",
             "description": "(optional) Please provide minimum Zabbix version required. Template will be filtered out for any versions below"
+          },
+          "templates": {
+            "description": "Add template links",
+            "type": "array"
           },
           "items": {
             "$ref": "./zabbix_metric_prototype_schema.json"
