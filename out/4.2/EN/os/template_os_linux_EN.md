@@ -16,7 +16,7 @@ For Zabbix version: 4.2
 |Name|Description|Default|
 |----|-----------|-------|
 |{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>-</p>|1.5|
+|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>Load per CPU considered sustainable. Tune if needed.</p>|1.5|
 
 ## Template links
 
