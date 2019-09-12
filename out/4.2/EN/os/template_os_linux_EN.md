@@ -99,7 +99,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Filesystems|{#FSNAME}: Used space|<p>Used storage in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},used]|
 |Filesystems|{#FSNAME}: Total space|<p>Total space in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},total]|
-|Filesystems|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]<p>**Expression**:</p>`(last(vfs.fs.size[{#FSNAME},used])/last(vfs.fs.size[{#FSNAME},total]))*100`|
+|Filesystems|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]<p>**Expression**:</p>`(last("vfs.fs.size[{#FSNAME},used]")/last("vfs.fs.size[{#FSNAME},total]"))*100`|
 |Filesystems|{#FSNAME}: Free inodes in %|<p>-</p>|ZABBIX_PASSIVE|vfs.fs.inode[{#FSNAME},pfree]|
 
 ## Triggers
@@ -146,7 +146,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.pused[agent]<p>**Expression**:</p>`((last(vm.memory.size[total])-last(vm.memory.size[available]))/last(vm.memory.size[total]))*100`|
+|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.pused[agent]<p>**Expression**:</p>`((last("vm.memory.size[total]")-last("vm.memory.size[available]"))/last("vm.memory.size[total]"))*100`|
 |Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[total]|
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|ZABBIX_PASSIVE|vm.memory.size[available]|
 |Memory|Total swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,total]|
@@ -202,8 +202,8 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Storage|{#DEVNAME}: Disk read rate|<p>r/s. The number (after merges) of read requests completed per second for the device.</p>|DEPENDENT|vfs.dev.read.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][3]`</p><p>- CHANGE_PER_SECOND|
 |Storage|{#DEVNAME}: Disk write rate|<p>w/s. The number (after merges) of write requests completed per second for the device.</p>|DEPENDENT|vfs.dev.write.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][7]`</p><p>- CHANGE_PER_SECOND|
-|Storage|{#DEVNAME}: Disk read request avg waiting time (r_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.read.await[{#DEVNAME}]<p>**Expression**:</p>`(last(vfs.dev.read.time.rate[{#DEVNAME}])/(last(vfs.dev.read.rate[{#DEVNAME}])+(last(vfs.dev.read.rate[{#DEVNAME}])=0)))*1000*(last(vfs.dev.read.rate[{#DEVNAME}]) > 0)`|
-|Storage|{#DEVNAME}: Disk write request avg waiting time (w_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.write.await[{#DEVNAME}]<p>**Expression**:</p>`(last(vfs.dev.write.time.rate[{#DEVNAME}])/(last(vfs.dev.write.rate[{#DEVNAME}])+(last(vfs.dev.write.rate[{#DEVNAME}])=0)))*1000*(last(vfs.dev.write.rate[{#DEVNAME}]) > 0)`|
+|Storage|{#DEVNAME}: Disk read request avg waiting time (r_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.read.await[{#DEVNAME}]<p>**Expression**:</p>`(last("vfs.dev.read.time.rate[{#DEVNAME}]")/(last("vfs.dev.read.rate[{#DEVNAME}]")+(last("vfs.dev.read.rate[{#DEVNAME}]")=0)))*1000*(last("vfs.dev.read.rate[{#DEVNAME}]") > 0)`|
+|Storage|{#DEVNAME}: Disk write request avg waiting time (w_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.write.await[{#DEVNAME}]<p>**Expression**:</p>`(last("vfs.dev.write.time.rate[{#DEVNAME}]")/(last("vfs.dev.write.rate[{#DEVNAME}]")+(last("vfs.dev.write.rate[{#DEVNAME}]")=0)))*1000*(last("vfs.dev.write.rate[{#DEVNAME}]") > 0)`|
 |Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>-</p>|DEPENDENT|vfs.dev.queue_size[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][13]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
 |Storage|{#DEVNAME}: Disk utilization|<p>-</p>|DEPENDENT|vfs.dev.util[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][12]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.1`</p>|
 |Zabbix_raw_items|Get /proc/diskstats|<p>-</p>|ZABBIX_PASSIVE|vfs.file.contents[/proc/diskstats]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var parsed = value.split("\n").reduce(function(acc, x, i) {   acc["values"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)   acc["lld"].push({"{#DEVNAME}":x.split(/ +/)[3]});   return acc; }, {"values":{}, "lld": []}); return JSON.stringify(parsed);`</p>|

@@ -30,7 +30,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.used[snmp]<p>**Expression**:</p>`((last(vm.memory.total[memTotalReal.0])-last(vm.memory.free[memAvailReal.0])-last(vm.memory.cached[memCached.0])-last(vm.memory.buffers[memBuffer.0]))/last(vm.memory.total[memTotalReal.0]))*100`|
+|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.used[snmp]<p>**Expression**:</p>`((last("vm.memory.total[memTotalReal.0]")-last("vm.memory.free[memAvailReal.0]")-last("vm.memory.cached[memCached.0]")-last("vm.memory.buffers[memBuffer.0]"))/last("vm.memory.total[memTotalReal.0]"))*100`|
 |Memory|Free memory|<p>MIB: UCD-SNMP-MIB</p>|SNMP|vm.memory.free[memAvailReal.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (buffers)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by kernel buffers (Buffers in /proc/meminfo)</p>|SNMP|vm.memory.buffers[memBuffer.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (cached)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)</p>|SNMP|vm.memory.cached[memCached.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
@@ -201,7 +201,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Storage|{#FSNAME}: Used space|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
 |Storage|{#FSNAME}: Total space|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.</p>|SNMP|vfs.fs.total[hrStorageSize.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
-|Storage|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|CALCULATED|vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last(vfs.fs.used[hrStorageUsed.{#SNMPINDEX}])/last(vfs.fs.total[hrStorageSize.{#SNMPINDEX}]))*100`|
+|Storage|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|CALCULATED|vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]")/last("vfs.fs.total[hrStorageSize.{#SNMPINDEX}]"))*100`|
 |Storage|{#FSNAME}: Free inodes in %|<p>MIB: UCD-SNMP-MIB</p><p>If having problems collecting this item make sure access to UCD-SNMP-MIB is allowed.</p>|SNMP|vfs.fs.inode.pfree[dskPercentNode.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return (100-value);`</p>|
 
 ## Triggers
