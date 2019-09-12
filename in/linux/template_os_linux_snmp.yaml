@@ -67,23 +67,24 @@ templates:
         key: system.swap.pfree[snmp]
         type: CALCULATED
 
-  - name: Template OS Linux VFS.DEV
+  - name: Template OS Linux block devices
     _classes:
       - SNMPv2
     _zbx_ver: "4.2"
     macros:
       - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
         value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)"
-        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+        _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
       - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
         value: ".+"
-        _description: "This macro is used in block devices discovery. Can be overriden on the host or linked template level"
+        _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
 
     discovery_rules:
       - name: Block devices discovery
         key: vfs.dev.discovery[snmp]
         type: SNMP
         oid: discovery[{#DEVNAME},1.3.6.1.4.1.2021.13.15.1.1.2]
+        description: Block devices are discovered from UCD-DISKIO-MIB::diskIOTable (http://net-snmp.sourceforge.net/docs/mibs/ucdDiskIOMIB.html#diskIOTable)
         filter:
           evaltype: AND
           conditions:
@@ -323,22 +324,22 @@ templates:
       - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
         value: "^(/dev|/sys|/run|/proc|.+/shm$)"
         _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
+          This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level
       - macro: "{$VFS.FS.FSNAME.MATCHES}"
         value: ".+"
         _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
+          This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level
       - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
         value: "^\\s$"
         _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
+          This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level
       - macro: "{$VFS.FS.FSTYPE.MATCHES}"
         value: ".*(\\.4|\\.9|hrStorageFixedDisk|hrStorageFlashMemory)$"
         _description:
-          This macro is used in filesystems discovery. Can be overriden on the host
+          This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level
     discovery_rules:
       - name: Mounted filesystem discovery
@@ -412,7 +413,7 @@ templates:
     description: Template OS Linux
     templates:
       - Template OS Linux CPU SNMPvX
-      - Template OS Linux VFS.DEV SNMPvX
+      - Template OS Linux block devices SNMPvX
       - Template OS Linux memory SNMPvX
       - Template OS Linux filesystems SNMPvX
     _classes:

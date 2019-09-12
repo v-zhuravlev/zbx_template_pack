@@ -52,7 +52,7 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
-# Template OS Linux VFS.DEV SNMPv2
+# Template OS Linux block devices SNMPv2
 
 ## Overview
 
@@ -68,8 +68,8 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overriden on the host or linked template level</p>|.+|
-|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overriden on the host or linked template level</p>|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
+|{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|.+|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
 
 ## Template links
 
@@ -79,7 +79,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Block devices discovery|<p>-</p>|SNMP|vfs.dev.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
+|Block devices discovery|<p>Block devices are discovered from UCD-DISKIO-MIB::diskIOTable (http://net-snmp.sourceforge.net/docs/mibs/ucdDiskIOMIB.html#diskIOTable)</p>|SNMP|vfs.dev.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -176,10 +176,10 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|.+|
-|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
-|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$|
-|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^\s$|
+|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|.+|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
+|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^\s$|
 |{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|10|
 |{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|20|
 |{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
@@ -257,7 +257,7 @@ No specific Zabbix configuration is required.
 |Template Module Generic SNMPv2|
 |Template Module Interfaces SNMPv2|
 |Template OS Linux CPU SNMPv2|
-|Template OS Linux VFS.DEV SNMPv2|
+|Template OS Linux block devices SNMPv2|
 |Template OS Linux filesystems SNMPv2|
 |Template OS Linux memory SNMPv2|
 
