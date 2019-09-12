@@ -15,9 +15,11 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.MATCHES}|<p>.</p>|.*|
-|{$CPU.NOT_MATCHES}|<p>.</p>|\s|
-|{$CPU_UTIL_MAX}|<p>-</p>|90|
+|{$CPU.INTERRUPT.CRIT.MAX}|<p>The critical threshold of the % Interrupt Time counter.</p>|50|
+|{$CPU.INTERRUPT.WARN.MAX}|<p>The warning threshold of the % Interrupt Time counter.</p>|30|
+|{$CPU.PRIV.CRIT.MAX}|<p>The threshold of the % Privileged Time counter.</p>|20|
+|{$CPU.QUEUE.CRIT.MAX}|<p>The threshold of the Processor Queue Length counter.</p>|3|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
 
 ## Template links
 
@@ -25,34 +27,32 @@ There are no template links in this template.
 
 ## Discovery rules
 
-|Name|Description|Type|Key and additional info|
-|----|-----------|----|----|
-|CPU core discovery|<p>Discovery of CPU cores as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}</p>|ZABBIX_PASSIVE|system.cpu.discovery<p>**Filter**:</p>AND <p>- A: {#CPU.NUMBER} MATCHES_REGEX `{$CPU.MATCHES}`</p><p>- B: {#CPU.NUMBER} NOT_MATCHES_REGEX `{$CPU.NOT_MATCHES}`</p>|
 
 ## Items collected
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|CPU|Interrupt Time, %|<p>-</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Interrupt Time"]|
-|CPU|Load, %|<p>The Processor Information(_total)\% Processor Time shows how much the processor(s) is being utilized.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Processor Time"]|
-|CPU|Privileged time, %|<p>The Processor(_total)\% Privileged Time counter shows the percent of time that the processor is spent </p><p>executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt </p><p>Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode </p><p>functions of the Windows® Operating System.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Privileged Time"]|
-|CPU|User time, %|<p>The Processor(_total)\% User Time counter shows the percent of time that the processor(s) is spent executing </p><p>in User mode.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% User Time"]|
+|CPU|Interrupt Time, %|<p>The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing </p><p>hardware interrupts during sample intervals. This value is an indirect indicator of the activity of </p><p>devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication </p><p>lines, network interface cards and other peripheral devices. This is an easy way to identify a potential </p><p>hardware failure. This should never be higher than 20%.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Interrupt Time"]|
+|CPU|Privileged time, %|<p>The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent </p><p>executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt </p><p>Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode </p><p>functions of the Windows® Operating System.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Privileged Time"]|
+|CPU|User time, %|<p>The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing </p><p>in User mode.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% User Time"]|
 |CPU|Queue Length|<p>The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue </p><p>and are waiting to be executed.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Processor Queue Length"]|
 |CPU|CPU utilization|<p>CPU utilization in %</p>|ZABBIX_PASSIVE|system.cpu.util|
-|CPU|#{#CPU.NUMBER}: CPU utilization|<p>CPU core #{#CPU.NUMBER} utilization in %</p>|ZABBIX_PASSIVE|system.cpu.util[{#CPU.NUMBER}]|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|High CPU utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util.avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE||
-|#{#CPU.NUMBER}: High CPU utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[{#CPU.NUMBER}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE||
+|CPU Interrupt Time is high (over {$CPU.INTERRUPT.WARN.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.WARN.MAX}%.</p>|`{TEMPLATE_NAME:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}>{$CPU.INTERRUPT.WARN.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)</p><p>- High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</p>|
+|CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%.</p>|`{TEMPLATE_NAME:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}>{$CPU.INTERRUPT.CRIT.MAX}`|HIGH|<p>**Depends on**:</p><p>- High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</p>|
+|CPU Privileged Time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The CPU Privileged Time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</p>|`{TEMPLATE_NAME:perf_counter_en["\Processor Information(_total)\% Privileged Time"].min(5m)}>{$CPU.PRIV.CRIT.MAX}`|HIGH|<p>**Depends on**:</p><p>- High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</p>|
+|CPU Queue Length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%.</p>|`{TEMPLATE_NAME:perf_counter_en["\System\Processor Queue Length"].min(5m)}>{$CPU.QUEUE.CRIT.MAX}`|HIGH|<p>**Depends on**:</p><p>- High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</p>|
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util.min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
 
-# Template OS Windows Filesystems by Zabbix agent
+# Template OS Windows filesystems by Zabbix agent
 
 ## Overview
 
@@ -91,23 +91,22 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Filesystems|{#FSNAME}: Used space|<p>Used storage in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},used]<p>**Expression**:</p>`(last(vfs.fs.size[{#FSNAME},total])-last(vfs.fs.size[{#FSNAME},free]))`|
-|Filesystems|{#FSNAME}: Free space|<p>-</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},free]|
+|Filesystems|{#FSNAME}: Used space|<p>Used storage in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},used]|
 |Filesystems|{#FSNAME}: Total space|<p>Total space in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},total]|
-|Filesystems|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]<p>**Expression**:</p>`(last(vfs.fs.size[{#FSNAME},used])/(last(vfs.fs.size[{#FSNAME},free])+last(vfs.fs.size[{#FSNAME},used])))*100`|
+|Filesystems|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]<p>**Expression**:</p>`(last("vfs.fs.size[{#FSNAME},used]")/last("vfs.fs.size[{#FSNAME},total]"))*100`|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|{#FSNAME}: Disk space critical status|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - Disk free space is less than 5G.</p><p> - Disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].last()}>{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and (({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})<5G or {TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}<1d)`|AVERAGE||
-|{#FSNAME}: Disk space warning|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - Disk free space is less than 10G.</p><p> - Disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].last()}>{$STORAGE_UTIL_WARN:"{#FSNAME}"} and (({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})<10G or {TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}<1d)`|WARNING|<p>**Depends on**:</p><p>- {#FSNAME}: Disk space critical status</p>|
+|{#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 5G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].last()}>{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and (({Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})<5G or {TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}<1d)`|AVERAGE|<p>Manual close: YES</p>|
+|{#FSNAME}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 10G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].last()}>{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and (({Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})<10G or {TEMPLATE_NAME:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}<1d)`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- {#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</p>|
 
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
 
-# Template OS Windows Inventory by Zabbix agent
+# Template OS Windows inventory by Zabbix agent
 
 ## Overview
 
@@ -131,7 +130,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|General|System uptime|<p>The time (in hundredths of a second) since the network management portion of the system was last re-initialized.</p>|ZABBIX_PASSIVE|system.uptime<p>**Preprocessing**:</p><p>- MULTIPLIER: `0.01`</p>|
+|General|System uptime|<p>-</p>|ZABBIX_PASSIVE|system.uptime|
 |General|System information|<p>-</p>|ZABBIX_PASSIVE|system.uname|
 |General|Number of processes|<p>-</p>|ZABBIX_PASSIVE|proc.num[]|
 |General|Number of threads|<p>The number of threads used by all running processes.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Threads"]|
@@ -146,7 +145,7 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
-# Template OS Windows Memory by Zabbix agent
+# Template OS Windows memory by Zabbix agent
 
 ## Overview
 
@@ -162,9 +161,9 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEMORY_AVAILABLE_MIN}|<p>-</p>|20M|
-|{$MEMORY_UTIL_MAX}|<p>-</p>|90|
-|{$SWAP_PFREE_WARN}|<p>-</p>|50|
+|{$MEMORY.AVAILABLE.MIN}|<p>-</p>|20M|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|50|
 
 ## Template links
 
@@ -180,7 +179,7 @@ There are no template links in this template.
 |Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[total]|
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|ZABBIX_PASSIVE|vm.memory.size[available]|
 |Memory|Used memory|<p>Used memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[used]|
-|Memory|Memory utilization|<p>Memory utilization in %</p>|ZABBIX_PASSIVE|vm.memory.size[pused]<p>**Expression**:</p>`(last(vm.memory.size[used])/last(vm.memory.size[total]))*100`|
+|Memory|Memory utilization|<p>Memory utilization in %</p>|ZABBIX_PASSIVE|vm.memory.size[pused]<p>**Expression**:</p>`((last("vm.memory.size[total]")-last("vm.memory.size[available]"))/last("vm.memory.size[total]"))*100`|
 |Memory|Total swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,total]|
 |Memory|Free swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,free]|
 |Memory|Free swap space in %|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,pfree]<p>**Expression**:</p>`((last(system.swap.size[,free]))/last(system.swap.size[,total]))*100`|
@@ -200,15 +199,15 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.size[available].last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Windows Memory by Zabbix agent:vm.memory.size[total].last(0)}>0`|AVERAGE||
-|High memory utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.size[pused].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE||
-|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.size[,pfree].last()}<{$SWAP_PFREE_WARN} and {Template OS Windows Memory by Zabbix agent:system.swap.size[,total].last()}>0`|WARNING||
+|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.size[available].last(0)}<{$MEMORY.AVAILABLE.MIN} and {Template OS Windows memory by Zabbix agent:vm.memory.size[total].last(0)}>0`|AVERAGE||
+|High memory utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.size[pused].avg(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.size[,pfree].last()}<{$SWAP.PFREE.MIN.WARN} and {Template OS Windows memory by Zabbix agent:system.swap.size[,total].last()}>0`|WARNING||
 
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
 
-# Template OS Windows Network by Zabbix agent
+# Template OS Windows network by Zabbix agent
 
 ## Overview
 
@@ -280,10 +279,10 @@ No specific Zabbix configuration is required.
 |Name|
 |----|
 |Template OS Windows CPU by Zabbix agent|
-|Template OS Windows Filesystems by Zabbix agent|
-|Template OS Windows Inventory by Zabbix agent|
-|Template OS Windows Memory by Zabbix agent|
-|Template OS Windows Network by Zabbix agent|
+|Template OS Windows filesystems by Zabbix agent|
+|Template OS Windows inventory by Zabbix agent|
+|Template OS Windows memory by Zabbix agent|
+|Template OS Windows network by Zabbix agent|
 
 ## Discovery rules
 

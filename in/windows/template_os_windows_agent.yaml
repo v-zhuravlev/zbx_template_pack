@@ -1,4 +1,7 @@
 ---
+# Custom intervals:
+# fixed: 0;1h/1-7,00:00-24:00
+# scheduling: 0;m0-59
 templates:
   - name: Template OS Windows CPU by Zabbix agent
     _zbx_ver: "3.4"
@@ -46,7 +49,7 @@ templates:
       #   value_type: FLOAT
       #   delay: 0;m0-59
       # Performance counters
-      - _id: p
+      - _id: system.cpu.interrupt.time
         _group: "CPU"
         name: Interrupt Time, %
         type: ZABBIX_PASSIVE
@@ -54,17 +57,39 @@ templates:
         value_type: FLOAT
         units: "%"
         delay: 0;m0-59
-      - _id: p
-        _group: "CPU"
-        name: Load, %
-        type: ZABBIX_PASSIVE
-        key: perf_counter_en["\Processor Information(_total)\% Processor Time"]
-        value_type: FLOAT
-        units: "%"
-        delay: 0;m0-59
         description: |
-          The Processor Information(_total)\% Processor Time shows how much the processor(s) is being utilized.
-      - _id: p
+          The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing 
+          hardware interrupts during sample intervals. This value is an indirect indicator of the activity of 
+          devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication 
+          lines, network interface cards and other peripheral devices. This is an easy way to identify a potential 
+          hardware failure. This should never be higher than 20%.
+        triggers:
+          - _id: t
+            name: "CPU Interrupt Time is high (over {$CPU.INTERRUPT.WARN.MAX}% for 5m)"
+            priority: "AVERAGE"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.INTERRUPT.WARN.MAX}"
+            description: "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.WARN.MAX}%."
+            _depends_on:
+              - trigger.cpu.high
+              - trigger.cpu.interrupt.high
+          - _id: trigger.cpu.interrupt.high
+            name: "CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)"
+            priority: "HIGH"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.INTERRUPT.CRIT.MAX}"
+            description: "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."
+            _depends_on:
+              - trigger.cpu.high
+      # - _id: p
+      #   _group: "CPU"
+      #   name: Load, %
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Processor Information(_total)\% Processor Time"]
+      #   value_type: FLOAT
+      #   units: "%"
+      #   delay: 0;m0-59
+      #   description: |
+      #     The Processor Information\% Processor Time shows how much the processor(s) is being utilized.
+      - _id: system.cpu.priv.time
         _group: "CPU"
         name: Privileged time, %
         type: ZABBIX_PASSIVE
@@ -73,11 +98,19 @@ templates:
         units: "%"
         delay: 0;m0-59
         description: |
-          The Processor(_total)\% Privileged Time counter shows the percent of time that the processor is spent 
+          The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent 
           executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt 
           Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode 
           functions of the Windows® Operating System.
-      - _id: p
+        triggers:
+          - _id: trigger.cpu.priv.high
+            name: "CPU Privileged Time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)"
+            priority: "HIGH"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.PRIV.CRIT.MAX}"
+            description: "The CPU Privileged Time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%."
+            _depends_on:
+              - trigger.cpu.high
+      - _id: system.cpu.user.time
         _group: "CPU"
         name: User time, %
         type: ZABBIX_PASSIVE
@@ -86,9 +119,23 @@ templates:
         units: "%"
         delay: 0;m0-59
         description: |
-          The Processor(_total)\% User Time counter shows the percent of time that the processor(s) is spent executing 
+          The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing 
           in User mode.
-      - _id: p
+        graphs:
+          - name: CPU % Time
+            graph_items:
+              - name: system.cpu.interrupt.time
+                drawtype: SINGLE_LINE
+              - name: system.cpu.user.time
+                drawtype: SINGLE_LINE
+              - name: system.cpu.priv.time
+                drawtype: SINGLE_LINE
+              - name: system.cpu.queue.length
+                drawtype: SINGLE_LINE
+                yaxisside: RIGHT
+              - name: system.cpu.util
+                drawtype: SINGLE_LINE
+      - _id: system.cpu.queue.length
         _group: "CPU"
         name: Queue Length
         type: ZABBIX_PASSIVE
@@ -98,6 +145,14 @@ templates:
         description: |
           The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue 
           and are waiting to be executed.
+        triggers:
+          - _id: trigger.cpu.queue.length
+            name: "CPU Queue Length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)"
+            priority: "HIGH"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.QUEUE.CRIT.MAX}"
+            description: "The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%."
+            _depends_on:
+              - trigger.cpu.high
       #       - _id: system.cpu.util.avg
       #         _group: "CPU"
       #         name: CPU utilisation, in %
@@ -118,41 +173,84 @@ templates:
         type: ZABBIX_PASSIVE
         key: system.cpu.util
         delay: 0;m0-59
-    discovery_rules:
-      - name: CPU core discovery
-        key: system.cpu.discovery
-        type: ZABBIX_PASSIVE
-        description: Discovery of CPU cores as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}
-        delay: 1d
-        items:
-          - _prototype: system.cpu.util
-            _group: "CPU"
-            _resource: "#{#CPU.NUMBER}"
-            type: ZABBIX_PASSIVE
-            key: system.cpu.util[{#CPU.NUMBER}]
-            delay: 0;m0-59
-            description: "CPU core #{#CPU.NUMBER} utilization in %"
-            # {#CPU.STATUS}":"online"} 0;1h/1-7,00:00-24:00
-        filter:
-          evaltype: AND
-          conditions:
-            - macro: "{#CPU.NUMBER}"
-              value: "{$CPU.MATCHES}"
-              formulaid: A
-              operator: MATCHES_REGEX
-            - macro: "{#CPU.NUMBER}"
-              value: "{$CPU.NOT_MATCHES}"
-              formulaid: B
-              operator: NOT_MATCHES_REGEX
-    macros:
-      - macro: "{$CPU.MATCHES}"
-        _description: .
-        value: .*
-      - macro: "{$CPU.NOT_MATCHES}"
-        _description: .
-        value: \s
+        triggers:
+          - _prototype: trigger.cpu.high
+            # name: "CPU utilization is too high (over {$CPU_UTIL_MAX}% for 10m)"
+            # expression: "{TEMPLATE_NAME:METRIC.avg(10m)}>{$CPU_UTIL_MAX}"
+            # description: "The average CPU usage in the last 10 minutes exceeds {$CPU_UTIL_MAX}%."
+          # - _id: trigger.cpu.util.warn
+          #   name: "CPU utilization is too high (over {$CPU_UTIL_MAX}% for 10m)"
+          #   priority: "AVERAGE"
+          #   expression: "{TEMPLATE_NAME:METRIC.avg(10m)}>{$CPU_UTIL_MAX}"
+          #   description: "The average CPU usage in the last 10 minutes exceeds {$CPU_UTIL_MAX}%."
 
-  - name: Template OS Windows Filesystems by Zabbix agent
+    # discovery_rules:
+    #   - name: CPU core discovery
+    #     key: system.cpu.discovery
+    #     type: ZABBIX_PASSIVE
+    #     description: Discovery of CPU cores as defined in macros {$CPU.NUMBER.MATCHES},{$CPU.NUMBER.NOT_MATCHES},{$CPU.STATUS.MATCHES},{$CPU.STATUS.NOT_MATCHES}.
+    #     delay: 1d
+    #     items:
+    #       - _prototype: system.cpu.util
+    #         _group: "CPU"
+    #         _resource: "#{#CPU.NUMBER}"
+    #         type: ZABBIX_PASSIVE
+    #         key: system.cpu.util[{#CPU.NUMBER}]
+    #         delay: 0;m0-59
+    #         description: "CPU core #{#CPU.NUMBER} utilization in %"
+    #         # triggers:
+    #         #   - _id: trigger.cpu.util.warn
+    #         #     name: 'CPU core #{#CPU.NUMBER} utilization is too high (over {$CPU_UTIL_MAX:"#{#CPU.NUMBER}"}% for 5m)'
+    #         #     priority: "WARNING"
+    #         #     expression: '{TEMPLATE_NAME:METRIC.avg(5m)}>{$CPU_UTIL_MAX:"#{#CPU.NUMBER}"}'
+    #         #     description: 'The average CPU core #{#CPU.NUMBER} usage in the last 5 minutes exceeds {$CPU_UTIL_MAX:"#{#CPU.NUMBER}"}%.'
+    #         #     _depends_on:
+    #         #       - trigger.cpu.high
+    #     filter:
+    #       evaltype: AND
+    #       conditions:
+    #         - macro: "{#CPU.NUMBER}"
+    #           value: "{$CPU.NUMBER.MATCHES}"
+    #           formulaid: A
+    #           operator: MATCHES_REGEX
+    #         - macro: "{#CPU.NUMBER}"
+    #           value: "{$CPU.NUMBER.NOT_MATCHES}"
+    #           formulaid: B
+    #           operator: NOT_MATCHES_REGEX
+    #         - macro: "{#CPU.STATUS}"
+    #           value: "{$CPU.STATUS.MATCHES}"
+    #           formulaid: C
+    #           operator: MATCHES_REGEX
+    #         - macro: "{#CPU.STATUS}"
+    #           value: "{$CPU.STATUS.NOT_MATCHES}"
+    #           formulaid: D
+    #           operator: NOT_MATCHES_REGEX
+    macros:
+      - macro: "{$CPU.INTERRUPT.WARN.MAX}"
+        _description: The warning threshold of the % Interrupt Time counter.
+        value: "30"
+      - macro: "{$CPU.INTERRUPT.CRIT.MAX}"
+        _description: The critical threshold of the % Interrupt Time counter.
+        value: "50"
+      - macro: "{$CPU.PRIV.CRIT.MAX}"
+        _description: The threshold of the % Privileged Time counter.
+        value: "20"
+      - macro: "{$CPU.QUEUE.CRIT.MAX}"
+        _description: The threshold of the Processor Queue Length counter.
+        value: "3"
+    #   - macro: "{$CPU.NUMBER.MATCHES}"
+    #     _description: CPU index or number of CPU/CPU core.
+    #     value: ^.+$
+    #   - macro: "{$CPU.NUMBER.NOT_MATCHES}"
+    #     _description: CPU index or number of CPU/CPU core.
+    #     value: ^\s$
+    #   - macro: "{$CPU.STATUS.MATCHES}"
+    #     _description: Whether the cpu is online/offline.
+    #     value: ^online$
+    #   - macro: "{$CPU.STATUS.NOT_MATCHES}"
+    #     _description: Whether the cpu is online/offline.
+    #     value: ^\s$
+  - name: Template OS Windows filesystems by Zabbix agent
     _zbx_ver: "3.4"
     _classes:
       - OS
@@ -214,12 +312,12 @@ templates:
             _group: "Filesystems"
             _resource: "{#FSNAME}"
             application_prototype: "Filesystem __RESOURCE__"
-          - _prototype: "vfs.fs.free"
-            type: "ZABBIX_PASSIVE"
-            key: "vfs.fs.size[{#FSNAME},free]"
-            _group: "Filesystems"
-            _resource: "{#FSNAME}"
-            application_prototype: "Filesystem __RESOURCE__"
+          # - _prototype: "vfs.fs.free"
+          #   type: "ZABBIX_PASSIVE"
+          #   key: "vfs.fs.size[{#FSNAME},free]"
+          #   _group: "Filesystems"
+          #   _resource: "{#FSNAME}"
+          #   application_prototype: "Filesystem __RESOURCE__"
           - _prototype: "vfs.fs.total"
             type: "ZABBIX_PASSIVE"
             key: "vfs.fs.size[{#FSNAME},total]"
@@ -233,12 +331,12 @@ templates:
             _resource: "{#FSNAME}"
             application_prototype: "Filesystem __RESOURCE__"
 
-  # - name: Template OS Windows Disk Performance by Zabbix agent
+  # - name: Template OS Windows disk performance by Zabbix agent
   #   _zbx_ver: "3.4"
   #   _classes:
   #     - OS
 
-  - name: Template OS Windows Inventory by Zabbix agent
+  - name: Template OS Windows inventory by Zabbix agent
     _zbx_ver: "3.4"
     _classes:
       - OS
@@ -303,7 +401,7 @@ templates:
       #   value_type: UNSIGNED
       #   delay: 1d
 
-  - name: Template OS Windows Memory by Zabbix agent
+  - name: Template OS Windows memory by Zabbix agent
     _zbx_ver: "3.4"
     _classes:
       - OS
@@ -705,7 +803,7 @@ templates:
       #   delay: 1h
       #   units: B
 
-  - name: Template OS Windows Network by Zabbix agent
+  - name: Template OS Windows network by Zabbix agent
     _zbx_ver: "3.4"
     _classes:
       - OS
@@ -835,11 +933,11 @@ templates:
         Install Zabbix agent to Windows OS according to Zabbix documentation.
     templates:
       - Template OS Windows CPU by Zabbix agent
-      - Template OS Windows Filesystems by Zabbix agent
-      - Template OS Windows Inventory by Zabbix agent
-      - Template OS Windows Memory by Zabbix agent
-      - Template OS Windows Network by Zabbix agent
-      # - Template OS Windows Disk Performance by Zabbix agent
+      - Template OS Windows filesystems by Zabbix agent
+      - Template OS Windows inventory by Zabbix agent
+      - Template OS Windows memory by Zabbix agent
+      - Template OS Windows network by Zabbix agent
+      # - Template OS Windows disk performance by Zabbix agent
     # screens:
     #   - name: "System performance"
     #     hsize: 2

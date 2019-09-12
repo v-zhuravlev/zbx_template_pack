@@ -11,7 +11,7 @@
       <template>
          <template>Template OS Windows CPU by Zabbix agent</template>
          <name>Template OS Windows CPU by Zabbix agent</name>
-         <description>Template tooling version used: 0.23</description>
+         <description>Template tooling version used: 0.28</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -51,66 +51,11 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>CPU</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Load, %</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>perf_counter_en["\Processor Information(_total)\% Processor Time"]</key>
-               <delay>0;m0-59</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>0</value_type>
-               <allowed_hosts/>
-               <units>%</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>The Processor Information(_total)\% Processor Time shows how much the processor(s) is being utilized.</description>
+               <description>The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing &#13;
+hardware interrupts during sample intervals. This value is an indirect indicator of the activity of &#13;
+devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication &#13;
+lines, network interface cards and other peripheral devices. This is an easy way to identify a potential &#13;
+hardware failure. This should never be higher than 20%.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -169,7 +114,7 @@
                <publickey/>
                <privatekey/>
                <port/>
-               <description>The Processor(_total)\% Privileged Time counter shows the percent of time that the processor is spent &#13;
+               <description>The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent &#13;
 executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt &#13;
 Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode &#13;
 functions of the Windows® Operating System.</description>
@@ -231,7 +176,7 @@ functions of the Windows® Operating System.</description>
                <publickey/>
                <privatekey/>
                <port/>
-               <description>The Processor(_total)\% User Time counter shows the percent of time that the processor(s) is spent executing &#13;
+               <description>The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing &#13;
 in User mode.</description>
                <inventory_link>0</inventory_link>
                <applications>
@@ -383,201 +328,27 @@ and are waiting to be executed.</description>
                <master_item/>
             </item>
          </items>
-         <discovery_rules>
-            <discovery_rule>
-               <name>CPU core discovery</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.cpu.discovery</key>
-               <delay>1d</delay>
-               <status>0</status>
-               <allowed_hosts/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <filter>
-                  <evaltype>1</evaltype>
-                  <formula/>
-                  <conditions>
-                     <condition>
-                        <macro>{#CPU.NUMBER}</macro>
-                        <value>{$CPU.MATCHES}</value>
-                        <operator>8</operator>
-                        <formulaid>A</formulaid>
-                     </condition>
-                     <condition>
-                        <macro>{#CPU.NUMBER}</macro>
-                        <value>{$CPU.NOT_MATCHES}</value>
-                        <operator>9</operator>
-                        <formulaid>B</formulaid>
-                     </condition>
-                  </conditions>
-               </filter>
-               <lifetime>30d</lifetime>
-               <description>Discovery of CPU cores as defined in {$CPU.MATCHES} and {$CPU.NOT_MATCHES}</description>
-               <item_prototypes>
-                  <item_prototype>
-                     <name>#{#CPU.NUMBER}: CPU utilization</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>system.cpu.util[{#CPU.NUMBER}]</key>
-                     <delay>0;m0-59</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>0</value_type>
-                     <allowed_hosts/>
-                     <units>%</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>CPU core #{#CPU.NUMBER} utilization in %</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>CPU</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-               </item_prototypes>
-               <trigger_prototypes>
-                  <trigger_prototype>
-                     <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util[{#CPU.NUMBER}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>#{#CPU.NUMBER}: High CPU utilization</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>3</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies/>
-                     <tags/>
-                  </trigger_prototype>
-               </trigger_prototypes>
-               <graph_prototypes>
-                  <graph_prototype>
-                     <name>#{#CPU.NUMBER}: CPU utilization</name>
-                     <width>900</width>
-                     <height>200</height>
-                     <yaxismin>0</yaxismin>
-                     <yaxismax>100</yaxismax>
-                     <show_work_period>1</show_work_period>
-                     <show_triggers>1</show_triggers>
-                     <type>0</type>
-                     <show_legend>1</show_legend>
-                     <show_3d>0</show_3d>
-                     <percent_left>0.0000</percent_left>
-                     <percent_right>0.0000</percent_right>
-                     <ymin_type_1>1</ymin_type_1>
-                     <ymax_type_1>1</ymax_type_1>
-                     <ymin_item_1>0</ymin_item_1>
-                     <ymax_item_1>0</ymax_item_1>
-                     <graph_items>
-                        <graph_item>
-                           <sortorder>0</sortorder>
-                           <drawtype>5</drawtype>
-                           <color>1A7C11</color>
-                           <yaxisside>0</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template OS Windows CPU by Zabbix agent</host>
-                              <key>system.cpu.util[{#CPU.NUMBER}]</key>
-                           </item>
-                        </graph_item>
-                     </graph_items>
-                  </graph_prototype>
-               </graph_prototypes>
-               <host_prototypes/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <lld_macro_paths/>
-               <preprocessing/>
-               <master_item/>
-            </discovery_rule>
-         </discovery_rules>
+         <discovery_rules/>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU.MATCHES}</macro>
-               <value>.*</value>
+               <macro>{$CPU.INTERRUPT.CRIT.MAX}</macro>
+               <value>50</value>
             </macro>
             <macro>
-               <macro>{$CPU.NOT_MATCHES}</macro>
-               <value>\s</value>
+               <macro>{$CPU.INTERRUPT.WARN.MAX}</macro>
+               <value>30</value>
             </macro>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.PRIV.CRIT.MAX}</macro>
+               <value>20</value>
+            </macro>
+            <macro>
+               <macro>{$CPU.QUEUE.CRIT.MAX}</macro>
+               <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -586,9 +357,9 @@ and are waiting to be executed.</description>
          <tags/>
       </template>
       <template>
-         <template>Template OS Windows Filesystems by Zabbix agent</template>
-         <name>Template OS Windows Filesystems by Zabbix agent</name>
-         <description>Template tooling version used: 0.23</description>
+         <template>Template OS Windows filesystems by Zabbix agent</template>
+         <name>Template OS Windows filesystems by Zabbix agent</name>
+         <description>Template tooling version used: 0.28</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -677,7 +448,7 @@ and are waiting to be executed.</description>
                      <snmp_oid/>
                      <key>vfs.fs.size[{#FSNAME},used]</key>
                      <delay>1m</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -690,7 +461,7 @@ and are waiting to be executed.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vfs.fs.size[{#FSNAME},total])-last(vfs.fs.size[{#FSNAME},free]))</params>
+                     <params/>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -731,73 +502,13 @@ and are waiting to be executed.</description>
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#FSNAME}: Free space</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>vfs.fs.size[{#FSNAME},free]</key>
-                     <delay>1m</delay>
-                     <history>30d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>B</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Filesystem {#FSNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
                      <name>{#FSNAME}: Total space</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>vfs.fs.size[{#FSNAME},total]</key>
                      <delay>1m</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -857,7 +568,7 @@ and are waiting to be executed.</description>
                      <snmp_oid/>
                      <key>vfs.fs.size[{#FSNAME},pused]</key>
                      <delay>1m</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -870,7 +581,7 @@ and are waiting to be executed.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vfs.fs.size[{#FSNAME},used])/(last(vfs.fs.size[{#FSNAME},free])+last(vfs.fs.size[{#FSNAME},used])))*100</params>
+                     <params>(last("vfs.fs.size[{#FSNAME},used]")/last("vfs.fs.size[{#FSNAME},total]"))*100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -913,11 +624,11 @@ and are waiting to be executed.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space critical status</name>
+                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -925,21 +636,21 @@ and are waiting to be executed.</description>
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
-Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
- - Disk free space is less than 5G.&#13;
- - Disk will be full in less than 24hours.</description>
+ - The disk free space is less than 5G.&#13;
+ - The disk will be full in less than 24hours.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_WARN:"{#FSNAME}"} and&#13;
-(({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
+(({Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space warning</name>
+                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -947,17 +658,17 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
-Two conditions should match: First, space utilization should be above {$STORAGE_UTIL_CRIT:"{#FSNAME}"}.&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
- - Disk free space is less than 10G.&#13;
- - Disk will be full in less than 24hours.</description>
+ - The disk free space is less than 10G.&#13;
+ - The disk will be full in less than 24hours.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Disk space critical status</name>
-                           <expression>{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$STORAGE_UTIL_CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Windows Filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
+                           <expression>{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Windows filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -991,7 +702,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                            <calc_fnc>9</calc_fnc>
                            <type>2</type>
                            <item>
-                              <host>Template OS Windows Filesystems by Zabbix agent</host>
+                              <host>Template OS Windows filesystems by Zabbix agent</host>
                               <key>vfs.fs.size[{#FSNAME},total]</key>
                            </item>
                         </graph_item>
@@ -1003,7 +714,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                            <calc_fnc>9</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Windows Filesystems by Zabbix agent</host>
+                              <host>Template OS Windows filesystems by Zabbix agent</host>
                               <key>vfs.fs.size[{#FSNAME},used]</key>
                            </item>
                         </graph_item>
@@ -1074,9 +785,9 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
          <tags/>
       </template>
       <template>
-         <template>Template OS Windows Inventory by Zabbix agent</template>
-         <name>Template OS Windows Inventory by Zabbix agent</name>
-         <description>Template tooling version used: 0.23</description>
+         <template>Template OS Windows inventory by Zabbix agent</template>
+         <name>Template OS Windows inventory by Zabbix agent</name>
+         <description>Template tooling version used: 0.28</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -1116,7 +827,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <publickey/>
                <privatekey/>
                <port/>
-               <description>The time (in hundredths of a second) since the network management portion of the system was last re-initialized.</description>
+               <description/>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1125,14 +836,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>1</type>
-                     <params>0.01</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
+               <preprocessing/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
                <url/>
@@ -1340,9 +1044,9 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
          <tags/>
       </template>
       <template>
-         <template>Template OS Windows Memory by Zabbix agent</template>
-         <name>Template OS Windows Memory by Zabbix agent</name>
-         <description>Template tooling version used: 0.23</description>
+         <template>Template OS Windows memory by Zabbix agent</template>
+         <name>Template OS Windows memory by Zabbix agent</name>
+         <description>Template tooling version used: 0.28</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -1551,7 +1255,7 @@ Two conditions should match: First, space utilization should be above {$STORAGE_
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <params>(last(vm.memory.size[used])/last(vm.memory.size[total]))*100</params>
+               <params>((last("vm.memory.size[total]")-last("vm.memory.size[available]"))/last("vm.memory.size[total]"))*100</params>
                <ipmi_sensor/>
                <authtype>0</authtype>
                <username/>
@@ -2464,15 +2168,15 @@ greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is r
          <httptests/>
          <macros>
             <macro>
-               <macro>{$MEMORY_AVAILABLE_MIN}</macro>
+               <macro>{$MEMORY.AVAILABLE.MIN}</macro>
                <value>20M</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$SWAP_PFREE_WARN}</macro>
+               <macro>{$SWAP.PFREE.MIN.WARN}</macro>
                <value>50</value>
             </macro>
          </macros>
@@ -2481,9 +2185,9 @@ greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is r
          <tags/>
       </template>
       <template>
-         <template>Template OS Windows Network by Zabbix agent</template>
-         <name>Template OS Windows Network by Zabbix agent</name>
-         <description>Template tooling version used: 0.23</description>
+         <template>Template OS Windows network by Zabbix agent</template>
+         <name>Template OS Windows network by Zabbix agent</name>
+         <description>Template tooling version used: 0.28</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -2690,7 +2394,7 @@ greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is r
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Windows Network by Zabbix agent</host>
+                              <host>Template OS Windows network by Zabbix agent</host>
                               <key>net.if.in["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -2702,7 +2406,7 @@ greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is r
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Windows Network by Zabbix agent</host>
+                              <host>Template OS Windows network by Zabbix agent</host>
                               <key>net.if.out["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -2756,7 +2460,7 @@ greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is r
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
 &#13;
-Template tooling version used: 0.23</description>
+Template tooling version used: 0.28</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -2772,16 +2476,16 @@ Template tooling version used: 0.23</description>
                <name>Template OS Windows CPU by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Windows Filesystems by Zabbix agent</name>
+               <name>Template OS Windows filesystems by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Windows Inventory by Zabbix agent</name>
+               <name>Template OS Windows inventory by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Windows Memory by Zabbix agent</name>
+               <name>Template OS Windows memory by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Windows Network by Zabbix agent</name>
+               <name>Template OS Windows network by Zabbix agent</name>
             </template>
          </templates>
          <screens/>
@@ -2789,6 +2493,86 @@ Template tooling version used: 0.23</description>
       </template>
    </templates>
    <graphs>
+      <graph>
+         <name>CPU % Time</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>0</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>0</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows CPU by Zabbix agent</host>
+                  <key>perf_counter_en["\Processor Information(_total)\% Interrupt Time"]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>0</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows CPU by Zabbix agent</host>
+                  <key>perf_counter_en["\Processor Information(_total)\% User Time"]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>2</sortorder>
+               <drawtype>0</drawtype>
+               <color>F63100</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows CPU by Zabbix agent</host>
+                  <key>perf_counter_en["\Processor Information(_total)\% Privileged Time"]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>3</sortorder>
+               <drawtype>0</drawtype>
+               <color>A54F10</color>
+               <yaxisside>1</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows CPU by Zabbix agent</host>
+                  <key>perf_counter_en["\System\Processor Queue Length"]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>4</sortorder>
+               <drawtype>0</drawtype>
+               <color>FC6EA3</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template OS Windows CPU by Zabbix agent</host>
+                  <key>system.cpu.util</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
       <graph>
          <name>CPU utilization</name>
          <width>900</width>
@@ -2847,7 +2631,7 @@ Template tooling version used: 0.23</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Windows Memory by Zabbix agent</host>
+                  <host>Template OS Windows memory by Zabbix agent</host>
                   <key>vm.memory.size[total]</key>
                </item>
             </graph_item>
@@ -2859,7 +2643,7 @@ Template tooling version used: 0.23</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Windows Memory by Zabbix agent</host>
+                  <host>Template OS Windows memory by Zabbix agent</host>
                   <key>vm.memory.size[available]</key>
                </item>
             </graph_item>
@@ -2891,7 +2675,7 @@ Template tooling version used: 0.23</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Windows Memory by Zabbix agent</host>
+                  <host>Template OS Windows memory by Zabbix agent</host>
                   <key>vm.memory.size[pused]</key>
                </item>
             </graph_item>
@@ -2900,15 +2684,112 @@ Template tooling version used: 0.23</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template OS Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}&gt;{$CPU.INTERRUPT.WARN.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High CPU utilization</name>
+         <name>CPU Interrupt Time is high (over {$CPU.INTERRUPT.WARN.MAX}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.WARN.MAX}%.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)</name>
+               <expression>{Template OS Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}&gt;{$CPU.INTERRUPT.CRIT.MAX}</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+               <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}&gt;{$CPU.INTERRUPT.CRIT.MAX}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>4</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+               <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Privileged Time"].min(5m)}&gt;{$CPU.PRIV.CRIT.MAX}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>CPU Privileged Time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>4</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The CPU Privileged Time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+               <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows CPU by Zabbix agent:perf_counter_en["\System\Processor Queue Length"].min(5m)}&gt;{$CPU.QUEUE.CRIT.MAX}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>CPU Queue Length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>4</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+               <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template OS Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -2916,7 +2797,7 @@ Template tooling version used: 0.23</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Windows Inventory by Zabbix agent:system.uptime.last()}&lt;10m</expression>
+         <expression>{Template OS Windows inventory by Zabbix agent:system.uptime.last()}&lt;10m</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Host has been restarted (uptime &lt; 10m)</name>
@@ -2933,7 +2814,7 @@ The device uptime is less than 10 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Windows Memory by Zabbix agent:vm.memory.size[available].last(0)}&lt;{$MEMORY_AVAILABLE_MIN} and {Template OS Windows Memory by Zabbix agent:vm.memory.size[total].last(0)}&gt;0</expression>
+         <expression>{Template OS Windows memory by Zabbix agent:vm.memory.size[available].last(0)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template OS Windows memory by Zabbix agent:vm.memory.size[total].last(0)}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})</name>
@@ -2949,7 +2830,7 @@ The device uptime is less than 10 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Windows Memory by Zabbix agent:vm.memory.size[pused].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template OS Windows memory by Zabbix agent:vm.memory.size[pused].avg(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High memory utilization</name>
@@ -2965,7 +2846,7 @@ The device uptime is less than 10 minutes.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Windows Memory by Zabbix agent:system.swap.size[,pfree].last()}&lt;{$SWAP_PFREE_WARN} and {Template OS Windows Memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
+         <expression>{Template OS Windows memory by Zabbix agent:system.swap.size[,pfree].last()}&lt;{$SWAP.PFREE.MIN.WARN} and {Template OS Windows memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})</name>
