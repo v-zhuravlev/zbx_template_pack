@@ -3083,6 +3083,18 @@ Interface is down</description>
                         <operator>9</operator>
                         <formulaid>D</formulaid>
                      </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSDEVICE.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>E</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSDEVICE}</macro>
+                        <value>{$VFS.FS.FSDEVICE.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>F</formulaid>
+                     </condition>
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
@@ -4444,6 +4456,14 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
             <macro>
                <macro>{$VFS.DEV.WRITE.AWAIT.WARN}</macro>
                <value>20</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSDEVICE.MATCHES}</macro>
+               <value>^.+$</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSDEVICE.NOT_MATCHES}</macro>
+               <value>^\s$</value>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSNAME.MATCHES}</macro>

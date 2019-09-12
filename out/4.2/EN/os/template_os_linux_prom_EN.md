@@ -33,6 +33,8 @@ No specific Zabbix configuration is required.
 |{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overriden on the host or linked template level</p>|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
 |{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|20|
 |{$VFS.DEV.WRITE.AWAIT.WARN}|<p>Disk write average response time (in ms) before the trigger would fire</p>|20|
+|{$VFS.FS.FSDEVICE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^.+$|
+|{$VFS.FS.FSDEVICE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^\s$|
 |{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|.+|
 |{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
 |{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level</p>|^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$|
@@ -51,7 +53,7 @@ There are no template links in this template.
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
 |Network interface discovery|<p>Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".</p><p>Filtering:</p><p> - interfaces with operstate != 'up'.</p><p> - veth interfaces automatically created by Docker.</p>|DEPENDENT|net.if.discovery[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `{__name__=~"^node_network_info$"}`</p><p>**Filter**:</p>AND <p>- A: {#IFNAME} MATCHES_REGEX `@Network interfaces for discovery`</p><p>- B: {#IFNAME} NOT_MATCHES_REGEX `^veth[0-9a-z]+$`</p><p>- C: {#IFOPERSTATUS} MATCHES_REGEX `^up$`</p>|
-|Mounted filesystem discovery|<p>Discovery of file systems of different types.</p>|DEPENDENT|vfs.fs.discovery[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint=~".+"}`</p><p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
+|Mounted filesystem discovery|<p>Discovery of file systems of different types.</p>|DEPENDENT|vfs.fs.discovery[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `{__name__=~"^node_filesystem_size(?:_bytes)?$", mountpoint=~".+"}`</p><p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p><p>- E: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSDEVICE.MATCHES}`</p><p>- F: {#FSDEVICE} NOT_MATCHES_REGEX `{$VFS.FS.FSDEVICE.NOT_MATCHES}`</p>|
 |Block devices discovery|<p>-</p>|DEPENDENT|vfs.dev.discovery[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `node_disk_io_now{device=~".+"}`</p><p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} NOT_MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
 
 ## Items collected

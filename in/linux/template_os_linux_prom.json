@@ -83,6 +83,16 @@
                     "macro": "{$VFS.FS.FSTYPE.NOT_MATCHES}",
                     "value": "^\\s$",
                     "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSDEVICE.MATCHES}",
+                    "value": "^.+$",
+                    "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSDEVICE.NOT_MATCHES}",
+                    "value": "^\\s$",
+                    "_description": "This macro is used in filesystems discovery. Can be overriden on the host or linked template level"
                 }
             ],
             "discovery_rules": [
@@ -636,6 +646,18 @@
                                 "value": "{$VFS.FS.FSNAME.NOT_MATCHES}",
                                 "operator": "NOT_MATCHES_REGEX",
                                 "formulaid": "D"
+                            },
+                            {
+                                "macro": "{#FSNAME}",
+                                "value": "{$VFS.FS.FSDEVICE.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "E"
+                            },
+                            {
+                                "macro": "{#FSDEVICE}",
+                                "value": "{$VFS.FS.FSDEVICE.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "F"
                             }
                         ]
                     },
