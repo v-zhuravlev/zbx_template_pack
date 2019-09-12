@@ -2816,7 +2816,7 @@ If having problems collecting this item make sure access to UCD-SNMP-MIB is allo
 (({Template OS Linux Filesystems SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template OS Linux Filesystems SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template OS Linux Filesystems SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
+                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2838,7 +2838,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
 (({Template OS Linux Filesystems SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template OS Linux Filesystems SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})&lt;10G or {Template OS Linux Filesystems SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})</name>
+                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2854,7 +2854,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
+                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                            <expression>{Template OS Linux Filesystems SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template OS Linux Filesystems SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template OS Linux Filesystems SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template OS Linux Filesystems SNMPv2:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>

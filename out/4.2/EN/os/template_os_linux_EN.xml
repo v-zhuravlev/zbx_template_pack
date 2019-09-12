@@ -1167,66 +1167,6 @@ return (100 - value)</params>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vfs.fs.size[{#FSNAME},total])-last(vfs.fs.size[{#FSNAME},free]))</params>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>Used storage in Bytes</description>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Filesystem {#FSNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>{#FSNAME}: Free space</name>
-                     <type>0</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>vfs.fs.size[{#FSNAME},free]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>3</value_type>
-                     <allowed_hosts/>
-                     <units>B</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
                      <params/>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
@@ -1235,7 +1175,7 @@ return (100 - value)</params>
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description/>
+                     <description>Used storage in Bytes</description>
                      <inventory_link>0</inventory_link>
                      <applications/>
                      <valuemap/>
@@ -1347,7 +1287,7 @@ return (100 - value)</params>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vfs.fs.size[{#FSNAME},used])/(last(vfs.fs.size[{#FSNAME},free])+last(vfs.fs.size[{#FSNAME},used])))*100</params>
+                     <params>(last(vfs.fs.size[{#FSNAME},used])/last(vfs.fs.size[{#FSNAME},total]))*100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -1454,7 +1394,7 @@ return (100 - value)</params>
 (({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
+                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1476,7 +1416,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
 (({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"})</name>
+                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1492,7 +1432,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"})</name>
+                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                            <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
