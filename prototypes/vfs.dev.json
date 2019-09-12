@@ -1,0 +1,100 @@
+[	//PERFORMANCE
+	{
+		"_id": "vfs.dev.read.rate",
+		"name": "Disk read rate",
+		"_group": "Storage",
+		"value_type": "FLOAT",
+		"graphs": [
+			{
+				"name": "Disk read/write rates",
+				"graphtype": "NORMAL",
+				"graph_items": [
+					{
+						"drawtype": "SINGLE_LINE",
+						"name": "vfs.dev.read.rate"
+					},
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "vfs.dev.write.rate"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "vfs.dev.write.rate",
+		"name": "Disk write rate",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.read.time.rate",
+		"name": "Disk read time (rate)",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.write.time.rate",
+		"name": "Disk write time (rate)",
+		"_group": "Storage",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.read.await",
+		"name": "Disk read request avg waiting time (r_await)",
+		"_group": "Storage",
+		"units": "!ms",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.",
+		"triggers": [
+			{
+				"name": "Disk read request response are too high (read > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} ms for 5m or write > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"} ms for 5m)",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)} > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} or {TEMPLATE_NAME:METRIC.min(5m)} > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"}",
+				"description": "This trigger might indicate disk __RESOURCE__ saturation.",
+				"manual_close": "YES",
+				"priority": "WARNING"
+			}
+		],
+		"graphs": [
+			{
+				"name": "Disk average waiting time",
+				"graphtype": "NORMAL",
+				"graph_items": [
+					{
+						"drawtype": "SINGLE_LINE",
+						"name": "vfs.dev.read.await"
+					},
+					{
+						"drawtype": "GRADIENT_LINE",
+						"name": "vfs.dev.write.await"
+					}
+				]
+			}
+		]
+	},
+	{
+		"_id": "vfs.dev.write.await",
+		"name": "Disk write request avg waiting time (w_await)",
+		"_group": "Storage",
+		"units": "!ms",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"description": "The average time for write requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them."
+	},
+	{
+		"_id": "vfs.dev.queue_size",
+		"name": "Disk average queue size (avgqu-sz)",
+		"_group": "Storage",
+		"update": "1m",
+		"value_type": "FLOAT"
+	},
+	{
+		"_id": "vfs.dev.util",
+		"name": "Disk utilization",
+		"_group": "Storage",
+		"update": "1m",
+		"value_type": "FLOAT",
+		"units": "%"
+	}
+]
