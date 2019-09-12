@@ -96,5 +96,16 @@
 		"update": "1m",
 		"value_type": "FLOAT",
 		"units": "%"
+	},
+	//trigger proto
+	{
+		"_id": "trigger.vfs.dev.util",
+		"name": "Disk is overloaded (util > {$VFS.DEV.UTIL.MAX.WARN}% for 15m)",
+		"priority": "WARNING",
+		"expression": "{TEMPLATE_NAME:METRIC.min(15m)}>{$VFS.DEV.UTIL.MAX.WARN}",
+		"manual_close": "YES",
+		"_depends_on": [
+			"trigger.vfs.dev.await"
+		]
 	}
 ]
