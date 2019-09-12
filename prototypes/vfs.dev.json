@@ -1,4 +1,4 @@
-[	//PERFORMANCE
+[ //PERFORMANCE
 	{
 		"_id": "vfs.dev.read.rate",
 		"name": "Disk read rate",
@@ -50,6 +50,7 @@
 		"triggers": [
 			{
 				"name": "Disk read request response are too high (read > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} ms for 5m or write > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"} ms for 5m)",
+				"_id": "trigger.vfs.dev.await",
 				"expression": "{TEMPLATE_NAME:METRIC.min(5m)} > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} or {TEMPLATE_NAME:METRIC.min(5m)} > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"}",
 				"description": "This trigger might indicate disk __RESOURCE__ saturation.",
 				"manual_close": "YES",
