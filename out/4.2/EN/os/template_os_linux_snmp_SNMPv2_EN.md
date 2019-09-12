@@ -15,8 +15,9 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEMORY_AVAILABLE_MIN}|<p>-</p>|20M|
-|{$SWAP_PFREE_WARN}|<p>-</p>|50|
+|{$MEMORY.AVAILABLE.MIN}|<p>-</p>|20M|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|50|
 
 ## Template links
 
@@ -29,6 +30,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
+|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.used[snmp]<p>**Expression**:</p>`((last(vm.memory.total[memTotalReal.0])-last(vm.memory.free[memAvailReal.0])-last(vm.memory.cached[memCached.0])-last(vm.memory.buffers[memBuffer.0]))/last(vm.memory.total[memTotalReal.0]))*100`|
 |Memory|Free memory|<p>MIB: UCD-SNMP-MIB</p>|SNMP|vm.memory.free[memAvailReal.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (buffers)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by kernel buffers (Buffers in /proc/meminfo)</p>|SNMP|vm.memory.buffers[memBuffer.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (cached)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)</p>|SNMP|vm.memory.cached[memCached.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
@@ -42,8 +44,9 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Lack of available memory ({ITEM.VALUE1} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.available[snmp].last(0)}<{$MEMORY_AVAILABLE_MIN} and {Template OS Linux Memory SNMPv2:vm.memory.total[memTotalReal.0].last(0)}>0`|AVERAGE||
-|High swap space usage (free: {ITEM.VALUE1}, total: {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[snmp].last()}<{$SWAP_PFREE_WARN} and {Template OS Linux Memory SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING||
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.used[snmp].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
+|Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.available[snmp].min(5m)}<{$MEMORY.AVAILABLE.MIN} and {Template OS Linux Memory SNMPv2:vm.memory.total[memTotalReal.0].last()}>0`|AVERAGE||
+|High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[snmp].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template OS Linux Memory SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 
 ## Feedback
 

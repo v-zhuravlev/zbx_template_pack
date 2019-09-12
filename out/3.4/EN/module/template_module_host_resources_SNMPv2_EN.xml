@@ -466,10 +466,10 @@ Template tooling version used: 0.27</description>
          </groups>
          <applications>
             <application>
-               <name>Internal items</name>
+               <name>Memory</name>
             </application>
             <application>
-               <name>Memory</name>
+               <name>Zabbix raw items</name>
             </application>
          </applications>
          <items/>
@@ -554,7 +554,7 @@ this number will commonly be greater than one. Otherwise this number will typica
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
-                           <name>Internal items</name>
+                           <name>Zabbix raw items</name>
                         </application>
                      </applications>
                      <valuemap/>
@@ -597,7 +597,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
-                           <name>Internal items</name>
+                           <name>Zabbix raw items</name>
                         </application>
                      </applications>
                      <valuemap/>
@@ -613,7 +613,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]</key>
-                     <delay>15m</delay>
+                     <delay>1m</delay>
                      <history>7d</history>
                      <trends>0</trends>
                      <status>0</status>
@@ -642,7 +642,7 @@ For example, the amount of main memory allocated to a buffer pool might be modif
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
-                           <name>Internal items</name>
+                           <name>Zabbix raw items</name>
                         </application>
                      </applications>
                      <valuemap/>
@@ -700,7 +700,7 @@ For example, the amount of main memory allocated to a buffer pool might be modif
                      <snmp_community/>
                      <snmp_oid/>
                      <key>vm.memory.total[memoryTotal.{#SNMPINDEX}]</key>
-                     <delay>15m</delay>
+                     <delay>1m</delay>
                      <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
@@ -756,7 +756,7 @@ For example, the amount of main memory allocated to a buffer pool might be modif
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}])/last(vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]))*100</params>
+                     <params>(last(vm.memory.used[memoryUsed.{#SNMPINDEX}])/last(vm.memory.total[memoryTotal.{#SNMPINDEX}]))*100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -781,10 +781,10 @@ For example, the amount of main memory allocated to a buffer pool might be modif
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module HOST-RESOURCES-MIB memory SNMPv2:vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Module HOST-RESOURCES-MIB memory SNMPv2:vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: High memory utilization</name>
+                     <name>#{#SNMPINDEX}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -838,7 +838,7 @@ For example, the amount of main memory allocated to a buffer pool might be modif
          <httptests/>
          <macros>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
          </macros>

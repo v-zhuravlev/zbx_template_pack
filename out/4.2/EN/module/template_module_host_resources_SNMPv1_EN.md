@@ -66,7 +66,7 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEMORY_UTIL_MAX}|<p>-</p>|90|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
 
 ## Template links
 
@@ -82,18 +82,18 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Internal_items|#{#SNMPINDEX}: Memory units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size, in bytes, of the data objects allocated from this pool.</p><p>If this entry is monitoring sectors, blocks, buffers, or packets, for example,</p><p>this number will commonly be greater than one. Otherwise this number will typically be one.</p>|SNMP|vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]|
-|Internal_items|#{#SNMPINDEX}: Used memory in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}]|
-|Internal_items|#{#SNMPINDEX}: Total memory in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</p>|SNMP|vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]|
 |Memory|#{#SNMPINDEX}: Used memory|<p>Used memory in Bytes</p>|CALCULATED|vm.memory.used[memoryUsed.{#SNMPINDEX}]<p>**Expression**:</p>`(last(vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}])*last(vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]))`|
 |Memory|#{#SNMPINDEX}: Total memory|<p>Total memory in Bytes</p>|CALCULATED|vm.memory.total[memoryTotal.{#SNMPINDEX}]<p>**Expression**:</p>`(last(vm.memory.units.total[hrStorageSize.{#SNMPINDEX}])*last(vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]))`|
-|Memory|#{#SNMPINDEX}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last(vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}])/last(vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]))*100`|
+|Memory|#{#SNMPINDEX}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last(vm.memory.used[memoryUsed.{#SNMPINDEX}])/last(vm.memory.total[memoryTotal.{#SNMPINDEX}]))*100`|
+|Zabbix_raw_items|#{#SNMPINDEX}: Memory units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size, in bytes, of the data objects allocated from this pool.</p><p>If this entry is monitoring sectors, blocks, buffers, or packets, for example,</p><p>this number will commonly be greater than one. Otherwise this number will typically be one.</p>|SNMP|vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]|
+|Zabbix_raw_items|#{#SNMPINDEX}: Used memory in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}]|
+|Zabbix_raw_items|#{#SNMPINDEX}: Total memory in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</p>|SNMP|vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|#{#SNMPINDEX}: High memory utilization|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE||
+|#{#SNMPINDEX}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 
 ## Feedback
 
