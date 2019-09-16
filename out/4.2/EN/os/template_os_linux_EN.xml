@@ -11,7 +11,7 @@
       <template>
          <template>Template OS Linux CPU by Zabbix agent</template>
          <name>Template OS Linux CPU by Zabbix agent</name>
-         <description>Template tooling version used: 0.28</description>
+         <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1077,7 +1077,7 @@ return (100 - value)</params>
       <template>
          <template>Template OS Linux filesystems by Zabbix agent</template>
          <name>Template OS Linux filesystems by Zabbix agent</name>
-         <description>Template tooling version used: 0.28</description>
+         <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1595,7 +1595,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <template>
          <template>Template OS Linux memory by Zabbix agent</template>
          <name>Template OS Linux memory by Zabbix agent</name>
-         <description>Template tooling version used: 0.28</description>
+         <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1609,10 +1609,10 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <items>
             <item>
                <name>Memory utilization</name>
-               <type>15</type>
+               <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>vm.memory.pused[agent]</key>
+               <key>vm.memory.size[pavailable]</key>
                <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
@@ -1635,7 +1635,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <publickey/>
                <privatekey/>
                <port/>
-               <description>Memory used percentage is calculated as (total-available)/total*100</description>
+               <description>Memory used percentage is calculated as (100-pavailable)</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
@@ -1644,7 +1644,14 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
+               <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>return (100-value);</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
                <url/>
@@ -1985,7 +1992,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <template>
          <template>Template OS Linux block devices by Zabbix agent</template>
          <name>Template OS Linux block devices by Zabbix agent</name>
-         <description>Template tooling version used: 0.28</description>
+         <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -2888,7 +2895,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
       <template>
          <template>Template OS Linux network interfaces by Zabbix agent</template>
          <name>Template OS Linux network interfaces by Zabbix agent</name>
-         <description>Template tooling version used: 0.28</description>
+         <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -3726,7 +3733,7 @@ Known Issues:&#13;
 &#13;
   Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
 &#13;
-Template tooling version used: 0.28</description>
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -4209,7 +4216,7 @@ Template tooling version used: 0.28</description>
                <type>0</type>
                <item>
                   <host>Template OS Linux memory by Zabbix agent</host>
-                  <key>vm.memory.pused[agent]</key>
+                  <key>vm.memory.size[pavailable]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -4300,7 +4307,7 @@ Per CPU load average is too high. Your system may be slow to respond.</descripti
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux memory by Zabbix agent:vm.memory.pused[agent].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
+         <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[pavailable].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
@@ -4354,7 +4361,7 @@ This trigger is ignored, if there is no swap configured</description>
          <dependencies>
             <dependency>
                <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
-               <expression>{Template OS Linux memory by Zabbix agent:vm.memory.pused[agent].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
+               <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[pavailable].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                <recovery_expression/>
             </dependency>
             <dependency>

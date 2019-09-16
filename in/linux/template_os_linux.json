@@ -229,10 +229,16 @@
                 //MEMORY
                 {
                     "_prototype": "vm.memory.pused",
-                    "type": "CALCULATED",
-                    "key": "vm.memory.pused[agent]",
-                    "_vendor_description": "Memory used percentage is calculated as (total-available)/total*100",
-                    //"_documentation": "vm.memory.size[pused] is not used as it calculated pused as total-free"
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "vm.memory.size[pavailable]",
+                    "_vendor_description": "Memory used percentage is calculated as (100-pavailable)",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "return (100-value);"
+                        }
+                    ]
+                    //"_documentation": "vm.memory.size[pused] is not used as it calculates pused as total-free/total*100"
                 },
                 {
                     "_prototype": "vm.memory.total",
