@@ -312,12 +312,6 @@ templates:
             _group: "Filesystems"
             _resource: "{#FSNAME}"
             application_prototype: "Filesystem __RESOURCE__"
-          # - _prototype: "vfs.fs.free"
-          #   type: "ZABBIX_PASSIVE"
-          #   key: "vfs.fs.size[{#FSNAME},free]"
-          #   _group: "Filesystems"
-          #   _resource: "{#FSNAME}"
-          #   application_prototype: "Filesystem __RESOURCE__"
           - _prototype: "vfs.fs.total"
             type: "ZABBIX_PASSIVE"
             key: "vfs.fs.size[{#FSNAME},total]"
@@ -405,27 +399,37 @@ templates:
     _zbx_ver: "3.4"
     _classes:
       - OS
+    macros:
+      - macro: "{$MEM.COMMITED.CRIT.MAX}"
+        _description: "The warning threshold of the % Committed Bytes In Use counter."
+        value: "80"
+      - macro: "{$MEM.PAGE_TABLE.CRIT.MAX}"
+        _description: "The warning threshold of the Free System Page Table Entries counter."
+        value: "5000"
+      - macro: "{$MEM.PAGE_SEC.CRIT.MAX}"
+        _description: "The warning threshold of the Memory Pages/sec counter."
+        value: "1000"
     items:
-      - _prototype: "vm.memory.total"
-        key: "vm.memory.size[total]"
-        type: "ZABBIX_PASSIVE"
-      - _prototype: "vm.memory.available"
-        key: "vm.memory.size[available]"
-        type: "ZABBIX_PASSIVE"
       - _prototype: "vm.memory.used"
         key: "vm.memory.size[used]"
         type: "ZABBIX_PASSIVE"
       - _prototype: "vm.memory.pused"
         key: "vm.memory.size[pused]"
         type: "ZABBIX_PASSIVE"
-      - _prototype: "system.swap.total"
-        key: "system.swap.size[,total]"
+      - _prototype: "vm.memory.total"
+        key: "vm.memory.size[total]"
         type: "ZABBIX_PASSIVE"
+      # - _prototype: "vm.memory.available"
+      #   key: "vm.memory.size[available]"
+      #   type: "ZABBIX_PASSIVE"
       - _prototype: "system.swap.free"
         key: "system.swap.size[,free]"
         type: "ZABBIX_PASSIVE"
       - _prototype: "system.swap.pfree"
         key: "system.swap.size[,pfree]"
+        type: "ZABBIX_PASSIVE"
+      - _prototype: "system.swap.total"
+        key: "system.swap.size[,total]"
         type: "ZABBIX_PASSIVE"
       # WMI counters
       # - _id: M
@@ -601,27 +605,27 @@ templates:
       #   delay: 1m
       #   units: B
       # Performance counters
-      - _id: p
+      # - _id: p
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Available
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Memory\Available Bytes"]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     Performance counter measures the amount of physical memory (RAM), in megabytes, that is immediately
+      #     available for allocation either to a process or for system use. It is the sum of the Zero, Free,
+      #     and Standby page lists discussed earlier. When the Available MBytes counter is low, it is a primary
+      #     indicator of a low RAM condition. This is when aggressive working set trims will occur which may or
+      #     may not result in a hard page fault where the pages on the Modified list are written to disk.
+      #     The \Memory\Pages/sec counter measures hard page faults, but it does not distinguish between hard
+      #     page faults that result from normal file reads or writes and page file reads or writes. Therefore,
+      #     use Pages/sec together with the Available MBytes counter, and do not use Pages/sec by itself.
+      - _id: item.cache_bytes
         _group: "Memory"
-        _resource: "Memory"
-        name: Available
-        type: ZABBIX_PASSIVE
-        key: perf_counter_en["\Memory\Available Bytes"]
-        value_type: UNSIGNED
-        delay: 1m
-        units: B
-        description: |
-          Performance counter measures the amount of physical memory (RAM), in megabytes, that is immediately 
-          available for allocation either to a process or for system use. It is the sum of the Zero, Free, 
-          and Standby page lists discussed earlier. When the Available MBytes counter is low, it is a primary 
-          indicator of a low RAM condition. This is when aggressive working set trims will occur which may or 
-          may not result in a hard page fault where the pages on the Modified list are written to disk.
-          The \Memory\Pages/sec counter measures hard page faults, but it does not distinguish between hard 
-          page faults that result from normal file reads or writes and page file reads or writes. Therefore, 
-          use Pages/sec together with the Available MBytes counter, and do not use Pages/sec by itself.
-      - _id: p
-        _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Cache bytes
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Memory\Cache Bytes"]
@@ -632,44 +636,48 @@ templates:
           Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, 
           Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays 
           the last observed value only; it is not an average.
-          The Memory performance object consists of counters that describe the behavior of physical and virtual 
-          memory on the computer. Physical memory is the amount of random access memory on the computer. Virtual 
-          memory consists of the space in physical memory and on disk. Many of the memory counters monitor paging, 
-          which is the movement of pages of code and data between disk and physical memory. Excessive paging, 
-          a symptom of a memory shortage, can cause delays which interfere with all system processes.
-      - _id: p
+        graphs:
+          - name: "Memory statistics"
+            graphtype: NORMAL
+            graph_items:
+              - name: item.cache_bytes
+              - name: item.percent_committed
+                yaxisside: RIGHT
+              - name: item.pagesec
+              - name: item.pool_nonpaged
+      # - _id: p
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Commit limit
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Memory\Commit Limit"]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     Commit Limit is the amount of virtual memory that can be committed without having to extend
+      #     the paging file(s). It is measured in bytes. Committed memory is the physical memory which
+      #     has space reserved on the disk paging files. There can be one paging file on each logical drive).
+      #     If the paging file(s) are be expanded, this limit increases accordingly. This counter displays
+      #     the last observed value only; it is not an average.
+      # - _id: p
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Committed
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Memory\Committed Bytes"]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     The system commit charge is the total amount of committed memory that is in use by all processes
+      #     and by the kernel. This memory might have been guaranteed or written to by a process or by the kernel.
+      #     Memory Available Megabytes in Use This measures the ratio of Committed Bytes to the Commit Limit—in other
+      #     words, the amount of virtual memory in use. This indicates insufficient memory if the number is greater
+      #     than 80 percent. The obvious solution for this is to add more memory.
+      - _id: item.percent_committed
         _group: "Memory"
-        _resource: "Memory"
-        name: Commit limit
-        type: ZABBIX_PASSIVE
-        key: perf_counter_en["\Memory\Commit Limit"]
-        value_type: UNSIGNED
-        delay: 1m
-        units: B
-        description: |
-          Commit Limit is the amount of virtual memory that can be committed without having to extend 
-          the paging file(s). It is measured in bytes. Committed memory is the physical memory which 
-          has space reserved on the disk paging files. There can be one paging file on each logical drive). 
-          If the paging file(s) are be expanded, this limit increases accordingly. This counter displays 
-          the last observed value only; it is not an average.
-      - _id: p
-        _group: "Memory"
-        _resource: "Memory"
-        name: Committed
-        type: ZABBIX_PASSIVE
-        key: perf_counter_en["\Memory\Committed Bytes"]
-        value_type: UNSIGNED
-        delay: 1m
-        units: B
-        description: |
-          The system commit charge is the total amount of committed memory that is in use by all processes 
-          and by the kernel. This memory might have been guaranteed or written to by a process or by the kernel.
-          Memory Available Megabytes in Use This measures the ratio of Committed Bytes to the Commit Limit—in other 
-          words, the amount of virtual memory in use. This indicates insufficient memory if the number is greater 
-          than 80 percent. The obvious solution for this is to add more memory.
-      - _id: p
-        _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Committed in use, %
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Memory\% Committed Bytes In Use"]
@@ -681,24 +689,33 @@ templates:
           to the system commit limit, and the system can perform poorly when the system commit limit is reached. 
           Therefore, when % Committed Bytes In Use is greater than 80%, use the \Process(*)\Private Bytes counter 
           to identify the processes that are consuming the most committed memory.
-          The Debug Diagnostic Tool (DebugDiag) is designed to assist in troubleshooting issues such as hangs,  
-          slow performance, memory leaks or fragmentation, and crashes in any user-mode process. The tool includes 
-          additional debugging scripts focused on Internet Information Services (IIS) applications, web data access 
-          components, COM+ and related Microsoft technologies.
+        triggers:
+          - _id: trigger.mem.committed.high
+            name: "Memory Committed Bytes is too high (over {$MEM.COMMITED.CRIT.MAX}% for 5m)"
+            priority: "HIGH"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$MEM.COMMITED.CRIT.MAX}"
+            description: "The Memory\\% Committed Bytes in the last 5 minutes exceeds {$MEM.COMMITED.CRIT.MAX}%. If you see this counter remaining over 80% for an extended time, you have a memory leak, or you need to upgrade your RAM."
       - _id: p
         _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Free system page table entries
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Memory\Free System Page Table Entries"]
         value_type: UNSIGNED
         delay: 1m
+        units: "entries"
         description: |
           This indicates the number of page table entries not currently in use by the system. If the number is less 
           than 5,000, there may well be a memory leak.
+        triggers:
+          - _id: trigger.mem.page_table.low
+            name: "Free System Page Table Entries is too low (less {$MEM.PAGE_TABLE.CRIT.MAX} for 5m)"
+            priority: "HIGH"
+            expression: "{TEMPLATE_NAME:METRIC.max(5m)}<{$MEM.PAGE_TABLE.CRIT.MAX}"
+            description: "The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE.CRIT.MAX} for 5 minutes. If the number is less than 5,000, there may well be a memory leak."
       - _id: p
         _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Page file usage, %
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Paging File(_total)\% Usage Peak"]
@@ -711,7 +728,7 @@ templates:
           The paging file is a reserved space on disk that backs up committed physical memory on the computer.
       - _id: p
         _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Pages faults per/sec
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Memory\Page Faults/sec"]
@@ -724,9 +741,9 @@ templates:
           disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most 
           processors can handle large numbers of soft faults without significant consequence. However, hard faults, 
           which require disk access, can cause significant delays.
-      - _id: p
+      - _id: item.pagesec
         _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Pages per/sec
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Memory\Pages/sec"]
@@ -735,9 +752,15 @@ templates:
         description: |
           This measures the rate at which pages are read from or written to disk to resolve hard page faults. 
           If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.
-      - _id: p
+        triggers:
+          - _id: trigger.mem.page_sec.low
+            name: "The Memory Pages/sec is too high (over {$MEM.PAGE_SEC.CRIT.MAX} for 5m)"
+            priority: "HIGH"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$MEM.PAGE_SEC.CRIT.MAX}"
+            description: "The Memory Pages/sec in the last 5 minutes exceeds {$MEM.PAGE_SEC.CRIT.MAX}. If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak."
+      - _id: item.pool_nonpaged
         _group: "Memory"
-        _resource: "Memory"
+        # _resource: "Memory"
         name: Pool non-paged
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Memory\Pool Nonpaged Bytes"]
@@ -749,19 +772,19 @@ templates:
           that cannot be written to disk but instead must remain in physical memory as long as they are allocated. 
           There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch). 
           A typical Event ID 2019 is recorded in the system event log.
-      - _id: p
-        _group: "Memory"
-        _resource: "Memory"
-        name: Pool paged
-        type: ZABBIX_PASSIVE
-        key: perf_counter_en["\Memory\Pool Paged Bytes"]
-        value_type: UNSIGNED
-        delay: 1m
-        units: B
-        description: |
-          This measures the size, in bytes, of the paged pool. This is an area of system memory used for objects 
-          that can be written to disk when they are not being used. There may be a memory leak if this value is 
-          greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is recorded in the system event log.
+      # - _id: p
+      #   _group: "Memory"
+      #   _resource: "Memory"
+      #   name: Pool paged
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Memory\Pool Paged Bytes"]
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: B
+      #   description: |
+      #     This measures the size, in bytes, of the paged pool. This is an area of system memory used for objects
+      #     that can be written to disk when they are not being used. There may be a memory leak if this value is
+      #     greater than 250MB (or 170MB with the /3GB switch). A typical Event ID 2020 is recorded in the system event log.
       # - _id: vm.memory.size[free]
       #   _group: "Memory"
       #   name: Free memory
