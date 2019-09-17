@@ -11,9 +11,12 @@
       <template>
          <template>Template Net Dell Force S-Series SNMPv2</template>
          <name>Template Net Dell Force S-Series SNMPv2</name>
-         <description>Template Dell Force S-Series version: 0.15&#13;
+         <description>Template Dell Force S-Series&#13;
+&#13;
 MIBs used:&#13;
-F10-S-SERIES-CHASSIS-MIB</description>
+F10-S-SERIES-CHASSIS-MIB&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -81,8 +84,8 @@ F10-S-SERIES-CHASSIS-MIB</description>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}]</key>
-                     <delay>180</delay>
-                     <history>30</history>
+                     <delay>60</delay>
+                     <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -125,9 +128,9 @@ CPU utilization in percentage for last 1 minute.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
-                     <delay>180</delay>
-                     <history>30</history>
+                     <key>vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -167,15 +170,15 @@ Total memory usage in percentage.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Dell Force S-Series SNMPv2:system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: High CPU utilization</name>
+                     <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
+                     <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -183,10 +186,10 @@ Total memory usage in percentage.</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Dell Force S-Series SNMPv2:vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: High memory utilization</name>
+                     <name>#{#SNMPINDEX}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -259,7 +262,7 @@ Total memory usage in percentage.</description>
                            <type>0</type>
                            <item>
                               <host>Template Net Dell Force S-Series SNMPv2</host>
-                              <key>vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -859,7 +862,7 @@ Device serial number has changed. Ack to close</description>
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -871,7 +874,7 @@ Device serial number has changed. Ack to close</description>
                <value>1</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>

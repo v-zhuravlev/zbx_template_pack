@@ -15,15 +15,15 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|-|90|
-|{$FAN_CRIT_STATUS}|-|2|
-|{$FAN_OK_STATUS}|-|1|
-|{$MEMORY_UTIL_MAX}|-|90|
-|{$PSU_CRIT_STATUS}|-|2|
-|{$PSU_OK_STATUS}|-|1|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT}|-|65|
-|{$TEMP_WARN}|-|55|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$FAN_CRIT_STATUS}|<p>-</p>|2|
+|{$FAN_OK_STATUS}|<p>-</p>|1|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$PSU_CRIT_STATUS}|<p>-</p>|2|
+|{$PSU_OK_STATUS}|<p>-</p>|1|
+|{$TEMP_CRIT_LOW}|<p>-</p>|5|
+|{$TEMP_CRIT}|<p>-</p>|65|
+|{$TEMP_WARN}|<p>-</p>|55|
 
 ## Template links
 
@@ -35,41 +35,43 @@ For Zabbix version: 4.0
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|CPU and Memory and Flash Discovery|-|SNMP|
-|PSU Discovery|A list of power supply residents in the S-series chassis.|SNMP|
-|FAN Discovery|-|SNMP|
-|Stack Unit Discovery|-|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|CPU and Memory and Flash Discovery|<p>-</p>|SNMP|module.discovery|
+|PSU Discovery|<p>A list of power supply residents in the S-series chassis.</p>|SNMP|psu.discovery|
+|FAN Discovery|<p>-</p>|SNMP|fan.discovery|
+|Stack Unit Discovery|<p>-</p>|SNMP|stack.discovery|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|#{#SNMPINDEX}: CPU utilization|MIB: F10-S-SERIES-CHASSIS-MIB</br>CPU utilization in percentage for last 1 minute.|SNMP|
-|#{#SNMPINDEX}: Memory utilization|MIB: F10-S-SERIES-CHASSIS-MIB</br>Total memory usage in percentage.|SNMP|
-|PSU {#SNMPVALUE}: Power supply status|MIB: F10-S-SERIES-CHASSIS-MIB</br>The status of the power supply {#SNMPVALUE}|SNMP|
-|Fan {#SNMPVALUE}: Fan status|MIB: F10-S-SERIES-CHASSIS-MIB</br>The status of the fan tray {#SNMPVALUE}.|SNMP|
-|Device {#SNMPVALUE}: Temperature|MIB: F10-S-SERIES-CHASSIS-MIB</br>The temperature of the unit.|SNMP|
-|#{#SNMPVALUE}: Hardware model name|MIB: F10-S-SERIES-CHASSIS-MIB</br>The plugged-in model ID for this unit.|SNMP|
-|#{#SNMPVALUE}: Hardware serial number|MIB: F10-S-SERIES-CHASSIS-MIB</br>The unit's serial number.|SNMP|
-|#{#SNMPVALUE}: Hardware version(revision)|MIB: F10-S-SERIES-CHASSIS-MIB</br>The unit manufacturer's product revision|SNMP|
-|#{#SNMPVALUE}: Operating system|MIB: F10-S-SERIES-CHASSIS-MIB</br>Current code version of this unit.|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|#{#SNMPINDEX}: CPU utilization|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>CPU utilization in percentage for last 1 minute.</p>|SNMP|system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}]|
+|Fans|Fan {#SNMPVALUE}: Fan status|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>The status of the fan tray {#SNMPVALUE}.</p>|SNMP|sensor.fan.status[chSysFanTrayOperStatus.{#SNMPINDEX}]|
+|Inventory|#{#SNMPVALUE}: Hardware model name|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>The plugged-in model ID for this unit.</p>|SNMP|system.hw.model[chStackUnitModelID.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|#{#SNMPVALUE}: Hardware serial number|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>The unit's serial number.</p>|SNMP|system.hw.serialnumber[chStackUnitSerialNumber.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|#{#SNMPVALUE}: Hardware version(revision)|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>The unit manufacturer's product revision</p>|SNMP|system.hw.version[chStackUnitProductRev.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|#{#SNMPVALUE}: Operating system|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>Current code version of this unit.</p>|SNMP|system.sw.os[chStackUnitCodeVersion.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Memory|#{#SNMPINDEX}: Memory utilization|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>Total memory usage in percentage.</p>|SNMP|vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}]|
+|Power_supply|PSU {#SNMPVALUE}: Power supply status|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>The status of the power supply {#SNMPVALUE}</p>|SNMP|sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}]|
+|Temperature|Device {#SNMPVALUE}: Temperature|<p>MIB: F10-S-SERIES-CHASSIS-MIB</p><p>The temperature of the unit.</p>|SNMP|sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|#{#SNMPINDEX}: High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
-|#{#SNMPINDEX}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
-|PSU {#SNMPVALUE}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
-|PSU {#SNMPVALUE}: Power supply is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1`|INFO|
-|Fan {#SNMPVALUE}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[chSysFanTrayOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE|
-|Fan {#SNMPVALUE}: Fan is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[chSysFanTrayOperStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|
-|Device {#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|Device {#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|Device {#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|#{#SNMPVALUE}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[chStackUnitSerialNumber.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[chStackUnitSerialNumber.{#SNMPINDEX}].strlen()}>0`|INFO|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|Fan {#SNMPVALUE}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[chSysFanTrayOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Fan {#SNMPVALUE}: Fan is not in normal state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[chSysFanTrayOperStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|<p>**Depends on**:</p><p>- Fan {#SNMPVALUE}: Fan is in critical state</p>|
+|#{#SNMPVALUE}: Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber[chStackUnitSerialNumber.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[chStackUnitSerialNumber.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|#{#SNMPINDEX}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|PSU {#SNMPVALUE}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE||
+|PSU {#SNMPVALUE}: Power supply is not in normal state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1`|INFO|<p>**Depends on**:</p><p>- PSU {#SNMPVALUE}: Power supply is in critical state</p>|
+|Device {#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- Device {#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|Device {#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|Device {#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[chStackUnitTemp.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 
