@@ -16,6 +16,7 @@ For Zabbix version: 3.4
 |Name|Description|Default|
 |----|-----------|-------|
 |{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
 
 ## Template links
 

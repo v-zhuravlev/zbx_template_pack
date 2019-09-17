@@ -30,6 +30,7 @@ No specific Zabbix configuration is required.
 |{$HEALTH_CRIT_STATUS}|<p>-</p>|4|
 |{$HEALTH_WARN_STATUS:"offline"}|<p>-</p>|2|
 |{$HEALTH_WARN_STATUS:"testing"}|<p>-</p>|3|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
 |{$PSU_CRIT_STATUS}|<p>-</p>|2|
 |{$PSU_OK_STATUS}|<p>-</p>|4|
 |{$TEMP_CRIT_LOW}|<p>-</p>|5|
