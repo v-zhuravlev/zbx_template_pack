@@ -8,12 +8,11 @@ templates:
     name: Template Net Extreme EXOS
     description: Template Extreme EXOS
     discovery_rules:
-      -
-        name: Memory Discovery
+      - name: Memory Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.32.2.2.1.1]
         key: memory.discovery
         items:
-          - _prototype: vm.memory.free
+          - _prototype: vm.memory.available
             oid: 1.3.6.1.4.1.1916.1.32.2.2.1.3.{#SNMPINDEX}
             _snmpObject: extremeMemoryMonitorSystemFree.{#SNMPINDEX}
             _mib: EXTREME-SOFTWARE-MONITOR-MIB
@@ -22,6 +21,7 @@ templates:
             preprocessing:
               - type: MULTIPLIER
                 params: "1024"
+            triggers: []
           - _prototype: vm.memory.total
             oid: 1.3.6.1.4.1.1916.1.32.2.2.1.2.{#SNMPINDEX}
             _snmpObject: extremeMemoryMonitorSystemTotal.{#SNMPINDEX}
@@ -29,15 +29,15 @@ templates:
             _vendor_description: Total amount of DRAM in Kbytes in the system.
             _resource: "#{#SNMPVALUE}"
             preprocessing:
-                - type: MULTIPLIER
-                  params: "1024"
-          - _prototype: vm.memory.pused
+              - type: MULTIPLIER
+                params: "1024"
+          - _prototype: vm.memory.util
             _snmpObject: "{#SNMPVALUE}"
             type: CALCULATED
+            params: (last("__vm.memory.total__") - last("__vm.memory.available__")) / last("__vm.memory.total__") * 100
             discoveryRule: Memory Discovery
             _resource: "#{#SNMPVALUE}"
-      -
-        name: PSU Discovery
+      - name: PSU Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.1.1.27.1.1]
         key: psu.discovery
         description: Table of status of all power supplies in the system.
@@ -50,34 +50,33 @@ templates:
             valueMap: EXTREME-SYSTEM-MIB::extremePowerSupplyStatus
             _vendor_description: Status of the power supply {#SNMPVALUE}
             triggers:
-              - _prototype: psu.crit            
-      -
-        name: FAN Discovery
+              - _prototype: psu.crit
+      - name: FAN Discovery
         snmp_oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.1916.1.1.1.9.1.1]
         key: fan.discovery
         items:
-        - _prototype: sensor.fan.status
-          oid: 1.3.6.1.4.1.1916.1.1.1.9.1.2.{#SNMPINDEX}
-          _snmpObject: extremeFanOperational.{#SNMPINDEX}
-          _mib: EXTREME-SYSTEM-MIB
-          _resource: Fan {#SNMPVALUE}
-          valueMap: EXTREME-SYSTEM-MIB::extremeFanOperational
-          _vendor_description: Operational status of a cooling fan.
-          triggers:
-           - _prototype: fan.crit
-        - _prototype: sensor.fan.speed
-          oid: 1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}
-          _snmpObject: extremeFanSpeed.{#SNMPINDEX}
-          _mib: EXTREME-SYSTEM-MIB
-          _resource: Fan {#SNMPVALUE}
-          _vendor_description: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
+          - _prototype: sensor.fan.status
+            oid: 1.3.6.1.4.1.1916.1.1.1.9.1.2.{#SNMPINDEX}
+            _snmpObject: extremeFanOperational.{#SNMPINDEX}
+            _mib: EXTREME-SYSTEM-MIB
+            _resource: Fan {#SNMPVALUE}
+            valueMap: EXTREME-SYSTEM-MIB::extremeFanOperational
+            _vendor_description: Operational status of a cooling fan.
+            triggers:
+              - _prototype: fan.crit
+          - _prototype: sensor.fan.speed
+            oid: 1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}
+            _snmpObject: extremeFanSpeed.{#SNMPINDEX}
+            _mib: EXTREME-SYSTEM-MIB
+            _resource: Fan {#SNMPVALUE}
+            _vendor_description: The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}
     items:
       - _prototype: system.cpu.util
         oid: 1.3.6.1.4.1.1916.1.32.1.2.0
         _snmpObject: extremeCpuMonitorTotalUtilization.0
         _mib: EXTREME-SOFTWARE-MONITOR-MIB
         _vendor_description: Total CPU utlization (percentage) as of last sampling.
-      
+
       - _prototype: sensor.temp.value
         oid: 1.3.6.1.4.1.1916.1.1.1.8.0
         _snmpObject: extremeCurrentTemperature.0
@@ -94,7 +93,6 @@ templates:
         _mib: EXTREME-SYSTEM-MIB
         _resource: Device
         valueMap: EXTREME-SYSTEM-MIB::extremeOverTemperatureAlarm
-
 
       - _prototype: system.hw.model
         oid: 1.3.6.1.2.1.47.1.1.1.1.2.1
@@ -116,64 +114,49 @@ templates:
         oid: 1.3.6.1.4.1.1916.1.1.1.13.0
         _snmpObject: extremePrimarySoftwareRev.0
         _mib: EXTREME-SYSTEM-MIB
-        _vendor_description: | 
+        _vendor_description: |
           The software revision of the primary image stored in this device.
           This string will have a zero length if the revision is unknown, invalid or not present.
           This will also be reported in RMON2 probeSoftwareRev if this is the software image currently running in the device.
     macros:
       - macro: "{$TEMP_CRIT}"
         value: "65"
-      -
-        macro: "{$TEMP_WARN}"
+      - macro: "{$TEMP_WARN}"
         value: "55"
-      -
-        macro: "{$TEMP_CRIT_STATUS}"
+      - macro: "{$TEMP_CRIT_STATUS}"
         value: "1"
-      -
-        macro: "{$PSU_CRIT_STATUS}"
+      - macro: "{$PSU_CRIT_STATUS}"
         value: "3"
-      -
-        macro: "{$FAN_CRIT_STATUS}"
+      - macro: "{$FAN_CRIT_STATUS}"
         value: "2"
+      - macro: "{$MEMORY.UTIL.MAX}"
+        value: "90"
 value_maps:
-    - name: TruthValue
-      mappings:
-        -
-          value: "1"
-          newvalue: "true"
-        -
-          value: "2"
-          newvalue: "false"
-    - name: EXTREME-SYSTEM-MIB::extremeFanOperational
-      mappings:
-        -
-          value: "1"
-          newvalue: "true - on"
-        -
-          value: "2"
-          newvalue: "false - off"
-    -
-      name: EXTREME-SYSTEM-MIB::extremeOverTemperatureAlarm
-      mappings:
-
-        -
-          value: "1"
-          newvalue: "alarm"
-        -
-          value: "2"
-          newvalue: "normal"
-    -
-      name: EXTREME-SYSTEM-MIB::extremePowerSupplyStatus
-      mappings:
-        -
-          value: "1"
-          newvalue: "notPresent"
-        -
-          value: "2"
-          newvalue: "presentOK"
-        -
-          value: "3"
-          newvalue: "presentNotOK"
-        -
-          value: "4"
-          newvalue: "presentPowerOff"
+  - name: TruthValue
+    mappings:
+      - value: "1"
+        newvalue: "true"
+      - value: "2"
+        newvalue: "false"
+  - name: EXTREME-SYSTEM-MIB::extremeFanOperational
+    mappings:
+      - value: "1"
+        newvalue: "true - on"
+      - value: "2"
+        newvalue: "false - off"
+  - name: EXTREME-SYSTEM-MIB::extremeOverTemperatureAlarm
+    mappings:
+      - value: "1"
+        newvalue: "alarm"
+      - value: "2"
+        newvalue: "normal"
+  - name: EXTREME-SYSTEM-MIB::extremePowerSupplyStatus
+    mappings:
+      - value: "1"
+        newvalue: "notPresent"
+      - value: "2"
+        newvalue: "presentOK"
+      - value: "3"
+        newvalue: "presentNotOK"
+      - value: "4"
+        newvalue: "presentPowerOff"
