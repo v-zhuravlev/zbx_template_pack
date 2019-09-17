@@ -7,6 +7,12 @@
             ],
             "name": "Template Module Cisco CISCO-MEMORY-POOL-MIB",
             "description": "Template Cisco CISCO-MEMORY-POOL-MIB",
+            "macros": [
+                {
+                    "macro": "{$MEMORY.UTIL.MAX}",
+                    "value": "90"
+                }
+            ],
             "discovery_rules": [
                 {
                     "name": "Memory Discovery",
@@ -24,6 +30,7 @@
                             "_resource": "{#SNMPVALUE}"
                         },
                         {
+                            //can be switched to available
                             "_prototype": "vm.memory.free",
                             "oid": "1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}",
                             "_snmpObject": "ciscoMemoryPoolFree.{#SNMPINDEX}",
@@ -33,9 +40,10 @@
                             "_resource": "{#SNMPVALUE}"
                         },
                         {
-                            "_prototype": "vm.memory.pused",
-                            "_snmpObject": "vm.memory.pused.{#SNMPINDEX}",
+                            "_prototype": "vm.memory.util",
+                            "_snmpObject": "vm.memory.util.{#SNMPINDEX}",
                             "type": "CALCULATED",
+                            "params": "last(\"__vm.memory.used__\")/(last(\"__vm.memory.free__\")+last(\"__vm.memory.used__\"))*100",
                             "_resource": "{#SNMPVALUE}"
                         }
                     ]
@@ -366,7 +374,7 @@
             //   { "_prototype": "vm.memory.free",
             //     "imported": "true"
             //   },
-            //   { "_prototype": "vm.memory.pused",
+            //   { "_prototype": "vm.memory.util",
             //     "imported": "true"
             //   },
             //   { "_prototype": "sensor.temp.value",
@@ -426,7 +434,7 @@
             //   { "_prototype": "vm.memory.free",
             //     "imported": "true"
             //   },
-            //   { "_prototype": "vm.memory.pused",
+            //   { "_prototype": "vm.memory.util",
             //     "imported": "true"
             //   },
             //   { "_prototype": "sensor.temp.value",
@@ -485,7 +493,7 @@
             //   { "_prototype": "vm.memory.free",
             //     "imported": "true"
             //   },
-            //   { "_prototype": "vm.memory.pused",
+            //   { "_prototype": "vm.memory.util",
             //     "imported": "true"
             //   },
             //   { "_prototype": "sensor.temp.value",
