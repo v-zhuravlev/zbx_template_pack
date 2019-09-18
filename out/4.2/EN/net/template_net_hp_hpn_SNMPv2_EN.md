@@ -22,17 +22,17 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|-|90|
-|{$FAN_CRIT_STATUS:"bad"}|-|2|
-|{$FAN_WARN_STATUS:"warning"}|-|3|
-|{$MEMORY_UTIL_MAX}|-|90|
-|{$PSU_CRIT_STATUS:"bad"}|-|2|
-|{$PSU_WARN_STATUS:"warning"}|-|3|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT_STATUS}|-|2|
-|{$TEMP_CRIT}|-|60|
-|{$TEMP_WARN_STATUS}|-|3|
-|{$TEMP_WARN}|-|50|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$FAN_CRIT_STATUS:"bad"}|<p>-</p>|2|
+|{$FAN_WARN_STATUS:"warning"}|<p>-</p>|3|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$PSU_CRIT_STATUS:"bad"}|<p>-</p>|2|
+|{$PSU_WARN_STATUS:"warning"}|<p>-</p>|3|
+|{$TEMP_CRIT_LOW}|<p>-</p>|5|
+|{$TEMP_CRIT_STATUS}|<p>-</p>|2|
+|{$TEMP_CRIT}|<p>-</p>|60|
+|{$TEMP_WARN_STATUS}|<p>-</p>|3|
+|{$TEMP_WARN}|<p>-</p>|50|
 
 ## Template links
 
@@ -44,47 +44,50 @@ No specific Zabbix configuration is required.
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|Temperature Discovery|ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter|SNMP|
-|Memory Discovery|Discovery of NETSWITCH-MIB::hpLocalMemTable, A table that contains information on all the local memory for each slot.|SNMP|
-|FAN Discovery|Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.2 - fans and are present|SNMP|
-|PSU Discovery|Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.1 - power supplies and are present|SNMP|
-|Temp Status Discovery|Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.3 - over temp status and are present|SNMP|
-|Entity Discovery|-|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|Temperature Discovery|<p>ENTITY-SENSORS-MIB::EntitySensorDataType discovery with celsius filter</p>|SNMP|temp.precision0.discovery<p>**Filter**:</p>AND <p>- B: {#SENSOR_TYPE} MATCHES_REGEX `8`</p><p>- B: {#SENSOR_PRECISION} MATCHES_REGEX `0`</p>|
+|Memory Discovery|<p>Discovery of NETSWITCH-MIB::hpLocalMemTable, A table that contains information on all the local memory for each slot.</p>|SNMP|memory.discovery|
+|FAN Discovery|<p>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.2 - fans and are present</p>|SNMP|fan.discovery<p>**Filter**:</p>AND <p>- A: {#ENT_CLASS} MATCHES_REGEX `.+8.3.2$`</p><p>- A: {#ENT_STATUS} MATCHES_REGEX `(1|2|3|4)`</p>|
+|PSU Discovery|<p>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.1 - power supplies and are present</p>|SNMP|psu.discovery<p>**Filter**:</p>AND <p>- A: {#ENT_CLASS} MATCHES_REGEX `.+8.3.1$`</p><p>- A: {#ENT_STATUS} MATCHES_REGEX `(1|2|3|4)`</p>|
+|Temp Status Discovery|<p>Discovering all entities of hpicfSensorObjectId that ends with: 11.2.3.7.8.3.3 - over temp status and are present</p>|SNMP|temp.status.discovery<p>**Filter**:</p>AND <p>- A: {#ENT_CLASS} MATCHES_REGEX `.+8.3.3$`</p><p>- A: {#ENT_STATUS} MATCHES_REGEX `(1|2|3|4)`</p>|
+|Entity Discovery|<p>-</p>|SNMP|entity.discovery<p>**Filter**:</p>AND_OR <p>- A: {#ENT_CLASS} MATCHES_REGEX `3`</p>|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|CPU utilization|MIB: STATISTICS-MIB</br>The CPU utilization in percent(%).</br>Reference: http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c02597344&sp4ts.oid=51079|SNMP|
-|Hardware serial number|MIB: SEMI-MIB</br>|SNMP|
-|Firmware version|MIB: NETSWITCH-MIB</br>Contains the operating code version number (also known as software or firmware).</br>For example, a software version such as A.08.01 is described as follows:</br>A    the function set available in your router</br>08   the common release number</br>01   updates to the current common release|SNMP|
-|{#SENSOR_INFO}: Temperature|MIB: ENTITY-SENSORS-MIB</br>The most recent measurement obtained by the agent for this sensor.</br>To correctly interpret the value of this object, the associated entPhySensorType,</br>entPhySensorScale, and entPhySensorPrecision objects must also be examined.|SNMP|
-|#{#SNMPVALUE}: Used memory|MIB: NETSWITCH-MIB</br>The number of currently allocated bytes.|SNMP|
-|#{#SNMPVALUE}: Free memory|MIB: NETSWITCH-MIB</br>The number of available (unallocated) bytes.|SNMP|
-|#{#SNMPVALUE}: Memory utilization|Memory utilization in %|CALCULATED|
-|{#ENT_DESCR}: Fan status|MIB: HP-ICF-CHASSIS</br>Actual status indicated by the sensor: {#ENT_DESCR}|SNMP|
-|{#ENT_DESCR}: Power supply status|MIB: HP-ICF-CHASSIS</br>Actual status indicated by the sensor: {#ENT_DESCR}|SNMP|
-|{#ENT_DESCR}: Temperature status|MIB: HP-ICF-CHASSIS</br>Actual status indicated by the sensor: {#ENT_DESCR}|SNMP|
-|{#ENT_NAME}: Hardware model name|MIB: ENTITY-MIB</br>|SNMP|
-|{#ENT_NAME}: Hardware version(revision)|MIB: ENTITY-MIB</br>|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|CPU utilization|<p>MIB: STATISTICS-MIB</p><p>The CPU utilization in percent(%).</p><p>Reference: http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c02597344&sp4ts.oid=51079</p>|SNMP|system.cpu.util[hpSwitchCpuStat.0]|
+|Fans|{#ENT_DESCR}: Fan status|<p>MIB: HP-ICF-CHASSIS</p><p>Actual status indicated by the sensor: {#ENT_DESCR}</p>|SNMP|sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}]|
+|Inventory|Hardware serial number|<p>MIB: SEMI-MIB</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Firmware version|<p>MIB: NETSWITCH-MIB</p><p>Contains the operating code version number (also known as software or firmware).</p><p>For example, a software version such as A.08.01 is described as follows:</p><p>A    the function set available in your router</p><p>08   the common release number</p><p>01   updates to the current common release</p>|SNMP|system.hw.firmware<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|{#ENT_NAME}: Hardware model name|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.model[entPhysicalDescr.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|{#ENT_NAME}: Hardware version(revision)|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.version[entPhysicalHardwareRev.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Memory|#{#SNMPVALUE}: Used memory|<p>MIB: NETSWITCH-MIB</p><p>The number of currently allocated bytes.</p>|SNMP|vm.memory.used[hpLocalMemAllocBytes.{#SNMPINDEX}]|
+|Memory|#{#SNMPVALUE}: Available memory|<p>MIB: NETSWITCH-MIB</p><p>The number of available (unallocated) bytes.</p>|SNMP|vm.memory.available[hpLocalMemFreeBytes.{#SNMPINDEX}]|
+|Memory|#{#SNMPVALUE}: Total memory|<p>MIB: NETSWITCH-MIB</p><p>The number of currently installed bytes.</p>|SNMP|vm.memory.total[hpLocalMemTotalBytes.{#SNMPINDEX}]|
+|Memory|#{#SNMPVALUE}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[snmp.{#SNMPINDEX}]<p>**Expression**:</p>`last("vm.memory.used[hpLocalMemAllocBytes.{#SNMPINDEX}]")/last("vm.memory.total[hpLocalMemTotalBytes.{#SNMPINDEX}]")*100`|
+|Power_supply|{#ENT_DESCR}: Power supply status|<p>MIB: HP-ICF-CHASSIS</p><p>Actual status indicated by the sensor: {#ENT_DESCR}</p>|SNMP|sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}]|
+|Temperature|{#SENSOR_INFO}: Temperature|<p>MIB: ENTITY-SENSORS-MIB</p><p>The most recent measurement obtained by the agent for this sensor.</p><p>To correctly interpret the value of this object, the associated entPhySensorType,</p><p>entPhySensorScale, and entPhySensorPrecision objects must also be examined.</p>|SNMP|sensor.temp.value[entPhySensorValue.{#SNMPINDEX}]|
+|Temperature|{#ENT_DESCR}: Temperature status|<p>MIB: HP-ICF-CHASSIS</p><p>Actual status indicated by the sensor: {#ENT_DESCR}</p>|SNMP|sensor.temp.status[hpicfSensorStatus.{#SNMPINDEX}]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[hpSwitchCpuStat.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
-|{#SENSOR_INFO}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|{#SENSOR_INFO}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|{#SENSOR_INFO}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|#{#SNMPVALUE}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
-|{#ENT_DESCR}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"bad"},eq)}=1`|AVERAGE|
-|{#ENT_DESCR}: Fan is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1`|WARNING|
-|{#ENT_DESCR}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"bad"},eq)}=1`|AVERAGE|
-|{#ENT_DESCR}: Power supply is in warning state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1`|WARNING|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[hpSwitchCpuStat.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|{#ENT_DESCR}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"bad"},eq)}=1`|AVERAGE||
+|{#ENT_DESCR}: Fan is in warning state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1`|WARNING|<p>**Depends on**:</p><p>- {#ENT_DESCR}: Fan is in critical state</p>|
+|Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|#{#SNMPVALUE}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[snmp.{#SNMPINDEX}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|{#ENT_DESCR}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"bad"},eq)}=1`|AVERAGE||
+|{#ENT_DESCR}: Power supply is in warning state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[hpicfSensorStatus.{#SNMPINDEX}].count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1`|WARNING|<p>**Depends on**:</p><p>- {#ENT_DESCR}: Power supply is in critical state</p>|
+|{#SENSOR_INFO}: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- {#SENSOR_INFO}: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|{#SENSOR_INFO}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|{#SENSOR_INFO}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[entPhySensorValue.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 

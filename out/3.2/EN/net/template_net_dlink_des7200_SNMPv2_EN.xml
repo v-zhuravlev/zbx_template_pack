@@ -11,13 +11,16 @@
       <template>
          <template>Template Net D-Link DES 7200 SNMPv2</template>
          <name>Template Net D-Link DES 7200 SNMPv2</name>
-         <description>Template D-Link DES 7200 version: 0.15&#13;
+         <description>Template D-Link DES 7200&#13;
+&#13;
 MIBs used:&#13;
 MY-PROCESS-MIB&#13;
 SNMPv2-MIB&#13;
 MY-MEMORY-MIB&#13;
 ENTITY-MIB&#13;
-MY-SYSTEM-MIB</description>
+MY-SYSTEM-MIB&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -51,8 +54,8 @@ MY-SYSTEM-MIB</description>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.171.10.97.2.36.1.1.3.0</snmp_oid>
                <key>system.cpu.util[myCPUUtilization5Min.0]</key>
-               <delay>180</delay>
-               <history>30</history>
+               <delay>60</delay>
+               <history>7</history>
                <trends>365</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -299,14 +302,14 @@ networking software.</description>
                <description/>
                <item_prototypes>
                   <item_prototype>
-                     <name>Memory utilization</name>
+                     <name>{#SNMPINDEX}: Memory utilization</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.171.10.97.2.35.1.1.1.3.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[myMemoryPoolCurrentUtilization.{#SNMPINDEX}]</key>
-                     <delay>180</delay>
-                     <history>30</history>
+                     <key>vm.memory.util[myMemoryPoolCurrentUtilization.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -346,10 +349,10 @@ This is the memory pool utilization currently.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net D-Link DES 7200 SNMPv2:vm.memory.pused[myMemoryPoolCurrentUtilization.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net D-Link DES 7200 SNMPv2:vm.memory.util[myMemoryPoolCurrentUtilization.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>High memory utilization</name>
+                     <name>{#SNMPINDEX}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -364,7 +367,7 @@ This is the memory pool utilization currently.</description>
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>Memory utilization</name>
+                     <name>{#SNMPINDEX}: Memory utilization</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -390,7 +393,7 @@ This is the memory pool utilization currently.</description>
                            <type>0</type>
                            <item>
                               <host>Template Net D-Link DES 7200 SNMPv2</host>
-                              <key>vm.memory.pused[myMemoryPoolCurrentUtilization.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[myMemoryPoolCurrentUtilization.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -745,7 +748,7 @@ Please check the fan unit</description>
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -753,7 +756,7 @@ Please check the fan unit</description>
                <value>5</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -820,15 +823,15 @@ Please check the fan unit</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Net D-Link DES 7200 SNMPv2:system.cpu.util[myCPUUtilization5Min.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net D-Link DES 7200 SNMPv2:system.cpu.util[myCPUUtilization5Min.0].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High CPU utilization</name>
+         <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
+         <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>

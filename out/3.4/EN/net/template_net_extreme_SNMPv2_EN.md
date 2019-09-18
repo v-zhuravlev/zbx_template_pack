@@ -15,14 +15,14 @@ For Zabbix version: 3.4
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|-|90|
-|{$FAN_CRIT_STATUS}|-|2|
-|{$MEMORY_UTIL_MAX}|-|90|
-|{$PSU_CRIT_STATUS}|-|3|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT_STATUS}|-|1|
-|{$TEMP_CRIT}|-|65|
-|{$TEMP_WARN}|-|55|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`2`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`3`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT_STATUS}|<p>-</p>|`1`|
+|{$TEMP_CRIT}|<p>-</p>|`65`|
+|{$TEMP_WARN}|<p>-</p>|`55`|
 
 ## Template links
 
@@ -34,44 +34,46 @@ For Zabbix version: 3.4
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|Memory Discovery|-|SNMP|
-|PSU Discovery|Table of status of all power supplies in the system.|SNMP|
-|FAN Discovery|-|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|Memory Discovery|<p>-</p>|SNMP|memory.discovery|
+|PSU Discovery|<p>Table of status of all power supplies in the system.</p>|SNMP|psu.discovery|
+|FAN Discovery|<p>-</p>|SNMP|fan.discovery|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|CPU utilization|MIB: EXTREME-SOFTWARE-MONITOR-MIB</br>Total CPU utlization (percentage) as of last sampling.|SNMP|
-|Device: Temperature|MIB: EXTREME-SYSTEM-MIB</br>Temperature readings of testpoint: Device</br>Reference: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-support-temperature-polling-via-SNMP-on-all-nodes-in-a-stack|SNMP|
-|Device: Temperature status|MIB: EXTREME-SYSTEM-MIB</br>Temperature status of testpoint: Device|SNMP|
-|Hardware model name|MIB: ENTITY-MIB</br>|SNMP|
-|Hardware serial number|MIB: ENTITY-MIB</br>|SNMP|
-|Firmware version|MIB: ENTITY-MIB</br>|SNMP|
-|Hardware version(revision)|MIB: ENTITY-MIB</br>|SNMP|
-|Operating system|MIB: EXTREME-SYSTEM-MIB</br>The software revision of the primary image stored in this device.</br>This string will have a zero length if the revision is unknown, invalid or not present.</br>This will also be reported in RMON2 probeSoftwareRev if this is the software image currently running in the device.</br>|SNMP|
-|#{#SNMPVALUE}: Free memory|MIB: EXTREME-SOFTWARE-MONITOR-MIB</br>Total amount of free memory in Kbytes in the system.|SNMP|
-|#{#SNMPVALUE}: Total memory|MIB: EXTREME-SOFTWARE-MONITOR-MIB</br>Total amount of DRAM in Kbytes in the system.|SNMP|
-|#{#SNMPVALUE}: Memory utilization|Memory utilization in %|CALCULATED|
-|PSU {#SNMPVALUE}: Power supply status|MIB: EXTREME-SYSTEM-MIB</br>Status of the power supply {#SNMPVALUE}|SNMP|
-|Fan {#SNMPVALUE}: Fan status|MIB: EXTREME-SYSTEM-MIB</br>Operational status of a cooling fan.|SNMP|
-|Fan {#SNMPVALUE}: Fan speed|MIB: EXTREME-SYSTEM-MIB</br>The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|CPU utilization|<p>MIB: EXTREME-SOFTWARE-MONITOR-MIB</p><p>Total CPU utlization (percentage) as of last sampling.</p>|SNMP|system.cpu.util[extremeCpuMonitorTotalUtilization.0]|
+|Fans|Fan {#SNMPVALUE}: Fan status|<p>MIB: EXTREME-SYSTEM-MIB</p><p>Operational status of a cooling fan.</p>|SNMP|sensor.fan.status[extremeFanOperational.{#SNMPINDEX}]|
+|Fans|Fan {#SNMPVALUE}: Fan speed|<p>MIB: EXTREME-SYSTEM-MIB</p><p>The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</p>|SNMP|sensor.fan.speed[extremeFanSpeed.{#SNMPINDEX}]|
+|Inventory|Hardware model name|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.model<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Hardware serial number|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Firmware version|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.firmware<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Hardware version(revision)|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.version<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system|<p>MIB: EXTREME-SYSTEM-MIB</p><p>The software revision of the primary image stored in this device.</p><p>This string will have a zero length if the revision is unknown, invalid or not present.</p><p>This will also be reported in RMON2 probeSoftwareRev if this is the software image currently running in the device.</p>|SNMP|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Memory|#{#SNMPVALUE}: Available memory|<p>MIB: EXTREME-SOFTWARE-MONITOR-MIB</p><p>Total amount of free memory in Kbytes in the system.</p>|SNMP|vm.memory.available[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
+|Memory|#{#SNMPVALUE}: Total memory|<p>MIB: EXTREME-SOFTWARE-MONITOR-MIB</p><p>Total amount of DRAM in Kbytes in the system.</p>|SNMP|vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
+|Memory|#{#SNMPVALUE}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[{#SNMPVALUE}]<p>**Expression**:</p>`(last("vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]") - last("vm.memory.available[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]")) / last("vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]") * 100`|
+|Power_supply|PSU {#SNMPVALUE}: Power supply status|<p>MIB: EXTREME-SYSTEM-MIB</p><p>Status of the power supply {#SNMPVALUE}</p>|SNMP|sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}]|
+|Temperature|Device: Temperature|<p>MIB: EXTREME-SYSTEM-MIB</p><p>Temperature readings of testpoint: Device</p><p>Reference: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-support-temperature-polling-via-SNMP-on-all-nodes-in-a-stack</p>|SNMP|sensor.temp.value[extremeCurrentTemperature.0]|
+|Temperature|Device: Temperature status|<p>MIB: EXTREME-SYSTEM-MIB</p><p>Temperature status of testpoint: Device</p>|SNMP|sensor.temp.status[extremeOverTemperatureAlarm.0]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[extremeCpuMonitorTotalUtilization.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
-|Device: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}>{$TEMP_WARN:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|Device: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}>{$TEMP_CRIT:""} or {Template Net Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|Device: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
-|#{#SNMPVALUE}: High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[{#SNMPVALUE}].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
-|PSU {#SNMPVALUE}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
-|Fan {#SNMPVALUE}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[extremeCpuMonitorTotalUtilization.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|Fan {#SNMPVALUE}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[extremeFanOperational.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|#{#SNMPVALUE}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[{#SNMPVALUE}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|PSU {#SNMPVALUE}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Device: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- Device: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|Device: Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}>{$TEMP_CRIT:""} or {Template Net Extreme EXOS SNMPv2:sensor.temp.status[extremeOverTemperatureAlarm.0].last(0)}={$TEMP_CRIT_STATUS}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|Device: Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[extremeCurrentTemperature.0].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 

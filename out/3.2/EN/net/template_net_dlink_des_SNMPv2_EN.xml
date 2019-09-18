@@ -11,16 +11,21 @@
       <template>
          <template>Template Net D-Link DES_DGS Switch SNMPv2</template>
          <name>Template Net D-Link DES_DGS Switch SNMPv2</name>
-         <description>Template D-Link DES_DGS Switch version: 0.15&#13;
+         <description>Template D-Link DES_DGS Switch&#13;
+&#13;
 MIBs used:&#13;
 DLINK-AGENT-MIB&#13;
 SNMPv2-MIB&#13;
 ENTITY-MIB&#13;
 EQUIPMENT-MIB&#13;
+&#13;
 Known Issues:&#13;
-description : D-Link reports missing PSU as fail(4)&#13;
-version : Firmware: 1.73R008,hardware revision: B1&#13;
-device : DGS-3420-26SC Gigabit Ethernet Switch</description>
+&#13;
+  Description: D-Link reports missing PSU as fail(4)&#13;
+  Version: Firmware: 1.73R008,hardware revision: B1&#13;
+  Device: DGS-3420-26SC Gigabit Ethernet Switch&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -54,8 +59,8 @@ device : DGS-3420-26SC Gigabit Ethernet Switch</description>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.171.12.1.1.6.2.0</snmp_oid>
                <key>system.cpu.util[agentCPUutilizationIn1min.0]</key>
-               <delay>180</delay>
-               <history>30</history>
+               <delay>60</delay>
+               <history>7</history>
                <trends>365</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -308,9 +313,9 @@ A text string containing the serial number of this device.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.4.1.171.12.1.1.9.1.4.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}]</key>
-                     <delay>180</delay>
-                     <history>30</history>
+                     <key>vm.memory.util[agentDRAMutilization.{#SNMPINDEX}]</key>
+                     <delay>60</delay>
+                     <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -350,10 +355,10 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net D-Link DES_DGS Switch SNMPv2:vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net D-Link DES_DGS Switch SNMPv2:vm.memory.util[agentDRAMutilization.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPVALUE}: High memory utilization</name>
+                     <name>#{#SNMPVALUE}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -394,7 +399,7 @@ The percentage of used DRAM memory of the total DRAM memory available.The value 
                            <type>0</type>
                            <item>
                               <host>Template Net D-Link DES_DGS Switch SNMPv2</host>
-                              <key>vm.memory.pused[agentDRAMutilization.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[agentDRAMutilization.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -775,7 +780,7 @@ Please check the fan unit</description>
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -783,7 +788,7 @@ Please check the fan unit</description>
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -853,15 +858,15 @@ Please check the fan unit</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Net D-Link DES_DGS Switch SNMPv2:system.cpu.util[agentCPUutilizationIn1min.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net D-Link DES_DGS Switch SNMPv2:system.cpu.util[agentCPUutilizationIn1min.0].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High CPU utilization</name>
+         <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
+         <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>

@@ -11,14 +11,18 @@
       <template>
          <template>Template Net Brocade FC SNMPv2</template>
          <name>Template Net Brocade FC SNMPv2</name>
-         <description>Template Net Brocade FC version: 0.15&#13;
-Overview: https://community.brocade.com/dtscp75322/attachments/dtscp75322/fibre/25235/1/FOS_MIB_Reference_v740.pdf&#13;
+         <description>Template Net Brocade FC&#13;
+&#13;
 MIBs used:&#13;
 SW-MIB&#13;
+&#13;
 Known Issues:&#13;
-description : no IF-MIB::ifAlias is available&#13;
-version : v6.3.1c, v7.0.0c,  v7.4.1c&#13;
-device : all</description>
+&#13;
+  Description: no IF-MIB::ifAlias is available&#13;
+  Version: v6.3.1c, v7.0.0c,  v7.4.1c&#13;
+  Device: all&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -54,8 +58,8 @@ device : all</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1588.2.1.1.1.26.1.0</snmp_oid>
                <key>system.cpu.util[swCpuUsage.0]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -113,9 +117,9 @@ System's CPU usage.</description>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1588.2.1.1.1.26.6.0</snmp_oid>
-               <key>vm.memory.pused[swMemUsage.0]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <key>vm.memory.util[swMemUsage.0]</key>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -176,7 +180,7 @@ Memory utilization in %</description>
                <key>system.status[swOperStatus.0]</key>
                <delay>30s</delay>
                <history>2w</history>
-               <trends>0</trends>
+               <trends>0d</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
@@ -476,7 +480,7 @@ Temperature readings of testpoint: {#SENSOR_INFO}</description>
                      <key>sensor.temp.status[swSensorStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -663,7 +667,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <key>sensor.psu.status[swSensorStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -831,7 +835,7 @@ Please check the power supply unit for errors</description>
                      <key>sensor.fan.status[swSensorStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -891,7 +895,7 @@ Please check the power supply unit for errors</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1588.2.1.1.1.1.22.1.4.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.fan.speed[swSensorValue.{#SNMPINDEX}]</key>
-                     <delay>5m</delay>
+                     <delay>1m</delay>
                      <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
@@ -1019,7 +1023,7 @@ Please check the fan unit</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -1043,7 +1047,7 @@ Please check the fan unit</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -1143,7 +1147,7 @@ Please check the fan unit</description>
                <type>0</type>
                <item>
                   <host>Template Net Brocade FC SNMPv2</host>
-                  <key>vm.memory.pused[swMemUsage.0]</key>
+                  <key>vm.memory.util[swMemUsage.0]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -1151,15 +1155,15 @@ Please check the fan unit</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Net Brocade FC SNMPv2:system.cpu.util[swCpuUsage.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net Brocade FC SNMPv2:system.cpu.util[swCpuUsage.0].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High CPU utilization</name>
+         <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
+         <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -1167,10 +1171,10 @@ Please check the fan unit</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Net Brocade FC SNMPv2:vm.memory.pused[swMemUsage.0].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Net Brocade FC SNMPv2:vm.memory.util[swMemUsage.0].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>High memory utilization</name>
+         <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>

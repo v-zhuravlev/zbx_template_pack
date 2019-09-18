@@ -18,7 +18,7 @@ JUNIPER-ALARM-MIB&#13;
 JUNIPER-MIB&#13;
 SNMPv2-MIB&#13;
 &#13;
-Template tooling version used: 0.23</description>
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -373,8 +373,8 @@ http://kb.juniper.net/InfoCenter/index?page=content&amp;id=KB17526&amp;actp=sear
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.8.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[jnxOperatingCPU.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -434,9 +434,9 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.11.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[jnxOperatingBuffer.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -494,15 +494,15 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Juniper SNMPv2:system.cpu.util[jnxOperatingCPU.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net Juniper SNMPv2:system.cpu.util[jnxOperatingCPU.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: High CPU utilization</name>
+                     <name>{#SNMPVALUE}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
+                     <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -510,10 +510,10 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Juniper SNMPv2:vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Juniper SNMPv2:vm.memory.util[jnxOperatingBuffer.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: High memory utilization</name>
+                     <name>{#SNMPVALUE}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -586,7 +586,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                            <type>0</type>
                            <item>
                               <host>Template Net Juniper SNMPv2</host>
-                              <key>vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[jnxOperatingBuffer.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -1081,7 +1081,7 @@ Please check the power supply unit for errors</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -1093,7 +1093,7 @@ Please check the power supply unit for errors</description>
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
