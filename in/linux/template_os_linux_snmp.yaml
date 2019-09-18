@@ -4,6 +4,9 @@ templates:
     _zbx_ver: "4.2"
     _classes:
       - SNMPv2
+    _documentation:
+      _issues:
+        - description: Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.
     macros:
       - macro: "{$MEMORY.UTIL.MAX}"
         value: "90"
@@ -14,6 +17,7 @@ templates:
         type: CALCULATED
         key: vm.memory.util[snmp]
         params: (last("__vm.memory.total__")-(last("__vm.memory.free__")+last("__vm.memory.buffers__")+last("__vm.memory.cached__")))/last("__vm.memory.total__")*100
+        _vendor_description: Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.
       - _prototype: vm.memory.free
         _snmpObject: memAvailReal.0
         oid: 1.3.6.1.4.1.2021.4.6.0
@@ -50,6 +54,7 @@ templates:
         type: CALCULATED
         key: vm.memory.available[snmp]
         expressionFormula: last("__vm.memory.free__")+last("__vm.memory.buffers__")+last("__vm.memory.cached__")
+        _vendor_description: Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.
       - _prototype: system.swap.total
         oid: 1.3.6.1.4.1.2021.4.3.0
         type: SNMP

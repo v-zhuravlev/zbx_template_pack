@@ -7,9 +7,11 @@ For Zabbix version: 4.2
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
@@ -30,12 +32,12 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Memory|Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[snmp]<p>**Expression**:</p>`(last("vm.memory.total[memTotalReal.0]")-(last("vm.memory.free[memAvailReal.0]")+last("vm.memory.buffers[memBuffer.0]")+last("vm.memory.cached[memCached.0]")))/last("vm.memory.total[memTotalReal.0]")*100`|
+|Memory|Memory utilization|<p>Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.</p>|CALCULATED|vm.memory.util[snmp]<p>**Expression**:</p>`(last("vm.memory.total[memTotalReal.0]")-(last("vm.memory.free[memAvailReal.0]")+last("vm.memory.buffers[memBuffer.0]")+last("vm.memory.cached[memCached.0]")))/last("vm.memory.total[memTotalReal.0]")*100`|
 |Memory|Free memory|<p>MIB: UCD-SNMP-MIB</p>|SNMP|vm.memory.free[memAvailReal.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (buffers)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by kernel buffers (Buffers in /proc/meminfo)</p>|SNMP|vm.memory.buffers[memBuffer.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Memory (cached)|<p>MIB: UCD-SNMP-MIB</p><p>Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)</p>|SNMP|vm.memory.cached[memCached.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Total memory|<p>MIB: UCD-SNMP-MIB</p><p>Total memory in Bytes</p>|SNMP|vm.memory.total[memTotalReal.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
-|Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|CALCULATED|vm.memory.available[snmp]<p>**Expression**:</p>`last("vm.memory.free[memAvailReal.0]")+last("vm.memory.buffers[memBuffer.0]")+last("vm.memory.cached[memCached.0]")`|
+|Memory|Available memory|<p>Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.</p>|CALCULATED|vm.memory.available[snmp]<p>**Expression**:</p>`last("vm.memory.free[memAvailReal.0]")+last("vm.memory.buffers[memBuffer.0]")+last("vm.memory.cached[memCached.0]")`|
 |Memory|Total swap space|<p>MIB: UCD-SNMP-MIB</p><p>The total amount of swap space configured for this host.</p>|SNMP|system.swap.total[memTotalSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Free swap space|<p>MIB: UCD-SNMP-MIB</p><p>The amount of swap space currently unused or available.</p>|SNMP|system.swap.free[memAvailSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Free swap space in %|<p>-</p>|CALCULATED|system.swap.pfree[snmp]<p>**Expression**:</p>`((last(system.swap.free[memAvailSwap.0]))/last(system.swap.total[memTotalSwap.0]))*100`|
@@ -51,6 +53,10 @@ There are no template links in this template.
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
+
+## Known Issues
+
+- Description: Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.
 
 # Template OS Linux block devices SNMPv2
 

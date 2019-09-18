@@ -131,3 +131,6 @@ https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt
 https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net
 https://www.debian.org/releases/stable/armhf/apds01.en.html
 https://docs.fedoraproject.org/en-US/Fedora/18/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
+
+memory: 
+https://stackoverflow.com/questions/31851951/monitor-real-memory-usage-in-linux-using-perl-and-snmp/31862651#31862651
