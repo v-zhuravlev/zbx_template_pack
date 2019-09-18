@@ -15,11 +15,11 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.INTERRUPT.CRIT.MAX}|<p>The critical threshold of the % Interrupt Time counter.</p>|50|
-|{$CPU.INTERRUPT.WARN.MAX}|<p>The warning threshold of the % Interrupt Time counter.</p>|30|
-|{$CPU.PRIV.CRIT.MAX}|<p>The threshold of the % Privileged Time counter.</p>|20|
-|{$CPU.QUEUE.CRIT.MAX}|<p>The threshold of the Processor Queue Length counter.</p>|3|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$CPU.INTERRUPT.CRIT.MAX}|<p>The critical threshold of the % Interrupt Time counter.</p>|`50`|
+|{$CPU.INTERRUPT.WARN.MAX}|<p>The warning threshold of the % Interrupt Time counter.</p>|`30`|
+|{$CPU.PRIV.CRIT.MAX}|<p>The threshold of the % Privileged Time counter.</p>|`20`|
+|{$CPU.QUEUE.CRIT.MAX}|<p>The threshold of the Processor Queue Length counter.</p>|`3`|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -68,14 +68,14 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.FS.FSDRIVETYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|fixed|
-|{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|^\s$|
-|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|.*|
-|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
-|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|.*|
-|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|^\s$|
-|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
-|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|80|
+|{$VFS.FS.FSDRIVETYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`fixed`|
+|{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`^\s$`|
+|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`.*`|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
+|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`.*`|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`^\s$`|
+|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|`90`|
+|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|`80`|
 
 ## Template links
 
@@ -161,11 +161,11 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEM.COMMITED.CRIT.MAX}|<p>The warning threshold of the % Committed Bytes In Use counter.</p>|80|
-|{$MEM.PAGE_SEC.CRIT.MAX}|<p>The warning threshold of the Memory Pages/sec counter.</p>|1000|
-|{$MEM.PAGE_TABLE.CRIT.MAX}|<p>The warning threshold of the Free System Page Table Entries counter.</p>|5000|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|50|
+|{$MEM.COMMITED.CRIT.MAX}|<p>The warning threshold of the % Committed Bytes In Use counter.</p>|`80`|
+|{$MEM.PAGE_SEC.CRIT.MAX}|<p>The warning threshold of the Memory Pages/sec counter.</p>|`1000`|
+|{$MEM.PAGE_TABLE.CRIT.MAX}|<p>The warning threshold of the Free System Page Table Entries counter.</p>|`5000`|
+|{$MEMORY.UTIL.MAX}|<p>The warning threshold of the Memory util item.</p>|`90`|
+|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
 
 ## Template links
 
@@ -179,7 +179,7 @@ There are no template links in this template.
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
 |Memory|Used memory|<p>Used memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[used]|
-|Memory|Memory utilization|<p>Memory utilization in %</p>|ZABBIX_PASSIVE|vm.memory.size[pused]<p>**Expression**:</p>`(last("vm.memory.size[used]")/last("vm.memory.size[total]"))*100`|
+|Memory|Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util<p>**Expression**:</p>`last("vm.memory.size[used]") / last("vm.memory.size[total]") * 100`|
 |Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[total]|
 |Memory|Free swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,free]|
 |Memory|Free swap space in %|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,pfree]<p>**Expression**:</p>`((last(system.swap.size[,free]))/last(system.swap.size[,total]))*100`|
@@ -196,7 +196,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.size[pused].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util.min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 |High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.size[,pfree].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template OS Windows memory by Zabbix agent:system.swap.size[,total].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p>|
 |Memory Committed Bytes is too high (over {$MEM.COMMITED.CRIT.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory\% Committed Bytes in the last 5 minutes exceeds {$MEM.COMMITED.CRIT.MAX}%. If you see this counter remaining over 80% for an extended time, you have a memory leak, or you need to upgrade your RAM.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\% Committed Bytes In Use"].min(5m)}>{$MEM.COMMITED.CRIT.MAX}`|HIGH||
 |Free System Page Table Entries is too low (less {$MEM.PAGE_TABLE.CRIT.MAX} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE.CRIT.MAX} for 5 minutes. If the number is less than 5,000, there may well be a memory leak.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\Free System Page Table Entries"].max(5m)}<{$MEM.PAGE_TABLE.CRIT.MAX}`|HIGH||
@@ -222,8 +222,8 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$NET.IFNAME.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|.*|
-|{$NET.IFNAME.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer|
+|{$NET.IFNAME.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`.*`|
+|{$NET.IFNAME.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer`|
 
 ## Template links
 

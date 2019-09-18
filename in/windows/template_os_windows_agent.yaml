@@ -409,13 +409,20 @@ templates:
       - macro: "{$MEM.PAGE_SEC.CRIT.MAX}"
         _description: "The warning threshold of the Memory Pages/sec counter."
         value: "1000"
+      - macro: "{$MEMORY.UTIL.MAX}"
+        _description: "The warning threshold of the Memory util item."
+        value: "90"
     items:
       - _prototype: "vm.memory.used"
         key: "vm.memory.size[used]"
         type: "ZABBIX_PASSIVE"
-      - _prototype: "vm.memory.pused"
-        key: "vm.memory.size[pused]"
-        type: "ZABBIX_PASSIVE"
+      # - _prototype: "vm.memory.pused"
+      #   key: "vm.memory.size[pused]"
+      #   type: "ZABBIX_PASSIVE"
+      - _prototype: "vm.memory.util"
+        key: "vm.memory.util"
+        type: CALCULATED
+        params: last("vm.memory.size[used]") / last("vm.memory.size[total]") * 100
       - _prototype: "vm.memory.total"
         key: "vm.memory.size[total]"
         type: "ZABBIX_PASSIVE"
