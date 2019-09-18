@@ -337,6 +337,14 @@
         "type": "string",
         "description": "Insert master item 'id' (only required for type = dependent item)"
       },
+      "params": {
+        "type": "string",
+        "description": "Additional parameters depending on the type of the item:\n - executed script for SSH and Telnet items;\n - SQL query for database monitor items;\n - formula for calculated items.\n",
+        "examples": [
+          "last(\"__vm.memory.used__\")/last(\"__vm.memory.total__\")*100",
+          "(last(\"__vm.memory.total__\")-(last(\"__vm.memory.free__\")+last(\"__vm.memory.buffers__\")+last(\"__vm.memory.cached__\")))/last(\"__vm.memory.total__\")*100"
+        ]
+      },
       "_zbx_ver": {
         "$ref": "#definitions/_zbx_ver",
         "description": "(optional) Please provide minimum Zabbix version required. Metric will be filtered out for any templates for versions below"
