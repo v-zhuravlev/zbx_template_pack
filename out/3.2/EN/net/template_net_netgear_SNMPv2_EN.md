@@ -22,15 +22,15 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|-|90|
-|{$FAN_CRIT_STATUS:"failed"}|-|2|
-|{$MEMORY_UTIL_MAX}|-|90|
-|{$PSU_CRIT_STATUS:"failed"}|-|2|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT_STATUS}|-|3|
-|{$TEMP_CRIT}|-|60|
-|{$TEMP_WARN_STATUS}|-|2|
-|{$TEMP_WARN}|-|50|
+|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$FAN_CRIT_STATUS:"failed"}|<p>-</p>|2|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$PSU_CRIT_STATUS:"failed"}|<p>-</p>|2|
+|{$TEMP_CRIT_LOW}|<p>-</p>|5|
+|{$TEMP_CRIT_STATUS}|<p>-</p>|3|
+|{$TEMP_CRIT}|<p>-</p>|60|
+|{$TEMP_WARN_STATUS}|<p>-</p>|2|
+|{$TEMP_WARN}|<p>-</p>|50|
 
 ## Template links
 
@@ -41,38 +41,40 @@ No specific Zabbix configuration is required.
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|Temperature Discovery|FASTPATH-BOXSERVICES-PRIVATE-MIB::boxServicesTempSensorsTable|SNMP|
-|FAN Discovery|FASTPATH-BOXSERVICES-PRIVATE-MIB::1.3.6.1.4.1.4526.10.43.1.6.1.1|SNMP|
-|PSU Discovery|FASTPATH-BOXSERVICES-PRIVATE-MIB::boxServicesPowSupplyIndex|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|Temperature Discovery|<p>FASTPATH-BOXSERVICES-PRIVATE-MIB::boxServicesTempSensorsTable</p>|SNMP|temp.discovery|
+|FAN Discovery|<p>FASTPATH-BOXSERVICES-PRIVATE-MIB::1.3.6.1.4.1.4526.10.43.1.6.1.1</p>|SNMP|fan.discovery|
+|PSU Discovery|<p>FASTPATH-BOXSERVICES-PRIVATE-MIB::boxServicesPowSupplyIndex</p>|SNMP|psu.discovery|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|Free memory|MIB: FASTPATH-SWITCHING-MIB</br>The total memory freed for utilization.|SNMP|
-|Total memory|MIB: FASTPATH-SWITCHING-MIB</br>The total Memory allocated for the tasks|SNMP|
-|Memory utilization|Memory utilization in %|CALCULATED|
-|Operating system|MIB: FASTPATH-SWITCHING-MIB</br>Operating System running on this unit|SNMP|
-|Hardware model name|MIB: FASTPATH-SWITCHING-MIB</br>|SNMP|
-|Hardware serial number|MIB: FASTPATH-SWITCHING-MIB</br>Serial number of the switch|SNMP|
-|#{#SNMPVALUE}: Temperature|MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</br>The temperature value reported by sensor|SNMP|
-|#{#SNMPVALUE}: Temperature status|MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</br>The state of temperature sensor|SNMP|
-|#{#SNMPVALUE}: Fan status|MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</br>The status of fan|SNMP|
-|#{#SNMPVALUE}: Power supply status|MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</br>The status of power supply|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Fans|#{#SNMPVALUE}: Fan status|<p>MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</p><p>The status of fan</p>|SNMP|sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}]|
+|Inventory|Operating system|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>Operating System running on this unit</p>|SNMP|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Hardware model name|<p>MIB: FASTPATH-SWITCHING-MIB</p>|SNMP|system.hw.model<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Hardware serial number|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>Serial number of the switch</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Memory|Available memory|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>The total memory freed for utilization.</p>|SNMP|vm.memory.available[agentSwitchCpuProcessMemFree.0]|
+|Memory|Total memory|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>The total Memory allocated for the tasks</p>|SNMP|vm.memory.total[agentSwitchCpuProcessMemAvailable.0]|
+|Memory|Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[memoryUsedPercentage.0]<p>**Expression**:</p>`(last("vm.memory.total[agentSwitchCpuProcessMemAvailable.0]")-last("vm.memory.available[agentSwitchCpuProcessMemFree.0]"))/last("vm.memory.total[agentSwitchCpuProcessMemAvailable.0]")*100`|
+|Power_supply|#{#SNMPVALUE}: Power supply status|<p>MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</p><p>The status of power supply</p>|SNMP|sensor.psu.status[boxServicesPowSupplyItemState.{#SNMPINDEX}]|
+|Temperature|#{#SNMPVALUE}: Temperature|<p>MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</p><p>The temperature value reported by sensor</p>|SNMP|sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}]|
+|Temperature|#{#SNMPVALUE}: Temperature status|<p>MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</p><p>The state of temperature sensor</p>|SNMP|sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
-|#{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|#{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|#{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|#{#SNMPVALUE}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE|
-|#{#SNMPVALUE}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[boxServicesPowSupplyItemState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|#{#SNMPVALUE}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE||
+|Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[memoryUsedPercentage.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|#{#SNMPVALUE}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[boxServicesPowSupplyItemState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE||
+|#{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_WARN_STATUS}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- #{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|#{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""} or {Template Net Netgear Fastpath SNMPv2:sensor.temp.status[boxServicesTempSensorState.{#SNMPINDEX}].last(0)}={$TEMP_CRIT_STATUS}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|#{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 
