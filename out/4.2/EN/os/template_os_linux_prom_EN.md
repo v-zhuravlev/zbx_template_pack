@@ -23,26 +23,26 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>Load per CPU considered sustainable. Tune if needed.</p>|1.5|
-|{$MEMORY.AVAILABLE.MIN}|<p>-</p>|20M|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$NODE_EXPORTER_PORT}|<p>TCP Port node_exporter is listening on.</p>|9100|
-|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|50|
-|{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|.+|
-|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
-|{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|20|
-|{$VFS.DEV.WRITE.AWAIT.WARN}|<p>Disk write average response time (in ms) before the trigger would fire</p>|20|
-|{$VFS.FS.FSDEVICE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^.+$|
-|{$VFS.FS.FSDEVICE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^\s$|
-|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|.+|
-|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
-|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$|
-|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^\s$|
-|{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|10|
-|{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|20|
-|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
-|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|80|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>Load per CPU considered sustainable. Tune if needed.</p>|`1.5`|
+|{$MEMORY.AVAILABLE.MIN}|<p>-</p>|`20M`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$NODE_EXPORTER_PORT}|<p>TCP Port node_exporter is listening on.</p>|`9100`|
+|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
+|{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`.+`|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)`|
+|{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|`20`|
+|{$VFS.DEV.WRITE.AWAIT.WARN}|<p>Disk write average response time (in ms) before the trigger would fire</p>|`20`|
+|{$VFS.FS.FSDEVICE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^.+$`|
+|{$VFS.FS.FSDEVICE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^\s$`|
+|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`.+`|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
+|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$`|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^\s$`|
+|{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|`10`|
+|{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|`20`|
+|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|`90`|
+|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|`80`|
 
 ## Template links
 
@@ -77,7 +77,7 @@ There are no template links in this template.
 |CPU|CPU guest nice time|<p>Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)</p>|DEPENDENT|system.cpu.guest_nice[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu=~".+",mode=~"^(?:nice|guest_nice)$"}`</p><p>- JAVASCRIPT: `//calculates average, all cpu utilization var valueArr = JSON.parse(value); return valueArr.reduce(function(acc,obj){    return acc + parseFloat(obj['value']) },0)/valueArr.length;`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `100`</p>|
 |CPU|Interrupts per second|<p>-</p>|DEPENDENT|system.cpu.intr[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_intr"} `</p><p>- CHANGE_PER_SECOND|
 |CPU|Context switches per second|<p>-</p>|DEPENDENT|system.cpu.switches[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_context_switches"} `</p><p>- CHANGE_PER_SECOND|
-|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.pused[node_exporter]<p>**Expression**:</p>`((last("vm.memory.total[node_exporter]")-last("vm.memory.available[node_exporter]"))/last("vm.memory.total[node_exporter]"))*100`|
+|Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.util[node_exporter]<p>**Expression**:</p>`(last("vm.memory.total[node_exporter]")-last("vm.memory.available[node_exporter]"))/last("vm.memory.total[node_exporter]")*100`|
 |Memory|Total memory|<p>Total memory in Bytes</p>|DEPENDENT|vm.memory.total[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_MemTotal"} `</p>|
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|DEPENDENT|vm.memory.available[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_MemAvailable"} `</p>|
 |Memory|Total swap space|<p>-</p>|DEPENDENT|system.swap.total[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_SwapTotal"} `</p>|
@@ -114,7 +114,7 @@ There are no template links in this template.
 |----|-----------|----|----|----|
 |Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
 |High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[node_exporter].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.pused[node_exporter].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[node_exporter].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 |Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.available[node_exporter].min(5m)}<{$MEMORY.AVAILABLE.MIN} and {Template OS Linux by Prom:vm.memory.total[node_exporter].last()}>0`|AVERAGE||
 |High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[node_exporter].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template OS Linux by Prom:system.swap.total[node_exporter].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 |Interface {#IFNAME}({#IFALIAS}): High bandwidth usage >{$IF_UTIL_MAX:"{#IFNAME}"}%|<p>Last value: {ITEM.LASTVALUE1}.</p>|`({TEMPLATE_NAME:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} or {Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}>({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}) and {Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}>0`<p>Recovery expression:</p>`{TEMPLATE_NAME:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}<(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} and {Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}<(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Interface {#IFNAME}({#IFALIAS}): Link down</p>|

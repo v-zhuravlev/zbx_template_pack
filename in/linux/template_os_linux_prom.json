@@ -93,6 +93,14 @@
                     "macro": "{$VFS.FS.FSDEVICE.NOT_MATCHES}",
                     "value": "^\\s$",
                     "_description": "This macro is used in filesystems discovery. Can be overridden on the host or linked template level"
+                },
+                {
+                    "macro": "{$MEMORY.UTIL.MAX}",
+                    "value": "90"
+                },
+                {
+                    "macro": "{$MEMORY.AVAILABLE.MIN}",
+                    "value": "20M"
                 }
             ],
             "discovery_rules": [
@@ -1290,9 +1298,10 @@
                 },
                 //MEMORY
                 {
-                    "_prototype": "vm.memory.pused",
+                    "_prototype": "vm.memory.util",
                     "type": "CALCULATED",
-                    "key": "vm.memory.pused[node_exporter]",
+                    "key": "vm.memory.util[node_exporter]",
+                    "params": "(last(\"__vm.memory.total__\")-last(\"__vm.memory.available__\"))/last(\"__vm.memory.total__\")*100",
                     "_vendor_description": "Memory used percentage is calculated as (total-available)/total*100"
                 },
                 {
