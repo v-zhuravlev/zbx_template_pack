@@ -15,7 +15,7 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -61,7 +61,7 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -105,7 +105,7 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -149,7 +149,7 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -233,22 +233,22 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$FAN_CRIT_STATUS:"critical"}|<p>-</p>|3|
-|{$FAN_CRIT_STATUS:"shutdown"}|<p>-</p>|4|
-|{$FAN_WARN_STATUS:"notFunctioning"}|<p>-</p>|6|
-|{$FAN_WARN_STATUS:"warning"}|<p>-</p>|2|
-|{$PSU_CRIT_STATUS:"critical"}|<p>-</p>|3|
-|{$PSU_CRIT_STATUS:"shutdown"}|<p>-</p>|4|
-|{$PSU_WARN_STATUS:"notFunctioning"}|<p>-</p>|6|
-|{$PSU_WARN_STATUS:"warning"}|<p>-</p>|2|
-|{$TEMP_CRIT:"CPU"}|<p>-</p>|75|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT_STATUS}|<p>-</p>|3|
-|{$TEMP_CRIT}|<p>-</p>|60|
-|{$TEMP_DISASTER_STATUS}|<p>-</p>|4|
-|{$TEMP_WARN:"CPU"}|<p>-</p>|70|
-|{$TEMP_WARN_STATUS}|<p>-</p>|2|
-|{$TEMP_WARN}|<p>-</p>|50|
+|{$FAN_CRIT_STATUS:"critical"}|<p>-</p>|`3`|
+|{$FAN_CRIT_STATUS:"shutdown"}|<p>-</p>|`4`|
+|{$FAN_WARN_STATUS:"notFunctioning"}|<p>-</p>|`6`|
+|{$FAN_WARN_STATUS:"warning"}|<p>-</p>|`2`|
+|{$PSU_CRIT_STATUS:"critical"}|<p>-</p>|`3`|
+|{$PSU_CRIT_STATUS:"shutdown"}|<p>-</p>|`4`|
+|{$PSU_WARN_STATUS:"notFunctioning"}|<p>-</p>|`6`|
+|{$PSU_WARN_STATUS:"warning"}|<p>-</p>|`2`|
+|{$TEMP_CRIT:"CPU"}|<p>-</p>|`75`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT_STATUS}|<p>-</p>|`3`|
+|{$TEMP_CRIT}|<p>-</p>|`60`|
+|{$TEMP_DISASTER_STATUS}|<p>-</p>|`4`|
+|{$TEMP_WARN:"CPU"}|<p>-</p>|`70`|
+|{$TEMP_WARN_STATUS}|<p>-</p>|`2`|
+|{$TEMP_WARN}|<p>-</p>|`50`|
 
 ## Template links
 

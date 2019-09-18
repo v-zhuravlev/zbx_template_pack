@@ -24,19 +24,19 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$FAN_CRIT_STATUS}|<p>-</p>|2|
-|{$FAN_OK_STATUS}|<p>-</p>|4|
-|{$HEALTH_CRIT_STATUS}|<p>-</p>|4|
-|{$HEALTH_WARN_STATUS:"offline"}|<p>-</p>|2|
-|{$HEALTH_WARN_STATUS:"testing"}|<p>-</p>|3|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$PSU_CRIT_STATUS}|<p>-</p>|2|
-|{$PSU_OK_STATUS}|<p>-</p>|4|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT}|<p>-</p>|75|
-|{$TEMP_WARN_STATUS}|<p>-</p>|5|
-|{$TEMP_WARN}|<p>-</p>|65|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`2`|
+|{$FAN_OK_STATUS}|<p>-</p>|`4`|
+|{$HEALTH_CRIT_STATUS}|<p>-</p>|`4`|
+|{$HEALTH_WARN_STATUS:"offline"}|<p>-</p>|`2`|
+|{$HEALTH_WARN_STATUS:"testing"}|<p>-</p>|`3`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`2`|
+|{$PSU_OK_STATUS}|<p>-</p>|`4`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN_STATUS}|<p>-</p>|`5`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 

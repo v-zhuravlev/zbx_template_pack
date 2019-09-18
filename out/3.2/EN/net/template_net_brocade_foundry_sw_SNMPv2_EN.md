@@ -15,8 +15,8 @@ For Zabbix version: 3.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -73,13 +73,13 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$FAN_CRIT_STATUS}|<p>-</p>|3|
-|{$FAN_OK_STATUS}|<p>-</p>|2|
-|{$PSU_CRIT_STATUS}|<p>-</p>|3|
-|{$PSU_OK_STATUS}|<p>-</p>|2|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT}|<p>-</p>|75|
-|{$TEMP_WARN}|<p>-</p>|65|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`3`|
+|{$FAN_OK_STATUS}|<p>-</p>|`2`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`3`|
+|{$PSU_OK_STATUS}|<p>-</p>|`2`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 
@@ -158,13 +158,13 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$FAN_CRIT_STATUS}|<p>-</p>|3|
-|{$FAN_OK_STATUS}|<p>-</p>|2|
-|{$PSU_CRIT_STATUS}|<p>-</p>|3|
-|{$PSU_OK_STATUS}|<p>-</p>|2|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT}|<p>-</p>|75|
-|{$TEMP_WARN}|<p>-</p>|65|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`3`|
+|{$FAN_OK_STATUS}|<p>-</p>|`2`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`3`|
+|{$PSU_OK_STATUS}|<p>-</p>|`2`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 

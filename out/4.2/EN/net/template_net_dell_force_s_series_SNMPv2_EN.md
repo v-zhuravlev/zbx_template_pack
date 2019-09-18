@@ -15,15 +15,15 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$FAN_CRIT_STATUS}|<p>-</p>|2|
-|{$FAN_OK_STATUS}|<p>-</p>|1|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$PSU_CRIT_STATUS}|<p>-</p>|2|
-|{$PSU_OK_STATUS}|<p>-</p>|1|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT}|<p>-</p>|65|
-|{$TEMP_WARN}|<p>-</p>|55|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`2`|
+|{$FAN_OK_STATUS}|<p>-</p>|`1`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`2`|
+|{$PSU_OK_STATUS}|<p>-</p>|`1`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`65`|
+|{$TEMP_WARN}|<p>-</p>|`55`|
 
 ## Template links
 
