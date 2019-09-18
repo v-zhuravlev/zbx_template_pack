@@ -15,8 +15,8 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>Load per CPU considered sustainable. Tune if needed.</p>|1.5|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>Load per CPU considered sustainable. Tune if needed.</p>|`1.5`|
 
 ## Template links
 
@@ -74,14 +74,14 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|.+|
-|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^(/dev|/sys|/run|/proc|.+/shm$)|
-|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$|
-|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|^\s$|
-|{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|10|
-|{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|20|
-|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
-|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|80|
+|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`.+`|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
+|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$`|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^\s$`|
+|{$VFS.FS.INODE.PFREE.MIN.CRIT}|<p>-</p>|`10`|
+|{$VFS.FS.INODE.PFREE.MIN.WARN}|<p>-</p>|`20`|
+|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|`90`|
+|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|`80`|
 
 ## Template links
 
@@ -131,9 +131,9 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEMORY.AVAILABLE.MIN}|<p>-</p>|20M|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|50|
+|{$MEMORY.AVAILABLE.MIN}|<p>This macro is used as a threshold in memory available trigger.</p>|`20M`|
+|{$MEMORY.UTIL.MAX}|<p>This macro is used as a threshold in memory utilization trigger.</p>|`90`|
+|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
 
 ## Template links
 
@@ -146,7 +146,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Memory|Memory utilization|<p>Memory used percentage is calculated as (100-pavailable)</p>|ZABBIX_PASSIVE|vm.memory.size[pavailable]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return (100-value);`</p><p>**Expression**:</p>`((last("vm.memory.size[total]")-last("vm.memory.size[available]"))/last("vm.memory.size[total]"))*100`|
+|Memory|Memory utilization|<p>Memory used percentage is calculated as (100-pavailable)</p>|ZABBIX_PASSIVE|vm.memory.size[pavailable]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return (100-value);`</p>|
 |Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[total]|
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|ZABBIX_PASSIVE|vm.memory.size[available]|
 |Memory|Total swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,total]|
@@ -181,10 +181,10 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|.+|
-|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)|
-|{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|20|
-|{$VFS.DEV.WRITE.AWAIT.WARN}|<p>Disk write average response time (in ms) before the trigger would fire</p>|20|
+|{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`.+`|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)`|
+|{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|`20`|
+|{$VFS.DEV.WRITE.AWAIT.WARN}|<p>Disk write average response time (in ms) before the trigger would fire</p>|`20`|
 
 ## Template links
 
@@ -287,9 +287,9 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$IFCONTROL}|<p>-</p>|1|
-|{$IF_ERRORS_WARN}|<p>-</p>|2|
-|{$IF_UTIL_MAX}|<p>-</p>|90|
+|{$IFCONTROL}|<p>-</p>|`1`|
+|{$IF_ERRORS_WARN}|<p>-</p>|`2`|
+|{$IF_UTIL_MAX}|<p>-</p>|`90`|
 
 ## Template links
 

@@ -224,11 +224,22 @@
         {
             "name": "Template OS Linux memory by Zabbix agent",
             "_zbx_ver": "4.2",
-            "macros": [],
+            "macros": [
+                {
+                    "macro": "{$MEMORY.UTIL.MAX}",
+                    "value": "90",
+                    "_description": "This macro is used as a threshold in memory utilization trigger."
+                },
+                {
+                    "macro": "{$MEMORY.AVAILABLE.MIN}",
+                    "value": "20M",
+                    "_description": "This macro is used as a threshold in memory available trigger."
+                }
+            ],
             "items": [
                 //MEMORY
                 {
-                    "_prototype": "vm.memory.pused",
+                    "_prototype": "vm.memory.util",
                     "type": "ZABBIX_PASSIVE",
                     "key": "vm.memory.size[pavailable]",
                     "_vendor_description": "Memory used percentage is calculated as (100-pavailable)",
@@ -238,7 +249,6 @@
                             "params": "return (100-value);"
                         }
                     ]
-                    //"_documentation": "vm.memory.size[pused] is not used as it calculates pused as total-free/total*100"
                 },
                 {
                     "_prototype": "vm.memory.total",
