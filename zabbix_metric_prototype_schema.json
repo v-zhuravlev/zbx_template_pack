@@ -305,6 +305,24 @@
           "DLINK-AGENT-MIB"
         ]
       },
+      "authtype": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "BASIC",
+          "NTLM",
+          "KERBEROS",
+          "PASSWORD",
+          "PUBLIC_KEY",
+        ],
+        "description": "Used only by SSH agent items or HTTP agent items.\n\n SSH agent authentication method possible values:\n 0 - (default) password;\n 1 - public key.\n\nHTTP agent authentication method possible values:\n 0 - (default) none\n 1 - basic\n 2 - NTLM\n 3 - Kerberos\n"
+      },
+      "username": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
       "_vendor_description": {
         "$id": "/properties/templates/items/properties/items/items/properties/_vendor_description",
         "type": "string",
@@ -318,6 +336,14 @@
         "$id": "/properties/templates/items/properties/items/items/properties/master_item",
         "type": "string",
         "description": "Insert master item 'id' (only required for type = dependent item)"
+      },
+      "params": {
+        "type": "string",
+        "description": "Additional parameters depending on the type of the item:\n - executed script for SSH and Telnet items;\n - SQL query for database monitor items;\n - formula for calculated items.\n",
+        "examples": [
+          "last(\"__vm.memory.used__\")/last(\"__vm.memory.total__\")*100",
+          "(last(\"__vm.memory.total__\")-(last(\"__vm.memory.free__\")+last(\"__vm.memory.buffers__\")+last(\"__vm.memory.cached__\")))/last(\"__vm.memory.total__\")*100"
+        ]
       },
       "_zbx_ver": {
         "$ref": "#definitions/_zbx_ver",

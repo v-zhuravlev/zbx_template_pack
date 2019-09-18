@@ -15,13 +15,13 @@ For Zabbix version: 3.4
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|-|90|
-|{$FAN_CRIT_STATUS}|-|1|
-|{$MEMORY_UTIL_MAX}|-|90|
-|{$PSU_CRIT_STATUS}|-|1|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT}|-|75|
-|{$TEMP_WARN}|-|65|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`1`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`1`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 
@@ -33,41 +33,43 @@ For Zabbix version: 3.4
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|PSU Discovery|-|SNMP|
-|FAN Discovery|-|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|PSU Discovery|<p>-</p>|SNMP|psu.discovery|
+|FAN Discovery|<p>-</p>|SNMP|fan.discovery|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|CPU utilization|MIB: QTECH-MIB</br>CPU utilization in %|SNMP|
-|Used memory|MIB: QTECH-MIB</br>Used memory in Bytes|SNMP|
-|Total memory|MIB: QTECH-MIB</br>Total memory in Bytes|SNMP|
-|Memory utilization|Memory utilization in %|CALCULATED|
-|Hardware model name|MIB: ENTITY-MIB</br>|SNMP|
-|Hardware serial number|MIB: ENTITY-MIB</br>|SNMP|
-|Firmware version|MIB: ENTITY-MIB</br>|SNMP|
-|Hardware version(revision)|MIB: ENTITY-MIB</br>|SNMP|
-|Operating system|MIB: QTECH-MIB</br>|SNMP|
-|Temperature|MIB: QTECH-MIB</br>Temperature readings of testpoint: __RESOURCE__|SNMP|
-|{#SNMPINDEX}: Power supply status|MIB: QTECH-MIB</br>|SNMP|
-|{#SNMPINDEX}: Fan status|MIB: QTECH-MIB</br>|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|CPU utilization|<p>MIB: QTECH-MIB</p><p>CPU utilization in %</p>|SNMP|system.cpu.util[switchCpuUsage.0]|
+|Fans|{#SNMPINDEX}: Fan status|<p>MIB: QTECH-MIB</p>|SNMP|sensor.fan.status[sysFanStatus.{#SNMPINDEX}]|
+|Inventory|Hardware model name|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.model<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Hardware serial number|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Firmware version|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.firmware<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Hardware version(revision)|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.version<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system|<p>MIB: QTECH-MIB</p>|SNMP|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Memory|Used memory|<p>MIB: QTECH-MIB</p><p>Used memory in Bytes</p>|SNMP|vm.memory.used[switchMemoryBusy.0]|
+|Memory|Total memory|<p>MIB: QTECH-MIB</p><p>Total memory in Bytes</p>|SNMP|vm.memory.total[switchMemorySize.0]|
+|Memory|Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[vm.memory.util.0]<p>**Expression**:</p>`last("vm.memory.used[switchMemoryBusy.0]")/last("vm.memory.total[switchMemorySize.0]")*100`|
+|Power_supply|{#SNMPINDEX}: Power supply status|<p>MIB: QTECH-MIB</p>|SNMP|sensor.psu.status[sysPowerStatus.{#SNMPINDEX}]|
+|Temperature|Temperature|<p>MIB: QTECH-MIB</p><p>Temperature readings of testpoint: __RESOURCE__</p>|SNMP|sensor.temp.value[switchTemperature.0]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[switchCpuUsage.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[vm.memory.pused.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
-|Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].avg(5m)}>{$TEMP_WARN:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].avg(5m)}>{$TEMP_CRIT:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|{#SNMPINDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[sysPowerStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
-|{#SNMPINDEX}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[sysFanStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[switchCpuUsage.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|{#SNMPINDEX}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[sysFanStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[vm.memory.util.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|{#SNMPINDEX}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[sysPowerStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].avg(5m)}>{$TEMP_CRIT:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[switchTemperature.0].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 

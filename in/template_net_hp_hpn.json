@@ -108,17 +108,27 @@
                             "_resource": "#{#SNMPVALUE}"
                         },
                         {
-                            "_prototype": "vm.memory.free",
+                            "_prototype": "vm.memory.available",
                             "oid": "1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.6.{#SNMPINDEX}",
                             "_snmpObject": "hpLocalMemFreeBytes.{#SNMPINDEX}",
                             "_mib": "NETSWITCH-MIB",
                             "_vendor_description": "The number of available (unallocated) bytes.",
+                            "_resource": "#{#SNMPVALUE}",
+                            "triggers": []
+                        },
+                        {
+                            "_prototype": "vm.memory.total",
+                            "oid": "1.3.6.1.4.1.11.2.14.11.5.1.1.2.1.1.1.5.{#SNMPINDEX}",
+                            "_snmpObject": "hpLocalMemTotalBytes.{#SNMPINDEX}",
+                            "_mib": "NETSWITCH-MIB",
+                            "_vendor_description": "The number of currently installed bytes.",
                             "_resource": "#{#SNMPVALUE}"
                         },
                         {
-                            "_prototype": "vm.memory.pused",
-                            "_snmpObject": "vm.memory.pused.{#SNMPINDEX}",
+                            "_prototype": "vm.memory.util",
+                            "key": "vm.memory.util[snmp.{#SNMPINDEX}]",
                             "type": "CALCULATED",
+                            "params": "last(\"__vm.memory.used__\")/last(\"__vm.memory.total__\")*100",
                             "_resource": "#{#SNMPVALUE}"
                         }
                     ]
@@ -319,6 +329,10 @@
                 {
                     "macro": "{$TEMP_CRIT_STATUS}",
                     "value": "2"
+                },
+                {
+                    "macro": "{$MEMORY.UTIL.MAX}",
+                    "value": "90"
                 }
             ]
         }

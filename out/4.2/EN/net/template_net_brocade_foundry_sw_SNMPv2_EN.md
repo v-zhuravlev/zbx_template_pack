@@ -15,8 +15,8 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU_UTIL_MAX}|-|90|
-|{$MEMORY_UTIL_MAX}|-|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -27,25 +27,33 @@ There are no template links in this template.
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|CPU utilization|MIB: FOUNDRY-SN-AGENT-MIB</br>The statistics collection of 1 minute CPU utilization.|SNMP|
-|Memory utilization|MIB: FOUNDRY-SN-AGENT-MIB</br>The system dynamic memory utilization, in unit of percentage.</br>Deprecated: Refer to snAgSystemDRAMUtil.</br>For NI platforms, refer to snAgentBrdMemoryUtil100thPercent|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|CPU|CPU utilization|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>The statistics collection of 1 minute CPU utilization.</p>|SNMP|system.cpu.util[snAgGblCpuUtil1MinAvg.0]|
+|Memory|Memory utilization|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>The system dynamic memory utilization, in unit of percentage.</p><p>Deprecated: Refer to snAgSystemDRAMUtil.</p><p>For NI platforms, refer to snAgentBrdMemoryUtil100thPercent</p>|SNMP|vm.memory.util[snAgGblDynMemUtil.0]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|High CPU utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:system.cpu.util[snAgGblCpuUtil1MinAvg.0].avg(5m)}>{$CPU_UTIL_MAX}`|AVERAGE|
-|High memory utilization|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:vm.memory.pused[snAgGblDynMemUtil.0].avg(5m)}>{$MEMORY_UTIL_MAX}`|AVERAGE|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[snAgGblCpuUtil1MinAvg.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[snAgGblDynMemUtil.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 
 # Template Net Brocade_Foundry Nonstackable SNMPv2
 
 ## Overview
 
 For Zabbix version: 4.2  
-For devices(old Foundry devices, MLXe and so on) that doesn't support Stackable SNMP Tables: snChasFan2Table, snChasPwrSupply2Table,snAgentTemp2Table -</br>FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are used instead.</br>For example:</br>The objects in table snChasPwrSupply2Table is not supported on the NetIron and the FastIron SX devices.</br>snChasFan2Table is not supported on  on the NetIron devices.</br>snAgentTemp2Table is not supported on old versions of MLXe
+For devices(old Foundry devices, MLXe and so on) that doesn't support Stackable SNMP Tables: snChasFan2Table, snChasPwrSupply2Table,snAgentTemp2Table -
+FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are used instead.
+For example:
+The objects in table snChasPwrSupply2Table is not supported on the NetIron and the FastIron SX devices.
+snChasFan2Table is not supported on  on the NetIron devices.
+snAgentTemp2Table is not supported on old versions of MLXe
 
 This template was tested on:
 
@@ -65,13 +73,13 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$FAN_CRIT_STATUS}|-|3|
-|{$FAN_OK_STATUS}|-|2|
-|{$PSU_CRIT_STATUS}|-|3|
-|{$PSU_OK_STATUS}|-|2|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT}|-|75|
-|{$TEMP_WARN}|-|65|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`3`|
+|{$FAN_OK_STATUS}|<p>-</p>|`2`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`3`|
+|{$PSU_OK_STATUS}|<p>-</p>|`2`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 
@@ -83,41 +91,44 @@ No specific Zabbix configuration is required.
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|PSU Discovery|snChasPwrSupplyTable: A table of each power supply information. Only installed power supply appears in a table row.|SNMP|
-|FAN Discovery|snChasFanTable: A table of each fan information. Only installed fan appears in a table row.|SNMP|
-|Temperature Discovery|snAgentTempTable:Table to list temperatures of the modules in the device. This table is applicable to only those modules with temperature sensors.|SNMP|
-|Temperature Discovery Chassis|Since temperature of the chassis is not available on all Brocade/Foundry hardware, this LLD is here to avoid unsupported items.|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|PSU Discovery|<p>snChasPwrSupplyTable: A table of each power supply information. Only installed power supply appears in a table row.</p>|SNMP|psu.discovery|
+|FAN Discovery|<p>snChasFanTable: A table of each fan information. Only installed fan appears in a table row.</p>|SNMP|fan.discovery|
+|Temperature Discovery|<p>snAgentTempTable:Table to list temperatures of the modules in the device. This table is applicable to only those modules with temperature sensors.</p>|SNMP|temp.discovery|
+|Temperature Discovery Chassis|<p>Since temperature of the chassis is not available on all Brocade/Foundry hardware, this LLD is here to avoid unsupported items.</p>|SNMP|temp.chassis.discovery|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|Hardware serial number|MIB: FOUNDRY-SN-AGENT-MIB</br>|SNMP|
-|Firmware version|MIB: FOUNDRY-SN-AGENT-MIB</br>The version of the running software in the form'major.minor.maintenance[letters]'|SNMP|
-|PSU {#PSU_INDEX}: Power supply status|MIB: FOUNDRY-SN-AGENT-MIB</br>|SNMP|
-|Fan {#FAN_INDEX}: Fan status|MIB: FOUNDRY-SN-AGENT-MIB</br>|SNMP|
-|{#SENSOR_DESCR}: Temperature|MIB: FOUNDRY-SN-AGENT-MIB</br>Temperature of the sensor represented by this row. Each unit is 0.5 degrees Celsius.|SNMP|
-|Chassis #{#SNMPINDEX}: Temperature|MIB: FOUNDRY-SN-AGENT-MIB</br>Temperature of the chassis. Each unit is 0.5 degrees Celcius.</br>Only management module built with temperature sensor hardware is applicable.</br>For those non-applicable management module, it returns no-such-name.|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Fans|Fan {#FAN_INDEX}: Fan status|<p>MIB: FOUNDRY-SN-AGENT-MIB</p>|SNMP|sensor.fan.status[snChasFanOperStatus.{#SNMPINDEX}]|
+|Inventory|Hardware serial number|<p>MIB: FOUNDRY-SN-AGENT-MIB</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Firmware version|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>The version of the running software in the form'major.minor.maintenance[letters]'</p>|SNMP|system.hw.firmware<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Power_supply|PSU {#PSU_INDEX}: Power supply status|<p>MIB: FOUNDRY-SN-AGENT-MIB</p>|SNMP|sensor.psu.status[snChasPwrSupplyOperStatus.{#SNMPINDEX}]|
+|Temperature|{#SENSOR_DESCR}: Temperature|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>Temperature of the sensor represented by this row. Each unit is 0.5 degrees Celsius.</p>|SNMP|sensor.temp.value[snAgentTempValue.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `0.5`</p>|
+|Temperature|Chassis #{#SNMPINDEX}: Temperature|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>Temperature of the chassis. Each unit is 0.5 degrees Celcius.</p><p>Only management module built with temperature sensor hardware is applicable.</p><p>For those non-applicable management module, it returns no-such-name.</p>|SNMP|sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `0.5`</p>|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
-|PSU {#PSU_INDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
-|PSU {#PSU_INDEX}: Power supply is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1`|INFO|
-|Fan {#FAN_INDEX}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[snChasFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE|
-|Fan {#FAN_INDEX}: Fan is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[snChasFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|
-|{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|Chassis #{#SNMPINDEX}: Temperature is above warning threshold: >{$TEMP_WARN:"Chassis"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:"Chassis"}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:"Chassis"}-3`|WARNING|
-|Chassis #{#SNMPINDEX}: Temperature is above critical threshold: >{$TEMP_CRIT:"Chassis"}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:"Chassis"}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:"Chassis"}-3`|HIGH|
-|Chassis #{#SNMPINDEX}: Temperature is too low: <{$TEMP_CRIT_LOW:"Chassis"}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:"Chassis"}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:"Chassis"}+3`|AVERAGE|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|Fan {#FAN_INDEX}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[snChasFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Fan {#FAN_INDEX}: Fan is not in normal state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[snChasFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|<p>**Depends on**:</p><p>- Fan {#FAN_INDEX}: Fan is in critical state</p>|
+|Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|PSU {#PSU_INDEX}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE||
+|PSU {#PSU_INDEX}: Power supply is not in normal state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupplyOperStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1`|INFO|<p>**Depends on**:</p><p>- PSU {#PSU_INDEX}: Power supply is in critical state</p>|
+|{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- {#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snAgentTempValue.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
+|Chassis #{#SNMPINDEX}: Temperature is above warning threshold: >{$TEMP_WARN:"Chassis"}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:"Chassis"}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:"Chassis"}-3`|WARNING|<p>**Depends on**:</p><p>- Chassis #{#SNMPINDEX}: Temperature is above critical threshold: >{$TEMP_CRIT:"Chassis"}</p>|
+|Chassis #{#SNMPINDEX}: Temperature is above critical threshold: >{$TEMP_CRIT:"Chassis"}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:"Chassis"}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:"Chassis"}-3`|HIGH||
+|Chassis #{#SNMPINDEX}: Temperature is too low: <{$TEMP_CRIT_LOW:"Chassis"}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:"Chassis"}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snChasActualTemperature.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:"Chassis"}+3`|AVERAGE||
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 
 # Template Net Brocade_Foundry Stackable SNMPv2
 
@@ -147,13 +158,13 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$FAN_CRIT_STATUS}|-|3|
-|{$FAN_OK_STATUS}|-|2|
-|{$PSU_CRIT_STATUS}|-|3|
-|{$PSU_OK_STATUS}|-|2|
-|{$TEMP_CRIT_LOW}|-|5|
-|{$TEMP_CRIT}|-|75|
-|{$TEMP_WARN}|-|65|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`3`|
+|{$FAN_OK_STATUS}|<p>-</p>|`2`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`3`|
+|{$PSU_OK_STATUS}|<p>-</p>|`2`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 
@@ -165,38 +176,46 @@ No specific Zabbix configuration is required.
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|PSU Discovery|snChasPwrSupply2Table: A table of each power supply information for each unit. Only installed power supply appears in a table row.|SNMP|
-|FAN Discovery|snChasFan2Table: A table of each fan information for each unit. Only installed fan appears in a table row.|SNMP|
-|Temperature Discovery|snAgentTemp2Table:Table to list temperatures of the modules in the device for each unit. This table is applicable to only those modules with temperature sensors.|SNMP|
-|Stack Discovery|Discovering snStackingConfigUnitTable for Model names|SNMP|
-|Chassis Discovery|snChasUnitIndex: The index to chassis table.|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|PSU Discovery|<p>snChasPwrSupply2Table: A table of each power supply information for each unit. Only installed power supply appears in a table row.</p>|SNMP|psu.discovery|
+|FAN Discovery|<p>snChasFan2Table: A table of each fan information for each unit. Only installed fan appears in a table row.</p>|SNMP|fan.discovery|
+|Temperature Discovery|<p>snAgentTemp2Table:Table to list temperatures of the modules in the device for each unit. This table is applicable to only those modules with temperature sensors.</p>|SNMP|temp.discovery|
+|Stack Discovery|<p>Discovering snStackingConfigUnitTable for Model names</p>|SNMP|stack.discovery|
+|Chassis Discovery|<p>snChasUnitIndex: The index to chassis table.</p>|SNMP|chassis.discovery|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|Firmware version|MIB: FOUNDRY-SN-AGENT-MIB</br>The version of the running software in the form 'major.minor.maintenance[letters]'|SNMP|
-|Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply status|MIB: FOUNDRY-SN-AGENT-MIB</br>|SNMP|
-|Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan status|MIB: FOUNDRY-SN-AGENT-MIB</br>|SNMP|
-|{#SENSOR_DESCR}: Temperature|MIB: FOUNDRY-SN-AGENT-MIB</br>Temperature of the sensor represented by this row. Each unit is 0.5 degrees Celsius.|SNMP|
-|Unit {#SNMPINDEX}: Hardware model name|MIB: FOUNDRY-SN-STACKING-MIB</br>A description of the configured/active system type for each unit.|SNMP|
-|Unit {#SNMPVALUE}: Hardware serial number|MIB: FOUNDRY-SN-AGENT-MIB</br>The serial number of the chassis for each unit. If the serial number is unknown or unavailable then the value should be a zero length string.|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Fans|Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan status|<p>MIB: FOUNDRY-SN-AGENT-MIB</p>|SNMP|sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}]|
+|Inventory|Firmware version|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>The version of the running software in the form 'major.minor.maintenance[letters]'</p>|SNMP|system.hw.firmware<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Unit {#SNMPINDEX}: Hardware model name|<p>MIB: FOUNDRY-SN-STACKING-MIB</p><p>A description of the configured/active system type for each unit.</p>|SNMP|system.hw.model[snStackingConfigUnitType.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Unit {#SNMPVALUE}: Hardware serial number|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>The serial number of the chassis for each unit. If the serial number is unknown or unavailable then the value should be a zero length string.</p>|SNMP|system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Power_supply|Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply status|<p>MIB: FOUNDRY-SN-AGENT-MIB</p>|SNMP|sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}]|
+|Temperature|{#SENSOR_DESCR}: Temperature|<p>MIB: FOUNDRY-SN-AGENT-MIB</p><p>Temperature of the sensor represented by this row. Each unit is 0.5 degrees Celsius.</p>|SNMP|sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `0.5`</p>|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|Firmware has changed|Last value: {ITEM.LASTVALUE1}.</br>Firmware version has changed. Ack to close|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|
-|Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE|
-|Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the power supply unit for errors|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1`|INFO|
-|Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan is in critical state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE|
-|Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan is not in normal state|Last value: {ITEM.LASTVALUE1}.</br>Please check the fan unit|`{TEMPLATE_NAME:sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|
-|{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|
-|{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|Last value: {ITEM.LASTVALUE1}.</br>This trigger uses temperature sensor values as well as temperature sensor status if available|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH|
-|{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|Last value: {ITEM.LASTVALUE1}.|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`</br>Recovery expression: `{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE|
-|Unit {#SNMPVALUE}: Device has been replaced (new serial number received)|Last value: {ITEM.LASTVALUE1}.</br>Device serial number has changed. Ack to close|`{TEMPLATE_NAME:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].strlen()}>0`|INFO|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan is not in normal state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}].count(#1,{$FAN_OK_STATUS},ne)}=1`|INFO|<p>**Depends on**:</p><p>- Unit {#FAN_UNIT} Fan {#FAN_INDEX}: Fan is in critical state</p>|
+|Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Unit {#SNMPVALUE}: Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[snChasUnitSerNum.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply is not in normal state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}].count(#1,{$PSU_OK_STATUS},ne)}=1`|INFO|<p>**Depends on**:</p><p>- Unit {#PSU_UNIT} PSU {#PSU_INDEX}: Power supply is in critical state</p>|
+|{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- {#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|
+|{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}>{$TEMP_CRIT:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].max(5m)}<{$TEMP_CRIT:""}-3`|HIGH||
+|{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:""}|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].avg(5m)}<{$TEMP_CRIT_LOW:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[snAgentTemp2Value.{#SNMPINDEX}].min(5m)}>{$TEMP_CRIT_LOW:""}+3`|AVERAGE||
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
+
+## Known Issues
+
+- Description: Correct fan(returns fan status as 'other(1)' and temperature (returns 0) for the non-master Switches are not available in SNMP
+  - Version: Version 08.0.40b and above
+  - Device: ICX 7750 in stack
 

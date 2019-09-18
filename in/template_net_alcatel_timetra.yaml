@@ -16,6 +16,8 @@ templates:
         value: "4"
       - macro: "{$FAN_CRIT_STATUS}"
         value: "4"
+      - macro: "{$MEMORY.UTIL.MAX}"
+        value: "90"
     items:
       - _prototype: system.cpu.util
         oid: "1.3.6.1.4.1.6527.3.1.2.1.1.1.0"
@@ -27,53 +29,54 @@ templates:
         _snmpObject: "sgiKbMemoryUsed.0"
         _mib: "TIMETRA-SYSTEM-MIB"
         _vendor_description: "The value of sgiKbMemoryUsed indicates the total pre-allocated pool memory, in kilobytes, currently in use on the system."
-        preprocessing: 
-         -  
-          type: MULTIPLIER
-          params: 1024
-      - _prototype: vm.memory.free
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+      - _prototype: vm.memory.available
         oid: "1.3.6.1.4.1.6527.3.1.2.1.1.10.0"
         _snmpObject: "sgiKbMemoryAvailable.0"
         _mib: "TIMETRA-SYSTEM-MIB"
         _vendor_description: "The value of sgiKbMemoryAvailable indicates the amount of free memory, in kilobytes, in the overall system that is not allocated to memory pools, but is available in case a memory pool needs to grow."
-        preprocessing: 
-         - 
-          type: MULTIPLIER
-          params: 1024
-      - _prototype: vm.memory.pused
-        _snmpObject: "vm.memory.pused.0"
+        preprocessing:
+          - type: MULTIPLIER
+            params: "1024"
+        triggers: []
+      - _prototype: vm.memory.total
         type: CALCULATED
+        key: vm.memory.total[snmp]
+        params: last("__vm.memory.available__")+last("__vm.memory.used__")
+      - _prototype: vm.memory.util
+        _snmpObject: "vm.memory.util.0"
+        type: CALCULATED
+        params: last("__vm.memory.used__")/(last("__vm.memory.available__")+last("__vm.memory.used__"))*100
       - _prototype: system.hw.model
         _zbx_ver: "3.4"
         oid: "1.3.6.1.2.1.1.1.0"
         _snmpObject: "sysDescr.0"
         _mib: "SNMPv2-MIB"
-        preprocessing: 
-         - 
-          type: REGEX
-          params: "^(\\w|-|\\.|/)+ (\\w|-|\\.|/)+ (.+) Copyright\n\\3"
+        preprocessing:
+          - type: REGEX
+            params: "^(\\w|-|\\.|/)+ (\\w|-|\\.|/)+ (.+) Copyright\n\\3"
       - _prototype: system.sw.os
         _zbx_ver: "3.4"
         oid: "1.3.6.1.2.1.1.1.0"
         _snmpObject: "sysDescr.0"
         _mib: "SNMPv2-MIB"
-        preprocessing: 
-         -
-          type: REGEX
-          params: "^((\\w|-|\\.|/)+)\n\\1"
+        preprocessing:
+          - type: REGEX
+            params: "^((\\w|-|\\.|/)+)\n\\1"
         #__zbx_ver: "3.4"
     discovery_rules:
       - name: Temperature Discovery
         oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.8,{#TEMP_SENSOR},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.17]"
         key: "temperature.discovery"
-        filter: 
-         evaltype: AND_OR
-         formula: ""
-         conditions: 
-          - 
-           macro: "{#TEMP_SENSOR}"
-           value: 1
-           formulaid: A
+        filter:
+          evaltype: AND_OR
+          formula: ""
+          conditions:
+            - macro: "{#TEMP_SENSOR}"
+              value: 1
+              formulaid: A
         items:
           - _prototype: sensor.temp.value
             oid: "1.3.6.1.4.1.6527.3.1.2.2.1.8.1.18.{#SNMPINDEX}"
@@ -84,14 +87,13 @@ templates:
       - name: "FAN Discovery"
         oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6527.3.1.2.2.1.4.1.2]"
         key: "fan.discovery"
-        filter: 
+        filter:
           evaltype: AND_OR
           formula: ""
-          conditions: 
-          -
-            macro: "{#SNMPVALUE}"
-            value: "[^1]"
-            formulaid: A
+          conditions:
+            - macro: "{#SNMPVALUE}"
+              value: "[^1]"
+              formulaid: A
         items:
           - _prototype: sensor.fan.status
             oid: "1.3.6.1.4.1.6527.3.1.2.2.1.4.1.2.{#SNMPINDEX}"
@@ -100,9 +102,7 @@ templates:
             _vendor_description: "Current status of the Fan tray."
             _resource: "#{#SNMPINDEX}"
             valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
-            triggers: [{
-              "_prototype":"fan.crit"
-            }]
+            triggers: [{ "_prototype": "fan.crit" }]
       - name: "PSU Discovery"
         oid: "discovery[{#SNMPVALUE},1.3.6.1.4.1.6527.3.1.2.2.1.5.1.6]"
         key: "psu.discovery"
@@ -112,60 +112,53 @@ templates:
             _snmpObject: "tmnxChassisPowerSupply1Status.{#SNMPINDEX}"
             _mib: "TIMETRA-SYSTEM-MIB"
             _vendor_description: |
-             The overall status of an equipped power supply. 
-             For AC multiple powersupplies, this represents the overall status of the first power supplyin the tray (or shelf).
-             For any other type, this represents the overall status of the power supply.
-             If tmnxChassisPowerSupply1Status is'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
-             A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
+              The overall status of an equipped power supply. 
+              For AC multiple powersupplies, this represents the overall status of the first power supplyin the tray (or shelf).
+              For any other type, this represents the overall status of the power supply.
+              If tmnxChassisPowerSupply1Status is'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
+              A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
             _resource: "#{#SNMPINDEX}"
             valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
-            triggers: [{
-              "_prototype":"psu.crit"
-            }]
+            triggers: [{ "_prototype": "psu.crit" }]
           - _prototype: sensor.psu.status
             oid: "1.3.6.1.4.1.6527.3.1.2.2.1.5.1.7.{#SNMPINDEX}"
             _snmpObject: "tmnxChassisPowerSupply2Status.{#SNMPINDEX}"
             _mib: "TIMETRA-SYSTEM-MIB"
             _vendor_description: |
-             The overall status of an equipped power supply.
-             For AC multiple powersupplies, this represents the overall status of the second power supplyin the tray (or shelf).
-             For any other type, this field is unused and set to 'deviceNotEquipped'.
-             If tmnxChassisPowerSupply2Status is 'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
-             A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
+              The overall status of an equipped power supply.
+              For AC multiple powersupplies, this represents the overall status of the second power supplyin the tray (or shelf).
+              For any other type, this field is unused and set to 'deviceNotEquipped'.
+              If tmnxChassisPowerSupply2Status is 'deviceStateOk', then all monitored statuses are 'deviceStateOk'.
+              A value of 'deviceStateFailed' represents a condition where at least one monitored status is in a failed state.
             _resource: "#{#SNMPINDEX}"
             valueMap: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
-            triggers: [{
-              "_prototype":"psu.crit"
-            }]
+            triggers: [{ "_prototype": "psu.crit" }]
       - name: "Entity Serial Numbers Discovery"
         oid: "discovery[{#ENT_NAME},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.8,{#ENT_CLASS},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.7,{#ENT_SN},1.3.6.1.4.1.6527.3.1.2.2.1.8.1.5]"
         key: "entity_sn.discovery"
-        filter: 
+        filter:
           evaltype: AND
           formula: ""
-          conditions: 
-          -
-            macro: "{#ENT_SN}"
-            value: ".+"
-            formulaid: B
+          conditions:
+            - macro: "{#ENT_SN}"
+              value: ".+"
+              formulaid: B
         items:
           - _prototype: system.hw.serialnumber
             oid: "1.3.6.1.4.1.6527.3.1.2.2.1.8.1.5.{#SNMPINDEX}"
             _snmpObject: "tmnxHwSerialNumber.{#SNMPINDEX}"
             _mib: "TIMETRA-CHASSIS-MIB"
             _resource: "{#ENT_NAME}"
-value_maps: 
- -
-  name: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
-  mappings: 
-     - value: "1"
-       newvalue: deviceStateUnknown
-     - value: "2"
-       newvalue: deviceNotEquipped
-     - value: "3"
-       newvalue: deviceStateOk
-     - value: "4"
-       newvalue: deviceStateFailed
-     - value: "5"
-       newvalue: deviceStateOutOfService
-
+value_maps:
+  - name: "TIMETRA-CHASSIS-MIB::TmnxDeviceState"
+    mappings:
+      - value: "1"
+        newvalue: deviceStateUnknown
+      - value: "2"
+        newvalue: deviceNotEquipped
+      - value: "3"
+        newvalue: deviceStateOk
+      - value: "4"
+        newvalue: deviceStateFailed
+      - value: "5"
+        newvalue: deviceStateOutOfService

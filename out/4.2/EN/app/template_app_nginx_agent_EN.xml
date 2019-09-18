@@ -9,10 +9,15 @@
    </groups>
    <templates>
       <template>
-         <template>Template App Apache Zabbix agent</template>
-         <name>Template App Apache Zabbix agent</name>
-         <description>Get metrics from mod_status module using Zabbix agent.&#13;
-https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</description>
+         <template>Template App Nginx by Zabbix agent</template>
+         <name>Template App Nginx by Zabbix agent</name>
+         <description>Get metrics from stub status module using Zabbix agent running on Linux&#13;
+https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html&#13;
+&#13;
+&#13;
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
+&#13;
+Template tooling version used: 0.22</description>
          <groups>
             <group>
                <name>Templates/Applications</name>
@@ -20,18 +25,21 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
          </groups>
          <applications>
             <application>
-               <name>Apache</name>
+               <name>Nginx</name>
+            </application>
+            <application>
+               <name>Zabbix raw items</name>
             </application>
          </applications>
          <items>
             <item>
-               <name>Apache: Get Apache HTTP status</name>
+               <name>Nginx: Get stub status page</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
+               <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                <delay>1m</delay>
-               <history>1d</history>
+               <history>1h</history>
                <trends>0</trends>
                <status>0</status>
                <value_type>4</value_type>
@@ -52,11 +60,18 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The following status information is provided:&#13;
+Active connections - the current number of active client connections including Waiting connections.&#13;
+Accepts - the total number of accepted client connections.&#13;
+Handled - the total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).&#13;
+Requests - the total number of client requests.&#13;
+Reading - the current number of connections where nginx is reading the request header.&#13;
+Writing - the current number of connections where nginx is writing the response back to the client.&#13;
+Waiting - the current number of idle client connections waiting for a request.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Zabbix raw items</name>
                   </application>
                </applications>
                <valuemap/>
@@ -84,18 +99,86 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <master_item/>
             </item>
             <item>
-               <name>Apache: Bytes per second</name>
-               <type>18</type>
+               <name>Nginx: Service status</name>
+               <type>0</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.bytes_per_second</key>
-               <delay>0</delay>
-               <history>90d</history>
+               <key>net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap>
+                  <name>Service state</name>
+               </valuemap>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>10m</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: Service response time</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>net.tcp.service.perf[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
                <allowed_hosts/>
-               <units>Bps</units>
+               <units>s</units>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -115,20 +198,12 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Nginx</name>
                   </application>
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>5</type>
-                     <params>BytesPerSec:\s+([0-9\.]+)
-\1</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
+               <preprocessing/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
                <url/>
@@ -148,18 +223,16 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
-               </master_item>
+               <master_item/>
             </item>
             <item>
-               <name>Apache: Connections async closing</name>
+               <name>Nginx: Requests total</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.connections.async_closing</key>
+               <key>nginx.requests.total</key>
                <delay>0</delay>
-               <history>90d</history>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -180,11 +253,11 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The total number of client requests.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Nginx</name>
                   </application>
                </applications>
                <valuemap/>
@@ -192,8 +265,8 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>ConnsAsyncClosing:\s+([0-9]+)
-\1</params>
+                     <params>server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)
+\3</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -218,229 +291,22 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
-               <name>Apache: Connections async keep alive</name>
+               <name>Nginx: Requests per second</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.connections.async_keep_alive</key>
+               <key>nginx.requests.total.rate</key>
                <delay>0</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>5</type>
-                     <params>ConnsAsyncKeepAlive:\s+([0-9]+)
-\1</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Apache: Connections async writing</name>
-               <type>18</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>apache.connections.async_writing</key>
-               <delay>0</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>5</type>
-                     <params>ConnsAsyncWriting:\s+([0-9]+)
-\1</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Apache: Connections total</name>
-               <type>18</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>apache.connections.total</key>
-               <delay>0</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>5</type>
-                     <params>ConnsTotal:\s+([0-9]+)
-\1</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Apache: Requests per second</name>
-               <type>18</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>apache.requests.total.rate</key>
-               <delay>0</delay>
-               <history>90d</history>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
                <allowed_hosts/>
-               <units>!rps</units>
+               <units/>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -456,12 +322,11 @@ https://httpd.apache.org/docs/current/mod/mod_status.html version: 0.15</descrip
                <publickey/>
                <privatekey/>
                <port/>
-               <description>Calculated as change rate for 'Total Accesses' stat.&#13;
-ReqPerSec is not used, as it counts average since last Apache server start.</description>
+               <description>The total number of client requests.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Nginx</name>
                   </application>
                </applications>
                <valuemap/>
@@ -469,7 +334,82 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>Total Accesses:\s+([0-9]+)
+                     <params>server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)
+\3</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>10</type>
+                     <params/>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               </master_item>
+            </item>
+            <item>
+               <name>Nginx: Connections accepted per second</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>nginx.connections.accepted.rate</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The total number of accepted client connections.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)
 \1</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -501,17 +441,169 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
-               <name>Apache: Total accesses (requests)</name>
+               <name>Nginx: Connections dropped per second</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.requests.total</key>
+               <key>nginx.connections.dropped.rate</key>
                <delay>0</delay>
-               <history>90d</history>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The total number of dropped client connections.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>var a = value.match(/server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)/)
+if (a) {
+    return a[1]-a[2]
+}</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>10</type>
+                     <params/>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               </master_item>
+            </item>
+            <item>
+               <name>Nginx: Connections handled per second</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>nginx.connections.handled.rate</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The total number of handled connections. Generally, the parameter value is the same as accepts unless some resource limits have been reached (for example, the worker_connections limit).</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)
+\2</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>10</type>
+                     <params/>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               </master_item>
+            </item>
+            <item>
+               <name>Nginx: Connections active</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>nginx.connections.active</key>
+               <delay>0</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -532,11 +624,11 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The current number of active client connections including Waiting connections.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Nginx</name>
                   </application>
                </applications>
                <valuemap/>
@@ -544,7 +636,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>Total Accesses:\s+([0-9]+)
+                     <params>Active connections: ([0-9]+)
 \1</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -570,22 +662,22 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
-               <name>Apache: Uptime</name>
+               <name>Nginx: Connections reading</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.uptime</key>
+               <key>nginx.connections.reading</key>
                <delay>0</delay>
-               <history>90d</history>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
-               <units>uptime</units>
+               <units/>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -601,11 +693,11 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <publickey/>
                <privatekey/>
                <port/>
-               <description/>
+               <description>The current number of connections where nginx is reading the request header.</description>
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Nginx</name>
                   </application>
                </applications>
                <valuemap/>
@@ -613,7 +705,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>\bUptime:\s+([0-9.]+)
+                     <params>Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)
 \1</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -639,17 +731,391 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
-               <name>Apache: Version</name>
+               <name>Nginx: Connections waiting</name>
                <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>apache.version</key>
+               <key>nginx.connections.waiting</key>
                <delay>0</delay>
-               <history>90d</history>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The current number of idle client connections waiting for a request.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)
+\3</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               </master_item>
+            </item>
+            <item>
+               <name>Nginx: Connections writing</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>nginx.connections.writing</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The current number of connections where nginx is writing the response back to the client.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>5</type>
+                     <params>Reading: ([0-9]+) Writing: ([0-9]+) Waiting: ([0-9]+)
+\2</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
+               </master_item>
+            </item>
+            <item>
+               <name>Nginx: Number of processes running</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.num[nginx]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Number of the Nginx processes running.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: Memory usage (vsize)</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.mem[nginx,,,,vsize]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Virtual memory size used by process in bytes.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: Memory usage (rss)</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.mem[nginx,,,,rss]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>B</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Resident set size memory used by process in bytes.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: CPU utilization</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.cpu.util[nginx]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Process CPU utilization percentage.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Nginx</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Nginx: Version</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>nginx.version</key>
+               <delay>0</delay>
+               <history>7d</history>
                <trends>0</trends>
                <status>0</status>
                <value_type>1</value_type>
@@ -674,7 +1140,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <inventory_link>0</inventory_link>
                <applications>
                   <application>
-                     <name>Apache</name>
+                     <name>Nginx</name>
                   </application>
                </applications>
                <valuemap/>
@@ -682,7 +1148,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>ServerVersion:\s+(.+)
+                     <params>Server: nginx/(.+)
 \1</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
@@ -714,412 +1180,184 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
                <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
+                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
                </master_item>
-            </item>
-            <item>
-               <name>Apache: Workers busy</name>
-               <type>18</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>apache.workers.busy</key>
-               <delay>0</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>5</type>
-                     <params>BusyWorkers:\s+([0-9]+)
-\1</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Apache: Workers idle</name>
-               <type>18</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>apache.workers.idle</key>
-               <delay>0</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>5</type>
-                     <params>IdleWorkers:\s+([0-9]+)
-\1</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Apache: Number of processes running</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>proc.num[{$APACHE_PROC_NAME}]</key>
-               <delay>5m</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Apache: Memory usage (rss)</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>proc.mem[{$APACHE_PROC_NAME},,,,rss]</key>
-               <delay>5m</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>Resident set size memory used by process in bytes.</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Apache: Memory usage (vsize)</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>proc.mem[{$APACHE_PROC_NAME},,,,vsize]</key>
-               <delay>5m</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>B</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>Virtual memory size used by process in bytes.</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Apache: CPU utilization</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>proc.cpu.util[{$APACHE_PROC_NAME}]</key>
-               <delay>5m</delay>
-               <history>90d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units>%</units>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>Process CPU utilization percentage.</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Apache</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
             </item>
          </items>
          <discovery_rules/>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$APACHE_PROC_NAME}</macro>
-               <value>httpd</value>
+               <macro>{$NGINX.DROP_RATE.MAX.WARN}</macro>
+               <value>1</value>
             </macro>
             <macro>
-               <macro>{$APACHE_STATUS_HOST}</macro>
+               <macro>{$NGINX.RESPONSE_TIME.MAX.WARN}</macro>
+               <value>10</value>
+            </macro>
+            <macro>
+               <macro>{$NGINX.STUB_STATUS.HOST}</macro>
                <value>localhost</value>
             </macro>
             <macro>
-               <macro>{$APACHE_STATUS_PATH}</macro>
-               <value>server-status?auto</value>
+               <macro>{$NGINX.STUB_STATUS.PATH}</macro>
+               <value>basic_status</value>
             </macro>
             <macro>
-               <macro>{$APACHE_STATUS_PORT}</macro>
+               <macro>{$NGINX.STUB_STATUS.PORT}</macro>
                <value>80</value>
             </macro>
          </macros>
          <templates/>
-         <screens/>
+         <screens>
+            <screen>
+               <name>Nginx performance</name>
+               <hsize>2</hsize>
+               <vsize>2</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Nginx: Connections by state</name>
+                        <host>Template App Nginx by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>1</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Nginx: Requests per second</name>
+                        <host>Template App Nginx by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>320</width>
+                     <height>200</height>
+                     <x>0</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Nginx: Connections per second</name>
+                        <host>Template App Nginx by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+               </screen_items>
+            </screen>
+         </screens>
          <tags/>
       </template>
    </templates>
    <graphs>
       <graph>
-         <name>Apache: Current connections</name>
+         <name>Nginx: Connections by state</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>0</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>2</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.active</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>0</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.waiting</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>2</sortorder>
+               <drawtype>0</drawtype>
+               <color>F63100</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.writing</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>3</sortorder>
+               <drawtype>0</drawtype>
+               <color>A54F10</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.reading</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Nginx: Connections per second</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
@@ -1144,8 +1382,8 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.connections.async_closing</key>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.accepted.rate</key>
                </item>
             </graph_item>
             <graph_item>
@@ -1156,8 +1394,8 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.connections.async_keep_alive</key>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.handled.rate</key>
                </item>
             </graph_item>
             <graph_item>
@@ -1168,26 +1406,14 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.connections.async_writing</key>
-               </item>
-            </graph_item>
-            <graph_item>
-               <sortorder>3</sortorder>
-               <drawtype>2</drawtype>
-               <color>A54F10</color>
-               <yaxisside>0</yaxisside>
-               <calc_fnc>2</calc_fnc>
-               <type>0</type>
-               <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.connections.total</key>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.connections.dropped.rate</key>
                </item>
             </graph_item>
          </graph_items>
       </graph>
       <graph>
-         <name>Apache: Requests per second</name>
+         <name>Nginx: Requests per second</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
@@ -1212,58 +1438,14 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.requests.total.rate</key>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>nginx.requests.total.rate</key>
                </item>
             </graph_item>
          </graph_items>
       </graph>
       <graph>
-         <name>Apache: Workers</name>
-         <width>900</width>
-         <height>200</height>
-         <yaxismin>0</yaxismin>
-         <yaxismax>100</yaxismax>
-         <show_work_period>1</show_work_period>
-         <show_triggers>1</show_triggers>
-         <type>1</type>
-         <show_legend>1</show_legend>
-         <show_3d>0</show_3d>
-         <percent_left>0.0000</percent_left>
-         <percent_right>0.0000</percent_right>
-         <ymin_type_1>0</ymin_type_1>
-         <ymax_type_1>0</ymax_type_1>
-         <ymin_item_1>0</ymin_item_1>
-         <ymax_item_1>0</ymax_item_1>
-         <graph_items>
-            <graph_item>
-               <sortorder>0</sortorder>
-               <drawtype>0</drawtype>
-               <color>1A7C11</color>
-               <yaxisside>0</yaxisside>
-               <calc_fnc>2</calc_fnc>
-               <type>0</type>
-               <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.workers.busy</key>
-               </item>
-            </graph_item>
-            <graph_item>
-               <sortorder>1</sortorder>
-               <drawtype>0</drawtype>
-               <color>2774A4</color>
-               <yaxisside>0</yaxisside>
-               <calc_fnc>2</calc_fnc>
-               <type>0</type>
-               <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>apache.workers.idle</key>
-               </item>
-            </graph_item>
-         </graph_items>
-      </graph>
-      <graph>
-         <name>Apache: Memory usage</name>
+         <name>Nginx: Memory usage</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
@@ -1288,8 +1470,8 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>proc.mem[{$APACHE_PROC_NAME},,,,vsize]</key>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>proc.mem[nginx,,,,vsize]</key>
                </item>
             </graph_item>
             <graph_item>
@@ -1300,8 +1482,8 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template App Apache Zabbix agent</host>
-                  <key>proc.mem[{$APACHE_PROC_NAME},,,,rss]</key>
+                  <host>Template App Nginx by Zabbix agent</host>
+                  <key>proc.mem[nginx,,,,rss]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -1309,14 +1491,64 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template App Apache Zabbix agent:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].str("HTTP/1.1 200")}=0 or&#13;
- {Template App Apache Zabbix agent:web.page.get[{$APACHE_STATUS_HOST},{$APACHE_STATUS_PATH},{$APACHE_STATUS_PORT}].nodata(30m)}=1</expression>
+         <expression>{Template App Nginx by Zabbix agent:web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"].str("HTTP/1.1 200")}=0 or&#13;
+ {Template App Nginx by Zabbix agent:web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"].nodata(30m)}=1</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Apache: Failed to fetch Apache stub status page</name>
+         <name>Nginx: Failed to fetch stub status page (or no data for 30m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
-         <url>https://httpd.apache.org/docs/current/mod/mod_status.html</url>
+         <url>https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html</url>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Zabbix has not received data for items for the last 30 minutes.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Nginx: Process is not running</name>
+               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Nginx: Service is down</name>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Nginx: Service is down</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>3</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Nginx: Process is not running</name>
+               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template App Nginx by Zabbix agent:net.tcp.service.perf[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.</description>
@@ -1324,18 +1556,51 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
          <manual_close>1</manual_close>
          <dependencies>
             <dependency>
-               <name>Apache: not running</name>
-               <expression>{Template App Apache Zabbix agent:proc.num[{$APACHE_PROC_NAME}].last()}=0</expression>
+               <name>Nginx: Process is not running</name>
+               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Nginx: Service is down</name>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template App Apache Zabbix agent:proc.num[{$APACHE_PROC_NAME}].last()}=0</expression>
+         <expression>{Template App Nginx by Zabbix agent:nginx.connections.dropped.rate.min(5m)} &gt; {$NGINX.DROP_RATE.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Apache: not running</name>
+         <name>Nginx: High connections drop rate (more than {$NGINX.DROP_RATE.MAX.WARN} for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Nginx: Process is not running</name>
+               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Nginx: Service is down</name>
+               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Nginx: Process is not running</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
@@ -1347,6 +1612,37 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
          <dependencies/>
          <tags/>
       </trigger>
+      <trigger>
+         <expression>{Template App Nginx by Zabbix agent:nginx.version.diff()}=1 and {Template App Nginx by Zabbix agent:nginx.version.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Nginx: Version has changed (new version: {ITEM.VALUE})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Nginx version has changed. Ack to close.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
    </triggers>
-   <value_maps/>
+   <value_maps>
+      <value_map>
+         <name>Service state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Down</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Up</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+   </value_maps>
 </zabbix_export>
