@@ -40,7 +40,7 @@ There are no template links in this template.
 |Memory|Available memory|<p>Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.</p>|CALCULATED|vm.memory.available[snmp]<p>**Expression**:</p>`last("vm.memory.free[memAvailReal.0]")+last("vm.memory.buffers[memBuffer.0]")+last("vm.memory.cached[memCached.0]")`|
 |Memory|Total swap space|<p>MIB: UCD-SNMP-MIB</p><p>The total amount of swap space configured for this host.</p>|SNMP|system.swap.total[memTotalSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Free swap space|<p>MIB: UCD-SNMP-MIB</p><p>The amount of swap space currently unused or available.</p>|SNMP|system.swap.free[memAvailSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
-|Memory|Free swap space in %|<p>-</p>|CALCULATED|system.swap.pfree[snmp]<p>**Expression**:</p>`((last(system.swap.free[memAvailSwap.0]))/last(system.swap.total[memTotalSwap.0]))*100`|
+|Memory|Free swap space in %|<p>-</p>|CALCULATED|system.swap.pfree[snmp]<p>**Expression**:</p>`last("system.swap.free[memAvailSwap.0]")/last("system.swap.total[memTotalSwap.0]")*100`|
 
 ## Triggers
 
