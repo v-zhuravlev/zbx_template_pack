@@ -99,7 +99,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Filesystems|{#FSNAME}: Used space|<p>Used storage in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},used]|
 |Filesystems|{#FSNAME}: Total space|<p>Total space in Bytes</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},total]|
-|Filesystems|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]<p>**Expression**:</p>`(last("vfs.fs.size[{#FSNAME},used]")/last("vfs.fs.size[{#FSNAME},total]"))*100`|
+|Filesystems|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|ZABBIX_PASSIVE|vfs.fs.size[{#FSNAME},pused]|
 |Filesystems|{#FSNAME}: Free inodes in %|<p>-</p>|ZABBIX_PASSIVE|vfs.fs.inode[{#FSNAME},pfree]|
 
 ## Triggers
@@ -151,7 +151,7 @@ There are no template links in this template.
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|ZABBIX_PASSIVE|vm.memory.size[available]|
 |Memory|Total swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,total]|
 |Memory|Free swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,free]|
-|Memory|Free swap space in %|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,pfree]<p>**Expression**:</p>`((last(system.swap.size[,free]))/last(system.swap.size[,total]))*100`|
+|Memory|Free swap space in %|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,pfree]|
 
 ## Triggers
 
