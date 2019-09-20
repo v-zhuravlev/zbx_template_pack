@@ -1410,16 +1410,61 @@ A typical Event ID 2019 is recorded in the system event log.</description>
             <application>
                <name>Network interfaces</name>
             </application>
+            <application>
+               <name>Zabbix raw items</name>
+            </application>
          </applications>
-         <items/>
-         <discovery_rules>
-            <discovery_rule>
-               <name>Network interface discovery</name>
+         <items>
+            <item>
+               <name>Interface {#IFNAME}: Network interface get</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
+               <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
+               <delay>1m</delay>
+               <history>1h</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>4</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <master_item/>
+            </item>
+         </items>
+         <discovery_rules>
+            <discovery_rule>
+               <name>Network interface discovery</name>
+               <type>18</type>
+               <snmp_community/>
+               <snmp_oid/>
                <key>net.if.discovery</key>
-               <delay>1h</delay>
+               <delay>0</delay>
                <status>0</status>
                <allowed_hosts/>
                <snmpv3_contextname/>
@@ -1442,21 +1487,15 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                   <formula/>
                   <conditions>
                      <condition>
-                        <macro>{#IFNAME}</macro>
-                        <value>{$NET.IFNAME.MATCHES}</value>
+                        <macro>{#IFPHYSICALADAPTER}</macro>
+                        <value>{$NET.PHYSICALADAPTER.MATCHES}</value>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
-                     </condition>
-                     <condition>
-                        <macro>{#IFNAME}</macro>
-                        <value>{$NET.IFNAME.NOT_MATCHES}</value>
-                        <operator>9</operator>
-                        <formulaid>B</formulaid>
                      </condition>
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
-               <description>Discovery of network interfaces as defined in {$NET.IFNAME.MATCHES} and {$NET.IFNAME.NOT_MATCHES}.</description>
+               <description>Discovery of network interfaces as defined in MACRO.</description>
                <item_prototypes>
                   <item_prototype>
                      <name>Interface {#IFNAME}: Bits received</name>
@@ -1464,8 +1503,8 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>net.if.in["{#IFNAME}"]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
+                     <delay>3m</delay>
+                     <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -1486,18 +1525,27 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description/>
+                     <description>The total number of octets received on the interface,including framing characters.  This object is a 64-bit version of ifInOctets. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
-                     <preprocessing/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                        <step>
+                           <type>1</type>
+                           <params>8</params>
+                        </step>
+                     </preprocessing>
                      <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <master_item_prototype/>
                   </item_prototype>
                   <item_prototype>
@@ -1506,8 +1554,8 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>net.if.out["{#IFNAME}"]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
+                     <delay>3m</delay>
+                     <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -1528,22 +1576,422 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description/>
+                     <description>The total number of octets transmitted out of the interface, including framing characters.  This object is a 64-bit version of ifOutOctets.Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
                      <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>Network interfaces</name>
-                        </application>
-                     </applications>
+                     <applications/>
                      <valuemap/>
                      <logtimefmt/>
-                     <preprocessing/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                        <step>
+                           <type>1</type>
+                           <params>8</params>
+                        </step>
+                     </preprocessing>
                      <jmx_endpoint/>
-                     <application_prototypes/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <master_item_prototype/>
                   </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Inbound packets discarded</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.in["{#IFNAME}",dropped]</key>
+                     <delay>5m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>The number of inbound packets which were chosen to be discarded&#13;
+even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.&#13;
+One possible reason for discarding such a packet could be to free up buffer space.&#13;
+Discontinuities in the value of this counter can occur at re-initialization of the management system,&#13;
+and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Outbound packets discarded</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.out["{#IFNAME}",dropped]</key>
+                     <delay>5m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>The number of outbound packets which were chosen to be discarded&#13;
+even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.&#13;
+One possible reason for discarding such a packet could be to free up buffer space.&#13;
+Discontinuities in the value of this counter can occur at re-initialization of the management system,&#13;
+and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Inbound packets with errors</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.in["{#IFNAME}",errors]</key>
+                     <delay>3m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Outbound packets with errors</name>
+                     <type>0</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.out["{#IFNAME}",errors]</key>
+                     <delay>3m</delay>
+                     <history>1w</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>For packet-oriented interfaces, the number of outbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of outbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>10</type>
+                           <params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype/>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: Speed</name>
+                     <type>18</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.speed["{#IFNAME}"]</key>
+                     <delay>0</delay>
+                     <history>1w</history>
+                     <trends>0d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units>bps</units>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>An estimate of the interface's current bandwidth in units of 1,000,000 bits per second.  If this object reports a value of `n' then the speed of the interface is somewhere in the range of `n-500,000' to`n+499,999'.  For interfaces which do not vary in bandwidth or for those where no accurate estimation can be made, this object should contain the nominal bandwidth.  For a sub-layer which has no concept of bandwidth, this object should be zero.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>12</type>
+                           <params>$[?(@.Name == "{#IFNAME}")].Speed.first()</params>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype>
+                        <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
+                     </master_item_prototype>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: net.if.type</name>
+                     <type>18</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.type["{#IFNAME}"]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>1</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>12</type>
+                           <params>$[?(@.Name == "{#IFNAME}")].AdapterType.first()</params>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype>
+                        <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
+                     </master_item_prototype>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}: net.if.status</name>
+                     <type>18</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.status["{#IFNAME}"]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap/>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>12</type>
+                           <params>$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()</params>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <master_item_prototype>
+                        <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
+                     </master_item_prototype>
+                  </item_prototype>
                </item_prototypes>
-               <trigger_prototypes/>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template OS Windows network by Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
+or {Template OS Windows network by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template OS Windows network by Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
+and {Template OS Windows network by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <name>Interface {#IFNAME}: High error rate</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template OS Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].change()}&lt;0 and {Template OS Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].last()}&gt;0&#13;
+and (&#13;
+{Template OS Windows network by Zabbix agent:net.if.type["{#IFNAME}"].last()}=6 or&#13;
+{Template OS Windows network by Zabbix agent:net.if.type["{#IFNAME}"].last()}=7 or&#13;
+{Template OS Windows network by Zabbix agent:net.if.type["{#IFNAME}"].last()}=11 or&#13;
+{Template OS Windows network by Zabbix agent:net.if.type["{#IFNAME}"].last()}=62 or&#13;
+{Template OS Windows network by Zabbix agent:net.if.type["{#IFNAME}"].last()}=69 or&#13;
+{Template OS Windows network by Zabbix agent:net.if.type["{#IFNAME}"].last()}=117&#13;
+)&#13;
+and&#13;
+({Template OS Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}&lt;&gt;2)</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>({Template OS Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].change()}&gt;0 and {Template OS Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].prev()}&gt;0) or&#13;
+({Template OS Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}=2)</recovery_expression>
+                     <name>Interface {#IFNAME}: Ethernet has changed to lower speed than it was before</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
                      <name>Interface {#IFNAME}: Network traffic</name>
@@ -1587,6 +2035,54 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                               <key>net.if.out["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
+                        <graph_item>
+                           <sortorder>2</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>F63100</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows network by Zabbix agent</host>
+                              <key>net.if.out["{#IFNAME}",errors]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>3</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>A54F10</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows network by Zabbix agent</host>
+                              <key>net.if.in["{#IFNAME}",errors]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>4</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>FC6EA3</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows network by Zabbix agent</host>
+                              <key>net.if.out["{#IFNAME}",dropped]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>5</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>6C59DC</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Windows network by Zabbix agent</host>
+                              <key>net.if.in["{#IFNAME}",dropped]</key>
+                           </item>
+                        </graph_item>
                      </graph_items>
                   </graph_prototype>
                </graph_prototypes>
@@ -1603,6 +2099,10 @@ A typical Event ID 2019 is recorded in the system event log.</description>
             <macro>
                <macro>{$NET.IFNAME.NOT_MATCHES}</macro>
                <value>Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer</value>
+            </macro>
+            <macro>
+               <macro>{$NET.PHYSICALADAPTER.MATCHES}</macro>
+               <value>True</value>
             </macro>
          </macros>
          <templates/>
