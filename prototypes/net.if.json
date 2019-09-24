@@ -11,18 +11,16 @@
 		"_vendor_description": "The current operational state of the interface.\n- The testing(3) state indicates that no operational packet scan be passed\n- If ifAdminStatus is down(2) then ifOperStatus should be down(2)\n- If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic\n- It should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection)\n- It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state\n- It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.",
 		"value_map": "IF-MIB::ifOperStatus",
 		"name": "Operational status",
-		"description": "Used memory in Bytes",
 		"value_type": "UNSIGNED",
 		"trends": "0",
 		"triggers": [
 			{
-				"_documentation": "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled.",
 				"_id": "net.if.down",
 				"expression": "{$IFCONTROL:\"{#IFNAME}\"}=1 and ({TEMPLATE_NAME:METRIC.last()}=2 and {TEMPLATE_NAME:METRIC.diff()}=1)",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.last()}<>2",
-				"manual_close": "NO",
+				"manual_close": "YES",
 				"name": "Link down",
-				"description": "Interface is down",
+				"description": "This trigger expression works as follows:\n1. Can be triggered if operations status is down.\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)\n\nWARNING: if closed manually - won't fire again on next poll, because of .diff.",
 				"priority": "AVERAGE",
 				"_translations": {
 					"RU": {
