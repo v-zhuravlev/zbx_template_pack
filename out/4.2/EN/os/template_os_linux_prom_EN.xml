@@ -2043,7 +2043,7 @@ Filtering:&#13;
                      <snmp_oid/>
                      <key>net.if.in[node_exporter,"{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -2125,7 +2125,7 @@ Filtering:&#13;
                      <snmp_oid/>
                      <key>net.if.out[node_exporter,"{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -2359,7 +2359,7 @@ Filtering:&#13;
                      <snmp_oid/>
                      <key>net.if.in.discards[node_exporter,"{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -2435,7 +2435,7 @@ Filtering:&#13;
                      <snmp_oid/>
                      <key>net.if.out.discards[node_exporter,"{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -2511,7 +2511,7 @@ Filtering:&#13;
                      <snmp_oid/>
                      <key>net.if.speed[node_exporter,"{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -2659,8 +2659,8 @@ Filtering:&#13;
                      <snmp_oid/>
                      <key>net.if.status[node_exporter,"{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>2w</history>
-                     <trends>0d</trends>
+                     <history>7d</history>
+                     <trends>0</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -2758,13 +2758,13 @@ return newvalue;</params>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>({Template OS Linux by Prom:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} or&#13;
-{Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}) and&#13;
+                     <expression>({Template OS Linux by Prom:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} or&#13;
+{Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}) and&#13;
 {Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}&gt;0</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux by Prom:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} and&#13;
-{Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}</recovery_expression>
-                     <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
+                     <recovery_expression>{Template OS Linux by Prom:net.if.in[node_exporter,"{#IFNAME}"].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()} and&#13;
+{Template OS Linux by Prom:net.if.out[node_exporter,"{#IFNAME}"].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template OS Linux by Prom:net.if.speed[node_exporter,"{#IFNAME}"].last()}</recovery_expression>
+                     <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2783,19 +2783,19 @@ return newvalue;</params>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux by Prom:net.if.in.errors[node_exporter,"{#IFNAME}"].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
-or {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template OS Linux by Prom:net.if.in.errors[node_exporter,"{#IFNAME}"].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
+or {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux by Prom:net.if.in.errors[node_exporter,"{#IFNAME}"].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
-and {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
-                     <name>Interface {#IFNAME}({#IFALIAS}): High error rate</name>
+                     <recovery_expression>{Template OS Linux by Prom:net.if.in.errors[node_exporter,"{#IFNAME}"].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
+and {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <name>Interface {#IFNAME}({#IFALIAS}): High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
+Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -2881,9 +2881,14 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <status>0</status>
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Interface is down</description>
+This trigger expression works as follows:&#13;
+1. Can be triggered if operations status is down.&#13;
+2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
+3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
+&#13;
+WARNING: if closed manually - won't fire again on next poll, because of .diff.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
@@ -4422,6 +4427,18 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                <value>90</value>
             </macro>
             <macro>
+               <macro>{$IF.ERRORS.WARN}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$IF.UTIL.MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
+            </macro>
+            <macro>
                <macro>{$LOAD_AVG_PER_CPU.MAX.WARN}</macro>
                <value>1.5</value>
             </macro>
@@ -4566,6 +4583,35 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                      <sort_triggers>0</sort_triggers>
                      <resource>
                         <name>Memory usage</name>
+                        <host>Template OS Linux by Prom</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+               </screen_items>
+            </screen>
+            <screen>
+               <name>Network interfaces</name>
+               <hsize>1</hsize>
+               <vsize>1</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Interface {#IFNAME}({#IFALIAS}): Network traffic</name>
                         <host>Template OS Linux by Prom</host>
                      </resource>
                      <max_columns>3</max_columns>

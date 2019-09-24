@@ -228,10 +228,19 @@ For Zabbix version: 4.2
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
+### Macros used
+
+|Name|Description|Default|
+|----|-----------|-------|
+|{$IF.ERRORS.WARN}|<p>-</p>|`2`|
+|{$IF.UTIL.MAX}|<p>-</p>|`90`|
+|{$IFCONTROL}|<p>-</p>|`1`|
 
 ## Template links
 
@@ -254,19 +263,23 @@ There are no template links in this template.
 |Network_interfaces|Interface {#IFNAME}: Outbound packets discarded||ZABBIX_PASSIVE|net.if.out["{#IFNAME}",dropped]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
 |Network_interfaces|Interface {#IFNAME}: Inbound packets discarded||ZABBIX_PASSIVE|net.if.in["{#IFNAME}",dropped]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
 |Network_interfaces|Interface {#IFNAME}: Operational status|<p>Indicates the interface RFC2863 operational state as a string.</p><p>Possible values are:"unknown", "notpresent", "down", "lowerlayerdown", "testing","dormant", "up".</p><p>Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</p>|ZABBIX_PASSIVE|vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var newvalue; switch(value) {   case "up":     newvalue = 1;     break;   case "down":     newvalue = 2;     break;   case "testing":     newvalue = 4;     break;   case "unknown":     newvalue = 5;     break;   case "dormant":     newvalue = 6;     break;   case "notPresent":     newvalue = 7;     break;   default:     newvalue = "Problem parsing interface operstate in JS"; } return newvalue;`</p>|
-|Network_interfaces|Interface {#IFNAME}: Interface type|<p>Indicates the interface protocol type as a decimal value.</p><p>See include/uapi/linux/if_arp.h for all possible values.</p><p>Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</p>|ZABBIX_PASSIVE|vfs.file.contents["/sys/class/net/{#IFNAME}/type"]|
+|Network_interfaces|Interface {#IFNAME}: Interface type|<p>Indicates the interface protocol type as a decimal value.</p><p>See include/uapi/linux/if_arp.h for all possible values.</p><p>Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net</p>|ZABBIX_PASSIVE|vfs.file.contents["/sys/class/net/{#IFNAME}/type"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Interface {#IFNAME}: High error rate|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</p>|`{TEMPLATE_NAME:net.if.in["{#IFNAME}",errors].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"} or {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}>{$IF_ERRORS_WARN:"{#IFNAME}"}`<p>Recovery expression:</p>`{TEMPLATE_NAME:net.if.in["{#IFNAME}",errors].avg(5m)}<{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8 and {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}<{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Interface {#IFNAME}: Link down</p>|
-|Interface {#IFNAME}: Link down|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Interface is down</p>|`{$IFCONTROL:"{#IFNAME}"}=1 and ({TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)`<p>Recovery expression:</p>`{TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}<>2`|AVERAGE||
+|Interface {#IFNAME}: High error rate ( > {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</p>|`{TEMPLATE_NAME:net.if.in["{#IFNAME}",errors].min(5m)}>{$IF.ERRORS.WARN:"{#IFNAME}"} or {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].min(5m)}>{$IF.ERRORS.WARN:"{#IFNAME}"}`<p>Recovery expression:</p>`{TEMPLATE_NAME:net.if.in["{#IFNAME}",errors].max(5m)}<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8 and {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].max(5m)}<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Interface {#IFNAME}: Link down</p>|
+|Interface {#IFNAME}: Link down|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger expression works as follows:</p><p>1. Can be triggered if operations status is down.</p><p>2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.</p><p>3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)</p><p>WARNING: if closed manually - won't fire again on next poll, because of .diff.</p>|`{$IFCONTROL:"{#IFNAME}"}=1 and ({TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)`<p>Recovery expression:</p>`{TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}<>2`|AVERAGE|<p>Manual close: YES</p>|
 |Interface {#IFNAME}: Ethernet has changed to lower speed than it was before|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</p>|`{TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}<0 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}>0 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=6 or {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=1) and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}<>2)`<p>Recovery expression:</p>`({TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}>0 and {TEMPLATE_NAME:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].prev()}>0) or ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2)`|INFO|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Interface {#IFNAME}: Link down</p>|
 
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
+
+## Known Issues
+
+- Description: High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth.
 
 # Template OS Linux by Zabbix agent
 
@@ -283,13 +296,6 @@ Install Zabbix agent to Linux OS according to Zabbix documentation.
 
 No specific Zabbix configuration is required.
 
-### Macros used
-
-|Name|Description|Default|
-|----|-----------|-------|
-|{$IFCONTROL}|<p>-</p>|`1`|
-|{$IF_ERRORS_WARN}|<p>-</p>|`2`|
-|{$IF_UTIL_MAX}|<p>-</p>|`90`|
 
 ## Template links
 

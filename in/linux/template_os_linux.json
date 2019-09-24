@@ -516,6 +516,16 @@
         {
             "name": "Template OS Linux network interfaces by Zabbix agent",
             "_zbx_ver": "4.2",
+            "_classes": [
+                "IF_MIB"
+            ],
+            "_documentation": {
+                "_issues": [
+                    {
+                        "description": "High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth."
+                    }
+                ]
+            },
             "discovery_rules": [
                 {
                     "name": "Network interface discovery",
@@ -659,6 +669,18 @@
                         // },
                     ]
                 }
+            ],
+            "screens": [
+                {
+                    "hsize": 1,
+                    "vsize": 1,
+                    "name": "Network interfaces",
+                    "screen_items": [
+                        {
+                            "_graph_id": "net.if.stats"
+                        }
+                    ]
+                }
             ]
         },
         {
@@ -666,8 +688,7 @@
             "name": "Template OS Linux by Zabbix agent",
             "_classes": [
                 "OS",
-                "PERFORMANCE",
-                "IF_MIB"
+                "PERFORMANCE"
             ],
             "templates": [
                 "Template OS Linux CPU by Zabbix agent",

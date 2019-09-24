@@ -2895,7 +2895,11 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
       <template>
          <template>Template OS Linux network interfaces by Zabbix agent</template>
          <name>Template OS Linux network interfaces by Zabbix agent</name>
-         <description>Template tooling version used: 0.29</description>
+         <description>Known Issues:&#13;
+&#13;
+  Description: High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth.&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -2961,7 +2965,7 @@ Filtering veth interfaces automatically created by Docker.</description>
                      <snmp_oid/>
                      <key>net.if.in["{#IFNAME}"]</key>
                      <delay>3m</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3034,7 +3038,7 @@ Filtering veth interfaces automatically created by Docker.</description>
                      <snmp_oid/>
                      <key>net.if.out["{#IFNAME}"]</key>
                      <delay>3m</delay>
-                     <history>30d</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3240,8 +3244,8 @@ Filtering veth interfaces automatically created by Docker.</description>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>net.if.out["{#IFNAME}",dropped]</key>
-                     <delay>5m</delay>
-                     <history>1w</history>
+                     <delay>3m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3307,8 +3311,8 @@ Filtering veth interfaces automatically created by Docker.</description>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>net.if.in["{#IFNAME}",dropped]</key>
-                     <delay>5m</delay>
-                     <history>1w</history>
+                     <delay>3m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3375,8 +3379,8 @@ Filtering veth interfaces automatically created by Docker.</description>
                      <snmp_oid/>
                      <key>vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"]</key>
                      <delay>1m</delay>
-                     <history>2w</history>
-                     <trends>0d</trends>
+                     <history>7d</history>
+                     <trends>0</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -3499,7 +3503,14 @@ Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net<
                         <name>Linux::Interface protocol types</name>
                      </valuemap>
                      <logtimefmt/>
-                     <preprocessing/>
+                     <preprocessing>
+                        <step>
+                           <type>20</type>
+                           <params>1d</params>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
@@ -3529,19 +3540,19 @@ Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net<
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
-or {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
+or {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
-and {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
-                     <name>Interface {#IFNAME}: High error rate</name>
+                     <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
+and {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <name>Interface {#IFNAME}: High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
+Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3564,9 +3575,14 @@ Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
                      <status>0</status>
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Interface is down</description>
+This trigger expression works as follows:&#13;
+1. Can be triggered if operations status is down.&#13;
+2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
+3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
+&#13;
+WARNING: if closed manually - won't fire again on next poll, because of .diff.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
@@ -3719,9 +3735,52 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
             </discovery_rule>
          </discovery_rules>
          <httptests/>
-         <macros/>
+         <macros>
+            <macro>
+               <macro>{$IF.ERRORS.WARN}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$IF.UTIL.MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
+            </macro>
+         </macros>
          <templates/>
-         <screens/>
+         <screens>
+            <screen>
+               <name>Network interfaces</name>
+               <hsize>1</hsize>
+               <vsize>1</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Interface {#IFNAME}: Network traffic</name>
+                        <host>Template OS Linux network interfaces by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+               </screen_items>
+            </screen>
+         </screens>
          <tags/>
       </template>
       <template>
@@ -3807,20 +3866,7 @@ Template tooling version used: 0.29</description>
          </items>
          <discovery_rules/>
          <httptests/>
-         <macros>
-            <macro>
-               <macro>{$IFCONTROL}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$IF_ERRORS_WARN}</macro>
-               <value>2</value>
-            </macro>
-            <macro>
-               <macro>{$IF_UTIL_MAX}</macro>
-               <value>90</value>
-            </macro>
-         </macros>
+         <macros/>
          <templates>
             <template>
                <name>Template OS Linux CPU by Zabbix agent</name>
