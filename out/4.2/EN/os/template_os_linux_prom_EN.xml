@@ -2049,10 +2049,7 @@ return valueArr.reduce(function(acc,obj){
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
-               <description>Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".&#13;
-Filtering:&#13;
- - interfaces with operstate != 'up'.&#13;
- - veth interfaces automatically created by Docker.</description>
+               <description>Discovery of network interfaces. Requires node_exporter v0.18 and up.</description>
                <item_prototypes>
                   <item_prototype>
                      <name>Interface {#IFNAME}({#IFALIAS}): Bits received</name>
@@ -4490,7 +4487,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
             </macro>
             <macro>
                <macro>{$NET.IF.IFOPERSTATUS.NOT_MATCHES}</macro>
-               <value>^6$</value>
+               <value>^7$</value>
             </macro>
             <macro>
                <macro>{$NODE_EXPORTER_PORT}</macro>
@@ -4506,7 +4503,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.NOT_MATCHES}</macro>
-               <value>(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)</value>
+               <value>(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)</value>
             </macro>
             <macro>
                <macro>{$VFS.DEV.READ.AWAIT.WARN}</macro>

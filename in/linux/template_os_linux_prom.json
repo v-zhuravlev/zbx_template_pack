@@ -57,7 +57,7 @@
                 },
                 {
                     "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
-                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+)",
+                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)",
                     "_description": "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
                 },
                 {
@@ -119,8 +119,8 @@
                 },
                 {
                     "macro": "{$NET.IF.IFOPERSTATUS.NOT_MATCHES}",
-                    "value": "^6$",
-                    "_description": "Ignore notPresent(6)"
+                    "value": "^7$",
+                    "_description": "Ignore notPresent(7)"
                 },
                 {
                     "macro": "{$NET.IF.IFALIAS.MATCHES}",
@@ -137,7 +137,7 @@
                     "type": "DEPENDENT",
                     "master_item": "node_exporter.get",
                     "key": "net.if.discovery[node_exporter]",
-                    "description": "Discovery of network interfaces as defined in global regular expression \"Network interfaces for discovery\".\nFiltering:\n - interfaces with operstate != 'up'.\n - veth interfaces automatically created by Docker.",
+                    "description": "Discovery of network interfaces. Requires node_exporter v0.18 and up.",
                     "preprocessing": [
                         {
                             "type": "PROMETHEUS_TO_JSON",
