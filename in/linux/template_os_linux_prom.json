@@ -102,6 +102,33 @@
                 {
                     "macro": "{$MEMORY.AVAILABLE.MIN}",
                     "value": "20M"
+                },
+                // network interfaces
+                {
+                    "macro": "{$NET.IF.IFNAME.MATCHES}",
+                    "value": "^.*$"
+                },
+                {
+                    "macro": "{$NET.IF.IFNAME.NOT_MATCHES}",
+                    "value": "(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)",
+                    "_description": "Filter out loopbacks, nulls, docker veth links and docker0 bridge by default"
+                },
+                {
+                    "macro": "{$NET.IF.IFOPERSTATUS.MATCHES}",
+                    "value": "^.*$"
+                },
+                {
+                    "macro": "{$NET.IF.IFOPERSTATUS.NOT_MATCHES}",
+                    "value": "^6$",
+                    "_description": "Ignore notPresent(6)"
+                },
+                {
+                    "macro": "{$NET.IF.IFALIAS.MATCHES}",
+                    "value": "^.*$"
+                },
+                {
+                    "macro": "{$NET.IF.IFALIAS.NOT_MATCHES}",
+                    "value": "CHANGE_IF_NEEDED"
                 }
             ],
             "discovery_rules": [
@@ -139,26 +166,42 @@
                         "evaltype": "AND",
                         "conditions": [
                             {
-                                //TODO remove global regex in filter
                                 "macro": "{#IFNAME}",
-                                "value": "@Network interfaces for discovery",
-                                "formulaid": "A",
+                                "value": "{$NET.IF.IFNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "A"
                             },
                             {
-                                //filter out docker veth links
                                 "macro": "{#IFNAME}",
-                                "value": "^veth[0-9a-z]+$",
+                                "value": "{$NET.IF.IFNAME.NOT_MATCHES}",
                                 "operator": "NOT_MATCHES_REGEX",
                                 "formulaid": "B"
                             },
                             {
-                                //find interfaces only with up
-                                "macro": "{#IFOPERSTATUS}",
-                                "value": "^up$",
+                                "macro": "{#IFALIAS}",
+                                "value": "{$NET.IF.IFALIAS.MATCHES}",
                                 "operator": "MATCHES_REGEX",
                                 "formulaid": "C"
+                            },
+                            {
+                                "macro": "{#IFALIAS}",
+                                "value": "{$NET.IF.IFALIAS.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "D"
+                            },
+                            {
+                                "macro": "{#IFOPERSTATUS}",
+                                "value": "{$NET.IF.IFOPERSTATUS.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "E"
+                            },
+                            {
+                                "macro": "{#IFOPERSTATUS}",
+                                "value": "{$NET.IF.IFOPERSTATUS.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "F"
                             }
-                        ],
+                        ]
                     },
                     "items": [
                         {

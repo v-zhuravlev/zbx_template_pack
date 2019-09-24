@@ -526,6 +526,18 @@
                     }
                 ]
             },
+            "macros": [
+                // network interfaces
+                {
+                    "macro": "{$NET.IF.IFNAME.MATCHES}",
+                    "value": "^.*$"
+                },
+                {
+                    "macro": "{$NET.IF.IFNAME.NOT_MATCHES}",
+                    "value": "(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)",
+                    "_description": "Filter out loopbacks, nulls, docker veth links and docker0 bridge by default"
+                }
+            ],
             "discovery_rules": [
                 {
                     "name": "Network interface discovery",
@@ -536,19 +548,18 @@
                         "evaltype": "AND",
                         "conditions": [
                             {
-                                //TODO remove global regex in filter
                                 "macro": "{#IFNAME}",
-                                "value": "@Network interfaces for discovery",
-                                "formulaid": "A",
+                                "value": "{$NET.IF.IFNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "A"
                             },
                             {
-                                //filter out docker veth links
                                 "macro": "{#IFNAME}",
-                                "value": "^veth[0-9a-z]+$",
+                                "value": "{$NET.IF.IFNAME.NOT_MATCHES}",
                                 "operator": "NOT_MATCHES_REGEX",
                                 "formulaid": "B"
                             }
-                        ],
+                        ]
                     },
                     "items": [
                         {

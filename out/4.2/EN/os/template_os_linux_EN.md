@@ -241,6 +241,8 @@ No specific Zabbix configuration is required.
 |{$IF.ERRORS.WARN}|<p>-</p>|`2`|
 |{$IF.UTIL.MAX}|<p>-</p>|`90`|
 |{$IFCONTROL}|<p>-</p>|`1`|
+|{$NET.IF.IFNAME.MATCHES}|<p>-</p>|`^.*$`|
+|{$NET.IF.IFNAME.NOT_MATCHES}|<p>Filter out loopbacks, nulls, docker veth links and docker0 bridge by default</p>|`(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)`|
 
 ## Template links
 
@@ -250,7 +252,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Network interface discovery|<p>Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".</p><p>Filtering veth interfaces automatically created by Docker.</p>|ZABBIX_PASSIVE|net.if.discovery<p>**Filter**:</p>AND <p>- A: {#IFNAME} MATCHES_REGEX `@Network interfaces for discovery`</p><p>- B: {#IFNAME} NOT_MATCHES_REGEX `^veth[0-9a-z]+$`</p>|
+|Network interface discovery|<p>Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".</p><p>Filtering veth interfaces automatically created by Docker.</p>|ZABBIX_PASSIVE|net.if.discovery<p>**Filter**:</p>AND <p>- A: {#IFNAME} MATCHES_REGEX `{$NET.IF.IFNAME.MATCHES}`</p><p>- B: {#IFNAME} NOT_MATCHES_REGEX `{$NET.IF.IFNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 

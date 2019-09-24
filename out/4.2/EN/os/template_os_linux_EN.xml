@@ -2942,13 +2942,13 @@ Template tooling version used: 0.29</description>
                   <conditions>
                      <condition>
                         <macro>{#IFNAME}</macro>
-                        <value>@Network interfaces for discovery</value>
+                        <value>{$NET.IF.IFNAME.MATCHES}</value>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
                      </condition>
                      <condition>
                         <macro>{#IFNAME}</macro>
-                        <value>^veth[0-9a-z]+$</value>
+                        <value>{$NET.IF.IFNAME.NOT_MATCHES}</value>
                         <operator>9</operator>
                         <formulaid>B</formulaid>
                      </condition>
@@ -3747,6 +3747,14 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
             <macro>
                <macro>{$IFCONTROL}</macro>
                <value>1</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFNAME.MATCHES}</macro>
+               <value>^.*$</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFNAME.NOT_MATCHES}</macro>
+               <value>(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)</value>
             </macro>
          </macros>
          <templates/>
