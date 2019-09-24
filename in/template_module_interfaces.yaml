@@ -10,16 +10,17 @@ templates:
       - macro: "{$NET.IF.IFNAME.MATCHES}"
         value: ^.*$
       - macro: "{$NET.IF.IFNAME.NOT_MATCHES}"
-        value: (^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$)
+        value: (^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)
         _description:
-          Filter out loopbacks and nulls by default
+          Filter out loopbacks, nulls, docker veth links and docker0 bridge by default
           # should filter out loopbacks and nulls
-          # 1	»	^Software Loopback Interface
-          # 2	»	^(In)?[Ll]oop[Bb]ack[0-9._]*$
-          # 3	»	^NULL[0-9.]*$
-          # 4	»	^[Ll]o[0-9.]*$
-          # 5	»	^[Ss]ystem$
-          # 6	»	^Nu[0-9.]*$
+          # 1 ^Software Loopback Interface
+          # 2 ^(In)?[Ll]oop[Bb]ack[0-9._]*$
+          # 3 ^NULL[0-9.]*$
+          # 4 ^[Ll]o[0-9.]*$
+          # 5 ^[Ss]ystem$
+          # 6 ^veth[0-9a-z]+$
+          # 7 docker[0-9]+
       - macro: "{$NET.IF.IFOPERSTATUS.MATCHES}"
         value: ^.*$
       - macro: "{$NET.IF.IFOPERSTATUS.NOT_MATCHES}"

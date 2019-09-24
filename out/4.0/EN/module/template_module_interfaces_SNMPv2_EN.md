@@ -25,7 +25,7 @@ For Zabbix version: 4.0
 |{$NET.IF.IFDESCR.MATCHES}|<p>-</p>|`.*`|
 |{$NET.IF.IFDESCR.NOT_MATCHES}|<p>-</p>|`CHANGE_IF_NEEDED`|
 |{$NET.IF.IFNAME.MATCHES}|<p>-</p>|`^.*$`|
-|{$NET.IF.IFNAME.NOT_MATCHES}|<p>Filter out loopbacks and nulls by default</p>|`(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$)`|
+|{$NET.IF.IFNAME.NOT_MATCHES}|<p>Filter out loopbacks, nulls, docker veth links and docker0 bridge by default</p>|`(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)`|
 |{$NET.IF.IFOPERSTATUS.MATCHES}|<p>-</p>|`^.*$`|
 |{$NET.IF.IFOPERSTATUS.NOT_MATCHES}|<p>Ignore notPresent(6)</p>|`^6$`|
 |{$NET.IF.IFTYPE.MATCHES}|<p>-</p>|`.*`|
