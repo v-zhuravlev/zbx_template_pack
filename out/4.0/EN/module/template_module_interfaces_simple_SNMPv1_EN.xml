@@ -720,13 +720,13 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>({Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} or&#13;
-{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}) and&#13;
+                     <expression>({Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} or&#13;
+{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}) and&#13;
 {Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}&gt;0</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} and&#13;
-{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</recovery_expression>
-                     <name>Interface {#IFDESCR}: High bandwidth usage ( &gt; {$IF_UTIL_MAX:"{#IFNAME}"}% )</name>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} and&#13;
+{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</recovery_expression>
+                     <name>Interface {#IFDESCR}: High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -745,19 +745,19 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].min(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
-or {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].min(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
+or {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].max(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
-and {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].max(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
-                     <name>Interface {#IFDESCR}: High error rate ( &gt; {$IF_ERRORS_WARN:"{#IFNAME}"} for 5m)</name>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
+and {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <name>Interface {#IFDESCR}: High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
+Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -922,16 +922,16 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
          <httptests/>
          <macros>
             <macro>
-               <macro>{$IFCONTROL}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$IF_ERRORS_WARN}</macro>
+               <macro>{$IF.ERRORS.WARN}</macro>
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$IF_UTIL_MAX}</macro>
+               <macro>{$IF.UTIL.MAX}</macro>
                <value>95</value>
+            </macro>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
             </macro>
          </macros>
          <templates/>

@@ -60,19 +60,19 @@
 		"units": "bps",
 		"triggers": [
 			{
-				"_documentation": "- This trigger uses 3% hysteresis (WARNING: do not change {$IF_UTIL_MAX:\"{#IFNAME}\"} below or equal to 3%\n- Additionally added 'and net.if.speed[*].last()>0' in order to fix ZBX-12688",
+				"_documentation": "- This trigger uses 3% hysteresis (WARNING: do not change {$IF.UTIL.MAX:\"{#IFNAME}\"} below or equal to 3%\n- Additionally added 'and net.if.speed[*].last()>0' in order to fix ZBX-12688",
 				"_id": "net.if.util_high",
-				"expression": "({TEMPLATE_NAME:METRIC.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()} or\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()}) and\n{TEMPLATE_NAME:__net.if.speed__.last()}>0",
-				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
+				"expression": "({TEMPLATE_NAME:METRIC.avg(15m)}>({$IF.UTIL.MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()} or\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}>({$IF.UTIL.MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()}) and\n{TEMPLATE_NAME:__net.if.speed__.last()}>0",
+				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF.UTIL.MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF.UTIL.MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
 				"manual_close": "YES",
-				"name": "High bandwidth usage ( > {$IF_UTIL_MAX:\"{#IFNAME}\"}% )",
+				"name": "High bandwidth usage ( > {$IF.UTIL.MAX:\"{#IFNAME}\"}% )",
 				"priority": "WARNING",
 				"_depends_on": [
 					"net.if.down"
 				],
 				"_translations": {
 					"RU": {
-						"name": "Интерфейс сильно загружен ( > {$IF_UTIL_MAX:\"{#IFNAME}\"}% )"
+						"name": "Интерфейс сильно загружен ( > {$IF.UTIL.MAX:\"{#IFNAME}\"}% )"
 					}
 				}
 			}
@@ -168,21 +168,21 @@
 		"value_type": "UNSIGNED",
 		"triggers": [
 			{
-				"_documentation": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} (see ZBX-13128)",
+				"_documentation": "Recovers when below 80% of {$IF.ERRORS.WARN:\"{#IFNAME}\"} (see ZBX-13128)",
 				"_id": "net.if.errors",
-				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}\nor {TEMPLATE_NAME:__net.if.out.errors__.min(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}",
-				"recovery_expression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.max(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$IF.ERRORS.WARN:\"{#IFNAME}\"}\nor {TEMPLATE_NAME:__net.if.out.errors__.min(5m)}>{$IF.ERRORS.WARN:\"{#IFNAME}\"}",
+				"recovery_expression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$IF.ERRORS.WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.max(5m)}<{$IF.ERRORS.WARN:\"{#IFNAME}\"}*0.8",
 				"manual_close": "YES",
-				"name": "High error rate ( > {$IF_ERRORS_WARN:\"{#IFNAME}\"} for 5m)",
+				"name": "High error rate ( > {$IF.ERRORS.WARN:\"{#IFNAME}\"} for 5m)",
 				"priority": "WARNING",
-				"description": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} threshold",
+				"description": "Recovers when below 80% of {$IF.ERRORS.WARN:\"{#IFNAME}\"} threshold",
 				"_depends_on": [
 					"net.if.down"
 				],
 				"_translations": {
 					"RU": {
-						"name": "Большое количество ошибок интерфейса ( > {$IF_ERRORS_WARN:\"{#IFNAME}\"} в течение 5m)",
-						"description": "Восстановление когда ниже 80% от значения {$IF_ERRORS_WARN:\"{#IFNAME}\"}"
+						"name": "Большое количество ошибок интерфейса ( > {$IF.ERRORS.WARN:\"{#IFNAME}\"} в течение 5m)",
+						"description": "Восстановление когда ниже 80% от значения {$IF.ERRORS.WARN:\"{#IFNAME}\"}"
 					}
 				}
 			}
