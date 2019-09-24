@@ -1,6 +1,7 @@
 [
 	//move SNMP specific stuff outa here
 	{
+		"_id": "net.if.status",
 		"oid": "1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}",
 		"_snmpObject": "ifOperStatus.{#SNMPINDEX}",
 		"_mib": "IF-MIB",
@@ -8,18 +9,15 @@
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
 		"_vendor_description": "The current operational state of the interface.\n- The testing(3) state indicates that no operational packet scan be passed\n- If ifAdminStatus is down(2) then ifOperStatus should be down(2)\n- If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic\n- It should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection)\n- It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state\n- It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.",
-		"valueMap": "IF-MIB::ifOperStatus",
-		"_id": "net.if.status",
+		"value_map": "IF-MIB::ifOperStatus",
 		"name": "Operational status",
 		"description": "Used memory in Bytes",
-		"update": "1m",
-		"history": "2w",
-		"trends": "0d",
 		"value_type": "UNSIGNED",
+		"trends": "0",
 		"triggers": [
 			{
 				"_documentation": "This trigger expression works as follows:\n1. Can be triggered if ifOperStatus = 2\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\nif IFNAME not available - use SNMPINDEX (IFINDEX))\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only ifOperStatus ever was up(1) before. (do not fire ethernal off interfaces.)\nWARNING. if closed manually - won't fire again on next poll. because of .diff. Thats why manual_close is disabled.",
-				"_id": "if.down",
+				"_id": "net.if.down",
 				"expression": "{$IFCONTROL:\"{#IFNAME}\"}=1 and ({TEMPLATE_NAME:METRIC.last()}=2 and {TEMPLATE_NAME:METRIC.diff()}=1)",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.last()}<>2",
 				"manual_close": "NO",
@@ -61,19 +59,18 @@
 		"application_prototype": "__RESOURCE__",
 		"value_type": "UNSIGNED",
 		"delay": "3m",
-		"history": "30d",
 		"units": "bps",
 		"triggers": [
 			{
 				"_documentation": "- This trigger uses 3% hysteresis (WARNING: do not change {$IF_UTIL_MAX:\"{#IFNAME}\"} below or equal to 3%\n- Additionally added 'and net.if.speed[*].last()>0' in order to fix ZBX-12688",
-				"_id": "if.util_high",
+				"_id": "net.if.util_high",
 				"expression": "({TEMPLATE_NAME:METRIC.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()} or\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}>({$IF_UTIL_MAX:\"{#IFNAME}\"}/100)*{TEMPLATE_NAME:__net.if.speed__.last()}) and\n{TEMPLATE_NAME:__net.if.speed__.last()}>0",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF_UTIL_MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
 				"manual_close": "YES",
 				"name": "High bandwidth usage >{$IF_UTIL_MAX:\"{#IFNAME}\"}%",
 				"priority": "WARNING",
 				"_depends_on": [
-					"if.down"
+					"net.if.down"
 				],
 				"_translations": {
 					"RU": {
@@ -145,7 +142,6 @@
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
 		"delay": "3m",
-		"history": "30d",
 		"value_type": "UNSIGNED",
 		"units": "bps",
 		"_translations": {
@@ -175,7 +171,7 @@
 		"triggers": [
 			{
 				"_documentation": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} (see ZBX-13128)",
-				"_id": "if.errors",
+				"_id": "net.if.errors",
 				"expression": "{TEMPLATE_NAME:METRIC.avg(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}\nor {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}>{$IF_ERRORS_WARN:\"{#IFNAME}\"}",
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.avg(5m)}<{$IF_ERRORS_WARN:\"{#IFNAME}\"}*0.8",
 				"manual_close": "YES",
@@ -183,7 +179,7 @@
 				"priority": "WARNING",
 				"description": "Recovers when below 80% of {$IF_ERRORS_WARN:\"{#IFNAME}\"} threshold",
 				"_depends_on": [
-					"if.down"
+					"net.if.down"
 				],
 				"_translations": {
 					"RU": {
@@ -238,8 +234,7 @@
 		"name": "Inbound packets discarded",
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
-		"delay": "5m",
-		"history": "1w",
+		"delay": "3m",
 		"value_type": "UNSIGNED",
 		"_translations": {
 			"RU": {
@@ -262,8 +257,7 @@
 		"name": "Outbound packets discarded",
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
-		"delay": "5m",
-		"history": "1w",
+		"delay": "3m",
 		"value_type": "UNSIGNED",
 		"_translations": {
 			"RU": {
@@ -280,7 +274,11 @@
 		"preprocessing": [
 			{
 				"type": "MULTIPLIER",
-				"params": 1000000
+				"params": "1000000"
+			},
+			{
+				"type": "DISCARD_UNCHANGED_HEARTBEAT",
+				"params": "1h"
 			}
 		],
 		"_id": "net.if.speed",
@@ -288,7 +286,6 @@
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
 		"delay": "5m",
-		"history": "1w",
 		"trends": "0d",
 		"value_type": "UNSIGNED",
 		"units": "bps",
@@ -304,13 +301,13 @@
 		}
 	},
 	{
+		"_id": "net.if.type",
 		"_snmpObject": "ifType.{#SNMPINDEX}",
 		"oid": "1.3.6.1.2.1.2.2.1.3.{#SNMPINDEX}",
 		"_mib": "IF-MIB",
 		"_resource": "Interface {#IFNAME}({#IFALIAS})",
 		"_vendor_description": "The type of interface.\nAdditional values for ifType are assigned by the Internet Assigned NumbersAuthority (IANA),\nthrough updating the syntax of the IANAifType textual convention.",
-		"valueMap": "IF-MIB::ifType",
-		"_id": "net.if.type",
+		"value_map": "IF-MIB::ifType",
 		"name": "Interface type",
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
@@ -318,6 +315,12 @@
 		"history": "1w",
 		"trends": "0d",
 		"value_type": "UNSIGNED",
+		"preprocessing": [
+			{
+				"type": "DISCARD_UNCHANGED_HEARTBEAT",
+				"params": "1d"
+			}
+		],
 		"_translations": {
 			"RU": {
 				"name": "Тип интерфейса"
@@ -330,8 +333,6 @@
 		"name": "Duplex status",
 		"_group": "Network_interfaces",
 		"application_prototype": "__RESOURCE__",
-		"history": "1w",
-		"trends": "0d",
 		"value_type": "UNSIGNED",
 		"_translations": {
 			"RU": {
@@ -340,8 +341,7 @@
 		},
 		"triggers": [
 			{
-				"_prototype": "none",
-				"_id": "if.halfduplex",
+				"_id": "net.if.halfduplex",
 				"expression": "{TEMPLATE_NAME:METRIC.last()}=2",
 				"manual_close": "YES",
 				"name": "In half-duplex mode",
