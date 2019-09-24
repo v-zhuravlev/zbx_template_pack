@@ -7,9 +7,11 @@ For Zabbix version: 3.4
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
@@ -18,6 +20,16 @@ For Zabbix version: 3.4
 |{$IF.ERRORS.WARN}|<p>-</p>|`2`|
 |{$IF.UTIL.MAX}|<p>-</p>|`95`|
 |{$IFCONTROL}|<p>-</p>|`1`|
+|{$NET.IF.IFADMINSTATUS.MATCHES}|<p>Ignore notPresent(6)</p>|`^.*`|
+|{$NET.IF.IFADMINSTATUS.NOT_MATCHES}|<p>Ignore down(2) administrative status</p>|`^2$`|
+|{$NET.IF.IFDESCR.MATCHES}|<p>-</p>|`.*`|
+|{$NET.IF.IFDESCR.NOT_MATCHES}|<p>-</p>|`CHANGE_IF_NEEDED`|
+|{$NET.IF.IFNAME.MATCHES}|<p>-</p>|`^.*$`|
+|{$NET.IF.IFNAME.NOT_MATCHES}|<p>Filter out loopbacks, nulls, docker veth links and docker0 bridge by default</p>|`(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+)`|
+|{$NET.IF.IFOPERSTATUS.MATCHES}|<p>-</p>|`^.*$`|
+|{$NET.IF.IFOPERSTATUS.NOT_MATCHES}|<p>Ignore notPresent(6)</p>|`^6$`|
+|{$NET.IF.IFTYPE.MATCHES}|<p>-</p>|`.*`|
+|{$NET.IF.IFTYPE.NOT_MATCHES}|<p>-</p>|`CHANGE_IF_NEEDED`|
 
 ## Template links
 
@@ -27,7 +39,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Network Interfaces Discovery|<p>Discovering interfaces from IF-MIB. Interfaces are not discovered:</p><p>- with down(2) Administrative status</p><p>- with notPresent(6) Operational status</p><p>- loopbacks</p>|SNMP|net.if.discovery<p>**Filter**:</p>AND <p>- A: {#IFADMINSTATUS} MATCHES_REGEX `(1|3)`</p><p>- C: {#IFOPERSTATUS} MATCHES_REGEX `(1|2|3|4|5|7)`</p><p>- B: {#IFNAME} MATCHES_REGEX `@Network interfaces for discovery`</p>|
+|Network interfaces discovery|<p>Discovering interfaces from IF-MIB.</p>|SNMP|net.if.discovery<p>**Filter**:</p>AND <p>- A: {#IFADMINSTATUS} MATCHES_REGEX `{$NET.IF.IFADMINSTATUS.MATCHES}`</p><p>- B: {#IFADMINSTATUS} NOT_MATCHES_REGEX `{$NET.IF.IFADMINSTATUS.NOT_MATCHES}`</p><p>- C: {#IFOPERSTATUS} MATCHES_REGEX `{$NET.IF.IFOPERSTATUS.MATCHES}`</p><p>- D: {#IFOPERSTATUS} NOT_MATCHES_REGEX `{$NET.IF.IFOPERSTATUS.NOT_MATCHES}`</p><p>- E: {#IFNAME} MATCHES_REGEX `{$NET.IF.IFNAME.MATCHES}`</p><p>- F: {#IFNAME} NOT_MATCHES_REGEX `{$NET.IF.IFNAME.NOT_MATCHES}`</p><p>- G: {#IFDESCR} MATCHES_REGEX `{$NET.IF.IFDESCR.MATCHES}`</p><p>- H: {#IFDESCR} NOT_MATCHES_REGEX `{$NET.IF.IFDESCR.NOT_MATCHES}`</p><p>- K: {#IFTYPE} MATCHES_REGEX `{$NET.IF.IFTYPE.MATCHES}`</p><p>- L: {#IFTYPE} NOT_MATCHES_REGEX `{$NET.IF.IFTYPE.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -55,4 +67,8 @@ There are no template links in this template.
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
+
+## Known Issues
+
+- Description: 32bit counters are used in this template (since there is no ifXtable available). If busy interfaces return incorrect bits sent/received - set update interval to 1m or less.
 
