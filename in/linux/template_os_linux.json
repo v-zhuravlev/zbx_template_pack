@@ -1,7 +1,7 @@
 {
     "templates": [
         {
-            "name": "Template OS Linux CPU by Zabbix agent",
+            "name": "Template Module Linux CPU by Zabbix agent",
             "_zbx_ver": "4.2",
             "macros": [
                 {
@@ -117,7 +117,7 @@
             ]
         },
         {
-            "name": "Template OS Linux filesystems by Zabbix agent",
+            "name": "Template Module Linux filesystems by Zabbix agent",
             "_zbx_ver": "4.2",
             "macros": [
                 {
@@ -222,7 +222,7 @@
             ]
         },
         {
-            "name": "Template OS Linux memory by Zabbix agent",
+            "name": "Template Module Linux memory by Zabbix agent",
             "_zbx_ver": "4.2",
             "macros": [
                 {
@@ -279,7 +279,7 @@
             ]
         },
         {
-            "name": "Template OS Linux block devices by Zabbix agent",
+            "name": "Template Module Linux block devices by Zabbix agent",
             "_zbx_ver": "4.2",
             "macros": [
                 {
@@ -514,7 +514,7 @@
             ]
         },
         {
-            "name": "Template OS Linux network interfaces by Zabbix agent",
+            "name": "Template Module Linux network interfaces by Zabbix agent",
             "_zbx_ver": "4.2",
             "_classes": [
                 "IF_MIB"
@@ -696,28 +696,21 @@
         },
         {
             "_zbx_ver": "4.2",
-            "name": "Template OS Linux by Zabbix agent",
-            "_classes": [
-                "OS",
-                "PERFORMANCE"
+            "name": "Template Module Linux generic by Zabbix agent",
+            "macros": [
+                {
+                    "macro": "{$SYSTEM.FUZZYTIME.MAX}",
+                    "value": "60"
+                },
+                {
+                    "macro": "{$KERNEL.MAXPROC.MIN}",
+                    "value": "1024"
+                },
+                {
+                    "macro": "{$KERNEL.MAXFILES.MIN}",
+                    "value": "256"
+                }
             ],
-            "templates": [
-                "Template OS Linux CPU by Zabbix agent",
-                "Template OS Linux memory by Zabbix agent",
-                "Template OS Linux filesystems by Zabbix agent",
-                "Template OS Linux block devices by Zabbix agent",
-                "Template OS Linux network interfaces by Zabbix agent"
-            ],
-            "_documentation": {
-                "_setup": "Install Zabbix agent to Linux OS according to Zabbix documentation.",
-                "_issues": [
-                    {
-                        "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
-                    }
-                ],
-                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
-            },
-            "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
             "items": [
                 {
                     "_prototype": "system.uptime",
@@ -729,14 +722,124 @@
                             "_prototype": "trigger.uptime.restarted",
                             "priority": "WARNING",
                             "name": "{HOST.NAME} has been restarted (uptime < 10m)",
-                            "description": "The device uptime is less than 10 minutes"
-                            // "_depends_on": [
-                            //     "nosnmp"
-                            // ]
+                            "description": "The host uptime is less than 10 minutes"
                         }
                     ]
+                },
+                {
+                    "_prototype": "system.boottime",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.boottime"
+                },
+                {
+                    "_prototype": "system.localtime",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.localtime"
+                },
+                {
+                    "_prototype": "system.name",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.hostname"
+                },
+                {
+                    "_prototype": "system.descr",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.uname",
+                    "_vendor_description": "The information as normally returned by 'uname -a'."
+                },
+                {
+                    "_id": "system.users.num",
+                    "type": "ZABBIX_PASSIVE",
+                    "_group": "General",
+                    "key": "system.users.num",
+                    "name": "Number of logged in users",
+                    "description": "Number of users who are currently logged in."
+                },
+                {
+                    "_prototype": "kernel.maxfiles",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "kernel.maxfiles"
+                },
+                //missing fd.open metric for zabbix agent! https://support.zabbix.com/browse/ZBXNEXT-5327
+                {
+                    "_prototype": "kernel.maxproc",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "kernel.maxproc"
+                },
+                {
+                    "_prototype": "proc.num.total",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "proc.num"
+                },
+                {
+                    "_id": "passwords.checksum",
+                    "name": "Checksum of /etc/passwd",
+                    "key": "vfs.file.cksum[/etc/passwd]",
+                    "type": "ZABBIX_PASSIVE",
+                    "value_type": "CHAR",
+                    "_group": "Security",
+                    "update": "15m",
+                    "preprocessing": [
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1h"
+                        }
+                    ],
+                    "triggers": [
+                        {
+                            "name": "/etc/passwd has been changed",
+                            "priority": "INFO",
+                            "manual_close": "YES",
+                            "expression": "{TEMPLATE_NAME:METRIC.diff()}>0",
+                            "_depends_on": [
+                                "trigger.system.name.changed",
+                                "trigger.system.sw.os.changed"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.sw.os",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.sw.os"
+                },
+                {
+                    "_prototype": "system.sw.arch",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.sw.arch"
+                },
+                {
+                    "_prototype": "system.sw.packages",
+                    "key": "system.sw.packages",
+                    "type": "ZABBIX_PASSIVE"
                 }
+            ]
+        },
+        {
+            "_zbx_ver": "4.2",
+            "name": "Template OS Linux by Zabbix agent",
+            "_classes": [
+                "OS"
             ],
+            "templates": [
+                "Template App Zabbix Agent",
+                "Template Module Linux generic by Zabbix agent",
+                "Template Module Linux CPU by Zabbix agent",
+                "Template Module Linux memory by Zabbix agent",
+                "Template Module Linux filesystems by Zabbix agent",
+                "Template Module Linux block devices by Zabbix agent",
+                "Template Module Linux network interfaces by Zabbix agent"
+            ],
+            "_documentation": {
+                "_setup": "Install Zabbix agent to Linux OS according to Zabbix documentation.",
+                "_issues": [
+                    {
+                        "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
+                    }
+                ],
+                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
+            },
+            "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
             "screens": [
                 {
                     "name": "System performance",

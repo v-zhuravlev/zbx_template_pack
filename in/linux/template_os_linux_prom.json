@@ -36,6 +36,14 @@
             },
             "macros": [
                 {
+                    "macro": "{$SYSTEM.FUZZYTIME.MAX}",
+                    "value": "60"
+                },
+                {
+                    "macro": "{$KERNEL.MAXFILES.MIN}",
+                    "value": "256"
+                },
+                {
                     "macro": "{$LOAD_AVG_PER_CPU.MAX.WARN}",
                     "value": "1.5",
                     "_description": "Load per CPU considered sustainable. Tune if needed."
@@ -975,6 +983,127 @@
                     "type": "HTTP_AGENT",
                     "value_type": "TEXT",
                     "url": "http://{HOST.CONN}:{$NODE_EXPORTER_PORT}/metrics"
+                },
+                //general items
+                {
+                    "_prototype": "system.boottime",
+                    "type": "DEPENDENT",
+                    "key": "system.boottime[node_exporter]",
+                    "value_type": "FLOAT",
+                    "master_item": "node_exporter.get",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "{__name__=~\"^node_boot_time(?:_seconds)?$\"}\r\n"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.localtime",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.localtime[node_exporter]",
+                    "value_type": "FLOAT",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "{__name__=~\"^node_time(?:_seconds)?$\"}\r\n"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.name",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.name[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_uname_info\r\nnodename"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.descr",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.descr[node_exporter]",
+                    "_vendor_description": "Labeled system information as provided by the uname system call.",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_TO_JSON",
+                            "params": "node_uname_info"
+                        },
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "var info = JSON.parse(value)[0];\r\n   return info.labels.sysname+' version: '+info.labels.release+' '+info.labels.version"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "kernel.maxfiles",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "kernel.maxfiles[node_exporter]",
+                    "value_type": "FLOAT",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_filefd_maximum\r\n"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "fd.used",
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "fd.open[node_exporter]",
+                    "value_type": "FLOAT",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_filefd_allocated\r\n"
+                        }
+                    ]
+                },
+                // {
+                //     "_prototype": "kernel.maxproc",
+                //     "type": "DEPENDENT",
+                //     "master_item": "node_exporter.get",
+                //     "key": "kernel.maxproc[node_exporter]",
+                //     "preprocessing": [
+                //         {
+                //             "type": "PROMETHEUS_PATTERN",
+                //             "params": ""
+                //         }
+                //     ]
+                // },
+                //reports only procs found under user 
+                //https://github.com/prometheus/node_exporter/issues/790
+                // {
+                //     "_prototype": "proc.num.total",
+                //     "type": "DEPENDENT",
+                //     "master_item": "node_exporter.get",
+                //     "key": "proc.num.total[node_exporter]",
+                //     "_vendor_description": "Number of processes in runnable state.",
+                //     "preprocessing": [
+                //         {
+                //             "type": "PROMETHEUS_PATTERN",
+                //             "params": "node_procs_running\r\n"
+                //         }
+                //     ],
+                //     //removed triggers as kernel.maxproc is not available
+                //     "triggers": []
+                // },
+                {
+                    "_prototype": "system.sw.os",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.sw.os"
+                },
+                {
+                    "_prototype": "system.sw.arch",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.sw.arch"
                 },
                 //uptime
                 {

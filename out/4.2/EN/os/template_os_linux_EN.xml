@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template OS Linux CPU by Zabbix agent</template>
-         <name>Template OS Linux CPU by Zabbix agent</name>
+         <template>Template Module Linux CPU by Zabbix agent</template>
+         <name>Template Module Linux CPU by Zabbix agent</name>
          <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
@@ -1075,8 +1075,8 @@ return (100 - value)</params>
          <tags/>
       </template>
       <template>
-         <template>Template OS Linux filesystems by Zabbix agent</template>
-         <name>Template OS Linux filesystems by Zabbix agent</name>
+         <template>Template Module Linux filesystems by Zabbix agent</template>
+         <name>Template Module Linux filesystems by Zabbix agent</name>
          <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
@@ -1390,8 +1390,8 @@ return (100 - value)</params>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
@@ -1412,8 +1412,8 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
-(({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                     <expression>{Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
+(({Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
@@ -1433,15 +1433,15 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
-                           <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
-(({Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template OS Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
+                           <expression>{Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Linux filesystems by Zabbix agent:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
+                     <expression>{Template Module Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
@@ -1459,7 +1459,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
+                     <expression>{Template Module Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
@@ -1476,7 +1476,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <dependencies>
                         <dependency>
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
-                           <expression>{Template OS Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
+                           <expression>{Template Module Linux filesystems by Zabbix agent:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
@@ -1510,7 +1510,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <calc_fnc>9</calc_fnc>
                            <type>2</type>
                            <item>
-                              <host>Template OS Linux filesystems by Zabbix agent</host>
+                              <host>Template Module Linux filesystems by Zabbix agent</host>
                               <key>vfs.fs.size[{#FSNAME},total]</key>
                            </item>
                         </graph_item>
@@ -1522,7 +1522,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <calc_fnc>9</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux filesystems by Zabbix agent</host>
+                              <host>Template Module Linux filesystems by Zabbix agent</host>
                               <key>vfs.fs.size[{#FSNAME},used]</key>
                            </item>
                         </graph_item>
@@ -1593,8 +1593,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <tags/>
       </template>
       <template>
-         <template>Template OS Linux memory by Zabbix agent</template>
-         <name>Template OS Linux memory by Zabbix agent</name>
+         <template>Template Module Linux memory by Zabbix agent</template>
+         <name>Template Module Linux memory by Zabbix agent</name>
          <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
@@ -1990,8 +1990,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <tags/>
       </template>
       <template>
-         <template>Template OS Linux block devices by Zabbix agent</template>
-         <name>Template OS Linux block devices by Zabbix agent</name>
+         <template>Template Module Linux block devices by Zabbix agent</template>
+         <name>Template Module Linux block devices by Zabbix agent</name>
          <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
@@ -2723,7 +2723,7 @@ return JSON.stringify(parsed);</params>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux block devices by Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux block devices by Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
+                     <expression>{Template Module Linux block devices by Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template Module Linux block devices by Zabbix agent:vfs.dev.read.await[{#DEVNAME}].min(5m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
                      <name>{#DEVNAME}: Disk read request response are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 5m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 5m)</name>
@@ -2767,7 +2767,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux block devices by Zabbix agent</host>
+                              <host>Template Module Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.read.rate[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -2779,7 +2779,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux block devices by Zabbix agent</host>
+                              <host>Template Module Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.write.rate[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -2811,7 +2811,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux block devices by Zabbix agent</host>
+                              <host>Template Module Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.read.await[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -2823,7 +2823,7 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux block devices by Zabbix agent</host>
+                              <host>Template Module Linux block devices by Zabbix agent</host>
                               <key>vfs.dev.write.await[{#DEVNAME}]</key>
                            </item>
                         </graph_item>
@@ -2893,8 +2893,8 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
          <tags/>
       </template>
       <template>
-         <template>Template OS Linux network interfaces by Zabbix agent</template>
-         <name>Template OS Linux network interfaces by Zabbix agent</name>
+         <template>Template Module Linux network interfaces by Zabbix agent</template>
+         <name>Template Module Linux network interfaces by Zabbix agent</name>
          <description>Known Issues:&#13;
 &#13;
   Description: High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth.&#13;
@@ -3539,11 +3539,11 @@ Reference: https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net<
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
-or {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template Module Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
+or {Template Module Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
-and {Template OS Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <recovery_expression>{Template Module Linux network interfaces by Zabbix agent:net.if.in["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
+and {Template Module Linux network interfaces by Zabbix agent:net.if.out["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
                      <name>Interface {#IFNAME}: High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -3557,16 +3557,16 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <dependencies>
                         <dependency>
                            <name>Interface {#IFNAME}: Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
+                           <recovery_expression>{Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
+                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
+                     <recovery_expression>{Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
                      <name>Interface {#IFNAME}: Link down</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -3586,15 +3586,15 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&lt;0 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}&gt;0&#13;
+                     <expression>{Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&lt;0 and {Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}&gt;0&#13;
 and&#13;
-({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=6&#13;
-or {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=1)&#13;
+({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=6&#13;
+or {Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].last()}=1)&#13;
 and&#13;
-({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2)</expression>
+({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2)</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&gt;0 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].prev()}&gt;0) or&#13;
-({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2)</recovery_expression>
+                     <recovery_expression>({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].change()}&gt;0 and {Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/type"].prev()}&gt;0) or&#13;
+({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2)</recovery_expression>
                      <name>Interface {#IFNAME}: Ethernet has changed to lower speed than it was before</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
@@ -3608,8 +3608,8 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <dependencies>
                         <dependency>
                            <name>Interface {#IFNAME}: Link down</name>
-                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
-                           <recovery_expression>{Template OS Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}=2 and {Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].diff()}=1)</expression>
+                           <recovery_expression>{Template Module Linux network interfaces by Zabbix agent:vfs.file.contents["/sys/class/net/{#IFNAME}/operstate"].last()}&lt;&gt;2</recovery_expression>
                         </dependency>
                      </dependencies>
                      <tags/>
@@ -3642,7 +3642,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <host>Template Module Linux network interfaces by Zabbix agent</host>
                               <key>net.if.in["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -3654,7 +3654,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <host>Template Module Linux network interfaces by Zabbix agent</host>
                               <key>net.if.out["{#IFNAME}"]</key>
                            </item>
                         </graph_item>
@@ -3666,7 +3666,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <host>Template Module Linux network interfaces by Zabbix agent</host>
                               <key>net.if.out["{#IFNAME}",errors]</key>
                            </item>
                         </graph_item>
@@ -3678,7 +3678,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <host>Template Module Linux network interfaces by Zabbix agent</host>
                               <key>net.if.in["{#IFNAME}",errors]</key>
                            </item>
                         </graph_item>
@@ -3690,7 +3690,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <host>Template Module Linux network interfaces by Zabbix agent</host>
                               <key>net.if.out["{#IFNAME}",dropped]</key>
                            </item>
                         </graph_item>
@@ -3702,7 +3702,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                            <calc_fnc>2</calc_fnc>
                            <type>0</type>
                            <item>
-                              <host>Template OS Linux network interfaces by Zabbix agent</host>
+                              <host>Template Module Linux network interfaces by Zabbix agent</host>
                               <key>net.if.in["{#IFNAME}",dropped]</key>
                            </item>
                         </graph_item>
@@ -3780,7 +3780,7 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <sort_triggers>0</sort_triggers>
                      <resource>
                         <name>Interface {#IFNAME}: Network traffic</name>
-                        <host>Template OS Linux network interfaces by Zabbix agent</host>
+                        <host>Template Module Linux network interfaces by Zabbix agent</host>
                      </resource>
                      <max_columns>3</max_columns>
                      <application/>
@@ -3791,21 +3791,24 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
          <tags/>
       </template>
       <template>
-         <template>Template OS Linux by Zabbix agent</template>
-         <name>Template OS Linux by Zabbix agent</name>
-         <description>Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.&#13;
-&#13;
-Known Issues:&#13;
-&#13;
-  Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
-&#13;
-Template tooling version used: 0.29</description>
+         <template>Template Module Linux generic by Zabbix agent</template>
+         <name>Template Module Linux generic by Zabbix agent</name>
+         <description>Template tooling version used: 0.29</description>
          <groups>
             <group>
-               <name>Templates/Operating systems</name>
+               <name>Templates/Modules</name>
             </group>
          </groups>
          <applications>
+            <application>
+               <name>General</name>
+            </application>
+            <application>
+               <name>Inventory</name>
+            </application>
+            <application>
+               <name>Security</name>
+            </application>
             <application>
                <name>Status</name>
             </application>
@@ -3870,25 +3873,839 @@ Template tooling version used: 0.29</description>
                <verify_host>0</verify_host>
                <master_item/>
             </item>
+            <item>
+               <name>System boot time</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.boottime</key>
+               <delay>15m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>unixtime</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>System local time</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.localtime</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units>unixtime</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>System name</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.hostname</key>
+               <delay>1h</delay>
+               <history>2w</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>System host name.</description>
+               <inventory_link>3</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>System description</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.uname</key>
+               <delay>1h</delay>
+               <history>2w</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>The information as normally returned by 'uname -a'.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Number of logged in users</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.users.num</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Number of users who are currently logged in.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Maximum number of open file descriptors</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>kernel.maxfiles</key>
+               <delay>1h</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Maximum number of processes</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>kernel.maxproc</key>
+               <delay>1h</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Number of running processes</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>proc.num</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>3</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>General</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Checksum of /etc/passwd</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>vfs.file.cksum[/etc/passwd]</key>
+               <delay>15m</delay>
+               <history>7d</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Security</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Operating system</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.sw.os</key>
+               <delay>1h</delay>
+               <history>2w</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>5</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Operating system architecture</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.sw.arch</key>
+               <delay>1h</delay>
+               <history>2w</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>1</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
+               <name>Software installed</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>system.sw.packages</key>
+               <delay>1h</delay>
+               <history>2w</history>
+               <trends>0</trends>
+               <status>0</status>
+               <value_type>4</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>Inventory</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
          </items>
+         <discovery_rules/>
+         <httptests/>
+         <macros>
+            <macro>
+               <macro>{$KERNEL.MAXFILES.MIN}</macro>
+               <value>256</value>
+            </macro>
+            <macro>
+               <macro>{$KERNEL.MAXPROC.MIN}</macro>
+               <value>1024</value>
+            </macro>
+            <macro>
+               <macro>{$SYSTEM.FUZZYTIME.MAX}</macro>
+               <value>60</value>
+            </macro>
+         </macros>
+         <templates/>
+         <screens/>
+         <tags/>
+      </template>
+      <template>
+         <template>Template OS Linux by Zabbix agent</template>
+         <name>Template OS Linux by Zabbix agent</name>
+         <description>Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.&#13;
+&#13;
+Known Issues:&#13;
+&#13;
+  Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.&#13;
+&#13;
+Template tooling version used: 0.29</description>
+         <groups>
+            <group>
+               <name>Templates/Operating systems</name>
+            </group>
+         </groups>
+         <applications/>
+         <items/>
          <discovery_rules/>
          <httptests/>
          <macros/>
          <templates>
             <template>
-               <name>Template OS Linux CPU by Zabbix agent</name>
+               <name>Template App Zabbix Agent</name>
             </template>
             <template>
-               <name>Template OS Linux block devices by Zabbix agent</name>
+               <name>Template Module Linux CPU by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Linux filesystems by Zabbix agent</name>
+               <name>Template Module Linux block devices by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Linux memory by Zabbix agent</name>
+               <name>Template Module Linux filesystems by Zabbix agent</name>
             </template>
             <template>
-               <name>Template OS Linux network interfaces by Zabbix agent</name>
+               <name>Template Module Linux generic by Zabbix agent</name>
+            </template>
+            <template>
+               <name>Template Module Linux memory by Zabbix agent</name>
+            </template>
+            <template>
+               <name>Template Module Linux network interfaces by Zabbix agent</name>
             </template>
          </templates>
          <screens>
@@ -3996,7 +4813,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.load[all,avg1]</key>
                </item>
             </graph_item>
@@ -4008,7 +4825,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.load[all,avg5]</key>
                </item>
             </graph_item>
@@ -4020,7 +4837,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.load[all,avg15]</key>
                </item>
             </graph_item>
@@ -4032,7 +4849,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.num</key>
                </item>
             </graph_item>
@@ -4064,7 +4881,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util</key>
                </item>
             </graph_item>
@@ -4096,7 +4913,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,system]</key>
                </item>
             </graph_item>
@@ -4108,7 +4925,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,user]</key>
                </item>
             </graph_item>
@@ -4120,7 +4937,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,nice]</key>
                </item>
             </graph_item>
@@ -4132,7 +4949,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,iowait]</key>
                </item>
             </graph_item>
@@ -4144,7 +4961,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,steal]</key>
                </item>
             </graph_item>
@@ -4156,7 +4973,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,interrupt]</key>
                </item>
             </graph_item>
@@ -4168,7 +4985,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,softirq]</key>
                </item>
             </graph_item>
@@ -4180,7 +4997,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,guest]</key>
                </item>
             </graph_item>
@@ -4192,7 +5009,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.util[,guest_nice]</key>
                </item>
             </graph_item>
@@ -4224,7 +5041,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.switches</key>
                </item>
             </graph_item>
@@ -4236,7 +5053,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux CPU by Zabbix agent</host>
+                  <host>Template Module Linux CPU by Zabbix agent</host>
                   <key>system.cpu.intr</key>
                </item>
             </graph_item>
@@ -4268,7 +5085,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux memory by Zabbix agent</host>
+                  <host>Template Module Linux memory by Zabbix agent</host>
                   <key>vm.memory.size[pavailable]</key>
                </item>
             </graph_item>
@@ -4300,7 +5117,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux memory by Zabbix agent</host>
+                  <host>Template Module Linux memory by Zabbix agent</host>
                   <key>vm.memory.size[total]</key>
                </item>
             </graph_item>
@@ -4312,7 +5129,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux memory by Zabbix agent</host>
+                  <host>Template Module Linux memory by Zabbix agent</host>
                   <key>vm.memory.size[available]</key>
                </item>
             </graph_item>
@@ -4344,7 +5161,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux memory by Zabbix agent</host>
+                  <host>Template Module Linux memory by Zabbix agent</host>
                   <key>system.swap.size[,free]</key>
                </item>
             </graph_item>
@@ -4356,7 +5173,7 @@ Template tooling version used: 0.29</description>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
-                  <host>Template OS Linux memory by Zabbix agent</host>
+                  <host>Template Module Linux memory by Zabbix agent</host>
                   <key>system.swap.size[,total]</key>
                </item>
             </graph_item>
@@ -4365,7 +5182,7 @@ Template tooling version used: 0.29</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.load[all,avg1].min(5m)}/{Template OS Linux CPU by Zabbix agent:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+         <expression>{Template Module Linux CPU by Zabbix agent:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
@@ -4382,7 +5199,7 @@ Per CPU load average is too high. Your system may be slow to respond.</descripti
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+         <expression>{Template Module Linux CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
@@ -4397,14 +5214,14 @@ Per CPU load average is too high. Your system may be slow to respond.</descripti
          <dependencies>
             <dependency>
                <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
-               <expression>{Template OS Linux CPU by Zabbix agent:system.cpu.load[all,avg1].min(5m)}/{Template OS Linux CPU by Zabbix agent:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+               <expression>{Template Module Linux CPU by Zabbix agent:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[pavailable].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
+         <expression>{Template Module Linux memory by Zabbix agent:vm.memory.size[pavailable].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
@@ -4419,14 +5236,14 @@ Per CPU load average is too high. Your system may be slow to respond.</descripti
          <dependencies>
             <dependency>
                <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
-               <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template OS Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
+               <expression>{Template Module Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template OS Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
+         <expression>{Template Module Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
@@ -4442,7 +5259,7 @@ Per CPU load average is too high. Your system may be slow to respond.</descripti
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux memory by Zabbix agent:system.swap.size[,pfree].min(5m)}&lt;{$SWAP.PFREE.MIN.WARN} and {Template OS Linux memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
+         <expression>{Template Module Linux memory by Zabbix agent:system.swap.size[,pfree].min(5m)}&lt;{$SWAP.PFREE.MIN.WARN} and {Template Module Linux memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
@@ -4458,19 +5275,19 @@ This trigger is ignored, if there is no swap configured</description>
          <dependencies>
             <dependency>
                <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
-               <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[pavailable].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
+               <expression>{Template Module Linux memory by Zabbix agent:vm.memory.size[pavailable].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                <recovery_expression/>
             </dependency>
             <dependency>
                <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
-               <expression>{Template OS Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template OS Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
+               <expression>{Template Module Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux by Zabbix agent:system.uptime.last()}&lt;10m</expression>
+         <expression>{Template Module Linux generic by Zabbix agent:system.uptime.last()}&lt;10m</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>{HOST.NAME} has been restarted (uptime &lt; 10m)</name>
@@ -4480,10 +5297,147 @@ This trigger is ignored, if there is no swap configured</description>
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The device uptime is less than 10 minutes</description>
+The host uptime is less than 10 minutes</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:system.localtime.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Check system time (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:system.hostname.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.hostname.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+System name has changed. Ack to close.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:kernel.maxfiles.last()}&lt;{$KERNEL.MAXFILES.MIN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Configured max number of open filedescriptors is too low (&lt; {$KERNEL.MAXFILES.MIN})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:kernel.maxproc.last()}&lt;{$KERNEL.MAXPROC.MIN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Configured max number of processes is too low (&lt; {$KERNEL.MAXPROC.MIN})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Getting closer to process limit (over 80% used)</name>
+               <expression>{Template Module Linux generic by Zabbix agent:proc.num.last()}/{Template Module Linux generic by Zabbix agent:kernel.maxproc.last()}*100&gt;80</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:proc.num.last()}/{Template Module Linux generic by Zabbix agent:kernel.maxproc.last()}*100&gt;80</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Getting closer to process limit (over 80% used)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:vfs.file.cksum[/etc/passwd].diff()}&gt;0</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>/etc/passwd has been changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Operating system description has changed</name>
+               <expression>{Template Module Linux generic by Zabbix agent:system.sw.os.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.sw.os.strlen()}&gt;0</expression>
+               <recovery_expression/>
+            </dependency>
+            <dependency>
+               <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+               <expression>{Template Module Linux generic by Zabbix agent:system.hostname.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.hostname.strlen()}&gt;0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Linux generic by Zabbix agent:system.sw.os.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.sw.os.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies>
+            <dependency>
+               <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+               <expression>{Template Module Linux generic by Zabbix agent:system.hostname.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.hostname.strlen()}&gt;0</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
          <tags/>
       </trigger>
    </triggers>

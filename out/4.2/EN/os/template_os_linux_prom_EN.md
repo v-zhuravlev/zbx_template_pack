@@ -27,6 +27,7 @@ No specific Zabbix configuration is required.
 |{$IF.ERRORS.WARN}|<p>-</p>|`2`|
 |{$IF.UTIL.MAX}|<p>-</p>|`90`|
 |{$IFCONTROL}|<p>-</p>|`1`|
+|{$KERNEL.MAXFILES.MIN}|<p>-</p>|`256`|
 |{$LOAD_AVG_PER_CPU.MAX.WARN}|<p>Load per CPU considered sustainable. Tune if needed.</p>|`1.5`|
 |{$MEMORY.AVAILABLE.MIN}|<p>-</p>|`20M`|
 |{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
@@ -38,6 +39,7 @@ No specific Zabbix configuration is required.
 |{$NET.IF.IFOPERSTATUS.NOT_MATCHES}|<p>Ignore notPresent(7)</p>|`^7$`|
 |{$NODE_EXPORTER_PORT}|<p>TCP Port node_exporter is listening on.</p>|`9100`|
 |{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
+|{$SYSTEM.FUZZYTIME.MAX}|<p>-</p>|`60`|
 |{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`.+`|
 |{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)`|
 |{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|`20`|
@@ -86,6 +88,14 @@ There are no template links in this template.
 |CPU|CPU guest nice time|<p>Time spent running a niced guest (virtual CPU for guest operating systems under the control of the Linux kernel)</p>|DEPENDENT|system.cpu.guest_nice[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `{__name__=~"^node_cpu(?:_guest_seconds_total)?$",cpu=~".+",mode=~"^(?:nice|guest_nice)$"}`</p><p>- JAVASCRIPT: `//calculates average, all cpu utilization var valueArr = JSON.parse(value); return valueArr.reduce(function(acc,obj){    return acc + parseFloat(obj['value']) },0)/valueArr.length;`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `100`</p>|
 |CPU|Interrupts per second|<p>-</p>|DEPENDENT|system.cpu.intr[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_intr"} `</p><p>- CHANGE_PER_SECOND|
 |CPU|Context switches per second|<p>-</p>|DEPENDENT|system.cpu.switches[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_context_switches"} `</p><p>- CHANGE_PER_SECOND|
+|General|System boot time|<p>-</p>|DEPENDENT|system.boottime[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"^node_boot_time(?:_seconds)?$"} `</p>|
+|General|System local time|<p>-</p>|DEPENDENT|system.localtime[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"^node_time(?:_seconds)?$"} `</p>|
+|General|System name|<p>System host name.</p>|DEPENDENT|system.name[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_uname_info nodename`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|General|System description|<p>Labeled system information as provided by the uname system call.</p>|DEPENDENT|system.descr[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_TO_JSON: `node_uname_info`</p><p>- JAVASCRIPT: `var info = JSON.parse(value)[0];    return info.labels.sysname+' version: '+info.labels.release+' '+info.labels.version`</p>|
+|General|Maximum number of open file descriptors|<p>It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.</p>|DEPENDENT|kernel.maxfiles[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_filefd_maximum `</p>|
+|General|Number of open file descriptors|<p>-</p>|DEPENDENT|fd.open[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_filefd_allocated `</p>|
+|Inventory|Operating system|<p>-</p>|ZABBIX_PASSIVE|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system architecture|<p>-</p>|ZABBIX_PASSIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Memory|Memory utilization|<p>Memory used percentage is calculated as (total-available)/total*100</p>|CALCULATED|vm.memory.util[node_exporter]<p>**Expression**:</p>`(last("vm.memory.total[node_exporter]")-last("vm.memory.available[node_exporter]"))/last("vm.memory.total[node_exporter]")*100`|
 |Memory|Total memory|<p>Total memory in Bytes</p>|DEPENDENT|vm.memory.total[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_MemTotal"} `</p>|
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|DEPENDENT|vm.memory.available[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_MemAvailable"} `</p>|
@@ -123,6 +133,11 @@ There are no template links in this template.
 |----|-----------|----|----|----|
 |Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
 |High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[node_exporter].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
+|Check system time (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.localtime[node_exporter].fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
+|Systen name has changed (new name: {ITEM.VALUE})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.name[node_exporter].diff()}=1 and {TEMPLATE_NAME:system.name[node_exporter].strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Configured max number of open filedescriptors is too low (< {$KERNEL.MAXFILES.MIN})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:kernel.maxfiles[node_exporter].last()}<{$KERNEL.MAXFILES.MIN}`|INFO|<p>**Depends on**:</p><p>- Running out of file descriptors (less than < 20% free)</p>|
+|Running out of file descriptors (less than < 20% free)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:fd.open[node_exporter].last()}/{Template OS Linux by Prom:kernel.maxfiles[node_exporter].last()}*100>80`|WARNING||
+|Operating system description has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</p>|`{TEMPLATE_NAME:system.sw.os.diff()}=1 and {TEMPLATE_NAME:system.sw.os.strlen()}>0`|INFO|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Systen name has changed (new name: {ITEM.VALUE})</p>|
 |High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[node_exporter].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 |Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.available[node_exporter].min(5m)}<{$MEMORY.AVAILABLE.MIN} and {Template OS Linux by Prom:vm.memory.total[node_exporter].last()}>0`|AVERAGE||
 |High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[node_exporter].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template OS Linux by Prom:system.swap.total[node_exporter].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
