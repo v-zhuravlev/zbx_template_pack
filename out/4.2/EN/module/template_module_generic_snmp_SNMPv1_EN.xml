@@ -560,8 +560,8 @@ networking software.</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$SNMP_TIMEOUT}</macro>
-               <value>3m</value>
+               <macro>{$SNMP.TIMEOUT}</macro>
+               <value>5m</value>
             </macro>
          </macros>
          <templates>
@@ -586,13 +586,13 @@ networking software.</description>
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The __RESOURCE__ uptime is less than 10 minutes</description>
+Uptime is less than 10 minutes</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies>
             <dependency>
                <name>No SNMP data collection</name>
-               <expression>{Template Module Generic SNMPv1:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
+               <expression>{Template Module Generic SNMPv1:zabbix[host,snmp,available].max({$SNMP.TIMEOUT})}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
@@ -616,7 +616,7 @@ System name has changed. Ack to close.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Module Generic SNMPv1:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
+         <expression>{Template Module Generic SNMPv1:zabbix[host,snmp,available].max({$SNMP.TIMEOUT})}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>No SNMP data collection</name>

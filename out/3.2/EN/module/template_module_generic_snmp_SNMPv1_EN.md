@@ -15,7 +15,7 @@ For Zabbix version: 3.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$SNMP_TIMEOUT}|<p>-</p>|`3m`|
+|{$SNMP.TIMEOUT}|<p>-</p>|`5m`|
 
 ## Template links
 
@@ -44,8 +44,8 @@ For Zabbix version: 3.2
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Systen name has changed (new name: {ITEM.VALUE})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.name.diff()}=1 and {TEMPLATE_NAME:system.name.strlen()}>0`|INFO|<p>Manual close: YES</p>|
-|{HOST.NAME} has been restarted (uptime < 10m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The __RESOURCE__ uptime is less than 10 minutes</p>|`{TEMPLATE_NAME:system.uptime[sysUpTime.0].last()}<10m`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- No SNMP data collection</p>|
-|No SNMP data collection|<p>Last value: {ITEM.LASTVALUE1}.</p><p>SNMP is not available for polling. Please check device connectivity and SNMP settings.</p>|`{TEMPLATE_NAME:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0`|WARNING|<p>**Depends on**:</p><p>- Unavailable by ICMP ping</p>|
+|{HOST.NAME} has been restarted (uptime < 10m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Uptime is less than 10 minutes</p>|`{TEMPLATE_NAME:system.uptime[sysUpTime.0].last()}<10m`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- No SNMP data collection</p>|
+|No SNMP data collection|<p>Last value: {ITEM.LASTVALUE1}.</p><p>SNMP is not available for polling. Please check device connectivity and SNMP settings.</p>|`{TEMPLATE_NAME:zabbix[host,snmp,available].max({$SNMP.TIMEOUT})}=0`|WARNING|<p>**Depends on**:</p><p>- Unavailable by ICMP ping</p>|
 
 ## Feedback
 
