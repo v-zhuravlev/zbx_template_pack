@@ -151,11 +151,16 @@
     },
     {
         "_id": "system.sw.os",
-        "key": "system.sw.os",
         "name": "Operating system",
         "value_type": "CHAR",
         "_group": "Inventory",
         "delay": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
         "history": "2w",
         "trends": "0",
         "inventoryLink": "OS",
@@ -171,6 +176,34 @@
                 "_depends_on": [
                     "trigger.system.name.changed"
                 ]
+            }
+        ]
+    },
+    {
+        "_id": "system.sw.arch",
+        "name": "Operating system architecture",
+        "value_type": "CHAR",
+        "delay": "1h",
+        "history": "2w",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "_group": "Inventory"
+    },
+    {
+        "_id": "system.sw.packages",
+        "name": "Software installed",
+        "_group": "Inventory",
+        "value_type": "TEXT",
+        "history": "2w",
+        "delay": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
             }
         ]
     }
