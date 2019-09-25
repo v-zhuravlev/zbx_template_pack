@@ -102,6 +102,7 @@ There are no template links in this template.
 |Memory|Total swap space|<p>-</p>|DEPENDENT|system.swap.total[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_SwapTotal"} `</p>|
 |Memory|Free swap space|<p>-</p>|DEPENDENT|system.swap.free[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `{__name__=~"node_memory_SwapFree"} `</p>|
 |Memory|Free swap space in %|<p>-</p>|CALCULATED|system.swap.pfree[node_exporter]<p>**Expression**:</p>`last("system.swap.free[node_exporter]")/last("system.swap.total[node_exporter]")*100`|
+|Monitoring_agent|Version of node_exporter running|<p>-</p>|DEPENDENT|agent.version[node_exporter]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_exporter_build_info version`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Bits received||DEPENDENT|net.if.in[node_exporter,"{#IFNAME}"]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_network_receive_bytes_total{device="{#IFNAME}"} `</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `8`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Bits sent||DEPENDENT|net.if.out[node_exporter,"{#IFNAME}"]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_network_transmit_bytes_total{device="{#IFNAME}"} `</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `8`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors||DEPENDENT|net.if.out.errors[node_exporter"{#IFNAME}"]<p>**Preprocessing**:</p><p>- PROMETHEUS_PATTERN: `node_network_transmit_errs_total{device="{#IFNAME}"} `</p><p>- CHANGE_PER_SECOND|
