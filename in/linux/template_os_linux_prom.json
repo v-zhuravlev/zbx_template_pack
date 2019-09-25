@@ -319,11 +319,13 @@
                             "type": "DEPENDENT",
                             "master_item": "node_exporter.get",
                             "key": "net.if.speed[node_exporter,\"{#IFNAME}\"]",
-                            "_vendor_description": "",
+                            "_vendor_description": "Sets value to 0 if metric is missing in node_exporter output.",
                             "preprocessing": [
                                 {
                                     "type": "PROMETHEUS_PATTERN",
-                                    "params": "node_network_speed_bytes{device=\"{#IFNAME}\"}\r\n"
+                                    "params": "node_network_speed_bytes{device=\"{#IFNAME}\"}\r\n",
+                                    "error_handler": "CUSTOM_VALUE",
+                                    "error_handler_params": "0"
                                 },
                                 {
                                     "type": "MULTIPLIER",
