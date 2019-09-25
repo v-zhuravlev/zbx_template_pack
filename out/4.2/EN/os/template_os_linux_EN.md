@@ -365,13 +365,13 @@ No specific Zabbix configuration is required.
 
 |Name|
 |----|
-|Template App Zabbix Agent|
 |Template Module Linux CPU by Zabbix agent|
 |Template Module Linux block devices by Zabbix agent|
 |Template Module Linux filesystems by Zabbix agent|
 |Template Module Linux generic by Zabbix agent|
 |Template Module Linux memory by Zabbix agent|
 |Template Module Linux network interfaces by Zabbix agent|
+|Template Module Zabbix agent|
 
 ## Discovery rules
 
