@@ -5630,6 +5630,23 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
    </graphs>
    <triggers>
       <trigger>
+         <expression>{Template OS Linux by Prom:node_exporter.get.nodata(30m)=1}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>node_exporter is not available (or no data for 30m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Failed to fetch system metrics from node_exporter in time.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
          <expression>{Template OS Linux by Prom:system.localtime[node_exporter].fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>

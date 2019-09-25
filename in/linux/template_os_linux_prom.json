@@ -982,7 +982,16 @@
                     "trends": "0",
                     "type": "HTTP_AGENT",
                     "value_type": "TEXT",
-                    "url": "http://{HOST.CONN}:{$NODE_EXPORTER_PORT}/metrics"
+                    "url": "http://{HOST.CONN}:{$NODE_EXPORTER_PORT}/metrics",
+                    "retrieve_mode": "BODY",
+                    "triggers": [
+                        {
+                            "_prototype": "trigger.http_get",
+                            "name": "node_exporter is not available (or no data for 30m)",
+                            "expression": "{TEMPLATE_NAME:METRIC.nodata(30m)=1}",
+                            "description": "Failed to fetch system metrics from node_exporter in time."
+                        }
+                    ]
                 },
                 //general items
                 {
