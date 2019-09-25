@@ -1,0 +1,77 @@
+[
+    {
+        "_id": "kernel.maxfiles",
+        "name": "Maximum number of open file descriptors",
+        "_group": "General",
+        "delay": "1h",
+        "description": "It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "triggers": [
+            {
+                "priority": "INFO",
+                "name": "Configured max number of open filedescriptors is too low (< {$KERNEL.MAXFILES.MIN})",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}<{$KERNEL.MAXFILES.MIN}",
+                "_depends_on": [
+                    "trigger.fd.used"
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "fd.used",
+        "name": "Number of open file descriptors",
+        "_group": "General",
+        "triggers": [
+            {
+                "_id": "trigger.fd.used",
+                "priority": "WARNING",
+                "name": "Running out of file descriptors (less than < 20% free)",
+                "opdata": "{ITEM.LASTVALUE1} of {ITEM.LASTVALUE2} file descriptors are in use.",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}/{TEMPLATE_NAME:__kernel.maxfiles__.last()}*100>80"
+            }
+        ]
+    },
+    //processes
+    {
+        "_id": "kernel.maxproc",
+        "_group": "General",
+        "name": "Maximum number of processes",
+        "description": "It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.",
+        "delay": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "triggers": [
+            {
+                "priority": "INFO",
+                "name": "Configured max number of processes is too low (< {$KERNEL.MAXPROC.MIN})",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}<{$KERNEL.MAXPROC.MIN}",
+                "_depends_on": [
+                    "trigger.proc.num.total.crit"
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "proc.num.total",
+        "_group": "General",
+        "name": "Number of running processes",
+        "triggers": [
+            {
+                "_id": "trigger.proc.num.total.crit",
+                "priority": "WARNING",
+                "name": "Getting closer to process limit (over 80% used)",
+                "opdata": "{ITEM.LASTVALUE1} running, {ITEM.LASTVALUE2} limit.",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}/{TEMPLATE_NAME:__kernel.maxproc__.last()}*100>80"
+            }
+        ]
+    }
+]
