@@ -11,9 +11,12 @@
       <template>
          <template>Template Module Interfaces Simple SNMPv1</template>
          <name>Template Module Interfaces Simple SNMPv1</name>
-         <description>Template Interfaces Simple (no ifXTable) version: 0.15&#13;
+         <description>Template Interfaces Simple (no ifXTable)&#13;
+&#13;
 MIBs used:&#13;
-IF-MIB</description>
+IF-MIB&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -89,7 +92,7 @@ IF-MIB</description>
                      <snmp_oid>1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</snmp_oid>
                      <key>net.if.status[ifOperStatus.{#SNMPINDEX}]</key>
                      <delay>60</delay>
-                     <history>14</history>
+                     <history>7</history>
                      <trends>0</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -142,7 +145,7 @@ The current operational state of the interface.&#13;
                      <snmp_oid>1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}</snmp_oid>
                      <key>net.if.in[ifInOctets.{#SNMPINDEX}]</key>
                      <delay>180</delay>
-                     <history>30</history>
+                     <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -187,7 +190,7 @@ The total number of octets received on the interface,including framing character
                      <snmp_oid>1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}</snmp_oid>
                      <key>net.if.out[ifOutOctets.{#SNMPINDEX}]</key>
                      <delay>180</delay>
-                     <history>30</history>
+                     <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -321,7 +324,7 @@ For packet-oriented interfaces, the number of outbound packets that contained er
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.2.2.1.19.{#SNMPINDEX}</snmp_oid>
                      <key>net.if.out.discards[ifOutDiscards.{#SNMPINDEX}]</key>
-                     <delay>300</delay>
+                     <delay>180</delay>
                      <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
@@ -370,7 +373,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <multiplier>0</multiplier>
                      <snmp_oid>1.3.6.1.2.1.2.2.1.13.{#SNMPINDEX}</snmp_oid>
                      <key>net.if.in.discards[ifInDiscards.{#SNMPINDEX}]</key>
-                     <delay>300</delay>
+                     <delay>180</delay>
                      <history>7</history>
                      <trends>365</trends>
                      <status>0</status>
@@ -524,20 +527,25 @@ For a sub-layer which has no concept of bandwidth, this object should be zero.</
                      <status>0</status>
                      <priority>3</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Interface is down</description>
+This trigger expression works as follows:&#13;
+1. Can be triggered if operations status is down.&#13;
+2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
+3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
+&#13;
+WARNING: if closed manually - won't fire again on next poll, because of .diff.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>({Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} or&#13;
-{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF_UTIL_MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}) and&#13;
+                     <expression>({Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} or&#13;
+{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}) and&#13;
 {Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}&gt;0</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} and&#13;
-{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF_UTIL_MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</recovery_expression>
-                     <name>Interface {#IFDESCR}: High bandwidth usage &gt;{$IF_UTIL_MAX:"{#IFNAME}"}%</name>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in[ifInOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()} and&#13;
+{Template Module Interfaces Simple SNMPv1:net.if.out[ifOutOctets.{#SNMPINDEX}].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template Module Interfaces Simple SNMPv1:net.if.speed[ifSpeed.{#SNMPINDEX}].last()}</recovery_expression>
+                     <name>Interface {#IFDESCR}: High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -556,19 +564,19 @@ Interface is down</description>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}&#13;
-or {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&gt;{$IF_ERRORS_WARN:"{#IFNAME}"}</expression>
+                     <expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
+or {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
-                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8&#13;
-and {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].avg(5m)}&lt;{$IF_ERRORS_WARN:"{#IFNAME}"}*0.8</recovery_expression>
-                     <name>Interface {#IFDESCR}: High error rate</name>
+                     <recovery_expression>{Template Module Interfaces Simple SNMPv1:net.if.in.errors[ifInErrors.{#SNMPINDEX}].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
+and {Template Module Interfaces Simple SNMPv1:net.if.out.errors[ifOutErrors.{#SNMPINDEX}].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
+                     <name>Interface {#IFDESCR}: High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Recovers when below 80% of {$IF_ERRORS_WARN:"{#IFNAME}"} threshold</description>
+Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -714,16 +722,16 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$IFCONTROL}</macro>
-               <value>1</value>
-            </macro>
-            <macro>
-               <macro>{$IF_ERRORS_WARN}</macro>
+               <macro>{$IF.ERRORS.WARN}</macro>
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$IF_UTIL_MAX}</macro>
+               <macro>{$IF.UTIL.MAX}</macro>
                <value>95</value>
+            </macro>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
             </macro>
          </macros>
          <templates/>

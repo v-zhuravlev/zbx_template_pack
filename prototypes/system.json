@@ -1,0 +1,210 @@
+[
+    {
+        "_id": "system.boottime",
+        "name": "System boot time",
+        "_translations": {
+            "RU": {
+                "name": "Время загрузки системы"
+            }
+        },
+        "_group": "General",
+        "units": "unixtime",
+        "update": "15m",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1h"
+            }
+        ]
+    },
+    {
+        "_id": "system.localtime",
+        "_group": "General",
+        "name": "System local time",
+        "_translations": {
+            "RU": {
+                "name": "Локальное время системы"
+            }
+        },
+        "units": "unixtime",
+        "triggers": [
+            {
+                "_id": "trigger.system.localtime.fuzzytime",
+                "name": "Check system time (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)",
+                "priority": "WARNING",
+                "expression": "{TEMPLATE_NAME:METRIC.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0",
+                //{$SYSTEM.FUZZYTIME.MAX} = 60
+                "manual_close": "YES"
+            }
+        ]
+    },
+    {
+        "_id": "system.location",
+        "history": "2w",
+        "trends": "0d",
+        "update": "15m",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1h"
+            }
+        ],
+        "value_type": "CHAR",
+        "_group": "General",
+        "name": "System location",
+        "_translations": {
+            "RU": {
+                "name": "Местоположение системы"
+            }
+        },
+        "inventoryLink": "LOCATION"
+    },
+    {
+        "_id": "system.contact",
+        "name": "System contact details",
+        "_group": "General",
+        "history": "2w",
+        "trends": "0d",
+        "update": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "value_type": "CHAR",
+        "inventoryLink": "CONTACT_STRING",
+        "_translations": {
+            "RU": {
+                "name": "Контактное лицо"
+            }
+        }
+    },
+    {
+        "_id": "system.objectid",
+        "name": "System object ID",
+        "_group": "General",
+        "history": "2w",
+        "trends": "0d",
+        "update": "15m",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1h"
+            }
+        ],
+        "value_type": "CHAR"
+    },
+    {
+        "_id": "system.name",
+        "name": "System name",
+        "key": "system.name",
+        "_group": "General",
+        "history": "2w",
+        "trends": "0d",
+        "update": "15m",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1h"
+            }
+        ],
+        "value_type": "CHAR",
+        "description": "System host name.",
+        "inventoryLink": "NAME",
+        "triggers": [
+            {
+                "_id": "trigger.system.name.changed",
+                "name": "Systen name has changed (new name: {ITEM.VALUE})",
+                "description": "System name has changed. Ack to close.",
+                "expression": "{TEMPLATE_NAME:METRIC.diff()}=1 and {TEMPLATE_NAME:METRIC.strlen()}>0",
+                "recovery_mode": "NONE",
+                "manual_close": "YES",
+                "priority": "INFO"
+            }
+        ],
+        "_translations": {
+            "RU": {
+                "name": "Имя системы"
+            }
+        }
+    },
+    {
+        "_id": "system.descr",
+        "name": "System description",
+        "_group": "General",
+        "history": "2w",
+        "trends": "0d",
+        "update": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "value_type": "CHAR",
+        "_translations": {
+            "RU": {
+                "name": "Описание системы"
+            }
+        }
+    },
+    {
+        "_id": "system.sw.os",
+        "name": "Operating system",
+        "value_type": "CHAR",
+        "_group": "Inventory",
+        "delay": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "history": "2w",
+        "trends": "0",
+        "inventoryLink": "OS",
+        "triggers": [
+            {
+                "_id": "trigger.system.sw.os.changed",
+                "name": "Operating system description has changed",
+                "description": "Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.",
+                "expression": "{TEMPLATE_NAME:METRIC.diff()}=1 and {TEMPLATE_NAME:METRIC.strlen()}>0",
+                "recovery_mode": "NONE",
+                "manual_close": "YES",
+                "priority": "INFO",
+                "_depends_on": [
+                    "trigger.system.name.changed"
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "system.sw.arch",
+        "name": "Operating system architecture",
+        "value_type": "CHAR",
+        "delay": "1h",
+        "history": "2w",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "_group": "Inventory"
+    },
+    {
+        "_id": "system.sw.packages",
+        "name": "Software installed",
+        "_group": "Inventory",
+        "value_type": "TEXT",
+        "history": "2w",
+        "delay": "1h",
+        "preprocessing": [
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ]
+    }
+]

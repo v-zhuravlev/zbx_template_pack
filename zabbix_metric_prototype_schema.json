@@ -79,6 +79,17 @@
           "params": {
             "type": "string",
             "description": "Additional parameters used by preprocessing option. Multiple parameters are separated by LF (\\n) character."
+          },
+          "error_handler": {
+            "enum": [
+              "ORIGINAL_ERROR",
+              "DISCARD_VALUE",
+              "CUSTOM_VALUE",
+              "CUSTOM_ERROR"
+            ]
+          },
+          "error_handler_params": {
+            "type": "string"
           }
         }
       }
@@ -349,6 +360,25 @@
         "$ref": "#definitions/_zbx_ver",
         "description": "(optional) Please provide minimum Zabbix version required. Metric will be filtered out for any templates for versions below"
       },
+      "retrieve_mode": {
+        "enum": [
+          "BODY",
+          "HEADERS",
+          "BODY_AND_HEADERS"
+        ]
+      },
+      "output_format": {
+        "enum": [
+          "RAW",
+          "JSON"
+        ]
+      },
+      "url": {
+        "type": "string"
+      },
+      "timeout": {
+        "type": "string"
+      },
       "preprocessing": {
         "$ref": "#definitions/preprocessing"
       },
@@ -381,7 +411,7 @@
               "title": "The Id Shema",
               "default": "",
               "examples": [
-                "if.down"
+                "net.if.down"
               ]
             },
             "expression": {
@@ -445,8 +475,9 @@
             "_depends_on": {
               "type": "array"
             },
-            "operational_data": {
+            "opdata": {
               "type": "string",
+              "title": "Operational data",
               "description": "Special field to show latest values in Zabbix 4.4 or later"
             }
           }

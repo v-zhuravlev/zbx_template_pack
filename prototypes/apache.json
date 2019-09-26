@@ -10,13 +10,12 @@
 		"_group": "Zabbix_raw_items",
 		"_resource": "Apache",
 		"value_type": "TEXT",
-		"description": "Getting data from a machine-readable version of the Apache status page",
+		"description": "Getting data from a machine-readable version of the Apache status page.\nhttps://httpd.apache.org/docs/current/mod/mod_status.html",
 		"triggers": [
 			{
 				"_prototype": "trigger.http_get",
 				"expression": "{TEMPLATE_NAME:METRIC.nodata(30m)}=1",
 				"name": "Failed to fetch status page (or no data for 30m)",
-				"url": "https://httpd.apache.org/docs/current/mod/mod_status.html",
 				"description": "Zabbix has not received data for items for the last 30 minutes.",
 				"_depends_on": [
 					"trigger.status",
@@ -37,7 +36,6 @@
 		"history": "7d",
 		"units": "Bps",
 		"value_type": "FLOAT",
-		"description": "",
 		"preprocessing": [
 			{
 				"type": "JSONPATH",
@@ -224,7 +222,6 @@
 				"_prototype": "trigger.uptime.restarted"
 			}
 		]
-
 	},
 	{
 		"_id": "apache.version",
@@ -543,7 +540,6 @@
 			}
 		]
 	},
-
 	{
 		"_id": "apache.connections.async_closing",
 		"key": "apache.connections[async_closing{#SINGLETON}]",

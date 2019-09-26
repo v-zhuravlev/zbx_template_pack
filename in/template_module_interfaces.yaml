@@ -1,633 +1,707 @@
 ---
 templates:
-- name: Template Module Interfaces
-  description: Template Interfaces
-  _classes:
-  - IF_MIB
-  - SNMPv1
-  - SNMPv2
-  discovery_rules:
-  - name: Network Interfaces Discovery
-    oid: discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]
-    key: net.if.discovery
-    description: |
-        Discovering interfaces from IF-MIB. Interfaces are not discovered:
-        - with down(2) Administrative status
-        - with notPresent(6) Operational status
-        - loopbacks
-    filter:
-      evaltype: AND
-      conditions:
-      - macro: "{#IFADMINSTATUS}"
-        value: "(1|3)"
-        formulaid: A        
-      - macro: "{#IFOPERSTATUS}"
-        value: "(1|2|3|4|5|7)" 
-        #<!--  ignore notPresent(6) -->
-        formulaid: B        
-      - macro: "{#IFNAME}"
-        value: "@Network interfaces for discovery" 
-        # <!-- should filter out loopbacks and nulls -->
-        formulaid: C
-    items:
-    - _prototype: net.if.status
-    - _prototype: net.if.in
-    - _prototype: net.if.out
-    - _prototype: net.if.in.errors
-    - _prototype: net.if.out.errors
-    - _prototype: net.if.out.discards
-    - _prototype: net.if.in.discards
-    - _prototype: net.if.type
-    - _prototype: net.if.speed    
+  - name: Template Module Interfaces
+    description: Template Module Interfaces
+    _zbx_ver: "4.0"
+    _classes:
+      - IF_MIB
+      - SNMPv1
+      - SNMPv2
+    macros:
+      - macro: "{$NET.IF.IFNAME.MATCHES}"
+        value: ^.*$
+      - macro: "{$NET.IF.IFNAME.NOT_MATCHES}"
+        value: (^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})
+        _description:
+          Filter out loopbacks, nulls, docker veth links and docker0 bridge by default
+          # should filter out loopbacks and nulls
+          # 1 ^Software Loopback Interface
+          # 2 ^(In)?[Ll]oop[Bb]ack[0-9._]*$
+          # 3 ^NULL[0-9.]*$
+          # 4 ^[Ll]o[0-9.]*$
+          # 5 ^[Ss]ystem$
+          # 6 ^veth[0-9a-z]+$
+          # 7 docker[0-9]+
+      - macro: "{$NET.IF.IFOPERSTATUS.MATCHES}"
+        value: ^.*$
+      - macro: "{$NET.IF.IFOPERSTATUS.NOT_MATCHES}"
+        value: "^6$"
+        _description: Ignore notPresent(6)
+      - macro: "{$NET.IF.IFADMINSTATUS.MATCHES}"
+        value: "^.*"
+        _description: Ignore notPresent(6)
+      - macro: "{$NET.IF.IFADMINSTATUS.NOT_MATCHES}"
+        value: "^2$"
+        _description: Ignore down(2) administrative status
+      - macro: "{$NET.IF.IFDESCR.MATCHES}"
+        value: ".*"
+      - macro: "{$NET.IF.IFDESCR.NOT_MATCHES}"
+        value: "CHANGE_IF_NEEDED"
+      - macro: "{$NET.IF.IFALIAS.MATCHES}"
+        value: ".*"
+      - macro: "{$NET.IF.IFALIAS.NOT_MATCHES}"
+        value: "CHANGE_IF_NEEDED"
+      - macro: "{$NET.IF.IFTYPE.MATCHES}"
+        value: ".*"
+      - macro: "{$NET.IF.IFTYPE.NOT_MATCHES}"
+        value: "CHANGE_IF_NEEDED"
+
+    discovery_rules:
+      - name: Network interfaces discovery
+        oid: discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]
+        key: net.if.discovery
+        description: |
+          Discovering interfaces from IF-MIB.
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#IFADMINSTATUS}"
+              value: "{$NET.IF.IFADMINSTATUS.MATCHES}"
+              formulaid: A
+            - macro: "{#IFADMINSTATUS}"
+              value: "{$NET.IF.IFADMINSTATUS.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: B
+            - macro: "{#IFOPERSTATUS}"
+              value: "{$NET.IF.IFOPERSTATUS.MATCHES}"
+              formulaid: C
+            - macro: "{#IFOPERSTATUS}"
+              value: "{$NET.IF.IFOPERSTATUS.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: D
+            - macro: "{#IFNAME}"
+              value: "{$NET.IF.IFNAME.MATCHES}"
+              formulaid: E
+            - macro: "{#IFNAME}"
+              value: "{$NET.IF.IFNAME.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: F
+            - macro: "{#IFDESCR}"
+              value: "{$NET.IF.IFDESCR.MATCHES}"
+              formulaid: G
+            - macro: "{#IFDESCR}"
+              value: "{$NET.IF.IFDESCR.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: H
+            - macro: "{#IFALIAS}"
+              value: "{$NET.IF.IFALIAS.MATCHES}"
+              formulaid: I
+            - macro: "{#IFALIAS}"
+              value: "{$NET.IF.IFALIAS.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: J
+            - macro: "{#IFTYPE}"
+              value: "{$NET.IF.IFTYPE.MATCHES}"
+              formulaid: K
+            - macro: "{#IFTYPE}"
+              value: "{$NET.IF.IFTYPE.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: L
+        items:
+          - _prototype: net.if.status
+          - _prototype: net.if.in
+          - _prototype: net.if.out
+          - _prototype: net.if.in.errors
+          - _prototype: net.if.out.errors
+          - _prototype: net.if.out.discards
+          - _prototype: net.if.in.discards
+          - _prototype: net.if.type
+          - _prototype: net.if.speed
+    screens:
+      - hsize: 1
+        vsize: 1
+        name: Network interfaces
+        screen_items:
+          - _graph_id: net.if.stats
 valueMaps:
-- name: IF-MIB::ifOperStatus
-  mappings:
-  - value: 1
-    newValue: up
-  - value: 2
-    newValue: down
-  - value: 3
-    newValue: testing
-  - value: 4
-    newValue: unknown
-  - value: 5
-    newValue: dormant
-  - value: 6
-    newValue: notPresent
-  - value: 7
-    newValue: lowerLayerDown
-- name: "IF-MIB::ifType"
-# https://www.iana.org/assignments/ianaiftype-_mib/ianaiftype-_mib LAST-UPDATED "201703300000Z"  March 30, 2017
-  mappings:
-  - value: 1
-    newValue: other
-  - value: 2
-    newValue: regular1822
-  - value: 3
-    newValue: hdh1822
-  - value: 4
-    newValue: ddnX25
-  - value: 5
-    newValue: rfc877x25
-  - value: 6
-    newValue: ethernetCsmacd
-  - value: 7
-    newValue: iso88023Csmacd
-  - value: 8
-    newValue: iso88024TokenBus
-  - value: 9
-    newValue: iso88025TokenRing
-  - value: 10
-    newValue: iso88026Man
-  - value: 11
-    newValue: starLan
-  - value: 12
-    newValue: proteon10Mbit
-  - value: 13
-    newValue: proteon80Mbit
-  - value: 14
-    newValue: hyperchannel
-  - value: 15
-    newValue: fddi
-  - value: 16
-    newValue: lapb
-  - value: 17
-    newValue: sdlc
-  - value: 18
-    newValue: ds1
-  - value: 19
-    newValue: e1
-  - value: 20
-    newValue: basicISDN
-  - value: 21
-    newValue: primaryISDN
-  - value: 22
-    newValue: propPointToPointSerial
-  - value: 23
-    newValue: ppp
-  - value: 24
-    newValue: softwareLoopback
-  - value: 25
-    newValue: eon
-  - value: 26
-    newValue: ethernet3Mbit
-  - value: 27
-    newValue: nsip
-  - value: 28
-    newValue: slip
-  - value: 29
-    newValue: ultra
-  - value: 30
-    newValue: ds3
-  - value: 31
-    newValue: sip
-  - value: 32
-    newValue: frameRelay
-  - value: 33
-    newValue: rs232
-  - value: 34
-    newValue: para
-  - value: 35
-    newValue: arcnet
-  - value: 36
-    newValue: arcnetPlus
-  - value: 37
-    newValue: atm
-  - value: 38
-    newValue: miox25
-  - value: 39
-    newValue: sonet
-  - value: 40
-    newValue: x25ple
-  - value: 41
-    newValue: iso88022llc
-  - value: 42
-    newValue: localTalk
-  - value: 43
-    newValue: smdsDxi
-  - value: 44
-    newValue: frameRelayService
-  - value: 45
-    newValue: v35
-  - value: 46
-    newValue: hssi
-  - value: 47
-    newValue: hippi
-  - value: 48
-    newValue: modem
-  - value: 49
-    newValue: aal5
-  - value: 50
-    newValue: sonetPath
-  - value: 51
-    newValue: sonetVT
-  - value: 52
-    newValue: smdsIcip
-  - value: 53
-    newValue: propVirtual
-  - value: 54
-    newValue: propMultiplexor
-  - value: 55
-    newValue: ieee80212
-  - value: 56
-    newValue: fibreChannel
-  - value: 57
-    newValue: hippiInterface
-  - value: 58
-    newValue: frameRelayInterconnect
-  - value: 59
-    newValue: aflane8023
-  - value: 60
-    newValue: aflane8025
-  - value: 61
-    newValue: cctEmul
-  - value: 62
-    newValue: fastEther
-  - value: 63
-    newValue: isdn
-  - value: 64
-    newValue: v11
-  - value: 65
-    newValue: v36
-  - value: 66
-    newValue: g703at64k
-  - value: 67
-    newValue: g703at2mb
-  - value: 68
-    newValue: qllc
-  - value: 69
-    newValue: fastEtherFX
-  - value: 70
-    newValue: channel
-  - value: 71
-    newValue: ieee80211
-  - value: 72
-    newValue: ibm370parChan
-  - value: 73
-    newValue: escon
-  - value: 74
-    newValue: dlsw
-  - value: 75
-    newValue: isdns
-  - value: 76
-    newValue: isdnu
-  - value: 77
-    newValue: lapd
-  - value: 78
-    newValue: ipSwitch
-  - value: 79
-    newValue: rsrb
-  - value: 80
-    newValue: atmLogical
-  - value: 81
-    newValue: ds0
-  - value: 82
-    newValue: ds0Bundle
-  - value: 83
-    newValue: bsc
-  - value: 84
-    newValue: async
-  - value: 85
-    newValue: cnr
-  - value: 86
-    newValue: iso88025Dtr
-  - value: 87
-    newValue: eplrs
-  - value: 88
-    newValue: arap
-  - value: 89
-    newValue: propCnls
-  - value: 90
-    newValue: hostPad
-  - value: 91
-    newValue: termPad
-  - value: 92
-    newValue: frameRelayMPI
-  - value: 93
-    newValue: x213
-  - value: 94
-    newValue: adsl
-  - value: 95
-    newValue: radsl
-  - value: 96
-    newValue: sdsl
-  - value: 97
-    newValue: vdsl
-  - value: 98
-    newValue: iso88025CRFPInt
-  - value: 99
-    newValue: myrinet
-  - value: 100
-    newValue: voiceEM
-  - value: 101
-    newValue: voiceFXO
-  - value: 102
-    newValue: voiceFXS
-  - value: 103
-    newValue: voiceEncap
-  - value: 104
-    newValue: voiceOverIp
-  - value: 105
-    newValue: atmDxi
-  - value: 106
-    newValue: atmFuni
-  - value: 107
-    newValue: atmIma
-  - value: 108
-    newValue: pppMultilinkBundle
-  - value: 109
-    newValue: ipOverCdlc
-  - value: 110
-    newValue: ipOverClaw
-  - value: 111
-    newValue: stackToStack
-  - value: 112
-    newValue: virtualIpAddress
-  - value: 113
-    newValue: mpc
-  - value: 114
-    newValue: ipOverAtm
-  - value: 115
-    newValue: iso88025Fiber
-  - value: 116
-    newValue: tdlc
-  - value: 117
-    newValue: gigabitEthernet
-  - value: 118
-    newValue: hdlc
-  - value: 119
-    newValue: lapf
-  - value: 120
-    newValue: v37
-  - value: 121
-    newValue: x25mlp
-  - value: 122
-    newValue: x25huntGroup
-  - value: 123
-    newValue: trasnpHdlc
-  - value: 124
-    newValue: interleave
-  - value: 125
-    newValue: fast
-  - value: 126
-    newValue: ip
-  - value: 127
-    newValue: docsCableMaclayer
-  - value: 128
-    newValue: docsCableDownstream
-  - value: 129
-    newValue: docsCableUpstream
-  - value: 130
-    newValue: a12MppSwitch
-  - value: 131
-    newValue: tunnel
-  - value: 132
-    newValue: coffee
-  - value: 133
-    newValue: ces
-  - value: 134
-    newValue: atmSubInterface
-  - value: 135
-    newValue: l2vlan
-  - value: 136
-    newValue: l3ipvlan
-  - value: 137
-    newValue: l3ipxvlan
-  - value: 138
-    newValue: digitalPowerline
-  - value: 139
-    newValue: mediaMailOverIp
-  - value: 140
-    newValue: dtm
-  - value: 141
-    newValue: dcn
-  - value: 142
-    newValue: ipForward
-  - value: 143
-    newValue: msdsl
-  - value: 144
-    newValue: ieee1394
-  - value: 145
-    newValue: if-gsn
-  - value: 146
-    newValue: dvbRccMacLayer
-  - value: 147
-    newValue: dvbRccDownstream
-  - value: 148
-    newValue: dvbRccUpstream
-  - value: 149
-    newValue: atmVirtual
-  - value: 150
-    newValue: mplsTunnel
-  - value: 151
-    newValue: srp
-  - value: 152
-    newValue: voiceOverAtm
-  - value: 153
-    newValue: voiceOverFrameRelay
-  - value: 154
-    newValue: idsl
-  - value: 155
-    newValue: compositeLink
-  - value: 156
-    newValue: ss7SigLink
-  - value: 157
-    newValue: propWirelessP2P
-  - value: 158
-    newValue: frForward
-  - value: 159
-    newValue: rfc1483
-  - value: 160
-    newValue: usb
-  - value: 161
-    newValue: ieee8023adLag
-  - value: 162
-    newValue: bgppolicyaccounting
-  - value: 163
-    newValue: frf16MfrBundle
-  - value: 164
-    newValue: h323Gatekeeper
-  - value: 165
-    newValue: h323Proxy
-  - value: 166
-    newValue: mpls
-  - value: 167
-    newValue: mfSigLink
-  - value: 168
-    newValue: hdsl2
-  - value: 169
-    newValue: shdsl
-  - value: 170
-    newValue: ds1FDL
-  - value: 171
-    newValue: pos
-  - value: 172
-    newValue: dvbAsiIn
-  - value: 173
-    newValue: dvbAsiOut
-  - value: 174
-    newValue: plc
-  - value: 175
-    newValue: nfas
-  - value: 176
-    newValue: tr008
-  - value: 177
-    newValue: gr303RDT
-  - value: 178
-    newValue: gr303IDT
-  - value: 179
-    newValue: isup
-  - value: 180
-    newValue: propDocsWirelessMaclayer
-  - value: 181
-    newValue: propDocsWirelessDownstream
-  - value: 182
-    newValue: propDocsWirelessUpstream
-  - value: 183
-    newValue: hiperlan2
-  - value: 184
-    newValue: propBWAp2Mp
-  - value: 185
-    newValue: sonetOverheadChannel
-  - value: 186
-    newValue: digitalWrapperOverheadChannel
-  - value: 187
-    newValue: aal2
-  - value: 188
-    newValue: radioMAC
-  - value: 189
-    newValue: atmRadio
-  - value: 190
-    newValue: imt
-  - value: 191
-    newValue: mvl
-  - value: 192
-    newValue: reachDSL
-  - value: 193
-    newValue: frDlciEndPt
-  - value: 194
-    newValue: atmVciEndPt
-  - value: 195
-    newValue: opticalChannel
-  - value: 196
-    newValue: opticalTransport
-  - value: 197
-    newValue: propAtm
-  - value: 198
-    newValue: voiceOverCable
-  - value: 199
-    newValue: infiniband
-  - value: 200
-    newValue: teLink
-  - value: 201
-    newValue: q2931
-  - value: 202
-    newValue: virtualTg
-  - value: 203
-    newValue: sipTg
-  - value: 204
-    newValue: sipSig
-  - value: 205
-    newValue: docsCableUpstreamChannel
-  - value: 206
-    newValue: econet
-  - value: 207
-    newValue: pon155
-  - value: 208
-    newValue: pon622
-  - value: 209
-    newValue: bridge
-  - value: 210
-    newValue: linegroup
-  - value: 211
-    newValue: voiceEMFGD
-  - value: 212
-    newValue: voiceFGDEANA
-  - value: 213
-    newValue: voiceDID
-  - value: 214
-    newValue: mpegTransport
-  - value: 215
-    newValue: sixToFour
-  - value: 216
-    newValue: gtp
-  - value: 217
-    newValue: pdnEtherLoop1
-  - value: 218
-    newValue: pdnEtherLoop2
-  - value: 219
-    newValue: opticalChannelGroup
-  - value: 220
-    newValue: homepna
-  - value: 221
-    newValue: gfp
-  - value: 222
-    newValue: ciscoISLvlan
-  - value: 223
-    newValue: actelisMetaLOOP
-  - value: 224
-    newValue: fcipLink
-  - value: 225
-    newValue: rpr
-  - value: 226
-    newValue: qam
-  - value: 227
-    newValue: lmp
-  - value: 228
-    newValue: cblVectaStar
-  - value: 229
-    newValue: docsCableMCmtsDownstream
-  - value: 230
-    newValue: adsl2
-  - value: 231
-    newValue: macSecControlledIF
-  - value: 232
-    newValue: macSecUncontrolledIF
-  - value: 233
-    newValue: aviciOpticalEther
-  - value: 234
-    newValue: atmbond
-  - value: 235
-    newValue: voiceFGDOS
-  - value: 236
-    newValue: mocaVersion1 # as documented in information provided privately to IANA
-  - value: 237
-    newValue: ieee80216WMAN
-  - value: 238
-    newValue: adsl2plus
-  - value: 239
-    newValue: dvbRcsMacLayer
-  - value: 240
-    newValue: dvbTdm
-  - value: 241
-    newValue: dvbRcsTdma
-  - value: 242
-    newValue: x86Laps
-  - value: 243
-    newValue: wwanPP
-  - value: 244
-    newValue: wwanPP2
-  - value: 245
-    newValue: voiceEBS
-  - value: 246
-    newValue: ifPwType
-  - value: 247
-    newValue: ilan
-  - value: 248
-    newValue: pip
-  - value: 249
-    newValue: aluELP
-  - value: 250
-    newValue: gpon
-  - value: 251
-    newValue: vdsl2
-  - value: 252
-    newValue: capwapDot11Profile
-  - value: 253
-    newValue: capwapDot11Bss
-  - value: 254
-    newValue: capwapWtpVirtualRadio
-  - value: 255
-    newValue: bits
-  - value: 256
-    newValue: docsCableUpstreamRfPort
-  - value: 257
-    newValue: cableDownstreamRfPort
-  - value: 258
-    newValue: vmwareVirtualNic
-  - value: 259
-    newValue: ieee802154
-  - value: 260
-    newValue: otnOdu
-  - value: 261
-    newValue: otnOtu
-  - value: 262
-    newValue: ifVfiType
-  - value: 263
-    newValue: g9981
-  - value: 264
-    newValue: g9982
-  - value: 265
-    newValue: g9983
-  - value: 266
-    newValue: aluEpon
-  - value: 267
-    newValue: aluEponOnu
-  - value: 268
-    newValue: aluEponPhysicalUni
-  - value: 269
-    newValue: aluEponLogicalLink
-  - value: 270
-    newValue: aluGponOnu
-  - value: 271
-    newValue: aluGponPhysicalUni
-  - value: 272
-    newValue: vmwareNicTeam
-  - value: 277
-    newValue: docsOfdmDownstream
-  - value: 278
-    newValue: docsOfdmaUpstream
-  - value: 279
-    newValue: gfast
-  - value: 280
-    newValue: sdci
-  - value: 281
-    newValue: xboxWireless
-  - value: 282
-    newValue: fastdsl
-  - value: 283
-    newValue: docsCableScte55d1FwdOob
-  - value: 284
-    newValue: docsCableScte55d1RetOob
-  - value: 285
-    newValue: docsCableScte55d2DsOob
-  - value: 286
-    newValue: docsCableScte55d2UsOob
-  - value: 287
-    newValue: docsCableNdf
-  - value: 288
-    newValue: docsCableNdr
-  - value: 289
-    newValue: ptm
-  - value: 290
-    newValue: ghn    
+  - name: IF-MIB::ifOperStatus
+    mappings:
+      - value: 1
+        newValue: up
+      - value: 2
+        newValue: down
+      - value: 3
+        newValue: testing
+      - value: 4
+        newValue: unknown
+      - value: 5
+        newValue: dormant
+      - value: 6
+        newValue: notPresent
+      - value: 7
+        newValue: lowerLayerDown
+  - name: "IF-MIB::ifType"
+    # https://www.iana.org/assignments/ianaiftype-_mib/ianaiftype-_mib LAST-UPDATED "201703300000Z"  March 30, 2017
+    mappings:
+      - value: 1
+        newValue: other
+      - value: 2
+        newValue: regular1822
+      - value: 3
+        newValue: hdh1822
+      - value: 4
+        newValue: ddnX25
+      - value: 5
+        newValue: rfc877x25
+      - value: 6
+        newValue: ethernetCsmacd
+      - value: 7
+        newValue: iso88023Csmacd
+      - value: 8
+        newValue: iso88024TokenBus
+      - value: 9
+        newValue: iso88025TokenRing
+      - value: 10
+        newValue: iso88026Man
+      - value: 11
+        newValue: starLan
+      - value: 12
+        newValue: proteon10Mbit
+      - value: 13
+        newValue: proteon80Mbit
+      - value: 14
+        newValue: hyperchannel
+      - value: 15
+        newValue: fddi
+      - value: 16
+        newValue: lapb
+      - value: 17
+        newValue: sdlc
+      - value: 18
+        newValue: ds1
+      - value: 19
+        newValue: e1
+      - value: 20
+        newValue: basicISDN
+      - value: 21
+        newValue: primaryISDN
+      - value: 22
+        newValue: propPointToPointSerial
+      - value: 23
+        newValue: ppp
+      - value: 24
+        newValue: softwareLoopback
+      - value: 25
+        newValue: eon
+      - value: 26
+        newValue: ethernet3Mbit
+      - value: 27
+        newValue: nsip
+      - value: 28
+        newValue: slip
+      - value: 29
+        newValue: ultra
+      - value: 30
+        newValue: ds3
+      - value: 31
+        newValue: sip
+      - value: 32
+        newValue: frameRelay
+      - value: 33
+        newValue: rs232
+      - value: 34
+        newValue: para
+      - value: 35
+        newValue: arcnet
+      - value: 36
+        newValue: arcnetPlus
+      - value: 37
+        newValue: atm
+      - value: 38
+        newValue: miox25
+      - value: 39
+        newValue: sonet
+      - value: 40
+        newValue: x25ple
+      - value: 41
+        newValue: iso88022llc
+      - value: 42
+        newValue: localTalk
+      - value: 43
+        newValue: smdsDxi
+      - value: 44
+        newValue: frameRelayService
+      - value: 45
+        newValue: v35
+      - value: 46
+        newValue: hssi
+      - value: 47
+        newValue: hippi
+      - value: 48
+        newValue: modem
+      - value: 49
+        newValue: aal5
+      - value: 50
+        newValue: sonetPath
+      - value: 51
+        newValue: sonetVT
+      - value: 52
+        newValue: smdsIcip
+      - value: 53
+        newValue: propVirtual
+      - value: 54
+        newValue: propMultiplexor
+      - value: 55
+        newValue: ieee80212
+      - value: 56
+        newValue: fibreChannel
+      - value: 57
+        newValue: hippiInterface
+      - value: 58
+        newValue: frameRelayInterconnect
+      - value: 59
+        newValue: aflane8023
+      - value: 60
+        newValue: aflane8025
+      - value: 61
+        newValue: cctEmul
+      - value: 62
+        newValue: fastEther
+      - value: 63
+        newValue: isdn
+      - value: 64
+        newValue: v11
+      - value: 65
+        newValue: v36
+      - value: 66
+        newValue: g703at64k
+      - value: 67
+        newValue: g703at2mb
+      - value: 68
+        newValue: qllc
+      - value: 69
+        newValue: fastEtherFX
+      - value: 70
+        newValue: channel
+      - value: 71
+        newValue: ieee80211
+      - value: 72
+        newValue: ibm370parChan
+      - value: 73
+        newValue: escon
+      - value: 74
+        newValue: dlsw
+      - value: 75
+        newValue: isdns
+      - value: 76
+        newValue: isdnu
+      - value: 77
+        newValue: lapd
+      - value: 78
+        newValue: ipSwitch
+      - value: 79
+        newValue: rsrb
+      - value: 80
+        newValue: atmLogical
+      - value: 81
+        newValue: ds0
+      - value: 82
+        newValue: ds0Bundle
+      - value: 83
+        newValue: bsc
+      - value: 84
+        newValue: async
+      - value: 85
+        newValue: cnr
+      - value: 86
+        newValue: iso88025Dtr
+      - value: 87
+        newValue: eplrs
+      - value: 88
+        newValue: arap
+      - value: 89
+        newValue: propCnls
+      - value: 90
+        newValue: hostPad
+      - value: 91
+        newValue: termPad
+      - value: 92
+        newValue: frameRelayMPI
+      - value: 93
+        newValue: x213
+      - value: 94
+        newValue: adsl
+      - value: 95
+        newValue: radsl
+      - value: 96
+        newValue: sdsl
+      - value: 97
+        newValue: vdsl
+      - value: 98
+        newValue: iso88025CRFPInt
+      - value: 99
+        newValue: myrinet
+      - value: 100
+        newValue: voiceEM
+      - value: 101
+        newValue: voiceFXO
+      - value: 102
+        newValue: voiceFXS
+      - value: 103
+        newValue: voiceEncap
+      - value: 104
+        newValue: voiceOverIp
+      - value: 105
+        newValue: atmDxi
+      - value: 106
+        newValue: atmFuni
+      - value: 107
+        newValue: atmIma
+      - value: 108
+        newValue: pppMultilinkBundle
+      - value: 109
+        newValue: ipOverCdlc
+      - value: 110
+        newValue: ipOverClaw
+      - value: 111
+        newValue: stackToStack
+      - value: 112
+        newValue: virtualIpAddress
+      - value: 113
+        newValue: mpc
+      - value: 114
+        newValue: ipOverAtm
+      - value: 115
+        newValue: iso88025Fiber
+      - value: 116
+        newValue: tdlc
+      - value: 117
+        newValue: gigabitEthernet
+      - value: 118
+        newValue: hdlc
+      - value: 119
+        newValue: lapf
+      - value: 120
+        newValue: v37
+      - value: 121
+        newValue: x25mlp
+      - value: 122
+        newValue: x25huntGroup
+      - value: 123
+        newValue: trasnpHdlc
+      - value: 124
+        newValue: interleave
+      - value: 125
+        newValue: fast
+      - value: 126
+        newValue: ip
+      - value: 127
+        newValue: docsCableMaclayer
+      - value: 128
+        newValue: docsCableDownstream
+      - value: 129
+        newValue: docsCableUpstream
+      - value: 130
+        newValue: a12MppSwitch
+      - value: 131
+        newValue: tunnel
+      - value: 132
+        newValue: coffee
+      - value: 133
+        newValue: ces
+      - value: 134
+        newValue: atmSubInterface
+      - value: 135
+        newValue: l2vlan
+      - value: 136
+        newValue: l3ipvlan
+      - value: 137
+        newValue: l3ipxvlan
+      - value: 138
+        newValue: digitalPowerline
+      - value: 139
+        newValue: mediaMailOverIp
+      - value: 140
+        newValue: dtm
+      - value: 141
+        newValue: dcn
+      - value: 142
+        newValue: ipForward
+      - value: 143
+        newValue: msdsl
+      - value: 144
+        newValue: ieee1394
+      - value: 145
+        newValue: if-gsn
+      - value: 146
+        newValue: dvbRccMacLayer
+      - value: 147
+        newValue: dvbRccDownstream
+      - value: 148
+        newValue: dvbRccUpstream
+      - value: 149
+        newValue: atmVirtual
+      - value: 150
+        newValue: mplsTunnel
+      - value: 151
+        newValue: srp
+      - value: 152
+        newValue: voiceOverAtm
+      - value: 153
+        newValue: voiceOverFrameRelay
+      - value: 154
+        newValue: idsl
+      - value: 155
+        newValue: compositeLink
+      - value: 156
+        newValue: ss7SigLink
+      - value: 157
+        newValue: propWirelessP2P
+      - value: 158
+        newValue: frForward
+      - value: 159
+        newValue: rfc1483
+      - value: 160
+        newValue: usb
+      - value: 161
+        newValue: ieee8023adLag
+      - value: 162
+        newValue: bgppolicyaccounting
+      - value: 163
+        newValue: frf16MfrBundle
+      - value: 164
+        newValue: h323Gatekeeper
+      - value: 165
+        newValue: h323Proxy
+      - value: 166
+        newValue: mpls
+      - value: 167
+        newValue: mfSigLink
+      - value: 168
+        newValue: hdsl2
+      - value: 169
+        newValue: shdsl
+      - value: 170
+        newValue: ds1FDL
+      - value: 171
+        newValue: pos
+      - value: 172
+        newValue: dvbAsiIn
+      - value: 173
+        newValue: dvbAsiOut
+      - value: 174
+        newValue: plc
+      - value: 175
+        newValue: nfas
+      - value: 176
+        newValue: tr008
+      - value: 177
+        newValue: gr303RDT
+      - value: 178
+        newValue: gr303IDT
+      - value: 179
+        newValue: isup
+      - value: 180
+        newValue: propDocsWirelessMaclayer
+      - value: 181
+        newValue: propDocsWirelessDownstream
+      - value: 182
+        newValue: propDocsWirelessUpstream
+      - value: 183
+        newValue: hiperlan2
+      - value: 184
+        newValue: propBWAp2Mp
+      - value: 185
+        newValue: sonetOverheadChannel
+      - value: 186
+        newValue: digitalWrapperOverheadChannel
+      - value: 187
+        newValue: aal2
+      - value: 188
+        newValue: radioMAC
+      - value: 189
+        newValue: atmRadio
+      - value: 190
+        newValue: imt
+      - value: 191
+        newValue: mvl
+      - value: 192
+        newValue: reachDSL
+      - value: 193
+        newValue: frDlciEndPt
+      - value: 194
+        newValue: atmVciEndPt
+      - value: 195
+        newValue: opticalChannel
+      - value: 196
+        newValue: opticalTransport
+      - value: 197
+        newValue: propAtm
+      - value: 198
+        newValue: voiceOverCable
+      - value: 199
+        newValue: infiniband
+      - value: 200
+        newValue: teLink
+      - value: 201
+        newValue: q2931
+      - value: 202
+        newValue: virtualTg
+      - value: 203
+        newValue: sipTg
+      - value: 204
+        newValue: sipSig
+      - value: 205
+        newValue: docsCableUpstreamChannel
+      - value: 206
+        newValue: econet
+      - value: 207
+        newValue: pon155
+      - value: 208
+        newValue: pon622
+      - value: 209
+        newValue: bridge
+      - value: 210
+        newValue: linegroup
+      - value: 211
+        newValue: voiceEMFGD
+      - value: 212
+        newValue: voiceFGDEANA
+      - value: 213
+        newValue: voiceDID
+      - value: 214
+        newValue: mpegTransport
+      - value: 215
+        newValue: sixToFour
+      - value: 216
+        newValue: gtp
+      - value: 217
+        newValue: pdnEtherLoop1
+      - value: 218
+        newValue: pdnEtherLoop2
+      - value: 219
+        newValue: opticalChannelGroup
+      - value: 220
+        newValue: homepna
+      - value: 221
+        newValue: gfp
+      - value: 222
+        newValue: ciscoISLvlan
+      - value: 223
+        newValue: actelisMetaLOOP
+      - value: 224
+        newValue: fcipLink
+      - value: 225
+        newValue: rpr
+      - value: 226
+        newValue: qam
+      - value: 227
+        newValue: lmp
+      - value: 228
+        newValue: cblVectaStar
+      - value: 229
+        newValue: docsCableMCmtsDownstream
+      - value: 230
+        newValue: adsl2
+      - value: 231
+        newValue: macSecControlledIF
+      - value: 232
+        newValue: macSecUncontrolledIF
+      - value: 233
+        newValue: aviciOpticalEther
+      - value: 234
+        newValue: atmbond
+      - value: 235
+        newValue: voiceFGDOS
+      - value: 236
+        newValue: mocaVersion1 # as documented in information provided privately to IANA
+      - value: 237
+        newValue: ieee80216WMAN
+      - value: 238
+        newValue: adsl2plus
+      - value: 239
+        newValue: dvbRcsMacLayer
+      - value: 240
+        newValue: dvbTdm
+      - value: 241
+        newValue: dvbRcsTdma
+      - value: 242
+        newValue: x86Laps
+      - value: 243
+        newValue: wwanPP
+      - value: 244
+        newValue: wwanPP2
+      - value: 245
+        newValue: voiceEBS
+      - value: 246
+        newValue: ifPwType
+      - value: 247
+        newValue: ilan
+      - value: 248
+        newValue: pip
+      - value: 249
+        newValue: aluELP
+      - value: 250
+        newValue: gpon
+      - value: 251
+        newValue: vdsl2
+      - value: 252
+        newValue: capwapDot11Profile
+      - value: 253
+        newValue: capwapDot11Bss
+      - value: 254
+        newValue: capwapWtpVirtualRadio
+      - value: 255
+        newValue: bits
+      - value: 256
+        newValue: docsCableUpstreamRfPort
+      - value: 257
+        newValue: cableDownstreamRfPort
+      - value: 258
+        newValue: vmwareVirtualNic
+      - value: 259
+        newValue: ieee802154
+      - value: 260
+        newValue: otnOdu
+      - value: 261
+        newValue: otnOtu
+      - value: 262
+        newValue: ifVfiType
+      - value: 263
+        newValue: g9981
+      - value: 264
+        newValue: g9982
+      - value: 265
+        newValue: g9983
+      - value: 266
+        newValue: aluEpon
+      - value: 267
+        newValue: aluEponOnu
+      - value: 268
+        newValue: aluEponPhysicalUni
+      - value: 269
+        newValue: aluEponLogicalLink
+      - value: 270
+        newValue: aluGponOnu
+      - value: 271
+        newValue: aluGponPhysicalUni
+      - value: 272
+        newValue: vmwareNicTeam
+      - value: 277
+        newValue: docsOfdmDownstream
+      - value: 278
+        newValue: docsOfdmaUpstream
+      - value: 279
+        newValue: gfast
+      - value: 280
+        newValue: sdci
+      - value: 281
+        newValue: xboxWireless
+      - value: 282
+        newValue: fastdsl
+      - value: 283
+        newValue: docsCableScte55d1FwdOob
+      - value: 284
+        newValue: docsCableScte55d1RetOob
+      - value: 285
+        newValue: docsCableScte55d2DsOob
+      - value: 286
+        newValue: docsCableScte55d2UsOob
+      - value: 287
+        newValue: docsCableNdf
+      - value: 288
+        newValue: docsCableNdr
+      - value: 289
+        newValue: ptm
+      - value: 290
+        newValue: ghn

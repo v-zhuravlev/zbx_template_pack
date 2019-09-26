@@ -11,9 +11,12 @@
       <template>
          <template>Template Module Generic SNMPv2</template>
          <name>Template Module Generic SNMPv2</name>
-         <description>Template Module Generic version: 0.15&#13;
+         <description>Template Module Generic&#13;
+&#13;
 MIBs used:&#13;
-SNMPv2-MIB</description>
+SNMPv2-MIB&#13;
+&#13;
+Template tooling version used: 0.29</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -29,11 +32,11 @@ SNMPv2-MIB</description>
          </applications>
          <items>
             <item>
-               <name>Device uptime</name>
+               <name>Uptime</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.3.0</snmp_oid>
-               <key>system.uptime[sysUpTime]</key>
+               <key>system.uptime[sysUpTime.0]</key>
                <delay>30s</delay>
                <history>2w</history>
                <trends>0d</trends>
@@ -101,7 +104,7 @@ The time (in hundredths of a second) since the network management portion of the
                <snmp_community/>
                <snmp_oid/>
                <key>snmptrap.fallback</key>
-               <delay>5m</delay>
+               <delay>1m</delay>
                <history>2w</history>
                <trends>0</trends>
                <status>0</status>
@@ -155,11 +158,11 @@ The time (in hundredths of a second) since the network management portion of the
                <master_item/>
             </item>
             <item>
-               <name>Device location</name>
+               <name>System location</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.6.0</snmp_oid>
-               <key>system.location</key>
+               <key>system.location[sysLocation.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -195,7 +198,7 @@ The physical location of this node (e.g., `telephone closet, 3rd floor').  If th
                <preprocessing>
                   <step>
                      <type>20</type>
-                     <params>1d</params>
+                     <params>1h</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -222,11 +225,11 @@ The physical location of this node (e.g., `telephone closet, 3rd floor').  If th
                <master_item/>
             </item>
             <item>
-               <name>Device contact details</name>
+               <name>System contact details</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.4.0</snmp_oid>
-               <key>system.contact</key>
+               <key>system.contact[sysContact.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -293,8 +296,8 @@ The textual identification of the contact person for this managed node, together
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.2.0</snmp_oid>
-               <key>system.objectid</key>
-               <delay>1h</delay>
+               <key>system.objectid[sysObjectID.0]</key>
+               <delay>15m</delay>
                <history>2w</history>
                <trends>0</trends>
                <status>0</status>
@@ -326,7 +329,14 @@ The vendor's authoritative identification of the network management subsystem co
                </applications>
                <valuemap/>
                <logtimefmt/>
-               <preprocessing/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
                <url/>
@@ -349,7 +359,7 @@ The vendor's authoritative identification of the network management subsystem co
                <master_item/>
             </item>
             <item>
-               <name>Device name</name>
+               <name>System name</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.5.0</snmp_oid>
@@ -389,7 +399,7 @@ An administratively-assigned name for this managed node.By convention, this is t
                <preprocessing>
                   <step>
                      <type>20</type>
-                     <params>1d</params>
+                     <params>1h</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -416,11 +426,11 @@ An administratively-assigned name for this managed node.By convention, this is t
                <master_item/>
             </item>
             <item>
-               <name>Device description</name>
+               <name>System description</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
-               <key>system.descr</key>
+               <key>system.descr[sysDescr.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -444,10 +454,10 @@ An administratively-assigned name for this managed node.By convention, this is t
                <privatekey/>
                <port/>
                <description>MIB: SNMPv2-MIB&#13;
-A textual description of the entity.  This value should&#13;
+A textual description of the entity. This value should&#13;
 include the full name and version identification of the system's hardware type, software operating-system, and&#13;
 networking software.</description>
-               <inventory_link>14</inventory_link>
+               <inventory_link>0</inventory_link>
                <applications>
                   <application>
                      <name>General</name>
@@ -485,14 +495,14 @@ networking software.</description>
                <master_item/>
             </item>
             <item>
-               <name>SNMP availability</name>
+               <name>SNMP agent availability</name>
                <type>5</type>
                <snmp_community/>
                <snmp_oid/>
                <key>zabbix[host,snmp,available]</key>
                <delay>1m</delay>
-               <history>2w</history>
-               <trends>0</trends>
+               <history>7d</history>
+               <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
@@ -550,8 +560,8 @@ networking software.</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$SNMP_TIMEOUT}</macro>
-               <value>3m</value>
+               <macro>{$SNMP.TIMEOUT}</macro>
+               <value>5m</value>
             </macro>
          </macros>
          <templates>
@@ -566,30 +576,47 @@ networking software.</description>
    <graphs/>
    <triggers>
       <trigger>
-         <expression>{Template Module Generic SNMPv2:system.uptime[sysUpTime].last()}&lt;10m</expression>
+         <expression>{Template Module Generic SNMPv2:system.uptime[sysUpTime.0].last()}&lt;10m</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>{HOST.NAME} has been restarted</name>
+         <name>{HOST.NAME} has been restarted (uptime &lt; 10m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The device uptime is less than 10 minutes</description>
+Uptime is less than 10 minutes</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies>
             <dependency>
                <name>No SNMP data collection</name>
-               <expression>{Template Module Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
+               <expression>{Template Module Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP.TIMEOUT})}=0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Module Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP_TIMEOUT})}=0</expression>
+         <expression>{Template Module Generic SNMPv2:system.name.diff()}=1 and {Template Module Generic SNMPv2:system.name.strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+System name has changed. Ack to close.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Generic SNMPv2:zabbix[host,snmp,available].max({$SNMP.TIMEOUT})}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>No SNMP data collection</name>

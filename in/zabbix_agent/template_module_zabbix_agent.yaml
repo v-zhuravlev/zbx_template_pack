@@ -1,0 +1,50 @@
+---
+templates:
+  - name: Template Module Zabbix agent
+    _classes:
+      - MODULE
+    macros:
+      - macro: "{$AGENT.TIMEOUT}"
+        value: "5m"
+    items:
+      - _prototype: agent.version
+        name: Version of Zabbix agent running
+        key: agent.version
+        type: ZABBIX_PASSIVE
+
+      - _id: agent.hostname
+        name: Host name of Zabbix agent running
+        value_type: CHAR
+        key: agent.hostname
+        type: ZABBIX_PASSIVE
+        _group: Monitoring_agent
+        delay: 1h
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+      - _prototype: agent.status
+        key: zabbix[host,agent,available]
+        name: Zabbix agent availability
+        type: INTERNAL
+        value_map: zabbix.host.available
+        triggers:
+          - _id: trigger.zabbix_agent.not_available
+            name: Zabbix agent is not available
+            priority: AVERAGE
+            expression: "{TEMPLATE_NAME:METRIC.max({$AGENT.TIMEOUT})}=0"
+            description: Zabbix agent is not available.
+            manual_close: "YES"
+
+value_maps:
+  # - name: Zabbix agent ping status
+  #   mappings:
+  #     - value: "1"
+  #       newvalue: Up
+  - name: zabbix.host.available
+    mappings:
+      - value: "0"
+        newvalue: "not available"
+      - value: "1"
+        newvalue: "available"
+      - value: "2"
+        newvalue: "unknown"

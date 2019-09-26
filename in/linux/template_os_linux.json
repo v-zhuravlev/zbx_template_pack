@@ -1,0 +1,1184 @@
+{
+    "templates": [
+        {
+            "name": "Template Module Linux CPU by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [
+                {
+                    "macro": "{$LOAD_AVG_PER_CPU.MAX.WARN}",
+                    "value": "1.5",
+                    "_description": "Load per CPU considered sustainable. Tune if needed."
+                }
+            ],
+            "items": [
+                //CPU
+                {
+                    "_prototype": "system.cpu.num",
+                    "key": "system.cpu.num",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.load.avg1",
+                    "key": "system.cpu.load[all,avg1]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.load.avg5",
+                    "key": "system.cpu.load[all,avg5]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.load.avg15",
+                    "key": "system.cpu.load[all,avg15]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.util",
+                    "type": "DEPENDENT",
+                    "master_item": "system.cpu.idle",
+                    "key": "system.cpu.util",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "//Calculate utilization\nreturn (100 - value)"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.idle",
+                    "key": "system.cpu.util[,idle]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.system",
+                    "key": "system.cpu.util[,system]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.user",
+                    "key": "system.cpu.util[,user]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.nice",
+                    "key": "system.cpu.util[,nice]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.iowait",
+                    "key": "system.cpu.util[,iowait]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.steal",
+                    "key": "system.cpu.util[,steal]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.interrupt",
+                    "key": "system.cpu.util[,interrupt]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.softirq",
+                    "key": "system.cpu.util[,softirq]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.guest",
+                    "key": "system.cpu.util[,guest]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.guest_nice",
+                    "key": "system.cpu.util[,guest_nice]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.cpu.switches",
+                    "key": "system.cpu.switches",
+                    "type": "ZABBIX_PASSIVE",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.cpu.intr",
+                    "key": "system.cpu.intr",
+                    "type": "ZABBIX_PASSIVE",
+                    "preprocessing": [
+                        {
+                            "type": "CHANGE_PER_SECOND"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Template Module Linux filesystems by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [
+                {
+                    "macro": "{$VFS.FS.FSNAME.NOT_MATCHES}",
+                    "value": "^(/dev|/sys|/run|/proc|.+/shm$)",
+                    "_description": "This macro is used in filesystems discovery. Can be overridden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSNAME.MATCHES}",
+                    "value": ".+",
+                    "_description": "This macro is used in filesystems discovery. Can be overridden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSTYPE.MATCHES}",
+                    "value": "^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$",
+                    "_description": "This macro is used in filesystems discovery. Can be overridden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.FS.FSTYPE.NOT_MATCHES}",
+                    "value": "^\\s$",
+                    "_description": "This macro is used in filesystems discovery. Can be overridden on the host or linked template level"
+                }
+            ],
+            "discovery_rules": [
+                {
+                    "name": "Mounted filesystem discovery",
+                    "key": "vfs.fs.discovery",
+                    "type": "ZABBIX_PASSIVE",
+                    "description": "Discovery of file systems of different types.",
+                    "filter": {
+                        "evalType": "AND",
+                        "conditions": [
+                            {
+                                "macro": "{#FSTYPE}",
+                                "value": "{$VFS.FS.FSTYPE.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "A"
+                            },
+                            {
+                                "macro": "{#FSTYPE}",
+                                "value": "{$VFS.FS.FSTYPE.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            },
+                            {
+                                "macro": "{#FSNAME}",
+                                "value": "{$VFS.FS.FSNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "C"
+                            },
+                            {
+                                "macro": "{#FSNAME}",
+                                "value": "{$VFS.FS.FSNAME.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "D"
+                            }
+                        ]
+                    },
+                    "items": [
+                        {
+                            "_prototype": "vfs.fs.used",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},used]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __RESOURCE__"
+                        },
+                        // {
+                        //     "_prototype": "vfs.fs.free",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "key": "vfs.fs.size[{#FSNAME},free]",
+                        //     "_group": "Filesystems",
+                        //     "_resource": "{#FSNAME}",
+                        //     "application_prototype": "Filesystem __RESOURCE__"
+                        // },
+                        {
+                            "_prototype": "vfs.fs.total",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},total]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __RESOURCE__"
+                        },
+                        {
+                            "_prototype": "vfs.fs.pused",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.size[{#FSNAME},pused]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __RESOURCE__"
+                        },
+                        {
+                            "_prototype": "vfs.fs.inode.pfree",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.fs.inode[{#FSNAME},pfree]",
+                            "_group": "Filesystems",
+                            "_resource": "{#FSNAME}",
+                            "application_prototype": "Filesystem __RESOURCE__"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Template Module Linux memory by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [
+                {
+                    "macro": "{$MEMORY.UTIL.MAX}",
+                    "value": "90",
+                    "_description": "This macro is used as a threshold in memory utilization trigger."
+                },
+                {
+                    "macro": "{$MEMORY.AVAILABLE.MIN}",
+                    "value": "20M",
+                    "_description": "This macro is used as a threshold in memory available trigger."
+                }
+            ],
+            "items": [
+                //MEMORY
+                {
+                    "_prototype": "vm.memory.util",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "vm.memory.size[pavailable]",
+                    "_vendor_description": "Memory used percentage is calculated as (100-pavailable)",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "return (100-value);"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "vm.memory.total",
+                    "key": "vm.memory.size[total]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "vm.memory.available",
+                    "key": "vm.memory.size[available]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                //SWAP,
+                {
+                    "_prototype": "system.swap.total",
+                    "key": "system.swap.size[,total]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.swap.free",
+                    "key": "system.swap.size[,free]",
+                    "type": "ZABBIX_PASSIVE"
+                },
+                {
+                    "_prototype": "system.swap.pfree",
+                    "key": "system.swap.size[,pfree]",
+                    "type": "ZABBIX_PASSIVE"
+                }
+            ]
+        },
+        {
+            "name": "Template Module Linux block devices by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "macros": [
+                {
+                    "macro": "{$VFS.DEV.READ.AWAIT.WARN}",
+                    "value": "20",
+                    "_description": "Disk read average response time (in ms) before the trigger would fire"
+                },
+                {
+                    "macro": "{$VFS.DEV.WRITE.AWAIT.WARN}",
+                    "value": "20",
+                    "_description": "Disk write average response time (in ms) before the trigger would fire"
+                },
+                {
+                    "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
+                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)",
+                    "_description": "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
+                },
+                {
+                    "macro": "{$VFS.DEV.DEVNAME.MATCHES}",
+                    "value": ".+",
+                    "_description": "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
+                }
+            ],
+            "discovery_rules": [
+                {
+                    "name": "Block devices discovery",
+                    "key": "vfs.dev.discovery",
+                    "master_item": "vfs.dev.diskstats",
+                    "type": "DEPENDENT",
+                    "preprocessing": [
+                        {
+                            "type": "JSONPATH",
+                            "params": "$.lld"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1h"
+                        }
+                    ],
+                    "filter": {
+                        "evaltype": "AND",
+                        "conditions": [
+                            {
+                                "macro": "{#DEVNAME}",
+                                "value": "{$VFS.DEV.DEVNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "A"
+                            },
+                            {
+                                "macro": "{#DEVNAME}",
+                                "value": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            }
+                        ]
+                    },
+                    "items": [
+                        {
+                            "_resource": "{#DEVNAME}",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "_prototype": "vfs.dev.read.rate",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
+                            "key": "vfs.dev.read.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "units": "!r/s",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][3]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "r/s. The number (after merges) of read requests completed per second for the device."
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "_prototype": "vfs.dev.write.rate",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
+                            "key": "vfs.dev.write.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "units": "!w/s",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][7]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                }
+                            ],
+                            "description": "w/s. The number (after merges) of write requests completed per second for the device."
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            //"application_prototype": "Disk __RESOURCE__",
+                            "_group": "Zabbix_raw_items",
+                            "_prototype": "vfs.dev.read.time.rate",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
+                            "key": "vfs.dev.read.time.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][6]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //convert 'ms' to 'seconds'
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.001"
+                                }
+                            ],
+                            "description": "Rate of total read time counter. Used in r_await calculation"
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            //"application_prototype": "Disk __RESOURCE__",
+                            "_group": "Zabbix_raw_items",
+                            "_prototype": "vfs.dev.write.time.rate",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
+                            "key": "vfs.dev.write.time.rate[{#DEVNAME}]",
+                            "valueType": "FLOAT",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][10]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //convert 'ms' to 'seconds'
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.001"
+                                }
+                            ],
+                            "description": "Rate of total write time counter. Used in w_await calculation"
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.read.await",
+                            "key": "vfs.dev.read.await[{#DEVNAME}]",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "type": "CALCULATED",
+                            "expression_formula": "(last(\"__vfs.dev.read.time.rate__\")/(last(\"__vfs.dev.read.rate__\")+(last(\"__vfs.dev.read.rate__\")=0)))*1000*(last(\"__vfs.dev.read.rate__\") > 0)",
+                            "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.write.await",
+                            "key": "vfs.dev.write.await[{#DEVNAME}]",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "type": "CALCULATED",
+                            "expression_formula": "(last(\"__vfs.dev.write.time.rate__\")/(last(\"__vfs.dev.write.rate__\")+(last(\"__vfs.dev.write.rate__\")=0)))*1000*(last(\"__vfs.dev.write.rate__\") > 0)",
+                            "description": "This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception."
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.queue_size",
+                            "key": "vfs.dev.queue_size[{#DEVNAME}]",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][13]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //to 'seconds'
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.001"
+                                }
+                            ]
+                        },
+                        {
+                            "_resource": "{#DEVNAME}",
+                            "_prototype": "vfs.dev.util",
+                            "key": "vfs.dev.util[{#DEVNAME}]",
+                            "application_prototype": "Disk __RESOURCE__",
+                            "type": "DEPENDENT",
+                            "master_item": "vfs.dev.diskstats",
+                            "preprocessing": [
+                                {
+                                    "type": "JSONPATH",
+                                    "params": "$.values['{#DEVNAME}'][12]"
+                                },
+                                {
+                                    "type": "CHANGE_PER_SECOND"
+                                },
+                                //to 'seconds'(0.001) and * 100%
+                                {
+                                    "type": "MULTIPLIER",
+                                    "params": "0.1"
+                                }
+                            ],
+                            "triggers": []
+                        }
+                    ]
+                }
+            ],
+            "items": [
+                {
+                    //master item for proc diskstats
+                    "_id": "vfs.dev.diskstats",
+                    "key": "vfs.file.contents[/proc/diskstats]",
+                    "type": "ZABBIX_PASSIVE",
+                    "valueType": "TEXT",
+                    "name": "Get /proc/diskstats",
+                    "_group": "Zabbix_raw_items",
+                    "update": "1m",
+                    "history": "1h",
+                    "preprocessing": [
+                        {
+                            "type": "JAVASCRIPT",
+                            "params": "var parsed = value.split(\"\\n\").reduce(function(acc, x, i) {\n  acc[\"values\"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)\n  acc[\"lld\"].push({\"{#DEVNAME}\":x.split(/ +/)[3]});\n  return acc;\n}, {\"values\":{}, \"lld\": []});\n\nreturn JSON.stringify(parsed);"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Template Module Linux network interfaces by Zabbix agent",
+            "_zbx_ver": "4.2",
+            "_classes": [
+                "IF_MIB"
+            ],
+            "_documentation": {
+                "_issues": [
+                    {
+                        "description": "High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth."
+                    }
+                ]
+            },
+            "macros": [
+                // network interfaces
+                {
+                    "macro": "{$NET.IF.IFNAME.MATCHES}",
+                    "value": "^.*$"
+                },
+                {
+                    "macro": "{$NET.IF.IFNAME.NOT_MATCHES}",
+                    "value": "(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})",
+                    "_description": "Filter out loopbacks, nulls, docker veth links and docker0 bridge by default"
+                }
+            ],
+            "discovery_rules": [
+                {
+                    "name": "Network interface discovery",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "net.if.discovery",
+                    "description": "Discovery of network interfaces.",
+                    "filter": {
+                        "evaltype": "AND",
+                        "conditions": [
+                            {
+                                "macro": "{#IFNAME}",
+                                "value": "{$NET.IF.IFNAME.MATCHES}",
+                                "operator": "MATCHES_REGEX",
+                                "formulaid": "A"
+                            },
+                            {
+                                "macro": "{#IFNAME}",
+                                "value": "{$NET.IF.IFNAME.NOT_MATCHES}",
+                                "operator": "NOT_MATCHES_REGEX",
+                                "formulaid": "B"
+                            }
+                        ]
+                    },
+                    "items": [
+                        {
+                            "_prototype": "net.if.in",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\"]",
+                            //removing trigger if.util_high since there is no net.if.speed to evaluate it properly.
+                            "triggers": [],
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.out",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\"]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.out.errors",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\",errors]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.in.errors",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\",errors]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.out.discards",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.out[\"{#IFNAME}\",dropped]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.in.discards",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "net.if.in[\"{#IFNAME}\",dropped]",
+                            "_vendor_description": ""
+                        },
+                        {
+                            "_prototype": "net.if.status",
+                            "type": "ZABBIX_PASSIVE",
+                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/operstate\"]",
+                            "_resource": "Interface {#IFNAME}",
+                            "_vendor_description": "Indicates the interface RFC2863 operational state as a string.\nPossible values are:\"unknown\", \"notpresent\", \"down\", \"lowerlayerdown\", \"testing\",\"dormant\", \"up\".",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
+                            "preprocessing": [
+                                /*
+                                var newvalue;
+                                switch(value) {
+                                case "up":
+                                    newvalue = 1;
+                                    break;
+                                case "down":
+                                    newvalue = 2;
+                                    break;
+                                case "testing":
+                                    newvalue = 4;
+                                    break;
+                                case "unknown":
+                                    newvalue = 5;
+                                    break;
+                                case "dormant":
+                                    newvalue = 6;
+                                    break;
+                                case "notPresent":
+                                    newvalue = 7;
+                                    break;
+                                default:
+                                    newvalue = "Problem parsing interface operstate in JS";
+                                }
+                                return newvalue;
+                                */
+                                {
+                                    "type": "JAVASCRIPT",
+                                    "params": "var newvalue;\nswitch(value) {\n  case \"up\":\n    newvalue = 1;\n    break;\n  case \"down\":\n    newvalue = 2;\n    break;\n  case \"testing\":\n    newvalue = 4;\n    break;\n  case \"unknown\":\n    newvalue = 5;\n    break;\n  case \"dormant\":\n    newvalue = 6;\n    break;\n  case \"notPresent\":\n    newvalue = 7;\n    break;\n  default:\n    newvalue = \"Problem parsing interface operstate in JS\";\n}\nreturn newvalue;"
+                                }
+                            ]
+                        },
+                        {
+                            "_prototype": "net.if.type",
+                            "type": "ZABBIX_PASSIVE",
+                            "_resource": "Interface {#IFNAME}",
+                            "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/type\"]",
+                            "_vendor_description": "Indicates the interface protocol type as a decimal value.\nSee include/uapi/linux/if_arp.h for all possible values.",
+                            "_ref": "https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net",
+                            "value_map": "Linux::Interface protocol types",
+                            "triggers": [
+                                {
+                                    "_prototype": "trigger.if.speed.not_max",
+                                    "expression": "{TEMPLATE_NAME:METRIC.change()}<0 and {TEMPLATE_NAME:METRIC.last()}>0\nand\n({TEMPLATE_NAME:__net.if.type__.last()}=6\nor {TEMPLATE_NAME:__net.if.type__.last()}=1)\nand\n({TEMPLATE_NAME:__net.if.status__.last()}<>2)"
+                                }
+                            ]
+                        }
+                        // add these metrics
+                        // net.if.duplex is ethernet only
+                        // {
+                        //     "_prototype": "net.if.duplex",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "_resource": "Interface {#IFNAME}",
+                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/duplex\"]",
+                        //     "_vendor_description": "Indicates the interface latest or current duplex value. Possible\nvalues are:\nhalf: half duplex\nfull: full duplex\n\nNote: This attribute is only valid for interfaces that implement\nthe ethtool get_link_ksettings method (mostly Ethernet)."
+                        // }
+                        // unable to add net.if.speed, since sometimes(for eth like bridges...) it return "File is too large for this check."
+                        // {
+                        //     "_prototype": "net.if.speed",
+                        //     "type": "ZABBIX_PASSIVE",
+                        //     "_resource": "Interface {#IFNAME}",
+                        //     "key": "vfs.file.contents[\"/sys/class/net/{#IFNAME}/speed\"]",
+                        //     "_vendor_description": "Indicates the interface latest or current speed value.\nValue is an integer representing the link speed in Mbits/sec. \nNote: this attribute is only valid for interfaces that implement \nthe ethtool get_link_ksettings method (mostly Ethernet)."
+                        // },
+                    ]
+                }
+            ],
+            "screens": [
+                {
+                    "hsize": 1,
+                    "vsize": 1,
+                    "name": "Network interfaces",
+                    "screen_items": [
+                        {
+                            "_graph_id": "net.if.stats"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "_zbx_ver": "4.2",
+            "name": "Template Module Linux generic by Zabbix agent",
+            "macros": [
+                {
+                    "macro": "{$SYSTEM.FUZZYTIME.MAX}",
+                    "value": "60"
+                },
+                {
+                    "macro": "{$KERNEL.MAXPROC.MIN}",
+                    "value": "1024"
+                },
+                {
+                    "macro": "{$KERNEL.MAXFILES.MIN}",
+                    "value": "256"
+                }
+            ],
+            "items": [
+                {
+                    "_prototype": "system.uptime",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.uptime",
+                    "name": "System uptime",
+                    "triggers": [
+                        {
+                            "_prototype": "trigger.uptime.restarted",
+                            "priority": "WARNING",
+                            "name": "{HOST.NAME} has been restarted (uptime < 10m)",
+                            "description": "The host uptime is less than 10 minutes"
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.boottime",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.boottime"
+                },
+                {
+                    "_prototype": "system.localtime",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.localtime"
+                },
+                {
+                    "_prototype": "system.name",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.hostname"
+                },
+                {
+                    "_prototype": "system.descr",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.uname",
+                    "_vendor_description": "The information as normally returned by 'uname -a'."
+                },
+                {
+                    "_id": "system.users.num",
+                    "type": "ZABBIX_PASSIVE",
+                    "_group": "General",
+                    "key": "system.users.num",
+                    "name": "Number of logged in users",
+                    "description": "Number of users who are currently logged in."
+                },
+                {
+                    "_prototype": "kernel.maxfiles",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "kernel.maxfiles"
+                },
+                //missing fd.open metric for zabbix agent! https://support.zabbix.com/browse/ZBXNEXT-5327
+                {
+                    "_prototype": "kernel.maxproc",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "kernel.maxproc"
+                },
+                {
+                    "_prototype": "proc.num.total",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "proc.num"
+                },
+                {
+                    "_prototype": "proc.num.run",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "proc.num[,,run]"
+                },
+                {
+                    "_id": "passwords.checksum",
+                    "name": "Checksum of /etc/passwd",
+                    "key": "vfs.file.cksum[/etc/passwd]",
+                    "type": "ZABBIX_PASSIVE",
+                    "value_type": "CHAR",
+                    "_group": "Security",
+                    "update": "15m",
+                    "preprocessing": [
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1h"
+                        }
+                    ],
+                    "triggers": [
+                        {
+                            "name": "/etc/passwd has been changed",
+                            "priority": "INFO",
+                            "manual_close": "YES",
+                            "expression": "{TEMPLATE_NAME:METRIC.diff()}>0",
+                            "_depends_on": [
+                                "trigger.system.name.changed",
+                                "trigger.system.sw.os.changed"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "_prototype": "system.sw.os",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.sw.os"
+                },
+                {
+                    "_prototype": "system.sw.arch",
+                    "type": "ZABBIX_PASSIVE",
+                    "key": "system.sw.arch"
+                },
+                {
+                    "_prototype": "system.sw.packages",
+                    "key": "system.sw.packages",
+                    "type": "ZABBIX_PASSIVE"
+                }
+            ]
+        },
+        {
+            "_zbx_ver": "4.2",
+            "name": "Template OS Linux by Zabbix agent",
+            "_classes": [
+                "OS"
+            ],
+            "templates": [
+                "Template Module Zabbix agent",
+                "Template Module Linux generic by Zabbix agent",
+                "Template Module Linux CPU by Zabbix agent",
+                "Template Module Linux memory by Zabbix agent",
+                "Template Module Linux filesystems by Zabbix agent",
+                "Template Module Linux block devices by Zabbix agent",
+                "Template Module Linux network interfaces by Zabbix agent"
+            ],
+            "_documentation": {
+                "_setup": "Install Zabbix agent to Linux OS according to Zabbix documentation.",
+                "_issues": [
+                    {
+                        "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
+                    }
+                ],
+                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
+            },
+            "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
+            "screens": [
+                {
+                    "name": "System performance",
+                    "hsize": 2,
+                    "vsize": 4,
+                    "screen_items": [
+                        {
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "System load"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "CPU usage"
+                                }
+                            ],
+                            "x": 1,
+                            "y": 0
+                        },
+                        {
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "Memory usage"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "value_maps": [
+        {
+            "name": "IF-MIB::ifOperStatus",
+            "mappings": [
+                {
+                    "value": "1",
+                    "newvalue": "up"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "down"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "unknown"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "dormant"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "notPresent"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "lowerLayerDown"
+                }
+            ]
+        },
+        {
+            "name": "Linux::Interface protocol types",
+            "mappings": [
+                //https://github.com/torvalds/linux/blob/master/include/uapi/linux/if_arp.h
+                /* ARP protocol HARDWARE identifiers. */
+                {
+                    "value": "0",
+                    "newvalue": "from KA9Q: NET/ROM pseudo"
+                },
+                {
+                    "value": "1",
+                    "newvalue": "Ethernet 10Mbps"
+                },
+                {
+                    "value": "2",
+                    "newvalue": "Experimental Ethernet"
+                },
+                {
+                    "value": "3",
+                    "newvalue": "AX.25 Level 2"
+                },
+                {
+                    "value": "4",
+                    "newvalue": "PROnet token ring"
+                },
+                {
+                    "value": "5",
+                    "newvalue": "Chaosnet"
+                },
+                {
+                    "value": "6",
+                    "newvalue": "IEEE 802.2 Ethernet/TR/TB"
+                },
+                {
+                    "value": "7",
+                    "newvalue": "ARCnet"
+                },
+                {
+                    "value": "8",
+                    "newvalue": "APPLEtalk"
+                },
+                {
+                    "value": "15",
+                    "newvalue": "Frame Relay DLCI"
+                },
+                {
+                    "value": "19",
+                    "newvalue": "ATM"
+                },
+                {
+                    "value": "23",
+                    "newvalue": "Metricom STRIP (new IANA id)"
+                },
+                {
+                    "value": "24",
+                    "newvalue": "IEEE 1394 IPv4 - RFC 2734"
+                },
+                {
+                    "value": "27",
+                    "newvalue": "EUI-64"
+                },
+                {
+                    "value": "32",
+                    "newvalue": "InfiniBand"
+                },
+                {
+                    "value": "256",
+                    "newvalue": "ARPHRD_SLIP"
+                },
+                {
+                    "value": "257",
+                    "newvalue": "ARPHRD_CSLIP"
+                },
+                {
+                    "value": "258",
+                    "newvalue": "ARPHRD_SLIP6"
+                },
+                {
+                    "value": "259",
+                    "newvalue": "ARPHRD_CSLIP6"
+                },
+                {
+                    "value": "260",
+                    "newvalue": "Notional KISS type"
+                },
+                {
+                    "value": "264",
+                    "newvalue": "ARPHRD_ADAPT"
+                },
+                {
+                    "value": "270",
+                    "newvalue": "ARPHRD_ROSE"
+                },
+                {
+                    "value": "271",
+                    "newvalue": "CCITT X.25"
+                },
+                {
+                    "value": "272",
+                    "newvalue": "Boards with X.25 in firmware"
+                },
+                {
+                    "value": "280",
+                    "newvalue": "Controller Area Network"
+                },
+                {
+                    "value": "512",
+                    "newvalue": "ARPHRD_PPP"
+                },
+                {
+                    "value": "513",
+                    "newvalue": "Cisco HDLC"
+                },
+                {
+                    "value": "516",
+                    "newvalue": "LAPB"
+                },
+                {
+                    "value": "517",
+                    "newvalue": "Digital's DDCMP protocol"
+                },
+                {
+                    "value": "518",
+                    "newvalue": "Raw HDLC"
+                },
+                {
+                    "value": "519",
+                    "newvalue": "Raw IP"
+                },
+                {
+                    "value": "768",
+                    "newvalue": "IPIP tunnel"
+                },
+                {
+                    "value": "769",
+                    "newvalue": "IP6IP6 tunnel"
+                },
+                {
+                    "value": "770",
+                    "newvalue": "Frame Relay Access Device"
+                },
+                {
+                    "value": "771",
+                    "newvalue": "SKIP vif"
+                },
+                {
+                    "value": "772",
+                    "newvalue": "Loopback device"
+                },
+                {
+                    "value": "773",
+                    "newvalue": "Localtalk device"
+                },
+                {
+                    "value": "774",
+                    "newvalue": "Fiber Distributed Data Interface"
+                },
+                {
+                    "value": "775",
+                    "newvalue": "AP1000 BIF"
+                },
+                {
+                    "value": "776",
+                    "newvalue": "sit0 device - IPv6-in-IPv4"
+                },
+                {
+                    "value": "777",
+                    "newvalue": "IP over DDP tunneller"
+                },
+                {
+                    "value": "778",
+                    "newvalue": "GRE over IP"
+                },
+                {
+                    "value": "779",
+                    "newvalue": "PIMSM register interface"
+                },
+                {
+                    "value": "780",
+                    "newvalue": "High Performance Parallel Interface"
+                },
+                {
+                    "value": "781",
+                    "newvalue": "Nexus 64Mbps Ash"
+                },
+                {
+                    "value": "782",
+                    "newvalue": "Acorn Econet"
+                },
+                {
+                    "value": "783",
+                    "newvalue": "Linux-IrDA"
+                },
+                {
+                    "value": "784",
+                    "newvalue": "Point to point fibrechannel"
+                },
+                {
+                    "value": "785",
+                    "newvalue": "Fibrechannel arbitrated loop"
+                },
+                {
+                    "value": "786",
+                    "newvalue": "Fibrechannel public loop"
+                },
+                {
+                    "value": "787",
+                    "newvalue": "Fibrechannel fabric"
+                },
+                /* 787->799 reserved for fibrechannel media types */
+                {
+                    "value": "800",
+                    "newvalue": "Magic type ident for TR"
+                },
+                {
+                    "value": "801",
+                    "newvalue": "IEEE 802.11"
+                },
+                {
+                    "value": "802",
+                    "newvalue": "IEEE 802.11 + Prism2 header"
+                },
+                {
+                    "value": "803",
+                    "newvalue": "IEEE 802.11 + radiotap header"
+                },
+                {
+                    "value": "804",
+                    "newvalue": "ARPHRD_IEEE802154"
+                },
+                {
+                    "value": "805",
+                    "newvalue": "IEEE 802.15.4 network monitor"
+                },
+                {
+                    "value": "820",
+                    "newvalue": "PhoNet media type"
+                },
+                {
+                    "value": "821",
+                    "newvalue": "PhoNet pipe header"
+                },
+                {
+                    "value": "822",
+                    "newvalue": "CAIF media type"
+                },
+                {
+                    "value": "823",
+                    "newvalue": "GRE over IPv6"
+                },
+                {
+                    "value": "824",
+                    "newvalue": "Netlink header"
+                },
+                {
+                    "value": "825",
+                    "newvalue": "IPv6 over LoWPAN"
+                },
+                {
+                    "value": "826",
+                    "newvalue": "Vsock monitor header"
+                }
+            ]
+        }
+    ]
+}
