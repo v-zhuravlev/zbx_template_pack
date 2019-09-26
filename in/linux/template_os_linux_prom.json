@@ -1004,6 +1004,10 @@
                         {
                             "type": "PROMETHEUS_PATTERN",
                             "params": "node_exporter_build_info\r\nversion"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1d"
                         }
                     ]
                 },
@@ -1043,6 +1047,10 @@
                         {
                             "type": "PROMETHEUS_PATTERN",
                             "params": "node_uname_info\r\nnodename"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1d"
                         }
                     ]
                 },
@@ -1060,6 +1068,10 @@
                         {
                             "type": "JAVASCRIPT",
                             "params": "var info = JSON.parse(value)[0];\r\n   return info.labels.sysname+' version: '+info.labels.release+' '+info.labels.version"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1d"
                         }
                     ]
                 },
@@ -1073,6 +1085,10 @@
                         {
                             "type": "PROMETHEUS_PATTERN",
                             "params": "node_filefd_maximum\r\n"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1d"
                         }
                     ]
                 },
@@ -1098,6 +1114,10 @@
                 //         {
                 //             "type": "PROMETHEUS_PATTERN",
                 //             "params": ""
+                //         },
+                //         {
+                //            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                //            "params": "1d"
                 //         }
                 //     ]
                 // },
@@ -1120,13 +1140,25 @@
                 // },
                 {
                     "_prototype": "system.sw.os",
-                    "type": "ZABBIX_PASSIVE",
-                    "key": "system.sw.os"
+                    "type": "DEPENDENT",
+                    "key": "system.sw.os[node_exporter]",
+                    "master_item": "system.descr"
                 },
                 {
                     "_prototype": "system.sw.arch",
-                    "type": "ZABBIX_PASSIVE",
-                    "key": "system.sw.arch"
+                    "type": "DEPENDENT",
+                    "master_item": "node_exporter.get",
+                    "key": "system.sw.arch[node_exporter]",
+                    "preprocessing": [
+                        {
+                            "type": "PROMETHEUS_PATTERN",
+                            "params": "node_uname_info\r\nmachine"
+                        },
+                        {
+                            "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                            "params": "1d"
+                        }
+                    ]
                 },
                 //uptime
                 {

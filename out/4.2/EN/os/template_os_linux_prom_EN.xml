@@ -162,6 +162,12 @@ version</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -450,6 +456,12 @@ nodename</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -516,6 +528,12 @@ nodename</params>
                      <type>22</type>
                      <params>node_filefd_maximum
 </params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>20</type>
+                     <params>1d</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -614,10 +632,10 @@ nodename</params>
             </item>
             <item>
                <name>Operating system</name>
-               <type>0</type>
+               <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>system.sw.os</key>
+               <key>system.sw.os[node_exporter]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -676,14 +694,16 @@ nodename</params>
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <master_item/>
+               <master_item>
+                  <key>system.descr[node_exporter]</key>
+               </master_item>
             </item>
             <item>
                <name>Operating system architecture</name>
-               <type>0</type>
+               <type>18</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>system.sw.arch</key>
+               <key>system.sw.arch[node_exporter]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -717,6 +737,13 @@ nodename</params>
                <logtimefmt/>
                <preprocessing>
                   <step>
+                     <type>22</type>
+                     <params>node_uname_info
+machine</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
                      <type>20</type>
                      <params>1d</params>
                      <error_handler>0</error_handler>
@@ -742,7 +769,9 @@ nodename</params>
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <master_item/>
+               <master_item>
+                  <key>node_exporter.get</key>
+               </master_item>
             </item>
             <item>
                <name>System uptime</name>
@@ -5790,7 +5819,7 @@ System name has changed. Ack to close.</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux by Prom:system.sw.os.diff()}=1 and {Template OS Linux by Prom:system.sw.os.strlen()}&gt;0</expression>
+         <expression>{Template OS Linux by Prom:system.sw.os[node_exporter].diff()}=1 and {Template OS Linux by Prom:system.sw.os[node_exporter].strlen()}&gt;0</expression>
          <recovery_mode>2</recovery_mode>
          <recovery_expression/>
          <name>Operating system description has changed</name>
