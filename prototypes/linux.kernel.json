@@ -63,15 +63,37 @@
     {
         "_id": "proc.num.total",
         "_group": "General",
-        "name": "Number of running processes",
+        "name": "Number of processes",
         "triggers": [
             {
                 "_id": "trigger.proc.num.total.crit",
                 "priority": "WARNING",
                 "name": "Getting closer to process limit (over 80% used)",
-                "opdata": "{ITEM.LASTVALUE1} running, {ITEM.LASTVALUE2} limit.",
+                "opdata": "{ITEM.LASTVALUE1} active, {ITEM.LASTVALUE2} limit.",
                 "expression": "{TEMPLATE_NAME:METRIC.last()}/{TEMPLATE_NAME:__kernel.maxproc__.last()}*100>80"
             }
+        ],
+        "graphs": [
+            {
+                "name": "Processes",
+                "graphtype": "NORMAL",
+                "graph_items": [
+                    {
+                        "name": "proc.num.total"
+                    },
+                    {
+                        "name": "proc.num.run"
+                    },
+                    {
+                        "name": "kernel.maxproc"
+                    }
+                ]
+            }
         ]
+    },
+    {
+        "_id": "proc.num.run",
+        "_group": "General",
+        "name": "Number of running processes"
     }
 ]

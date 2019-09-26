@@ -321,7 +321,8 @@ There are no template links in this template.
 |General|Number of logged in users|<p>Number of users who are currently logged in.</p>|ZABBIX_PASSIVE|system.users.num|
 |General|Maximum number of open file descriptors|<p>It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.</p>|ZABBIX_PASSIVE|kernel.maxfiles<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |General|Maximum number of processes|<p>It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.</p>|ZABBIX_PASSIVE|kernel.maxproc<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|General|Number of running processes|<p>-</p>|ZABBIX_PASSIVE|proc.num|
+|General|Number of processes|<p>-</p>|ZABBIX_PASSIVE|proc.num|
+|General|Number of running processes|<p>-</p>|ZABBIX_PASSIVE|proc.num[,,run]|
 |Inventory|Operating system|<p>-</p>|ZABBIX_PASSIVE|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Operating system architecture|<p>-</p>|ZABBIX_PASSIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Software installed|<p>-</p>|ZABBIX_PASSIVE|system.sw.packages<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
