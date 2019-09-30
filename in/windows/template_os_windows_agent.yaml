@@ -194,6 +194,7 @@ templates:
         type: ZABBIX_PASSIVE
         key: system.cpu.util
 
+
     # discovery_rules:
     #   - name: CPU core discovery
     #     key: system.cpu.discovery
@@ -235,151 +236,6 @@ templates:
     #           value: "{$CPU.STATUS.NOT_MATCHES}"
     #           formulaid: D
     #           operator: NOT_MATCHES_REGEX
-  - name: Template Module Windows filesystems by Zabbix agent
-    _zbx_ver: "4.2"
-    _classes:
-      - OS
-    macros:
-      - macro: "{$VFS.FS.FSNAME.MATCHES}"
-        value: ".*"
-        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
-      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
-        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
-        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
-      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
-        value: ".*"
-        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
-      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
-        value: "^\\s$"
-        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
-      - macro: "{$VFS.FS.FSDRIVETYPE.MATCHES}"
-        value: "fixed"
-        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
-      - macro: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
-        value: "^\\s$"
-        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
-    discovery_rules:
-      - name: "Mounted filesystem discovery"
-        key: "vfs.fs.discovery"
-        type: "ZABBIX_PASSIVE"
-        description: "Discovery of file systems of different types."
-        filter:
-          evalType: "AND"
-          conditions:
-            - macro: "{#FSTYPE}"
-              value: "{$VFS.FS.FSTYPE.MATCHES}"
-              operator: "MATCHES_REGEX"
-              formulaid: "A"
-            - macro: "{#FSTYPE}"
-              value: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
-              operator: "NOT_MATCHES_REGEX"
-              formulaid: "B"
-            - macro: "{#FSNAME}"
-              value: "{$VFS.FS.FSNAME.MATCHES}"
-              operator: "MATCHES_REGEX"
-              formulaid: "C"
-            - macro: "{#FSNAME}"
-              value: "{$VFS.FS.FSNAME.NOT_MATCHES}"
-              operator: "NOT_MATCHES_REGEX"
-              formulaid: "D"
-            - macro: "{#FSDRIVETYPE}"
-              value: "{$VFS.FS.FSDRIVETYPE.MATCHES}"
-              operator: MATCHES_REGEX
-              formulaid: E
-            - macro: "{#FSDRIVETYPE}"
-              value: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
-              operator: NOT_MATCHES_REGEX
-              formulaid: F
-        items:
-          - _prototype: "vfs.fs.used"
-            type: "ZABBIX_PASSIVE"
-            key: "vfs.fs.size[{#FSNAME},used]"
-            _group: "Filesystems"
-            _resource: "{#FSNAME}"
-            application_prototype: "Filesystem __RESOURCE__"
-          - _prototype: "vfs.fs.total"
-            type: "ZABBIX_PASSIVE"
-            key: "vfs.fs.size[{#FSNAME},total]"
-            _group: "Filesystems"
-            _resource: "{#FSNAME}"
-            application_prototype: "Filesystem __RESOURCE__"
-          - _prototype: "vfs.fs.pused"
-            type: "ZABBIX_PASSIVE"
-            key: "vfs.fs.size[{#FSNAME},pused]"
-            _group: "Filesystems"
-            _resource: "{#FSNAME}"
-            application_prototype: "Filesystem __RESOURCE__"
-
-  # - name: Template Module Windows disk performance by Zabbix agent
-  #   _zbx_ver: "4.2"
-  #   _classes:
-  #     - OS
-
-  - name: Template Module Windows inventory by Zabbix agent
-    _zbx_ver: "4.2"
-    _classes:
-      - OS
-    items:
-      - _prototype: "system.uptime"
-        _group: "General"
-        type: "ZABBIX_PASSIVE"
-        key: "system.uptime"
-        name: "System uptime"
-        triggers:
-          - _prototype: "trigger.uptime.restarted"
-            priority: "WARNING"
-            name: "Host has been restarted (uptime < 10m)"
-            description: "The device uptime is less than 10 minutes."
-      - _id: system.uname
-        _group: "General"
-        name: System information
-        type: ZABBIX_PASSIVE
-        key: system.uname
-        value_type: CHAR
-        delay: 1h
-      - _id: proc.num[]
-        _group: "General"
-        name: Number of processes
-        type: ZABBIX_PASSIVE
-        key: proc.num[]
-        value_type: UNSIGNED
-      - _id: sys.threads
-        _group: "General"
-        name: Number of threads
-        type: ZABBIX_PASSIVE
-        key: perf_counter_en["\System\Threads"]
-        value_type: UNSIGNED
-        description: "The number of threads used by all running processes."
-      # - _id: system.uptime
-      #   _group: "General"
-      #   name: System uptime
-      #   type: ZABBIX_PASSIVE
-      #   key: system.uptime
-      #   value_type: UNSIGNED
-      #   delay: 1m
-      #   units: uptime
-      #   triggers:
-      #     - _prototype: trigger.uptime.restarted
-      #       priority: WARNING
-      #       name: Host has been restarted (uptime < 10m)
-      #       description: The device uptime is less than 10 minutes.
-      # _depends_on:
-      # - _id: custom.os.updates.latestupdatesinstalled
-      #   _group: "General"
-      #   name: Latest update installed days ago
-      #   type: ZABBIX_PASSIVE
-      #   key: custom.os.updates.latestupdatesinstalled
-      #   value_type: UNSIGNED
-      #   delay: 1d
-      #   units: s
-      # - _id: custom.os.pendingreboot
-      #   _group: "General"
-      #   name: Pending reboot
-      #   type: ZABBIX_PASSIVE
-      #   key: custom.os.pendingreboot
-      #   value_type: UNSIGNED
-      #   delay: 1d
-
   - name: Template Module Windows memory by Zabbix agent
     _zbx_ver: "4.2"
     _classes:
@@ -817,6 +673,151 @@ templates:
       #   value_type: UNSIGNED
       #   delay: 1h
       #   units: B
+
+  - name: Template Module Windows filesystems by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - OS
+    macros:
+      - macro: "{$VFS.FS.FSNAME.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
+      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
+        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
+      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
+      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
+      - macro: "{$VFS.FS.FSDRIVETYPE.MATCHES}"
+        value: "fixed"
+        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
+      - macro: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description: "This macro is used in filesystems discovery. Can be overriden on the host or linked template level."
+    discovery_rules:
+      - name: "Mounted filesystem discovery"
+        key: "vfs.fs.discovery"
+        type: "ZABBIX_PASSIVE"
+        description: "Discovery of file systems of different types."
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#FSTYPE}"
+              value: "{$VFS.FS.FSTYPE.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+            - macro: "{#FSTYPE}"
+              value: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
+            - macro: "{#FSNAME}"
+              value: "{$VFS.FS.FSNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "C"
+            - macro: "{#FSNAME}"
+              value: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "D"
+            - macro: "{#FSDRIVETYPE}"
+              value: "{$VFS.FS.FSDRIVETYPE.MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: E
+            - macro: "{#FSDRIVETYPE}"
+              value: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: F
+        items:
+          - _prototype: "vfs.fs.used"
+            type: "ZABBIX_PASSIVE"
+            key: "vfs.fs.size[{#FSNAME},used]"
+            _group: "Filesystems"
+            _resource: "{#FSNAME}"
+            application_prototype: "Filesystem __RESOURCE__"
+          - _prototype: "vfs.fs.total"
+            type: "ZABBIX_PASSIVE"
+            key: "vfs.fs.size[{#FSNAME},total]"
+            _group: "Filesystems"
+            _resource: "{#FSNAME}"
+            application_prototype: "Filesystem __RESOURCE__"
+          - _prototype: "vfs.fs.pused"
+            type: "ZABBIX_PASSIVE"
+            key: "vfs.fs.size[{#FSNAME},pused]"
+            _group: "Filesystems"
+            _resource: "{#FSNAME}"
+            application_prototype: "Filesystem __RESOURCE__"
+
+  # - name: Template Module Windows disk performance by Zabbix agent
+  #   _zbx_ver: "4.2"
+  #   _classes:
+  #     - OS
+
+  - name: Template Module Windows inventory by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - OS
+    items:
+      - _prototype: "system.uptime"
+        _group: "General"
+        type: "ZABBIX_PASSIVE"
+        key: "system.uptime"
+        name: "System uptime"
+        triggers:
+          - _prototype: "trigger.uptime.restarted"
+            priority: "WARNING"
+            name: "Host has been restarted (uptime < 10m)"
+            description: "The device uptime is less than 10 minutes."
+      - _id: system.uname
+        _group: "General"
+        name: System information
+        type: ZABBIX_PASSIVE
+        key: system.uname
+        value_type: CHAR
+        delay: 1h
+      - _id: proc.num[]
+        _group: "General"
+        name: Number of processes
+        type: ZABBIX_PASSIVE
+        key: proc.num[]
+        value_type: UNSIGNED
+      - _id: sys.threads
+        _group: "General"
+        name: Number of threads
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\System\Threads"]
+        value_type: UNSIGNED
+        description: "The number of threads used by all running processes."
+      # - _id: system.uptime
+      #   _group: "General"
+      #   name: System uptime
+      #   type: ZABBIX_PASSIVE
+      #   key: system.uptime
+      #   value_type: UNSIGNED
+      #   delay: 1m
+      #   units: uptime
+      #   triggers:
+      #     - _prototype: trigger.uptime.restarted
+      #       priority: WARNING
+      #       name: Host has been restarted (uptime < 10m)
+      #       description: The device uptime is less than 10 minutes.
+      # _depends_on:
+      # - _id: custom.os.updates.latestupdatesinstalled
+      #   _group: "General"
+      #   name: Latest update installed days ago
+      #   type: ZABBIX_PASSIVE
+      #   key: custom.os.updates.latestupdatesinstalled
+      #   value_type: UNSIGNED
+      #   delay: 1d
+      #   units: s
+      # - _id: custom.os.pendingreboot
+      #   _group: "General"
+      #   name: Pending reboot
+      #   type: ZABBIX_PASSIVE
+      #   key: custom.os.pendingreboot
+      #   value_type: UNSIGNED
+      #   delay: 1d
 
   - name: Template Module Windows network by Zabbix agent
     _zbx_ver: "4.2"

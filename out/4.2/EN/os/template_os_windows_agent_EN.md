@@ -50,6 +50,67 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+# Template Module Windows memory by Zabbix agent
+
+## Overview
+
+For Zabbix version: 4.2  
+
+## Setup
+
+
+## Zabbix configuration
+
+
+### Macros used
+
+|Name|Description|Default|
+|----|-----------|-------|
+|{$MEM.COMMITED.CRIT.MAX}|<p>The warning threshold of the % Committed Bytes In Use counter.</p>|`80`|
+|{$MEM.PAGE_SEC.CRIT.MAX}|<p>The warning threshold of the Memory Pages/sec counter.</p>|`1000`|
+|{$MEM.PAGE_TABLE.CRIT.MAX}|<p>The warning threshold of the Free System Page Table Entries counter.</p>|`5000`|
+|{$MEMORY.UTIL.MAX}|<p>The warning threshold of the Memory util item.</p>|`90`|
+|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
+
+## Template links
+
+There are no template links in this template.
+
+## Discovery rules
+
+
+## Items collected
+
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Memory|Used memory|<p>Used memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[used]|
+|Memory|Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util<p>**Expression**:</p>`last("vm.memory.size[used]") / last("vm.memory.size[total]") * 100`|
+|Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[total]|
+|Memory|Free swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,free]|
+|Memory|Free swap space in %|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,pfree]|
+|Memory|Total swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,total]|
+|Memory|Cache bytes|<p>Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, </p><p>Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays </p><p>the last observed value only; it is not an average.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Cache Bytes"]|
+|Memory|Committed in use, %|<p>The \Memory\% Committed Bytes In Use counter calculates the ratio of committed bytes (system commit charge) </p><p>to the system commit limit, and the system can perform poorly when the system commit limit is reached. </p><p>Therefore, when % Committed Bytes In Use is greater than 80%, use the \Process(*)\Private Bytes counter </p><p>to identify the processes that are consuming the most committed memory.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\% Committed Bytes In Use"]|
+|Memory|Free system page table entries|<p>This indicates the number of page table entries not currently in use by the system. If the number is less </p><p>than 5,000, there may well be a memory leak.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Free System Page Table Entries"]|
+|Memory|Page file usage, %|<p>The peak usage of the Page File instance in percent. </p><p>The Paging File performance object consists of counters that monitor the paging file(s) on the computer. </p><p>The paging file is a reserved space on disk that backs up committed physical memory on the computer.</p>|ZABBIX_PASSIVE|perf_counter_en["\Paging File(_total)\% Usage Peak"]|
+|Memory|Pages faults per/sec|<p>Page Faults/sec is the average number of pages faulted per second. It is measured in number of pages </p><p>faulted per second because only one page is faulted in each fault operation, hence this is also equal </p><p>to the number of page fault operations. This counter includes both hard faults (those that require </p><p>disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most </p><p>processors can handle large numbers of soft faults without significant consequence. However, hard faults, </p><p>which require disk access, can cause significant delays.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Page Faults/sec"]|
+|Memory|Pages per/sec|<p>This measures the rate at which pages are read from or written to disk to resolve hard page faults. </p><p>If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Pages/sec"]|
+|Memory|Pool non-paged|<p>This measures the size, in bytes, of the non-paged pool. This is an area of system memory for objects </p><p>that cannot be written to disk but instead must remain in physical memory as long as they are allocated. </p><p>There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch). </p><p>A typical Event ID 2019 is recorded in the system event log.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Pool Nonpaged Bytes"]|
+
+## Triggers
+
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util.min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.size[,pfree].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template Module Windows memory by Zabbix agent:system.swap.size[,total].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p>|
+|Memory Committed Bytes is too high (over {$MEM.COMMITED.CRIT.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory\% Committed Bytes in the last 5 minutes exceeds {$MEM.COMMITED.CRIT.MAX}%. If you see this counter remaining over 80% for an extended time, you have a memory leak, or you need to upgrade your RAM.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\% Committed Bytes In Use"].min(5m)}>{$MEM.COMMITED.CRIT.MAX}`|HIGH||
+|Free System Page Table Entries is too low (less {$MEM.PAGE_TABLE.CRIT.MAX} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE.CRIT.MAX} for 5 minutes. If the number is less than 5,000, there may well be a memory leak.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\Free System Page Table Entries"].max(5m)}<{$MEM.PAGE_TABLE.CRIT.MAX}`|HIGH||
+|The Memory Pages/sec is too high (over {$MEM.PAGE_SEC.CRIT.MAX} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory Pages/sec in the last 5 minutes exceeds {$MEM.PAGE_SEC.CRIT.MAX}. If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\Pages/sec"].min(5m)}>{$MEM.PAGE_SEC.CRIT.MAX}`|HIGH||
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
+
 # Template Module Windows filesystems by Zabbix agent
 
 ## Overview
@@ -138,67 +199,6 @@ There are no template links in this template.
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Host has been restarted (uptime < 10m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The device uptime is less than 10 minutes.</p>|`{TEMPLATE_NAME:system.uptime.last()}<10m`|WARNING|<p>Manual close: YES</p>|
-
-## Feedback
-
-Please report any issues with the template at https://support.zabbix.com
-
-# Template Module Windows memory by Zabbix agent
-
-## Overview
-
-For Zabbix version: 4.2  
-
-## Setup
-
-
-## Zabbix configuration
-
-
-### Macros used
-
-|Name|Description|Default|
-|----|-----------|-------|
-|{$MEM.COMMITED.CRIT.MAX}|<p>The warning threshold of the % Committed Bytes In Use counter.</p>|`80`|
-|{$MEM.PAGE_SEC.CRIT.MAX}|<p>The warning threshold of the Memory Pages/sec counter.</p>|`1000`|
-|{$MEM.PAGE_TABLE.CRIT.MAX}|<p>The warning threshold of the Free System Page Table Entries counter.</p>|`5000`|
-|{$MEMORY.UTIL.MAX}|<p>The warning threshold of the Memory util item.</p>|`90`|
-|{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
-
-## Template links
-
-There are no template links in this template.
-
-## Discovery rules
-
-
-## Items collected
-
-|Group|Name|Description|Type|Key and additional info|
-|-----|----|-----------|----|---------------------|
-|Memory|Used memory|<p>Used memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[used]|
-|Memory|Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util<p>**Expression**:</p>`last("vm.memory.size[used]") / last("vm.memory.size[total]") * 100`|
-|Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_PASSIVE|vm.memory.size[total]|
-|Memory|Free swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,free]|
-|Memory|Free swap space in %|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,pfree]|
-|Memory|Total swap space|<p>-</p>|ZABBIX_PASSIVE|system.swap.size[,total]|
-|Memory|Cache bytes|<p>Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, </p><p>Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays </p><p>the last observed value only; it is not an average.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Cache Bytes"]|
-|Memory|Committed in use, %|<p>The \Memory\% Committed Bytes In Use counter calculates the ratio of committed bytes (system commit charge) </p><p>to the system commit limit, and the system can perform poorly when the system commit limit is reached. </p><p>Therefore, when % Committed Bytes In Use is greater than 80%, use the \Process(*)\Private Bytes counter </p><p>to identify the processes that are consuming the most committed memory.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\% Committed Bytes In Use"]|
-|Memory|Free system page table entries|<p>This indicates the number of page table entries not currently in use by the system. If the number is less </p><p>than 5,000, there may well be a memory leak.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Free System Page Table Entries"]|
-|Memory|Page file usage, %|<p>The peak usage of the Page File instance in percent. </p><p>The Paging File performance object consists of counters that monitor the paging file(s) on the computer. </p><p>The paging file is a reserved space on disk that backs up committed physical memory on the computer.</p>|ZABBIX_PASSIVE|perf_counter_en["\Paging File(_total)\% Usage Peak"]|
-|Memory|Pages faults per/sec|<p>Page Faults/sec is the average number of pages faulted per second. It is measured in number of pages </p><p>faulted per second because only one page is faulted in each fault operation, hence this is also equal </p><p>to the number of page fault operations. This counter includes both hard faults (those that require </p><p>disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most </p><p>processors can handle large numbers of soft faults without significant consequence. However, hard faults, </p><p>which require disk access, can cause significant delays.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Page Faults/sec"]|
-|Memory|Pages per/sec|<p>This measures the rate at which pages are read from or written to disk to resolve hard page faults. </p><p>If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Pages/sec"]|
-|Memory|Pool non-paged|<p>This measures the size, in bytes, of the non-paged pool. This is an area of system memory for objects </p><p>that cannot be written to disk but instead must remain in physical memory as long as they are allocated. </p><p>There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch). </p><p>A typical Event ID 2019 is recorded in the system event log.</p>|ZABBIX_PASSIVE|perf_counter_en["\Memory\Pool Nonpaged Bytes"]|
-
-## Triggers
-
-|Name|Description|Expression|Severity|Dependencies and additional info|
-|----|-----------|----|----|----|
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util.min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
-|High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.size[,pfree].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template Module Windows memory by Zabbix agent:system.swap.size[,total].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p>|
-|Memory Committed Bytes is too high (over {$MEM.COMMITED.CRIT.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory\% Committed Bytes in the last 5 minutes exceeds {$MEM.COMMITED.CRIT.MAX}%. If you see this counter remaining over 80% for an extended time, you have a memory leak, or you need to upgrade your RAM.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\% Committed Bytes In Use"].min(5m)}>{$MEM.COMMITED.CRIT.MAX}`|HIGH||
-|Free System Page Table Entries is too low (less {$MEM.PAGE_TABLE.CRIT.MAX} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE.CRIT.MAX} for 5 minutes. If the number is less than 5,000, there may well be a memory leak.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\Free System Page Table Entries"].max(5m)}<{$MEM.PAGE_TABLE.CRIT.MAX}`|HIGH||
-|The Memory Pages/sec is too high (over {$MEM.PAGE_SEC.CRIT.MAX} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The Memory Pages/sec in the last 5 minutes exceeds {$MEM.PAGE_SEC.CRIT.MAX}. If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</p>|`{TEMPLATE_NAME:perf_counter_en["\Memory\Pages/sec"].min(5m)}>{$MEM.PAGE_SEC.CRIT.MAX}`|HIGH||
 
 ## Feedback
 
