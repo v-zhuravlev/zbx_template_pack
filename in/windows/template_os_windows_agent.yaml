@@ -476,20 +476,42 @@ templates:
   - name: Template Module Windows network by Zabbix agent
     _zbx_ver: "4.2"
     macros:
-      - macro: "{$NET.IFNAME.MATCHES}"
+      - macro: "{$NET.IF.IFNAME.MATCHES}"
         value: ".*"
         _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
-      - macro: "{$NET.IFNAME.NOT_MATCHES}"
+      - macro: "{$NET.IF.IFNAME.NOT_MATCHES}"
         value: "Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer"
         _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
-      - macro: "{$NET.PHYSICALADAPTER.MATCHES}"
+
+      - macro: "{$NET.IF.IFALIAS.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.IFALIAS.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.IFDESCR.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.IFDESCR.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.PHYSICALADAPTER.MATCHES}"
         value: "True"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.IFNETENABLED.MATCHES}"
+        value: "True"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
+      - macro: "{$NET.IF.IFNETENABLED.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overriden on the host or linked template level."
     items:
       - _id: net.if.get
         _group: "Zabbix_raw_items"
-        _resource: "Interface {#IFNAME}"
         type: "ZABBIX_PASSIVE"
-        name: Network interface get
+        name: Network interfaces get
         key: wmi.getall[root\cimv2,"select * from win32_networkadapter"]
         value_type: "TEXT"
         delay: "1m"
@@ -500,6 +522,9 @@ templates:
         type: DEPENDENT
         key: "net.if.discovery"
         master_item: "net.if.get"
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
         # key: wmi.getall[root\cimv2,"select * from win32_networkadapter"]
         # type: ZABBIX_PASSIVE
         description: Discovery of network interfaces as defined in MACRO.
@@ -518,153 +543,107 @@ templates:
           evalType: "AND"
           conditions:
             - macro: "{#IFPHYSICALADAPTER}"
-              value: "{$NET.PHYSICALADAPTER.MATCHES}"
+              value: "{$NET.IF.PHYSICALADAPTER.MATCHES}"
               operator: "MATCHES_REGEX"
               formulaid: "A"
-        #     - macro: "{#IFNAME}"
-        #       value: "{$NET.IFNAME.MATCHES}"
-        #       operator: "MATCHES_REGEX"
-        #       formulaid: "A"
-        #     - macro: "{#IFNAME}"
-        #       value: "{$NET.IFNAME.NOT_MATCHES}"
-        #       operator: "NOT_MATCHES_REGEX"
-        #       formulaid: "B"
+            - macro: "{#IFPHYSICALADAPTER}"
+              value: "{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: B
+            - macro: "{#IFNAME}"
+              value: "{$NET.IF.IFNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: C
+            - macro: "{#IFNAME}"
+              value: "{$NET.IF.IFNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: D
+            - macro: "{#IFDESCR}"
+              value: "{$NET.IF.IFDESCR.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: E
+            - macro: "{#IFDESCR}"
+              value: "{$NET.IF.IFDESCR.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: F
+            - macro: "{#IFALIAS}"
+              value: "{$NET.IF.IFALIAS.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: G
+            - macro: "{#IFALIAS}"
+              value: "{$NET.IF.IFALIAS.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: H
+            - macro: "{#IFNETENABLED}"
+              value: "{$NET.IF.IFNETENABLED.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: I
+            - macro: "{#IFNETENABLED}"
+              value: "{$NET.IF.IFNETENABLED.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: J
         items:
           - _prototype: "net.if.in"
             type: "ZABBIX_PASSIVE"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            description: ""
             key: 'net.if.in["{#IFNAME}"]'
-            # removing trigger if.util_high since there is no net.if.speed to evaluate it properly.
-            triggers: []
           - _prototype: "net.if.out"
             type: "ZABBIX_PASSIVE"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}"]'
+            description: ""
           - _prototype: "net.if.in.discards"
             type: "ZABBIX_PASSIVE"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",dropped]'
+            description: ""
           - _prototype: "net.if.out.discards"
             type: "ZABBIX_PASSIVE"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",dropped]'
+            description: ""
           - _prototype: "net.if.in.errors"
             type: "ZABBIX_PASSIVE"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",errors]'
+            description: ""
           - _prototype: "net.if.out.errors"
             type: "ZABBIX_PASSIVE"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",errors]'
+            description: ""
           - _prototype: "net.if.speed"
-            _resource: "Interface {#IFNAME}"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
             key: 'net.if.speed["{#IFNAME}"]'
             master_item: "net.if.get"
-            application_prototype: "__RESOURCE__"
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].Speed.first()'
                 error_handler: CUSTOM_VALUE
                 error_handler_params: "0"
-          - _id: "net.if.type"
-            _group: "Network_interfaces"
-            _resource: "Interface {#IFNAME}"
-            name: "net.if.type"
+            description: ""
+          - _prototype: "net.if.type"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
             key: 'net.if.type["{#IFNAME}"]'
             master_item: "net.if.get"
-            value_type: CHAR
-            application_prototype: "__RESOURCE__"
+            value_map: Win32_NetworkAdapter::AdapterTypeId
             preprocessing:
               - type: JSONPATH
-                params: '$[?(@.Name == "{#IFNAME}")].AdapterType.first()'
-          - _id: "net.if.status"
-            _group: "Network_interfaces"
-            _resource: "Interface {#IFNAME}"
-            name: "net.if.status"
+                params: '$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()'
+            description: ""
+          - _prototype: net.if.status
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
             key: 'net.if.status["{#IFNAME}"]'
             master_item: "net.if.get"
-            value_type: UNSIGNED
-            application_prototype: "__RESOURCE__"
+            value_map: Win32_NetworkAdapter::NetConnectionStatus
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()'
-          # - _id: "net.if.in"
-          #   type: "ZABBIX_PASSIVE"
-          #   _resource: "Interface {#IFNAME}"
-          #   key: 'net.if.in["{#IFNAME}"]'
-          #   name: "Bits received"
-          #   _group: "Network_interfaces"
-          #   # application_prototype: "__RESOURCE__"
-          #   value_type: "UNSIGNED"
-          #   delay: "1m"
-          #   history: "7d"
-          #   units: "bps"
-          # - _id: "net.if.out"
-          #   type: "ZABBIX_PASSIVE"
-          #   _resource: "Interface {#IFNAME}"
-          #   key: 'net.if.out["{#IFNAME}"]'
-          #   name: "Bits sent"
-          #   _group: "Network_interfaces"
-          #   # application_prototype: "__RESOURCE__"
-          #   delay: "1m"
-          #   history: "7d"
-          #   value_type: "UNSIGNED"
-          #   units: "bps"
-          #   graphs:
-          #     - name: "Network traffic"
-          #       graph_items:
-          #         - name: "net.if.in"
-          #           drawtype: "GRADIENT_LINE"
-          #           yaxisside: "LEFT"
-          #         - name: "net.if.out"
-          #           drawtype: "BOLD_LINE"
-          #           yaxisside: "LEFT"
-          # - _id: wmi.get[root\cimv2,select BytesReceivedPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   _group: "Network_interfaces"
-          #   _resource: Interface
-          #   name: "{#IFNAME}: Incoming network traffic"
-          #   key: wmi.get[root\cimv2,select BytesReceivedPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   type: ZABBIX_PASSIVE
-          #   value_type: UNSIGNED
-          #   units: Bps
-          #   description: .
-          # - _id: wmi.get[root\cimv2,select BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   _group: "Network_interfaces"
-          #   _resource: Interface
-          #   name: "{#IFNAME}: Outgoing network traffic"
-          #   key: wmi.get[root\cimv2,select BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   type: ZABBIX_PASSIVE
-          #   value_type: UNSIGNED
-          #   units: Bps
-          #   description: .
-          # - _id: wmi.get[root\cimv2,select NetConnectionStatus from win32_networkadapter where Name='{#IFNAME}']
-          #   _group: "Network_interfaces"
-          #   _resource: Interface
-          #   name: "{#IFNAME}: Network carrier"
-          #   key: wmi.get[root\cimv2,select NetConnectionStatus from win32_networkadapter where Name='{#IFNAME}']
-          #   type: ZABBIX_PASSIVE
-          #   value_type: UNSIGNED
-          #   description: .
-          # - _id: wmi.get[root\cimv2,select OutputQueueLength from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   _group: "Network_interfaces"
-          #   _resource: Interface
-          #   name: "{#IFNAME}: Output queue length"
-          #   key: wmi.get[root\cimv2,select OutputQueueLength from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   type: ZABBIX_PASSIVE
-          #   value_type: UNSIGNED
-          #   description: .
-          # - _id: wmi.get[root\cimv2,select BytesTotalPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   _group: "Network_interfaces"
-          #   _resource: Interface
-          #   name: "{#IFNAME}: Total network traffic"
-          #   key: wmi.get[root\cimv2,select BytesTotalPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='{#IFNAME}']
-          #   type: ZABBIX_PASSIVE
-          #   value_type: UNSIGNED
-          #   units: Bps
-          #   description: .
+            description: ""
 
   - name: Template OS Windows by Zabbix agent
     _zbx_ver: "4.2"
@@ -703,3 +682,114 @@ templates:
     #       - _graph_id:
     #         x: 0
     #         y: 1
+
+value_maps:
+  - name: Win32_NetworkAdapter::AdapterTypeId
+    mappings:
+      - value: "0"
+        newvalue: Ethernet 802.3
+      - value: "1"
+        newvalue: Token Ring 802.5
+      - value: "2"
+        newvalue: Fiber Distributed Data Interface (FDDI)
+      - value: "3"
+        newvalue: Wide Area Network (WAN)
+      - value: "4"
+        newvalue: LocalTalk
+      - value: "5"
+        newvalue: Ethernet using DIX header format
+      - value: "6"
+        newvalue: ARCNET
+      - value: "7"
+        newvalue: ARCNET (878.2)
+      - value: "8"
+        newvalue: ATM
+      - value: "9"
+        newvalue: Wireless
+      - value: "10"
+        newvalue: Infrared Wireless
+      - value: "11"
+        newvalue: Bpc
+      - value: "12"
+        newvalue: CoWan
+      - value: "13"
+        newvalue: "1394"
+  #https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/cim-logicaldevice
+  - name: CIM_LogicalDevice::Availability
+    mappings:
+      - value: "1"
+        newvalue: Other
+      - value: "2"
+        newvalue: Unknown
+      - value: "3"
+        newvalue: Running/Full Power
+      - value: "4"
+        newvalue: Warning
+      - value: "5"
+        newvalue: In Test
+      - value: "6"
+        newvalue: Not Applicable
+      - value: "7"
+        newvalue: Power Off
+      - value: "8"
+        newvalue: Off Line
+      - value: "9"
+        newvalue: Off Duty
+      - value: "10"
+        newvalue: Degraded
+      - value: "11"
+        newvalue: Not Installed
+      - value: "12"
+        newvalue: Install Error
+      - value: "13"
+        newvalue: Power Save - Unknown
+        # The device is known to be in a power save mode, but its exact status is unknown.
+      - value: "14"
+        newvalue: Power Save - Low Power Mode
+        # The device is in a power save state but still functioning, and may exhibit degraded performance.
+      - value: "15"
+        newvalue: Power Save - Standby
+        # The device is not functioning but could be brought to full power quickly.
+      - value: "16"
+        newvalue: Power Cycle
+      - value: "17"
+        newvalue: Power Save - Warning
+        # The device is in a warning state, though also in a power save mode.
+      - value: "18"
+        newvalue: Paused
+        # The device is paused.
+      - value: "19"
+        newvalue: Not Ready
+      - value: "20"
+        newvalue: Not Configured
+      - value: "21"
+        newvalue: Quiesced
+        # The device is quiet.
+  - name: Win32_NetworkAdapter::NetConnectionStatus
+    mappings:
+      - value: "0"
+        newvalue: Disconnected
+      - value: "1"
+        newvalue: Connecting
+      - value: "2"
+        newvalue: Connected
+      - value: "3"
+        newvalue: Disconnecting
+      - value: "4"
+        newvalue: Hardware Not Present
+      - value: "5"
+        newvalue: Hardware Disabled
+      - value: "6"
+        newvalue: Hardware Malfunction
+      - value: "7"
+        newvalue: Media Disconnected
+      - value: "8"
+        newvalue: Authenticating
+      - value: "9"
+        newvalue: Authentication Succeeded
+      - value: "10"
+        newvalue: Authentication Failed
+      - value: "11"
+        newvalue: Invalid Address
+      - value: "12"
+        newvalue: Credentials Required

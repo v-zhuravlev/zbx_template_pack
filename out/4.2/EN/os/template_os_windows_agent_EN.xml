@@ -1759,7 +1759,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
          </applications>
          <items>
             <item>
-               <name>Interface {#IFNAME}: Network interface get</name>
+               <name>Network interfaces get</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
@@ -1849,9 +1849,63 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                   <conditions>
                      <condition>
                         <macro>{#IFPHYSICALADAPTER}</macro>
-                        <value>{$NET.PHYSICALADAPTER.MATCHES}</value>
+                        <value>{$NET.IF.PHYSICALADAPTER.MATCHES}</value>
                         <operator>8</operator>
                         <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFPHYSICALADAPTER}</macro>
+                        <value>{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFNAME}</macro>
+                        <value>{$NET.IF.IFNAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFNAME}</macro>
+                        <value>{$NET.IF.IFNAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>D</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFDESCR}</macro>
+                        <value>{$NET.IF.IFDESCR.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>E</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFDESCR}</macro>
+                        <value>{$NET.IF.IFDESCR.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>F</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFALIAS}</macro>
+                        <value>{$NET.IF.IFALIAS.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>G</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFALIAS}</macro>
+                        <value>{$NET.IF.IFALIAS.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>H</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFNETENABLED}</macro>
+                        <value>{$NET.IF.IFNETENABLED.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>I</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#IFNETENABLED}</macro>
+                        <value>{$NET.IF.IFNETENABLED.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>J</formulaid>
                      </condition>
                   </conditions>
                </filter>
@@ -1859,7 +1913,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <description>Discovery of network interfaces as defined in MACRO.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Bits received</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Bits received</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -1908,7 +1962,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -1932,7 +1986,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Bits sent</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Bits sent</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -1981,7 +2035,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2005,7 +2059,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Inbound packets discarded</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Inbound packets discarded</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2052,7 +2106,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2076,7 +2130,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Outbound packets discarded</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Outbound packets discarded</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2123,7 +2177,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2147,7 +2201,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Inbound packets with errors</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Inbound packets with errors</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2190,7 +2244,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2214,7 +2268,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Outbound packets with errors</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors</name>
                      <type>0</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2257,7 +2311,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2281,7 +2335,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: Speed</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Speed</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -2324,7 +2378,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2350,83 +2404,14 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Interface {#IFNAME}: net.if.type</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Interface type</name>
                      <type>18</type>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>net.if.type["{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>7d</history>
-                     <trends>0</trends>
-                     <status>0</status>
-                     <value_type>1</value_type>
-                     <allowed_hosts/>
-                     <units/>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description/>
-                     <inventory_link>0</inventory_link>
-                     <applications/>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing>
-                        <step>
-                           <type>12</type>
-                           <params>$[?(@.Name == "{#IFNAME}")].AdapterType.first()</params>
-                           <error_handler>0</error_handler>
-                           <error_handler_params/>
-                        </step>
-                     </preprocessing>
-                     <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Interface {#IFNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item>
-                        <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Interface {#IFNAME}: net.if.status</name>
-                     <type>18</type>
-                     <snmp_community/>
-                     <snmp_oid/>
-                     <key>net.if.status["{#IFNAME}"]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
+                     <history>1w</history>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -2446,10 +2431,91 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description/>
+                     <description>The type of interface.&#13;
+Additional values for ifType are assigned by the Internet Assigned NumbersAuthority (IANA),&#13;
+through updating the syntax of the IANAifType textual convention.</description>
                      <inventory_link>0</inventory_link>
                      <applications/>
-                     <valuemap/>
+                     <valuemap>
+                        <name>Win32_NetworkAdapter::AdapterTypeId</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing>
+                        <step>
+                           <type>12</type>
+                           <params>$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()</params>
+                           <error_handler>0</error_handler>
+                           <error_handler_params/>
+                        </step>
+                     </preprocessing>
+                     <jmx_endpoint/>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item>
+                        <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Operational status</name>
+                     <type>18</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>net.if.status["{#IFNAME}"]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description>The current operational state of the interface.&#13;
+- The testing(3) state indicates that no operational packet scan be passed&#13;
+- If ifAdminStatus is down(2) then ifOperStatus should be down(2)&#13;
+- If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic&#13;
+- It should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection)&#13;
+- It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state&#13;
+- It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.</description>
+                     <inventory_link>0</inventory_link>
+                     <applications/>
+                     <valuemap>
+                        <name>Win32_NetworkAdapter::NetConnectionStatus</name>
+                     </valuemap>
                      <logtimefmt/>
                      <preprocessing>
                         <step>
@@ -2462,7 +2528,7 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                      <jmx_endpoint/>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Interface {#IFNAME}</name>
+                           <name>Interface {#IFNAME}({#IFALIAS})</name>
                         </application_prototype>
                      </application_prototypes>
                      <timeout>3s</timeout>
@@ -2490,12 +2556,37 @@ and at other times as indicated by the value of ifCounterDiscontinuityTime.</des
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
+                     <expression>({Template Module Windows network by Zabbix agent:net.if.in["{#IFNAME}"].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].last()} or&#13;
+{Template Module Windows network by Zabbix agent:net.if.out["{#IFNAME}"].avg(15m)}&gt;({$IF.UTIL.MAX:"{#IFNAME}"}/100)*{Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].last()}) and&#13;
+{Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].last()}&gt;0</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template Module Windows network by Zabbix agent:net.if.in["{#IFNAME}"].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].last()} and&#13;
+{Template Module Windows network by Zabbix agent:net.if.out["{#IFNAME}"].avg(15m)}&lt;(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*{Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].last()}</recovery_expression>
+                     <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>2</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}=2 and {Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
                      <expression>{Template Module Windows network by Zabbix agent:net.if.in["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}&#13;
 or {Template Module Windows network by Zabbix agent:net.if.out["{#IFNAME}",errors].min(5m)}&gt;{$IF.ERRORS.WARN:"{#IFNAME}"}</expression>
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>{Template Module Windows network by Zabbix agent:net.if.in["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8&#13;
 and {Template Module Windows network by Zabbix agent:net.if.out["{#IFNAME}",errors].max(5m)}&lt;{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8</recovery_expression>
-                     <name>Interface {#IFNAME}: High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2505,7 +2596,13 @@ and {Template Module Windows network by Zabbix agent:net.if.out["{#IFNAME}",erro
 Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
-                     <dependencies/>
+                     <dependencies>
+                        <dependency>
+                           <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}=2 and {Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                        </dependency>
+                     </dependencies>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
@@ -2523,7 +2620,7 @@ and&#13;
                      <recovery_mode>1</recovery_mode>
                      <recovery_expression>({Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].change()}&gt;0 and {Template Module Windows network by Zabbix agent:net.if.speed["{#IFNAME}"].prev()}&gt;0) or&#13;
 ({Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}=2)</recovery_expression>
-                     <name>Interface {#IFNAME}: Ethernet has changed to lower speed than it was before</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -2533,13 +2630,41 @@ and&#13;
 This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
+                           <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}=2 and {Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                           <recovery_expression>{Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                        </dependency>
+                     </dependencies>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{$IFCONTROL:"{#IFNAME}"}=1 and ({Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}=2 and {Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].diff()}=1)</expression>
+                     <recovery_mode>1</recovery_mode>
+                     <recovery_expression>{Template Module Windows network by Zabbix agent:net.if.status["{#IFNAME}"].last()}&lt;&gt;2</recovery_expression>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+This trigger expression works as follows:&#13;
+1. Can be triggered if operations status is down.&#13;
+2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
+3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
+&#13;
+WARNING: if closed manually - won't fire again on next poll, because of .diff.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>Interface {#IFNAME}: Network traffic</name>
+                     <name>Interface {#IFNAME}({#IFALIAS}): Network traffic</name>
                      <width>900</width>
                      <height>200</height>
                      <yaxismin>0</yaxismin>
@@ -2672,7 +2797,14 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <path>$.NetEnabled</path>
                   </lld_macro_path>
                </lld_macro_paths>
-               <preprocessing/>
+               <preprocessing>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+               </preprocessing>
                <master_item>
                   <key>wmi.getall[root\cimv2,"select * from win32_networkadapter"]</key>
                </master_item>
@@ -2681,16 +2813,44 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
          <httptests/>
          <macros>
             <macro>
-               <macro>{$NET.IFNAME.MATCHES}</macro>
+               <macro>{$NET.IF.IFALIAS.MATCHES}</macro>
                <value>.*</value>
             </macro>
             <macro>
-               <macro>{$NET.IFNAME.NOT_MATCHES}</macro>
+               <macro>{$NET.IF.IFALIAS.NOT_MATCHES}</macro>
+               <value>CHANGE_THIS</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFDESCR.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFDESCR.NOT_MATCHES}</macro>
+               <value>CHANGE_THIS</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFNAME.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFNAME.NOT_MATCHES}</macro>
                <value>Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer</value>
             </macro>
             <macro>
-               <macro>{$NET.PHYSICALADAPTER.MATCHES}</macro>
+               <macro>{$NET.IF.IFNETENABLED.MATCHES}</macro>
                <value>True</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.IFNETENABLED.NOT_MATCHES}</macro>
+               <value>CHANGE_THIS</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.PHYSICALADAPTER.MATCHES}</macro>
+               <value>True</value>
+            </macro>
+            <macro>
+               <macro>{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}</macro>
+               <value>CHANGE_THIS</value>
             </macro>
          </macros>
          <templates/>
@@ -3093,5 +3253,213 @@ The device uptime is less than 10 minutes.</description>
          <tags/>
       </trigger>
    </triggers>
-   <value_maps/>
+   <value_maps>
+      <value_map>
+         <name>Win32_NetworkAdapter::AdapterTypeId</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Ethernet 802.3</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Token Ring 802.5</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Fiber Distributed Data Interface (FDDI)</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Wide Area Network (WAN)</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>LocalTalk</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Ethernet using DIX header format</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>ARCNET</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>ARCNET (878.2)</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>ATM</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>Wireless</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>Infrared Wireless</newvalue>
+            </mapping>
+            <mapping>
+               <value>11</value>
+               <newvalue>Bpc</newvalue>
+            </mapping>
+            <mapping>
+               <value>12</value>
+               <newvalue>CoWan</newvalue>
+            </mapping>
+            <mapping>
+               <value>13</value>
+               <newvalue>1394</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>CIM_LogicalDevice::Availability</name>
+         <mappings>
+            <mapping>
+               <value>1</value>
+               <newvalue>Other</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Running/Full Power</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Warning</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>In Test</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>Not Applicable</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>Power Off</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>Off Line</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>Off Duty</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>Degraded</newvalue>
+            </mapping>
+            <mapping>
+               <value>11</value>
+               <newvalue>Not Installed</newvalue>
+            </mapping>
+            <mapping>
+               <value>12</value>
+               <newvalue>Install Error</newvalue>
+            </mapping>
+            <mapping>
+               <value>13</value>
+               <newvalue>Power Save - Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>14</value>
+               <newvalue>Power Save - Low Power Mode</newvalue>
+            </mapping>
+            <mapping>
+               <value>15</value>
+               <newvalue>Power Save - Standby</newvalue>
+            </mapping>
+            <mapping>
+               <value>16</value>
+               <newvalue>Power Cycle</newvalue>
+            </mapping>
+            <mapping>
+               <value>17</value>
+               <newvalue>Power Save - Warning</newvalue>
+            </mapping>
+            <mapping>
+               <value>18</value>
+               <newvalue>Paused</newvalue>
+            </mapping>
+            <mapping>
+               <value>19</value>
+               <newvalue>Not Ready</newvalue>
+            </mapping>
+            <mapping>
+               <value>20</value>
+               <newvalue>Not Configured</newvalue>
+            </mapping>
+            <mapping>
+               <value>21</value>
+               <newvalue>Quiesced</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Win32_NetworkAdapter::NetConnectionStatus</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Disconnected</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Connecting</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Connected</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Disconnecting</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Hardware Not Present</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Hardware Disabled</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>Hardware Malfunction</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>Media Disconnected</newvalue>
+            </mapping>
+            <mapping>
+               <value>8</value>
+               <newvalue>Authenticating</newvalue>
+            </mapping>
+            <mapping>
+               <value>9</value>
+               <newvalue>Authentication Succeeded</newvalue>
+            </mapping>
+            <mapping>
+               <value>10</value>
+               <newvalue>Authentication Failed</newvalue>
+            </mapping>
+            <mapping>
+               <value>11</value>
+               <newvalue>Invalid Address</newvalue>
+            </mapping>
+            <mapping>
+               <value>12</value>
+               <newvalue>Credentials Required</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+   </value_maps>
 </zabbix_export>
