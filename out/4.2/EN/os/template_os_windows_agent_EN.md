@@ -66,7 +66,6 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEM.COMMITED.CRIT.MAX}|<p>The warning threshold of the % Committed Bytes In Use counter.</p>|`80`|
 |{$MEM.PAGE_SEC.CRIT.MAX}|<p>The warning threshold of the Memory Pages/sec counter.</p>|`1000`|
 |{$MEM.PAGE_TABLE_CRIT.MIN}|<p>The warning threshold of the Free System Page Table Entries counter.</p>|`5000`|
 |{$MEMORY.UTIL.MAX}|<p>The warning threshold of the Memory util item.</p>|`90`|
