@@ -652,33 +652,33 @@ templates:
           - _prototype: "net.if.in"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
-            description: ""
+            _vendor_description: ""
             key: 'net.if.in["{#IFNAME}"]'
           - _prototype: "net.if.out"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}"]'
-            description: ""
+            _vendor_description: ""
           - _prototype: "net.if.in.discards"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",dropped]'
-            description: ""
+            _vendor_description: ""
           - _prototype: "net.if.out.discards"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",dropped]'
-            description: ""
+            _vendor_description: ""
           - _prototype: "net.if.in.errors"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",errors]'
-            description: ""
+            _vendor_description: ""
           - _prototype: "net.if.out.errors"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",errors]'
-            description: ""
+            _vendor_description: ""
           - _prototype: "net.if.speed"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -689,7 +689,7 @@ templates:
                 params: '$[?(@.Name == "{#IFNAME}")].Speed.first()'
                 error_handler: CUSTOM_VALUE
                 error_handler_params: "0"
-            description: ""
+            _vendor_description: ""
           - _prototype: "net.if.type"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -699,7 +699,7 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()'
-            description: ""
+            _vendor_description: ""
           - _prototype: net.if.status
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -709,7 +709,7 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()'
-            description: ""
+            _vendor_description: ""
 
   - name: Template OS Windows by Zabbix agent
     _zbx_ver: "4.2"
