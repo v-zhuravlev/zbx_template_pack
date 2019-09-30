@@ -24,12 +24,12 @@
          </applications>
          <items>
             <item>
-               <name>Interrupt Time, %</name>
+               <name>CPU interrupt time</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
                <key>perf_counter_en["\Processor Information(_total)\% Interrupt Time"]</key>
-               <delay>0;m0-59</delay>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -87,12 +87,12 @@ hardware failure. This should never be higher than 20%.</description>
                <master_item/>
             </item>
             <item>
-               <name>Privileged time, %</name>
+               <name>CPU privileged time</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
                <key>perf_counter_en["\Processor Information(_total)\% Privileged Time"]</key>
-               <delay>0;m0-59</delay>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -149,12 +149,12 @@ functions of the Windows® Operating System.</description>
                <master_item/>
             </item>
             <item>
-               <name>User time, %</name>
+               <name>CPU user time</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
                <key>perf_counter_en["\Processor Information(_total)\% User Time"]</key>
-               <delay>0;m0-59</delay>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -209,12 +209,12 @@ in User mode.</description>
                <master_item/>
             </item>
             <item>
-               <name>Queue Length</name>
+               <name>CPU queue length</name>
                <type>0</type>
                <snmp_community/>
                <snmp_oid/>
                <key>perf_counter_en["\System\Processor Queue Length"]</key>
-               <delay>0;m0-59</delay>
+               <delay>1m</delay>
                <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
@@ -336,12 +336,8 @@ and are waiting to be executed.</description>
                <value>50</value>
             </macro>
             <macro>
-               <macro>{$CPU.INTERRUPT.WARN.MAX}</macro>
-               <value>30</value>
-            </macro>
-            <macro>
                <macro>{$CPU.PRIV.CRIT.MAX}</macro>
-               <value>20</value>
+               <value>30</value>
             </macro>
             <macro>
                <macro>{$CPU.QUEUE.CRIT.MAX}</macro>
@@ -2873,14 +2869,14 @@ Template tooling version used: 0.29</description>
    </templates>
    <graphs>
       <graph>
-         <name>CPU % Time</name>
+         <name>CPU usage</name>
          <width>900</width>
          <height>200</height>
          <yaxismin>0</yaxismin>
          <yaxismax>100</yaxismax>
          <show_work_period>1</show_work_period>
          <show_triggers>1</show_triggers>
-         <type>0</type>
+         <type>1</type>
          <show_legend>1</show_legend>
          <show_3d>0</show_3d>
          <percent_left>0.0000</percent_left>
@@ -2899,7 +2895,7 @@ Template tooling version used: 0.29</description>
                <type>0</type>
                <item>
                   <host>Template Module Windows CPU by Zabbix agent</host>
-                  <key>perf_counter_en["\Processor Information(_total)\% Interrupt Time"]</key>
+                  <key>perf_counter_en["\Processor Information(_total)\% User Time"]</key>
                </item>
             </graph_item>
             <graph_item>
@@ -2911,43 +2907,19 @@ Template tooling version used: 0.29</description>
                <type>0</type>
                <item>
                   <host>Template Module Windows CPU by Zabbix agent</host>
-                  <key>perf_counter_en["\Processor Information(_total)\% User Time"]</key>
+                  <key>perf_counter_en["\Processor Information(_total)\% Privileged Time"]</key>
                </item>
             </graph_item>
             <graph_item>
                <sortorder>2</sortorder>
                <drawtype>0</drawtype>
                <color>F63100</color>
-               <yaxisside>0</yaxisside>
-               <calc_fnc>2</calc_fnc>
-               <type>0</type>
-               <item>
-                  <host>Template Module Windows CPU by Zabbix agent</host>
-                  <key>perf_counter_en["\Processor Information(_total)\% Privileged Time"]</key>
-               </item>
-            </graph_item>
-            <graph_item>
-               <sortorder>3</sortorder>
-               <drawtype>0</drawtype>
-               <color>A54F10</color>
                <yaxisside>1</yaxisside>
                <calc_fnc>2</calc_fnc>
                <type>0</type>
                <item>
                   <host>Template Module Windows CPU by Zabbix agent</host>
                   <key>perf_counter_en["\System\Processor Queue Length"]</key>
-               </item>
-            </graph_item>
-            <graph_item>
-               <sortorder>4</sortorder>
-               <drawtype>0</drawtype>
-               <color>FC6EA3</color>
-               <yaxisside>0</yaxisside>
-               <calc_fnc>2</calc_fnc>
-               <type>0</type>
-               <item>
-                  <host>Template Module Windows CPU by Zabbix agent</host>
-                  <key>system.cpu.util</key>
                </item>
             </graph_item>
          </graph_items>
@@ -3131,17 +3103,45 @@ Template tooling version used: 0.29</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Module Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}&gt;{$CPU.INTERRUPT.WARN.MAX}</expression>
+         <expression>{Template Module Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}&gt;{$CPU.INTERRUPT.CRIT.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>CPU Interrupt Time is high (over {$CPU.INTERRUPT.WARN.MAX}% for 5m)</name>
+         <name>CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
+         <priority>4</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.WARN.MAX}%.</description>
+"The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."&#13;
+The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing &#13;
+hardware interrupts during sample intervals. This value is an indirect indicator of the activity of &#13;
+devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication &#13;
+lines, network interface cards and other peripheral devices. This is an easy way to identify a potential &#13;
+hardware failure. This should never be higher than 20%.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies>
+            <dependency>
+               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+               <expression>{Template Module Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+               <recovery_expression/>
+            </dependency>
+         </dependencies>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Privileged Time"].min(5m)}&gt;{$CPU.PRIV.CRIT.MAX}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>CPU privileged time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+The CPU privileged time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -3159,52 +3159,6 @@ The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.WARN.MAX}%.
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Module Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Interrupt Time"].min(5m)}&gt;{$CPU.INTERRUPT.CRIT.MAX}</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>4</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%.</description>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies>
-            <dependency>
-               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
-               <expression>{Template Module Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
-         <tags/>
-      </trigger>
-      <trigger>
-         <expression>{Template Module Windows CPU by Zabbix agent:perf_counter_en["\Processor Information(_total)\% Privileged Time"].min(5m)}&gt;{$CPU.PRIV.CRIT.MAX}</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>CPU Privileged Time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>4</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The CPU Privileged Time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</description>
-         <type>0</type>
-         <manual_close>0</manual_close>
-         <dependencies>
-            <dependency>
-               <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
-               <expression>{Template Module Windows CPU by Zabbix agent:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
-         <tags/>
-      </trigger>
-      <trigger>
          <expression>{Template Module Windows CPU by Zabbix agent:perf_counter_en["\System\Processor Queue Length"].min(5m)}&gt;{$CPU.QUEUE.CRIT.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
@@ -3213,7 +3167,7 @@ The CPU Privileged Time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</de
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>4</priority>
+         <priority>2</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
 The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%.</description>
          <type>0</type>

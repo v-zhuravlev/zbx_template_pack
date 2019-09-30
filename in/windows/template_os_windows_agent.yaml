@@ -7,6 +7,28 @@ templates:
     _zbx_ver: "4.2"
     _classes:
       - OS
+    macros:
+      - macro: "{$CPU.INTERRUPT.CRIT.MAX}"
+        _description: The critical threshold of the % Interrupt Time counter.
+        value: "50"
+      - macro: "{$CPU.PRIV.CRIT.MAX}"
+        _description: The threshold of the % Privileged Time counter.
+        value: "30"
+      - macro: "{$CPU.QUEUE.CRIT.MAX}"
+        _description: The threshold of the Processor Queue Length counter.
+        value: "3"
+    #   - macro: "{$CPU.NUMBER.MATCHES}"
+    #     _description: CPU index or number of CPU/CPU core.
+    #     value: ^.+$
+    #   - macro: "{$CPU.NUMBER.NOT_MATCHES}"
+    #     _description: CPU index or number of CPU/CPU core.
+    #     value: ^\s$
+    #   - macro: "{$CPU.STATUS.MATCHES}"
+    #     _description: Whether the cpu is online/offline.
+    #     value: ^online$
+    #   - macro: "{$CPU.STATUS.NOT_MATCHES}"
+    #     _description: Whether the cpu is online/offline.
+    #     value: ^\s$
     items:
       # WMI counters
       # - _id: w
@@ -49,14 +71,13 @@ templates:
       #   value_type: FLOAT
       #   delay: 0;m0-59
       # Performance counters
-      - _id: system.cpu.interrupt.time
-        _group: "CPU"
-        name: Interrupt Time, %
+      - _id: system.cpu.interrupt
+        _group: CPU
+        name: CPU interrupt time
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Processor Information(_total)\% Interrupt Time"]
         value_type: FLOAT
         units: "%"
-        delay: 0;m0-59
         description: |
           The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing 
           hardware interrupts during sample intervals. This value is an indirect indicator of the activity of 
@@ -64,19 +85,17 @@ templates:
           lines, network interface cards and other peripheral devices. This is an easy way to identify a potential 
           hardware failure. This should never be higher than 20%.
         triggers:
-          - _id: t
-            name: "CPU Interrupt Time is high (over {$CPU.INTERRUPT.WARN.MAX}% for 5m)"
-            priority: "AVERAGE"
-            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.INTERRUPT.WARN.MAX}"
-            description: "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.WARN.MAX}%."
-            _depends_on:
-              - trigger.cpu.high
-              - trigger.cpu.interrupt.high
           - _id: trigger.cpu.interrupt.high
             name: "CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)"
             priority: "HIGH"
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.INTERRUPT.CRIT.MAX}"
-            description: "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."
+            description: |
+              "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."
+              The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing 
+              hardware interrupts during sample intervals. This value is an indirect indicator of the activity of 
+              devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication 
+              lines, network interface cards and other peripheral devices. This is an easy way to identify a potential 
+              hardware failure. This should never be higher than 20%.
             _depends_on:
               - trigger.cpu.high
       # - _id: p
@@ -89,14 +108,13 @@ templates:
       #   delay: 0;m0-59
       #   description: |
       #     The Processor Information\% Processor Time shows how much the processor(s) is being utilized.
-      - _id: system.cpu.priv.time
+      - _id: system.cpu.priv
         _group: "CPU"
-        name: Privileged time, %
+        name: CPU privileged time
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Processor Information(_total)\% Privileged Time"]
         value_type: FLOAT
         units: "%"
-        delay: 0;m0-59
         description: |
           The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent 
           executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt 
@@ -104,51 +122,52 @@ templates:
           functions of the Windows® Operating System.
         triggers:
           - _id: trigger.cpu.priv.high
-            name: "CPU Privileged Time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)"
-            priority: "HIGH"
+            name: "CPU privileged time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)"
+            priority: "WARNING"
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.PRIV.CRIT.MAX}"
-            description: "The CPU Privileged Time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%."
+            description: "The CPU privileged time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%."
             _depends_on:
               - trigger.cpu.high
-      - _id: system.cpu.user.time
+              # interrupts are part of priv time
+              - trigger.cpu.interrupt.high
+      - _id: system.cpu.user
         _group: "CPU"
-        name: User time, %
+        name: CPU user time
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\Processor Information(_total)\% User Time"]
         value_type: FLOAT
         units: "%"
-        delay: 0;m0-59
         description: |
           The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing 
           in User mode.
         graphs:
-          - name: CPU % Time
+          - name: CPU usage
+            graphtype: STACKED
             graph_items:
-              - name: system.cpu.interrupt.time
+              # - name: system.cpu.interrupt
+              #   drawtype: SINGLE_LINE
+              - name: system.cpu.user
                 drawtype: SINGLE_LINE
-              - name: system.cpu.user.time
-                drawtype: SINGLE_LINE
-              - name: system.cpu.priv.time
+              - name: system.cpu.priv
                 drawtype: SINGLE_LINE
               - name: system.cpu.queue.length
                 drawtype: SINGLE_LINE
                 yaxisside: RIGHT
-              - name: system.cpu.util
-                drawtype: SINGLE_LINE
+              # - name: system.cpu.util
+              #   drawtype: SINGLE_LINE
       - _id: system.cpu.queue.length
         _group: "CPU"
-        name: Queue Length
+        name: CPU queue length
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\System\Processor Queue Length"]
         value_type: FLOAT
-        delay: 0;m0-59
         description: |
           The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue 
           and are waiting to be executed.
         triggers:
           - _id: trigger.cpu.queue.length
             name: "CPU Queue Length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)"
-            priority: "HIGH"
+            priority: "WARNING"
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.QUEUE.CRIT.MAX}"
             description: "The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%."
             _depends_on:
@@ -173,16 +192,6 @@ templates:
         type: ZABBIX_PASSIVE
         key: system.cpu.util
         delay: 0;m0-59
-        triggers:
-          - _prototype: trigger.cpu.high
-            # name: "CPU utilization is too high (over {$CPU_UTIL_MAX}% for 10m)"
-            # expression: "{TEMPLATE_NAME:METRIC.avg(10m)}>{$CPU_UTIL_MAX}"
-            # description: "The average CPU usage in the last 10 minutes exceeds {$CPU_UTIL_MAX}%."
-          # - _id: trigger.cpu.util.warn
-          #   name: "CPU utilization is too high (over {$CPU_UTIL_MAX}% for 10m)"
-          #   priority: "AVERAGE"
-          #   expression: "{TEMPLATE_NAME:METRIC.avg(10m)}>{$CPU_UTIL_MAX}"
-          #   description: "The average CPU usage in the last 10 minutes exceeds {$CPU_UTIL_MAX}%."
 
     # discovery_rules:
     #   - name: CPU core discovery
@@ -225,31 +234,6 @@ templates:
     #           value: "{$CPU.STATUS.NOT_MATCHES}"
     #           formulaid: D
     #           operator: NOT_MATCHES_REGEX
-    macros:
-      - macro: "{$CPU.INTERRUPT.WARN.MAX}"
-        _description: The warning threshold of the % Interrupt Time counter.
-        value: "30"
-      - macro: "{$CPU.INTERRUPT.CRIT.MAX}"
-        _description: The critical threshold of the % Interrupt Time counter.
-        value: "50"
-      - macro: "{$CPU.PRIV.CRIT.MAX}"
-        _description: The threshold of the % Privileged Time counter.
-        value: "20"
-      - macro: "{$CPU.QUEUE.CRIT.MAX}"
-        _description: The threshold of the Processor Queue Length counter.
-        value: "3"
-    #   - macro: "{$CPU.NUMBER.MATCHES}"
-    #     _description: CPU index or number of CPU/CPU core.
-    #     value: ^.+$
-    #   - macro: "{$CPU.NUMBER.NOT_MATCHES}"
-    #     _description: CPU index or number of CPU/CPU core.
-    #     value: ^\s$
-    #   - macro: "{$CPU.STATUS.MATCHES}"
-    #     _description: Whether the cpu is online/offline.
-    #     value: ^online$
-    #   - macro: "{$CPU.STATUS.NOT_MATCHES}"
-    #     _description: Whether the cpu is online/offline.
-    #     value: ^\s$
   - name: Template Module Windows filesystems by Zabbix agent
     _zbx_ver: "4.2"
     _classes:
