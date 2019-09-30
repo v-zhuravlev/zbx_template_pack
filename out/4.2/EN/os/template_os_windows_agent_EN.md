@@ -211,7 +211,7 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
-# Template Module Windows inventory by Zabbix agent
+# Template Module Windows generic by Zabbix agent
 
 ## Overview
 
@@ -223,6 +223,11 @@ For Zabbix version: 4.2
 ## Zabbix configuration
 
 
+### Macros used
+
+|Name|Description|Default|
+|----|-----------|-------|
+|{$SYSTEM.FUZZYTIME.MAX}|<p>-</p>|`60`|
 
 ## Template links
 
@@ -236,15 +241,22 @@ There are no template links in this template.
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
 |General|System uptime|<p>-</p>|ZABBIX_PASSIVE|system.uptime|
-|General|System information|<p>-</p>|ZABBIX_PASSIVE|system.uname|
+|General|System local time|<p>-</p>|ZABBIX_PASSIVE|system.localtime|
+|General|System name|<p>System host name.</p>|ZABBIX_PASSIVE|system.hostname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
+|General|System description|<p>-</p>|ZABBIX_PASSIVE|system.uname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|General|Number of logged in users|<p>Number of users who are currently logged</p>|ZABBIX_PASSIVE|system.users.num|
 |General|Number of processes|<p>-</p>|ZABBIX_PASSIVE|proc.num[]|
 |General|Number of threads|<p>The number of threads used by all running processes.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Threads"]|
+|Inventory|Operating system architecture|<p>-</p>|ZABBIX_PASSIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Software installed|<p>-</p>|ZABBIX_PASSIVE|system.sw.packages<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Host has been restarted (uptime < 10m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>The device uptime is less than 10 minutes.</p>|`{TEMPLATE_NAME:system.uptime.last()}<10m`|WARNING|<p>Manual close: YES</p>|
+|Check system time (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.localtime.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
+|Systen name has changed (new name: {ITEM.VALUE})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.hostname.diff()}=1 and {TEMPLATE_NAME:system.hostname.strlen()}>0`|INFO|<p>Manual close: YES</p>|
 
 ## Feedback
 
@@ -343,7 +355,7 @@ No specific Zabbix configuration is required.
 |----|
 |Template Module Windows CPU by Zabbix agent|
 |Template Module Windows filesystems by Zabbix agent|
-|Template Module Windows inventory by Zabbix agent|
+|Template Module Windows generic by Zabbix agent|
 |Template Module Windows memory by Zabbix agent|
 |Template Module Windows network by Zabbix agent|
 |Template Module Windows physical disks by Zabbix agent|

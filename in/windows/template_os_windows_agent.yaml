@@ -493,8 +493,11 @@ templates:
             triggers:
               - _prototype: trigger.vfs.dev.util
 
-  - name: Template Module Windows inventory by Zabbix agent
+  - name: Template Module Windows generic by Zabbix agent
     _zbx_ver: "4.2"
+    macros:
+      - macro: "{$SYSTEM.FUZZYTIME.MAX}"
+        value: "60"
     items:
       - _prototype: "system.uptime"
         _group: "General"
@@ -506,55 +509,38 @@ templates:
             priority: "WARNING"
             name: "Host has been restarted (uptime < 10m)"
             description: "The device uptime is less than 10 minutes."
-      - _id: system.uname
-        _group: "General"
-        name: System information
+      - _prototype: system.localtime
+        type: ZABBIX_PASSIVE
+        key: system.localtime
+      - _prototype: system.name
+        type: ZABBIX_PASSIVE
+        key: system.hostname
+      - _prototype: system.descr
         type: ZABBIX_PASSIVE
         key: system.uname
-        value_type: CHAR
-        delay: 1h
+      - _id: system.users.num
+        type: ZABBIX_PASSIVE
+        _group: General
+        key: system.users.num
+        name: Number of logged in users
+        description: Number of users who are currently logged
       - _id: proc.num[]
         _group: "General"
         name: Number of processes
         type: ZABBIX_PASSIVE
         key: proc.num[]
-        value_type: UNSIGNED
       - _id: sys.threads
         _group: "General"
         name: Number of threads
         type: ZABBIX_PASSIVE
         key: perf_counter_en["\System\Threads"]
-        value_type: UNSIGNED
         description: "The number of threads used by all running processes."
-      # - _id: system.uptime
-      #   _group: "General"
-      #   name: System uptime
-      #   type: ZABBIX_PASSIVE
-      #   key: system.uptime
-      #   value_type: UNSIGNED
-      #   delay: 1m
-      #   units: uptime
-      #   triggers:
-      #     - _prototype: trigger.uptime.restarted
-      #       priority: WARNING
-      #       name: Host has been restarted (uptime < 10m)
-      #       description: The device uptime is less than 10 minutes.
-      # _depends_on:
-      # - _id: custom.os.updates.latestupdatesinstalled
-      #   _group: "General"
-      #   name: Latest update installed days ago
-      #   type: ZABBIX_PASSIVE
-      #   key: custom.os.updates.latestupdatesinstalled
-      #   value_type: UNSIGNED
-      #   delay: 1d
-      #   units: s
-      # - _id: custom.os.pendingreboot
-      #   _group: "General"
-      #   name: Pending reboot
-      #   type: ZABBIX_PASSIVE
-      #   key: custom.os.pendingreboot
-      #   value_type: UNSIGNED
-      #   delay: 1d
+      - _prototype: system.sw.arch
+        type: ZABBIX_PASSIVE
+        key: system.sw.arch
+      - _prototype: system.sw.packages
+        type: ZABBIX_PASSIVE
+        key: system.sw.packages
 
   - name: Template Module Windows network by Zabbix agent
     _zbx_ver: "4.2"
@@ -744,7 +730,7 @@ templates:
       - Template Module Zabbix agent
       - Template Module Windows CPU by Zabbix agent
       - Template Module Windows filesystems by Zabbix agent
-      - Template Module Windows inventory by Zabbix agent
+      - Template Module Windows generic by Zabbix agent
       - Template Module Windows memory by Zabbix agent
       - Template Module Windows network by Zabbix agent
       - Template Module Windows physical disks by Zabbix agent
