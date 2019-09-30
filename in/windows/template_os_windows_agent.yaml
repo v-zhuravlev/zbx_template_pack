@@ -405,10 +405,93 @@ templates:
             _resource: "{#FSNAME}"
             application_prototype: "Filesystem __RESOURCE__"
 
-  # - name: Template Module Windows disk performance by Zabbix agent
-  #   _zbx_ver: "4.2"
-  #   _classes:
-  #     - OS
+  - name: Template Module Windows physical disks by Zabbix agent
+    _zbx_ver: "4.2"
+    macros:
+      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
+        value: ".*"
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "_Total"
+      - macro: "{$VFS.DEV.UTIL.MAX.WARN}"
+        value: "95"
+    items:
+      - _id: vfs.dev.get
+        _group: "Zabbix_raw_items"
+        type: "ZABBIX_PASSIVE"
+        name: Physical disks WMI get
+        key: wmi.getall[root\cimv2,"select * from win32_perfformatteddata_perfdisk_physicaldisk"]
+        value_type: TEXT
+        delay: "1m"
+        history: "1h"
+    discovery_rules:
+      - name: Physical disks discovery
+        # key: net.if.discovery
+        type: DEPENDENT
+        key: "vfs.dev.discovery"
+        master_item: "vfs.dev.get"
+        preprocessing:
+          # TODO fix
+          # - type: JSONPATH
+          #   params: $['Name']
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
+        lld_macro_paths:
+          - lld_macro: "{#DEVNAME}"
+            path: "$.Name"
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: A
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: B
+        items:
+          - _prototype: vfs.dev.read.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.read.rate[DiskReadsPersec.{#DEVNAME}]
+            units: "!r/s"
+            value_type: UNSIGNED
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].DiskReadsPersec.first()'
+          - _prototype: vfs.dev.write.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.write.rate[DiskWritesPersec.{#DEVNAME}]
+            units: "!w/s"
+            value_type: UNSIGNED
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].DiskWritesPersec.first()'
+          - _prototype: vfs.dev.queue_size
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.queue_size[CurrentDiskQueueLength.{#DEVNAME}]
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].CurrentDiskQueueLength.first()'
+          - _prototype: vfs.dev.util
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.util[PercentDiskTime.{#DEVNAME}]
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].PercentDiskTime.first()'
+            triggers:
+              - _prototype: trigger.vfs.dev.util
 
   - name: Template Module Windows inventory by Zabbix agent
     _zbx_ver: "4.2"
@@ -511,13 +594,13 @@ templates:
       - _id: net.if.get
         _group: "Zabbix_raw_items"
         type: "ZABBIX_PASSIVE"
-        name: Network interfaces get
+        name: Network interfaces WMI get
         key: wmi.getall[root\cimv2,"select * from win32_networkadapter"]
         value_type: "TEXT"
         delay: "1m"
         history: "1h"
     discovery_rules:
-      - name: Network interface discovery
+      - name: Network interfaces discovery
         # key: net.if.discovery
         type: DEPENDENT
         key: "net.if.discovery"
@@ -525,9 +608,6 @@ templates:
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1h
-        # key: wmi.getall[root\cimv2,"select * from win32_networkadapter"]
-        # type: ZABBIX_PASSIVE
-        description: Discovery of network interfaces as defined in MACRO.
         lld_macro_paths:
           - lld_macro: "{#IFNAME}"
             path: "$.Name"
@@ -667,7 +747,7 @@ templates:
       - Template Module Windows inventory by Zabbix agent
       - Template Module Windows memory by Zabbix agent
       - Template Module Windows network by Zabbix agent
-      # - Template Module Windows disk performance by Zabbix agent
+      - Template Module Windows physical disks by Zabbix agent
     # screens:
     #   - name: "System performance"
     #     hsize: 2

@@ -161,6 +161,56 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+# Template Module Windows physical disks by Zabbix agent
+
+## Overview
+
+For Zabbix version: 4.2  
+
+## Setup
+
+
+## Zabbix configuration
+
+
+### Macros used
+
+|Name|Description|Default|
+|----|-----------|-------|
+|{$VFS.DEV.DEVNAME.MATCHES}|<p>-</p>|`.*`|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>-</p>|`_Total`|
+|{$VFS.DEV.UTIL.MAX.WARN}|<p>-</p>|`95`|
+
+## Template links
+
+There are no template links in this template.
+
+## Discovery rules
+
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|Physical disks discovery|<p>-</p>|DEPENDENT|vfs.dev.discovery<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p><p>**Filter**:</p>AND <p>- A: {#DEVNAME} MATCHES_REGEX `{$VFS.DEV.DEVNAME.MATCHES}`</p><p>- B: {#DEVNAME} NOT_MATCHES_REGEX `{$VFS.DEV.DEVNAME.NOT_MATCHES}`</p>|
+
+## Items collected
+
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Storage|{#DEVNAME}: Disk read rate|<p>-</p>|DEPENDENT|vfs.dev.read.rate[DiskReadsPersec.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].DiskReadsPersec.first()`</p>|
+|Storage|{#DEVNAME}: Disk write rate|<p>-</p>|DEPENDENT|vfs.dev.write.rate[DiskWritesPersec.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].DiskWritesPersec.first()`</p>|
+|Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>-</p>|DEPENDENT|vfs.dev.queue_size[CurrentDiskQueueLength.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].CurrentDiskQueueLength.first()`</p>|
+|Storage|{#DEVNAME}: Disk utilization|<p>-</p>|DEPENDENT|vfs.dev.util[PercentDiskTime.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].PercentDiskTime.first()`</p>|
+|Zabbix_raw_items|Physical disks WMI get|<p>-</p>|ZABBIX_PASSIVE|wmi.getall[root\cimv2,"select * from win32_perfformatteddata_perfdisk_physicaldisk"]|
+
+## Triggers
+
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|{#DEVNAME}: Disk is overloaded (util > {$VFS.DEV.UTIL.MAX.WARN}% for 15m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vfs.dev.util[PercentDiskTime.{#DEVNAME}].min(15m)}>{$VFS.DEV.UTIL.MAX.WARN}`|WARNING|<p>Manual close: YES</p>|
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
+
 # Template Module Windows inventory by Zabbix agent
 
 ## Overview
@@ -235,7 +285,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Network interface discovery|<p>Discovery of network interfaces as defined in MACRO.</p>|DEPENDENT|net.if.discovery<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p><p>**Filter**:</p>AND <p>- A: {#IFPHYSICALADAPTER} MATCHES_REGEX `{$NET.IF.PHYSICALADAPTER.MATCHES}`</p><p>- B: {#IFPHYSICALADAPTER} NOT_MATCHES_REGEX `{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}`</p><p>- C: {#IFNAME} MATCHES_REGEX `{$NET.IF.IFNAME.MATCHES}`</p><p>- D: {#IFNAME} NOT_MATCHES_REGEX `{$NET.IF.IFNAME.NOT_MATCHES}`</p><p>- E: {#IFDESCR} MATCHES_REGEX `{$NET.IF.IFDESCR.MATCHES}`</p><p>- F: {#IFDESCR} NOT_MATCHES_REGEX `{$NET.IF.IFDESCR.NOT_MATCHES}`</p><p>- G: {#IFALIAS} MATCHES_REGEX `{$NET.IF.IFALIAS.MATCHES}`</p><p>- H: {#IFALIAS} NOT_MATCHES_REGEX `{$NET.IF.IFALIAS.NOT_MATCHES}`</p><p>- I: {#IFNETENABLED} MATCHES_REGEX `{$NET.IF.IFNETENABLED.MATCHES}`</p><p>- J: {#IFNETENABLED} NOT_MATCHES_REGEX `{$NET.IF.IFNETENABLED.NOT_MATCHES}`</p>|
+|Network interfaces discovery|<p>-</p>|DEPENDENT|net.if.discovery<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p><p>**Filter**:</p>AND <p>- A: {#IFPHYSICALADAPTER} MATCHES_REGEX `{$NET.IF.PHYSICALADAPTER.MATCHES}`</p><p>- B: {#IFPHYSICALADAPTER} NOT_MATCHES_REGEX `{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}`</p><p>- C: {#IFNAME} MATCHES_REGEX `{$NET.IF.IFNAME.MATCHES}`</p><p>- D: {#IFNAME} NOT_MATCHES_REGEX `{$NET.IF.IFNAME.NOT_MATCHES}`</p><p>- E: {#IFDESCR} MATCHES_REGEX `{$NET.IF.IFDESCR.MATCHES}`</p><p>- F: {#IFDESCR} NOT_MATCHES_REGEX `{$NET.IF.IFDESCR.NOT_MATCHES}`</p><p>- G: {#IFALIAS} MATCHES_REGEX `{$NET.IF.IFALIAS.MATCHES}`</p><p>- H: {#IFALIAS} NOT_MATCHES_REGEX `{$NET.IF.IFALIAS.NOT_MATCHES}`</p><p>- I: {#IFNETENABLED} MATCHES_REGEX `{$NET.IF.IFNETENABLED.MATCHES}`</p><p>- J: {#IFNETENABLED} NOT_MATCHES_REGEX `{$NET.IF.IFNETENABLED.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -250,7 +300,7 @@ There are no template links in this template.
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Speed|<p>An estimate of the interface's current bandwidth in units of 1,000,000 bits per second. If this object reports a value of `n' then the speed of the interface is somewhere in the range of `n-500,000' to`n+499,999'.  For interfaces which do not vary in bandwidth or for those where no accurate estimation can be made, this object should contain the nominal bandwidth. For a sub-layer which has no concept of bandwidth, this object should be zero.</p>|DEPENDENT|net.if.speed["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].Speed.first()`</p><p>⛔️ON_FAIL: `CUSTOM_VALUE -> 0`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Interface type|<p>The type of interface.</p><p>Additional values for ifType are assigned by the Internet Assigned NumbersAuthority (IANA),</p><p>through updating the syntax of the IANAifType textual convention.</p>|DEPENDENT|net.if.type["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Operational status|<p>The current operational state of the interface.</p><p>- The testing(3) state indicates that no operational packet scan be passed</p><p>- If ifAdminStatus is down(2) then ifOperStatus should be down(2)</p><p>- If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic</p><p>- It should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection)</p><p>- It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state</p><p>- It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.</p>|DEPENDENT|net.if.status["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()`</p>|
-|Zabbix_raw_items|Network interfaces get|<p>-</p>|ZABBIX_PASSIVE|wmi.getall[root\cimv2,"select * from win32_networkadapter"]|
+|Zabbix_raw_items|Network interfaces WMI get|<p>-</p>|ZABBIX_PASSIVE|wmi.getall[root\cimv2,"select * from win32_networkadapter"]|
 
 ## Triggers
 
@@ -296,6 +346,7 @@ No specific Zabbix configuration is required.
 |Template Module Windows inventory by Zabbix agent|
 |Template Module Windows memory by Zabbix agent|
 |Template Module Windows network by Zabbix agent|
+|Template Module Windows physical disks by Zabbix agent|
 |Template Module Zabbix agent|
 
 ## Discovery rules
