@@ -86,8 +86,8 @@ templates:
           hardware failure. This should never be higher than 20%.
         triggers:
           - _id: trigger.cpu.interrupt.high
-            name: "CPU Interrupt Time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)"
-            priority: "HIGH"
+            name: "CPU interrupt time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)"
+            priority: "WARNING"
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.INTERRUPT.CRIT.MAX}"
             description: |
               "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."
@@ -142,6 +142,8 @@ templates:
           in User mode.
         graphs:
           - name: CPU usage
+            yaxismin: 0
+            yaxismax: 100
             graphtype: STACKED
             graph_items:
               # - name: system.cpu.interrupt
@@ -166,7 +168,7 @@ templates:
           and are waiting to be executed.
         triggers:
           - _id: trigger.cpu.queue.length
-            name: "CPU Queue Length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)"
+            name: "CPU queue length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)"
             priority: "WARNING"
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.QUEUE.CRIT.MAX}"
             description: "The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%."
@@ -191,7 +193,6 @@ templates:
       - _prototype: system.cpu.util
         type: ZABBIX_PASSIVE
         key: system.cpu.util
-        delay: 0;m0-59
 
     # discovery_rules:
     #   - name: CPU core discovery
