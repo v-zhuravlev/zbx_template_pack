@@ -5,6 +5,8 @@
 templates:
   - name: Template Module Windows CPU by Zabbix agent
     _zbx_ver: "4.2"
+    _classes:
+    - ZABBIX_ACTIVE
     macros:
       - macro: "{$CPU.INTERRUPT.CRIT.MAX}"
         _description: The critical threshold of the % Interrupt Time counter.
@@ -204,6 +206,8 @@ templates:
     #           operator: NOT_MATCHES_REGEX
   - name: Template Module Windows memory by Zabbix agent
     _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
     macros:
       - macro: "{$MEM.PAGE_TABLE_CRIT.MIN}"
         _description: "The warning threshold of the Free System Page Table Entries counter."
@@ -343,6 +347,8 @@ templates:
 
   - name: Template Module Windows filesystems by Zabbix agent
     _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
     macros:
       - macro: "{$VFS.FS.FSNAME.MATCHES}"
         value: ".*"
@@ -416,6 +422,8 @@ templates:
 
   - name: Template Module Windows physical disks by Zabbix agent
     _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
     macros:
       - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
         value: ".*"
@@ -504,6 +512,8 @@ templates:
 
   - name: Template Module Windows generic by Zabbix agent
     _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
     macros:
       - macro: "{$SYSTEM.FUZZYTIME.MAX}"
         value: "60"
@@ -551,6 +561,8 @@ templates:
 
   - name: Template Module Windows network by Zabbix agent
     _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
     macros:
       - macro: "{$NET.IF.IFNAME.MATCHES}"
         value: ".*"
@@ -727,11 +739,13 @@ templates:
   - name: Template OS Windows by Zabbix agent
     _zbx_ver: "4.2"
     _classes:
+      - ZABBIX_ACTIVE
+    _classes:
       - OS
     description: |
       Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
     _documentation:
-      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows
       _tested_on:
         - name: Windows
           version: "10"
