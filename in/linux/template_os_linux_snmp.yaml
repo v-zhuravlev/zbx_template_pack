@@ -82,12 +82,13 @@ templates:
       - SNMPv2
     _zbx_ver: "4.2"
     macros:
-      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
-        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)"
-        _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
       - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
         value: ".+"
         _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)"
+        _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
+
       # - macro: "{$VFS.DEV.UTIL.MAX.WARN}"
       #   value: "99"
       #   _description: "Maximum block device utilization"
@@ -456,11 +457,12 @@ templates:
 
         Change {$SNMP_COMMUNITY} on the host level in Zabbix.
       _ref: https://docs.fedoraproject.org/en-US/Fedora/26/html/System_Administrators_Guide/sect-System_Monitoring_Tools-Net-SNMP-Retrieving.html
+      _zabbix_forum_url: "https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux"
 
     screens:
       - name: System performance
         hsize: 2
-        vsize: 4
+        vsize: 6
         screen_items:
           - resourcetype: GRAPH
             resource:
@@ -477,3 +479,32 @@ templates:
               - name: Memory usage
             x: 0
             y: 1
+          - resourcetype: GRAPH
+            resource:
+              - name: Swap usage
+            x: 1
+            y: 1
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#FSNAME}: Disk space usage"
+            x: 0
+            y: 2
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#DEVNAME}: Disk read/write rates"
+            x: 0
+            y: 3
+            colspan: 2
+          - resourcetype: SIMPLE_GRAPH_PROTOTYPE
+            resource:
+              - name: "vfs.dev.util[diskIOLA1.{#SNMPINDEX}]"
+            x: 0
+            y: 4
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "Interface {#IFNAME}({#IFALIAS}): Network traffic"
+            x: 0
+            y: 5
+            colspan: 2

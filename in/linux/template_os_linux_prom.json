@@ -32,7 +32,8 @@
                         "version": "0.18.1"
                     }
                 ],
-                "_ref": "https://github.com/prometheus/node_exporter"
+                "_ref": "https://github.com/prometheus/node_exporter",
+                "_zabbix_forum_url": "https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux"
             },
             "macros": [
                 {
@@ -65,7 +66,7 @@
                 },
                 {
                     "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
-                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)",
+                    "value": "^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)",
                     "_description": "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
                 },
                 {
@@ -1597,7 +1598,7 @@
                 {
                     "name": "System performance",
                     "hsize": 2,
-                    "vsize": 4,
+                    "vsize": 7,
                     "screen_items": [
                         {
                             "resourcetype": "GRAPH",
@@ -1628,6 +1629,71 @@
                             ],
                             "x": 0,
                             "y": 1
+                        },
+                        {
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "Swap usage"
+                                }
+                            ],
+                            "x": 1,
+                            "y": 1
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#FSNAME}: Disk space usage"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 2,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#DEVNAME}: Disk read/write rates"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 3,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#DEVNAME}: Disk average waiting time"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 4,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#DEVNAME}: Disk utilization and queue"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 5,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "Interface {#IFNAME}({#IFALIAS}): Network traffic"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 6,
+                            "colspan": 2
                         }
                     ]
                 },

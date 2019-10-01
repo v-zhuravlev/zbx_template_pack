@@ -18,7 +18,7 @@ Known Issues:&#13;
 &#13;
   Description: Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.30</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -635,7 +635,7 @@ The amount of swap space currently unused or available.</description>
          <description>MIBs used:&#13;
 UCD-DISKIO-MIB&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.30</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -970,7 +970,7 @@ The 1 minute average load of disk (%)</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.NOT_MATCHES}</macro>
-               <value>(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)</value>
+               <value>^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)</value>
             </macro>
          </macros>
          <templates/>
@@ -984,7 +984,7 @@ The 1 minute average load of disk (%)</description>
 HOST-RESOURCES-MIB&#13;
 UCD-SNMP-MIB&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.30</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -2477,7 +2477,7 @@ return JSON.stringify([{"{#CPU.COUNT}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}"
 HOST-RESOURCES-MIB&#13;
 UCD-SNMP-MIB&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.30</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -3023,7 +3023,9 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <name>Template OS Linux SNMPv2</name>
          <description>Template OS Linux&#13;
 &#13;
-Template tooling version used: 0.29</description>
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux&#13;
+&#13;
+Template tooling version used: 0.30</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -3061,7 +3063,7 @@ Template tooling version used: 0.29</description>
             <screen>
                <name>System performance</name>
                <hsize>2</hsize>
-               <vsize>4</vsize>
+               <vsize>6</vsize>
                <screen_items>
                   <screen_item>
                      <resourcetype>0</resourcetype>
@@ -3124,6 +3126,116 @@ Template tooling version used: 0.29</description>
                      <sort_triggers>0</sort_triggers>
                      <resource>
                         <name>Memory usage</name>
+                        <host>Template OS Linux SNMPv2</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Swap usage</name>
+                        <host>Template OS Linux SNMPv2</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>2</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>{#FSNAME}: Disk space usage</name>
+                        <host>Template OS Linux SNMPv2</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>3</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>{#DEVNAME}: Disk read/write rates</name>
+                        <host>Template OS Linux SNMPv2</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>19</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>4</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <key>vfs.dev.util[diskIOLA1.{#SNMPINDEX}]</key>
+                        <host>Template OS Linux SNMPv2</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>5</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Interface {#IFNAME}({#IFALIAS}): Network traffic</name>
                         <host>Template OS Linux SNMPv2</host>
                      </resource>
                      <max_columns>3</max_columns>

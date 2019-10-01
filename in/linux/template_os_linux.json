@@ -3,6 +3,9 @@
         {
             "name": "Template Module Linux CPU by Zabbix agent",
             "_zbx_ver": "4.2",
+            "_classes": [
+                "ZABBIX_ACTIVE"
+            ],
             "macros": [
                 {
                     "macro": "{$LOAD_AVG_PER_CPU.MAX.WARN}",
@@ -119,6 +122,9 @@
         {
             "name": "Template Module Linux filesystems by Zabbix agent",
             "_zbx_ver": "4.2",
+            "_classes": [
+                "ZABBIX_ACTIVE"
+            ],
             "macros": [
                 {
                     "macro": "{$VFS.FS.FSNAME.NOT_MATCHES}",
@@ -224,6 +230,9 @@
         {
             "name": "Template Module Linux memory by Zabbix agent",
             "_zbx_ver": "4.2",
+            "_classes": [
+                "ZABBIX_ACTIVE"
+            ],
             "macros": [
                 {
                     "macro": "{$MEMORY.UTIL.MAX}",
@@ -281,6 +290,9 @@
         {
             "name": "Template Module Linux block devices by Zabbix agent",
             "_zbx_ver": "4.2",
+            "_classes": [
+                "ZABBIX_ACTIVE"
+            ],
             "macros": [
                 {
                     "macro": "{$VFS.DEV.READ.AWAIT.WARN}",
@@ -294,7 +306,7 @@
                 },
                 {
                     "macro": "{$VFS.DEV.DEVNAME.NOT_MATCHES}",
-                    "value": "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)",
+                    "value": "^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)",
                     "_description": "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
                 },
                 {
@@ -517,6 +529,7 @@
             "name": "Template Module Linux network interfaces by Zabbix agent",
             "_zbx_ver": "4.2",
             "_classes": [
+                "ZABBIX_ACTIVE",
                 "IF_MIB"
             ],
             "_documentation": {
@@ -696,6 +709,9 @@
         },
         {
             "_zbx_ver": "4.2",
+            "_classes": [
+                "ZABBIX_ACTIVE"
+            ],
             "name": "Template Module Linux generic by Zabbix agent",
             "macros": [
                 {
@@ -821,9 +837,10 @@
             ]
         },
         {
-            "_zbx_ver": "4.2",
             "name": "Template OS Linux by Zabbix agent",
+            "_zbx_ver": "4.2",
             "_classes": [
+                "ZABBIX_ACTIVE",
                 "OS"
             ],
             "templates": [
@@ -842,14 +859,15 @@
                         "description": "Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed."
                     }
                 ],
-                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer."
+                "_overview": "New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
+                "_zabbix_forum_url": "https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux"
             },
             "description": "Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.",
             "screens": [
                 {
                     "name": "System performance",
                     "hsize": 2,
-                    "vsize": 4,
+                    "vsize": 7,
                     "screen_items": [
                         {
                             "resourcetype": "GRAPH",
@@ -880,6 +898,71 @@
                             ],
                             "x": 0,
                             "y": 1
+                        },
+                        {
+                            "resourcetype": "GRAPH",
+                            "resource": [
+                                {
+                                    "name": "Swap usage"
+                                }
+                            ],
+                            "x": 1,
+                            "y": 1
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#FSNAME}: Disk space usage"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 2,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#DEVNAME}: Disk read/write rates"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 3,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#DEVNAME}: Disk average waiting time"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 4,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "{#DEVNAME}: Disk utilization and queue"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 5,
+                            "colspan": 2
+                        },
+                        {
+                            "resourcetype": "GRAPH_PROTOTYPE",
+                            "resource": [
+                                {
+                                    "name": "Interface {#IFNAME}: Network traffic"
+                                }
+                            ],
+                            "x": 0,
+                            "y": 6,
+                            "colspan": 2
                         }
                     ]
                 }

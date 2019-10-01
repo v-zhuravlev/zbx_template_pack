@@ -41,7 +41,7 @@ No specific Zabbix configuration is required.
 |{$SWAP.PFREE.MIN.WARN}|<p>-</p>|`50`|
 |{$SYSTEM.FUZZYTIME.MAX}|<p>-</p>|`60`|
 |{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`.+`|
-|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)`|
+|{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in block devices discovery. Can be overridden on the host or linked template level</p>|`^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)`|
 |{$VFS.DEV.READ.AWAIT.WARN}|<p>Disk read average response time (in ms) before the trigger would fire</p>|`20`|
 |{$VFS.DEV.WRITE.AWAIT.WARN}|<p>Disk write average response time (in ms) before the trigger would fire</p>|`20`|
 |{$VFS.FS.FSDEVICE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</p>|`^.+$`|
@@ -134,7 +134,7 @@ There are no template links in this template.
 |----|-----------|----|----|----|
 |Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
 |High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[node_exporter].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
-|Check system time (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.localtime[node_exporter].fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
+|System time is out of sync (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.localtime[node_exporter].fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
 |Systen name has changed (new name: {ITEM.VALUE})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.name[node_exporter].diff()}=1 and {TEMPLATE_NAME:system.name[node_exporter].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |Configured max number of open filedescriptors is too low (< {$KERNEL.MAXFILES.MIN})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:kernel.maxfiles[node_exporter].last()}<{$KERNEL.MAXFILES.MIN}`|INFO|<p>**Depends on**:</p><p>- Running out of file descriptors (less than < 20% free)</p>|
 |Running out of file descriptors (less than < 20% free)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:fd.open[node_exporter].last()}/{Template OS Linux by Prom:kernel.maxfiles[node_exporter].last()}*100>80`|WARNING||
@@ -158,6 +158,9 @@ There are no template links in this template.
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
+
+You can also provide feedback, discuss the template or ask for help with it at
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux).
 
 ## Known Issues
 
