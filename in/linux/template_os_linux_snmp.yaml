@@ -82,12 +82,13 @@ templates:
       - SNMPv2
     _zbx_ver: "4.2"
     macros:
-      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
-        value: "(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+)"
-        _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
       - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
         value: ".+"
         _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)"
+        _description: "This macro is used in block devices discovery. Can be overridden on the host or linked template level"
+
       # - macro: "{$VFS.DEV.UTIL.MAX.WARN}"
       #   value: "99"
       #   _description: "Maximum block device utilization"
