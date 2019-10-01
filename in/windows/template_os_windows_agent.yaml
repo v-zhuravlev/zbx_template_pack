@@ -1,0 +1,921 @@
+---
+# Custom intervals:
+# fixed: 0;1h/1-7,00:00-24:00
+# scheduling: 0;m0-59
+templates:
+  - name: Template Module Windows CPU by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+    - ZABBIX_ACTIVE
+    macros:
+      - macro: "{$CPU.INTERRUPT.CRIT.MAX}"
+        _description: The critical threshold of the % Interrupt Time counter.
+        value: "50"
+      - macro: "{$CPU.PRIV.CRIT.MAX}"
+        _description: The threshold of the % Privileged Time counter.
+        value: "30"
+      - macro: "{$CPU.QUEUE.CRIT.MAX}"
+        _description: The threshold of the Processor Queue Length counter.
+        value: "3"
+    #   - macro: "{$CPU.NUMBER.MATCHES}"
+    #     _description: CPU index or number of CPU/CPU core.
+    #     value: ^.+$
+    #   - macro: "{$CPU.NUMBER.NOT_MATCHES}"
+    #     _description: CPU index or number of CPU/CPU core.
+    #     value: ^\s$
+    #   - macro: "{$CPU.STATUS.MATCHES}"
+    #     _description: Whether the cpu is online/offline.
+    #     value: ^online$
+    #   - macro: "{$CPU.STATUS.NOT_MATCHES}"
+    #     _description: Whether the cpu is online/offline.
+    #     value: ^\s$
+    items:
+      - _prototype: system.cpu.util
+        type: ZABBIX_PASSIVE
+        key: system.cpu.util
+      # Performance counters
+      - _prototype: system.cpu.intr
+        _group: CPU
+        name: CPU interrupt time
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Processor Information(_total)\% Interrupt Time"]
+        value_type: FLOAT
+        units: "%"
+        description: |
+          The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing 
+          hardware interrupts during sample intervals. This value is an indirect indicator of the activity of 
+          devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication 
+          lines, network interface cards and other peripheral devices. This is an easy way to identify a potential 
+          hardware failure. This should never be higher than 20%.
+        triggers:
+          - _id: trigger.cpu.interrupt.high
+            name: "CPU interrupt time is too high (over {$CPU.INTERRUPT.CRIT.MAX}% for 5m)"
+            priority: "WARNING"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.INTERRUPT.CRIT.MAX}"
+            description: |
+              "The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."
+              The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing 
+              hardware interrupts during sample intervals. This value is an indirect indicator of the activity of 
+              devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication 
+              lines, network interface cards and other peripheral devices. This is an easy way to identify a potential 
+              hardware failure. This should never be higher than 20%.
+            _depends_on:
+              - trigger.cpu.high
+      # - _id: p
+      #   _group: "CPU"
+      #   name: Load, %
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Processor Information(_total)\% Processor Time"]
+      #   value_type: FLOAT
+      #   units: "%"
+      #   delay: 0;m0-59
+      #   description: |
+      #     The Processor Information\% Processor Time shows how much the processor(s) is being utilized.
+      - _prototype: system.cpu.switches
+        key: system.cpu.switches
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\System\Context Switches/sec"]
+        _vendor_description: |
+          Context Switches/sec is the combined rate at which all processors on the computer are switched from one thread to another.
+          Context switches occur when a running thread voluntarily relinquishes the processor, is preempted by a higher priority ready thread, or switches between user-mode and privileged (kernel) mode to use an Executive or subsystem service.
+          It is the sum of Thread\\Context Switches/sec for all threads running on all processors in the computer and is measured in numbers of switches.
+          There are context switch counters on the System and Thread objects. This counter displays the difference between the values observed in the last two samples, divided by the duration of the sample interval.
+      - _id: system.cpu.priv
+        _group: "CPU"
+        name: CPU privileged time
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Processor Information(_total)\% Privileged Time"]
+        value_type: FLOAT
+        units: "%"
+        description: |
+          The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent 
+          executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt 
+          Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode 
+          functions of the Windows® Operating System.
+        triggers:
+          - _id: trigger.cpu.priv.high
+            name: "CPU privileged time is too high (over {$CPU.PRIV.CRIT.MAX}% for 5m)"
+            priority: "WARNING"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.PRIV.CRIT.MAX}"
+            description: "The CPU privileged time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%."
+            _depends_on:
+              - trigger.cpu.high
+              # interrupts are part of priv time
+              - trigger.cpu.interrupt.high
+      - _id: system.cpu.user
+        _group: "CPU"
+        name: CPU user time
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Processor Information(_total)\% User Time"]
+        value_type: FLOAT
+        units: "%"
+        description: |
+          The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing 
+          in User mode.
+        graphs:
+          - name: CPU usage
+            yaxismin: 0
+            yaxismax: 100
+            graphtype: STACKED
+            graph_items:
+              # - name: system.cpu.interrupt
+              #   drawtype: SINGLE_LINE
+              - name: system.cpu.user
+                drawtype: SINGLE_LINE
+              - name: system.cpu.priv
+                drawtype: SINGLE_LINE
+              # - name: system.cpu.queue.length
+              #   drawtype: SINGLE_LINE
+              #   yaxisside: RIGHT
+              # - name: system.cpu.util
+              #   drawtype: SINGLE_LINE
+      - _id: system.cpu.queue.length
+        _group: "CPU"
+        name: CPU queue length
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\System\Processor Queue Length"]
+        value_type: FLOAT
+        description: |
+          The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue 
+          and are waiting to be executed.
+        triggers:
+          - _id: trigger.cpu.queue.length
+            name: "CPU queue length is too high (over {$CPU.QUEUE.CRIT.MAX}% for 5m)"
+            priority: "WARNING"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$CPU.QUEUE.CRIT.MAX}"
+            description: "The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%."
+            _depends_on:
+              - trigger.cpu.high
+      #       - _id: system.cpu.util.avg
+      #         _group: "CPU"
+      #         name: CPU utilisation, in %
+      #         type: CALCULATED
+      #         params: "( last(system.cpu.util[0]) +
+      # last(system.cpu.util[1]) +
+      # last(system.cpu.util[2]) +
+      # last(system.cpu.util[3]) +
+      # last(system.cpu.util[4]) +
+      # last(system.cpu.util[5]) +
+      # last(system.cpu.util[6]) +
+      # last(system.cpu.util[7]) ) / 8"
+      #         key: system.cpu.util.avg
+      #         value_type: FLOAT
+      #         units: "%"
+      #         delay: 0;m0-59s5
+
+    # discovery_rules:
+    #   - name: CPU core discovery
+    #     key: system.cpu.discovery
+    #     type: ZABBIX_PASSIVE
+    #     description: Discovery of CPU cores as defined in macros {$CPU.NUMBER.MATCHES},{$CPU.NUMBER.NOT_MATCHES},{$CPU.STATUS.MATCHES},{$CPU.STATUS.NOT_MATCHES}.
+    #     delay: 1d
+    #     items:
+    #       - _prototype: system.cpu.util
+    #         _group: "CPU"
+    #         _resource: "#{#CPU.NUMBER}"
+    #         type: ZABBIX_PASSIVE
+    #         key: system.cpu.util[{#CPU.NUMBER}]
+    #         delay: 0;m0-59
+    #         description: "CPU core #{#CPU.NUMBER} utilization in %"
+    #         # triggers:
+    #         #   - _id: trigger.cpu.util.warn
+    #         #     name: 'CPU core #{#CPU.NUMBER} utilization is too high (over {$CPU_UTIL_MAX:"#{#CPU.NUMBER}"}% for 5m)'
+    #         #     priority: "WARNING"
+    #         #     expression: '{TEMPLATE_NAME:METRIC.avg(5m)}>{$CPU_UTIL_MAX:"#{#CPU.NUMBER}"}'
+    #         #     description: 'The average CPU core #{#CPU.NUMBER} usage in the last 5 minutes exceeds {$CPU_UTIL_MAX:"#{#CPU.NUMBER}"}%.'
+    #         #     _depends_on:
+    #         #       - trigger.cpu.high
+    #     filter:
+    #       evaltype: AND
+    #       conditions:
+    #         - macro: "{#CPU.NUMBER}"
+    #           value: "{$CPU.NUMBER.MATCHES}"
+    #           formulaid: A
+    #           operator: MATCHES_REGEX
+    #         - macro: "{#CPU.NUMBER}"
+    #           value: "{$CPU.NUMBER.NOT_MATCHES}"
+    #           formulaid: B
+    #           operator: NOT_MATCHES_REGEX
+    #         - macro: "{#CPU.STATUS}"
+    #           value: "{$CPU.STATUS.MATCHES}"
+    #           formulaid: C
+    #           operator: MATCHES_REGEX
+    #         - macro: "{#CPU.STATUS}"
+    #           value: "{$CPU.STATUS.NOT_MATCHES}"
+    #           formulaid: D
+    #           operator: NOT_MATCHES_REGEX
+  - name: Template Module Windows memory by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
+    macros:
+      - macro: "{$MEM.PAGE_TABLE_CRIT.MIN}"
+        _description: "The warning threshold of the Free System Page Table Entries counter."
+        value: "5000"
+      - macro: "{$MEM.PAGE_SEC.CRIT.MAX}"
+        _description: "The warning threshold of the Memory Pages/sec counter."
+        value: "1000"
+      - macro: "{$MEMORY.UTIL.MAX}"
+        _description: "The warning threshold of the Memory util item."
+        value: "90"
+    items:
+      - _prototype: "vm.memory.used"
+        key: "vm.memory.size[used]"
+        type: "ZABBIX_PASSIVE"
+      - _prototype: "vm.memory.total"
+        key: "vm.memory.size[total]"
+        type: "ZABBIX_PASSIVE"
+      - _prototype: "vm.memory.util"
+        key: "vm.memory.util"
+        type: CALCULATED
+        params: last("__vm.memory.used__") / last("__vm.memory.total__") * 100
+      # - _prototype: "vm.memory.available"
+      #   key: "vm.memory.size[available]"
+      #   type: "ZABBIX_PASSIVE"
+
+      - _id: vm.memory.cache_bytes
+        _group: "Memory"
+        name: Cache bytes
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Memory\Cache Bytes"]
+        value_type: UNSIGNED
+        units: B
+        description: |
+          Cache Bytes is the sum of the Memory\\System Cache Resident Bytes, Memory\\System Driver Resident Bytes, 
+          Memory\\System Code Resident Bytes, and Memory\\Pool Paged Resident Bytes counters. This counter displays 
+          the last observed value only; it is not an average.
+      # - _id: vm.memory.percent_commited
+      #   _group: "Memory"
+      # name: Memory committed in use
+      # type: ZABBIX_PASSIVE
+      # key: perf_counter_en["\Memory\% Committed Bytes In Use"]
+      # value_type: FLOAT
+      # delay: 1m
+      # units: "%"
+      # description: |
+      #   The \Memory\% Committed Bytes In Use counter calculates the ratio of committed bytes (system commit charge)
+      #   to the system commit limit, and the system can perform poorly when the system commit limit is reached.
+      #   Therefore, when % Committed Bytes In Use is greater than 80%, use the \Process(*)\Private Bytes counter
+      #   to identify the processes that are consuming the most committed memory.
+      # triggers:
+      #   - _id: trigger.mem.committed.high
+      #     name: "Memory committed bytes are too high (over {$MEM.COMMITED.CRIT.MAX}% for 5m)"
+      #     priority: "WARNING"
+      #     expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$MEM.COMMITED.CRIT.MAX}"
+      #     description: "The Memory\\% Committed Bytes in the last 5 minutes exceeds {$MEM.COMMITED.CRIT.MAX}%. If you see this counter remaining over 80% for an extended time, you have a memory leak, or you need to upgrade your RAM."
+
+      # SWAP (pages)
+      - _prototype: "system.swap.free"
+        key: "system.swap.size[,free]"
+        type: "ZABBIX_PASSIVE"
+      - _prototype: "system.swap.pfree"
+        key: "system.swap.size[,pfree]"
+        type: "ZABBIX_PASSIVE"
+      - _prototype: "system.swap.total"
+        key: "system.swap.size[,total]"
+        type: "ZABBIX_PASSIVE"
+      # 'same' as :
+      # - _id: p
+      #   _group: "Memory"
+      #   name: Page file usage
+      #   type: ZABBIX_PASSIVE
+      #   key: perf_counter_en["\Paging File(_total)\% Usage Peak"]
+      #   value_type: FLOAT
+      #   units: "%"
+      #   description: |
+      #     The peak usage of the Page File instance in percent.
+      #     The Paging File performance object consists of counters that monitor the paging file(s) on the computer.
+      #     The paging file is a reserved space on disk that backs up committed physical memory on the computer.
+
+      - _id: vm.memory.page_table
+        _group: "Memory"
+        name: Free system page table entries
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Memory\Free System Page Table Entries"]
+        description: |
+          This indicates the number of page table entries not currently in use by the system. If the number is less 
+          than 5,000, there may well be a memory leak or you running out of memory.
+        triggers:
+          - _id: trigger.memory.page_table.low
+            name: "Number of free system page table entries is too low (less {$MEM.PAGE_TABLE_CRIT.MIN} for 5m)"
+            priority: "WARNING"
+            expression: "{TEMPLATE_NAME:METRIC.max(5m)}<{$MEM.PAGE_TABLE_CRIT.MIN}"
+            description: "The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE_CRIT.MIN} for 5 minutes. If the number is less than 5,000, there may well be a memory leak."
+            _depends_on:
+              - "trigger.memory.util"
+      - _id: vm.memory.pagefaultssec
+        _group: "Memory"
+        name: Memory page faults per second
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Memory\Page Faults/sec"]
+        value_type: FLOAT
+        description: |
+          Page Faults/sec is the average number of pages faulted per second. It is measured in number of pages 
+          faulted per second because only one page is faulted in each fault operation, hence this is also equal 
+          to the number of page fault operations. This counter includes both hard faults (those that require 
+          disk access) and soft faults (where the faulted page is found elsewhere in physical memory.) Most 
+          processors can handle large numbers of soft faults without significant consequence. However, hard faults, 
+          which require disk access, can cause significant delays.
+      - _id: vm.memory.pagesec
+        _group: "Memory"
+        name: Memory pages per second
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Memory\Pages/sec"]
+        value_type: FLOAT
+        description: |
+          This measures the rate at which pages are read from or written to disk to resolve hard page faults. 
+          If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.
+        triggers:
+          - _id: trigger.memory.page_sec.low
+            name: "The Memory Pages/sec is too high (over {$MEM.PAGE_SEC.CRIT.MAX} for 5m)"
+            priority: "WARNING"
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$MEM.PAGE_SEC.CRIT.MAX}"
+            description: "The Memory Pages/sec in the last 5 minutes exceeds {$MEM.PAGE_SEC.CRIT.MAX}. If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak."
+            _depends_on:
+              - "trigger.memory.util"
+      - _id: vm.memory.pool_nonpaged
+        _group: "Memory"
+        name: Memory pool non-paged
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Memory\Pool Nonpaged Bytes"]
+        units: B
+        description: |
+          This measures the size, in bytes, of the non-paged pool. This is an area of system memory for objects 
+          that cannot be written to disk but instead must remain in physical memory as long as they are allocated. 
+          There is a possible memory leak if the value is greater than 175MB (or 100MB with the /3GB switch). 
+          A typical Event ID 2019 is recorded in the system event log.
+
+  - name: Template Module Windows filesystems by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
+    macros:
+      - macro: "{$VFS.FS.FSNAME.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSDRIVETYPE.MATCHES}"
+        value: "fixed"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+    discovery_rules:
+      - name: "Mounted filesystem discovery"
+        key: "vfs.fs.discovery"
+        type: "ZABBIX_PASSIVE"
+        description: "Discovery of file systems of different types."
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#FSTYPE}"
+              value: "{$VFS.FS.FSTYPE.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+            - macro: "{#FSTYPE}"
+              value: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
+            - macro: "{#FSNAME}"
+              value: "{$VFS.FS.FSNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "C"
+            - macro: "{#FSNAME}"
+              value: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "D"
+            - macro: "{#FSDRIVETYPE}"
+              value: "{$VFS.FS.FSDRIVETYPE.MATCHES}"
+              operator: MATCHES_REGEX
+              formulaid: E
+            - macro: "{#FSDRIVETYPE}"
+              value: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: F
+        items:
+          - _prototype: "vfs.fs.used"
+            type: "ZABBIX_PASSIVE"
+            key: "vfs.fs.size[{#FSNAME},used]"
+            _group: "Filesystems"
+            _resource: "{#FSNAME}"
+            application_prototype: "Filesystem __RESOURCE__"
+          - _prototype: "vfs.fs.total"
+            type: "ZABBIX_PASSIVE"
+            key: "vfs.fs.size[{#FSNAME},total]"
+            _group: "Filesystems"
+            _resource: "{#FSNAME}"
+            application_prototype: "Filesystem __RESOURCE__"
+          - _prototype: "vfs.fs.pused"
+            type: "ZABBIX_PASSIVE"
+            key: "vfs.fs.size[{#FSNAME},pused]"
+            _group: "Filesystems"
+            _resource: "{#FSNAME}"
+            application_prototype: "Filesystem __RESOURCE__"
+
+  - name: Template Module Windows physical disks by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
+    macros:
+      - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
+        value: ".*"
+      - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        value: "_Total"
+      - macro: "{$VFS.DEV.UTIL.MAX.WARN}"
+        value: "95"
+    items:
+      - _id: vfs.dev.get
+        _group: "Zabbix_raw_items"
+        type: "ZABBIX_PASSIVE"
+        name: Physical disks WMI get
+        key: wmi.getall[root\cimv2,"select * from win32_perfformatteddata_perfdisk_physicaldisk"]
+        value_type: TEXT
+        delay: "1m"
+        history: "1h"
+    discovery_rules:
+      - name: Physical disks discovery
+        # key: net.if.discovery
+        type: DEPENDENT
+        key: "vfs.dev.discovery"
+        master_item: "vfs.dev.get"
+        preprocessing:
+          # TODO fix
+          # - type: JSONPATH
+          #   params: $['Name']
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
+        lld_macro_paths:
+          - lld_macro: "{#DEVNAME}"
+            path: "$.Name"
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: A
+            - macro: "{#DEVNAME}"
+              value: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: B
+        items:
+          - _prototype: vfs.dev.read.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.read.rate[DiskReadsPersec.{#DEVNAME}]
+            units: "!r/s"
+            value_type: UNSIGNED
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].DiskReadsPersec.first()'
+          - _prototype: vfs.dev.write.rate
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.write.rate[DiskWritesPersec.{#DEVNAME}]
+            units: "!w/s"
+            value_type: UNSIGNED
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].DiskWritesPersec.first()'
+          - _prototype: vfs.dev.queue_size
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.queue_size[CurrentDiskQueueLength.{#DEVNAME}]
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].CurrentDiskQueueLength.first()'
+          - _prototype: vfs.dev.util
+            _resource: "{#DEVNAME}"
+            application_prototype: Disk __RESOURCE__
+            type: DEPENDENT
+            master_item: vfs.dev.get
+            key: vfs.dev.util[PercentDiskTime.{#DEVNAME}]
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#DEVNAME}")].PercentDiskTime.first()'
+            triggers:
+              - _prototype: trigger.vfs.dev.util
+
+  - name: Template Module Windows generic by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
+    macros:
+      - macro: "{$SYSTEM.FUZZYTIME.MAX}"
+        value: "60"
+    items:
+      - _prototype: "system.uptime"
+        type: "ZABBIX_PASSIVE"
+        key: "system.uptime"
+        triggers:
+          - _prototype: "trigger.uptime.restarted"
+            priority: "WARNING"
+            name: "Host has been restarted (uptime < 10m)"
+            description: "The device uptime is less than 10 minutes."
+      - _prototype: system.localtime
+        type: ZABBIX_PASSIVE
+        key: system.localtime
+      - _prototype: system.name
+        type: ZABBIX_PASSIVE
+        key: system.hostname
+      - _prototype: system.descr
+        type: ZABBIX_PASSIVE
+        key: system.uname
+      # - _id: system.users.num
+      #   type: ZABBIX_PASSIVE
+      #   _group: General
+      #   key: system.users.num
+      #   name: Number of logged in users
+      #   description: Number of users who are currently logged
+      - _id: proc.num[]
+        _group: "General"
+        name: Number of processes
+        type: ZABBIX_PASSIVE
+        key: proc.num[]
+      - _id: sys.threads
+        _group: "General"
+        name: Number of threads
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\System\Threads"]
+        description: "The number of threads used by all running processes."
+      - _prototype: system.sw.arch
+        type: ZABBIX_PASSIVE
+        key: system.sw.arch
+      # - _prototype: system.sw.packages
+      #   type: ZABBIX_PASSIVE
+      #   key: system.sw.packages
+
+  - name: Template Module Windows network by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
+    macros:
+      - macro: "{$NET.IF.IFNAME.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.IFNAME.NOT_MATCHES}"
+        value: "Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+
+      - macro: "{$NET.IF.IFALIAS.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.IFALIAS.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.IFDESCR.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.IFDESCR.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.PHYSICALADAPTER.MATCHES}"
+        value: "True"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.IFNETENABLED.MATCHES}"
+        value: "True"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+      - macro: "{$NET.IF.IFNETENABLED.NOT_MATCHES}"
+        value: "CHANGE_THIS"
+        _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
+    items:
+      - _id: net.if.get
+        _group: "Zabbix_raw_items"
+        type: "ZABBIX_PASSIVE"
+        name: Network interfaces WMI get
+        key: wmi.getall[root\cimv2,"select * from win32_networkadapter where PhysicalAdapter=True"]
+        value_type: "TEXT"
+        delay: "1m"
+        history: "1h"
+    discovery_rules:
+      - name: Network interfaces discovery
+        type: DEPENDENT
+        key: "net.if.discovery"
+        master_item: "net.if.get"
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
+        lld_macro_paths:
+          - lld_macro: "{#IFNAME}"
+            path: "$.Name"
+          - lld_macro: "{#IFPHYSICALADAPTER}"
+            path: "$.PhysicalAdapter"
+          - lld_macro: "{#IFDESCR}"
+            path: "$.Description"
+          - lld_macro: "{#IFALIAS}"
+            path: "$.NetConnectionID"
+          - lld_macro: "{#IFNETENABLED}"
+            path: "$.NetEnabled"
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#IFPHYSICALADAPTER}"
+              value: "{$NET.IF.PHYSICALADAPTER.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+            - macro: "{#IFPHYSICALADAPTER}"
+              value: "{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: B
+            - macro: "{#IFNAME}"
+              value: "{$NET.IF.IFNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: C
+            - macro: "{#IFNAME}"
+              value: "{$NET.IF.IFNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: D
+            - macro: "{#IFDESCR}"
+              value: "{$NET.IF.IFDESCR.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: E
+            - macro: "{#IFDESCR}"
+              value: "{$NET.IF.IFDESCR.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: F
+            - macro: "{#IFALIAS}"
+              value: "{$NET.IF.IFALIAS.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: G
+            - macro: "{#IFALIAS}"
+              value: "{$NET.IF.IFALIAS.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: H
+            - macro: "{#IFNETENABLED}"
+              value: "{$NET.IF.IFNETENABLED.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: I
+            - macro: "{#IFNETENABLED}"
+              value: "{$NET.IF.IFNETENABLED.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: J
+        items:
+          - _prototype: "net.if.in"
+            type: "ZABBIX_PASSIVE"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            _vendor_description: ""
+            key: 'net.if.in["{#IFNAME}"]'
+          - _prototype: "net.if.out"
+            type: "ZABBIX_PASSIVE"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            key: 'net.if.out["{#IFNAME}"]'
+            _vendor_description: ""
+          - _prototype: "net.if.in.discards"
+            type: "ZABBIX_PASSIVE"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            key: 'net.if.in["{#IFNAME}",dropped]'
+            _vendor_description: ""
+          - _prototype: "net.if.out.discards"
+            type: "ZABBIX_PASSIVE"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            key: 'net.if.out["{#IFNAME}",dropped]'
+            _vendor_description: ""
+          - _prototype: "net.if.in.errors"
+            type: "ZABBIX_PASSIVE"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            key: 'net.if.in["{#IFNAME}",errors]'
+            _vendor_description: ""
+          - _prototype: "net.if.out.errors"
+            type: "ZABBIX_PASSIVE"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            key: 'net.if.out["{#IFNAME}",errors]'
+            _vendor_description: ""
+          - _prototype: "net.if.speed"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            type: DEPENDENT
+            key: 'net.if.speed["{#IFNAME}"]'
+            master_item: "net.if.get"
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#IFNAME}")].Speed.first()'
+                error_handler: CUSTOM_VALUE
+                error_handler_params: "0"
+            _vendor_description: ""
+          - _prototype: "net.if.type"
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            type: DEPENDENT
+            key: 'net.if.type["{#IFNAME}"]'
+            master_item: "net.if.get"
+            value_map: Win32_NetworkAdapter::AdapterTypeId
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()'
+            _vendor_description: ""
+          - _prototype: net.if.status
+            _resource: "Interface {#IFNAME}({#IFALIAS})"
+            type: DEPENDENT
+            key: 'net.if.status["{#IFNAME}"]'
+            master_item: "net.if.get"
+            value_map: Win32_NetworkAdapter::NetConnectionStatus
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()'
+            _vendor_description: ""
+    screens:
+      - hsize: 1
+        vsize: 1
+        name: Netowrk interfaces
+        screen_items:
+          - _graph_id: net.if.stats
+
+  - name: Template OS Windows by Zabbix agent
+    _zbx_ver: "4.2"
+    _classes:
+      - OS
+      - ZABBIX_ACTIVE
+    description: |
+      Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+    _documentation:
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows
+      _tested_on:
+        - name: Windows
+          version: "10"
+      _overview: |
+        New official Windows template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+      _setup: |
+        Install Zabbix agent to Windows OS according to Zabbix documentation.
+    templates:
+      - Template Module Zabbix agent
+      - Template Module Windows CPU by Zabbix agent
+      - Template Module Windows filesystems by Zabbix agent
+      - Template Module Windows generic by Zabbix agent
+      - Template Module Windows memory by Zabbix agent
+      - Template Module Windows network by Zabbix agent
+      - Template Module Windows physical disks by Zabbix agent
+    screens:
+      - name: "System performance"
+        hsize: 2
+        vsize: 6
+        screen_items:
+          - resourcetype: GRAPH
+            resource:
+              - name: CPU usage
+            x: 0
+            y: 0
+          - resourcetype: SIMPLE_GRAPH
+            resource:
+              - name: perf_counter_en["\System\Processor Queue Length"]
+            x: 1
+            y: 0
+          - resourcetype: GRAPH
+            resource:
+              - name: Memory utilization
+            x: 0
+            y: 1
+          - resourcetype: GRAPH
+            resource:
+              - name: Swap usage
+            x: 1
+            y: 1
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#FSNAME}: Disk space usage"
+            x: 0
+            y: 2
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#DEVNAME}: Disk read/write rates"
+            x: 0
+            y: 3
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#DEVNAME}: Disk utilization and queue"
+            x: 0
+            y: 4
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "Interface {#IFNAME}({#IFALIAS}): Network traffic"
+            x: 0
+            y: 5
+            colspan: 2
+
+value_maps:
+  - name: Win32_NetworkAdapter::AdapterTypeId
+    mappings:
+      - value: "0"
+        newvalue: Ethernet 802.3
+      - value: "1"
+        newvalue: Token Ring 802.5
+      - value: "2"
+        newvalue: Fiber Distributed Data Interface (FDDI)
+      - value: "3"
+        newvalue: Wide Area Network (WAN)
+      - value: "4"
+        newvalue: LocalTalk
+      - value: "5"
+        newvalue: Ethernet using DIX header format
+      - value: "6"
+        newvalue: ARCNET
+      - value: "7"
+        newvalue: ARCNET (878.2)
+      - value: "8"
+        newvalue: ATM
+      - value: "9"
+        newvalue: Wireless
+      - value: "10"
+        newvalue: Infrared Wireless
+      - value: "11"
+        newvalue: Bpc
+      - value: "12"
+        newvalue: CoWan
+      - value: "13"
+        newvalue: "1394"
+  #https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/cim-logicaldevice
+  - name: CIM_LogicalDevice::Availability
+    mappings:
+      - value: "1"
+        newvalue: Other
+      - value: "2"
+        newvalue: Unknown
+      - value: "3"
+        newvalue: Running/Full Power
+      - value: "4"
+        newvalue: Warning
+      - value: "5"
+        newvalue: In Test
+      - value: "6"
+        newvalue: Not Applicable
+      - value: "7"
+        newvalue: Power Off
+      - value: "8"
+        newvalue: Off Line
+      - value: "9"
+        newvalue: Off Duty
+      - value: "10"
+        newvalue: Degraded
+      - value: "11"
+        newvalue: Not Installed
+      - value: "12"
+        newvalue: Install Error
+      - value: "13"
+        newvalue: Power Save - Unknown
+        # The device is known to be in a power save mode, but its exact status is unknown.
+      - value: "14"
+        newvalue: Power Save - Low Power Mode
+        # The device is in a power save state but still functioning, and may exhibit degraded performance.
+      - value: "15"
+        newvalue: Power Save - Standby
+        # The device is not functioning but could be brought to full power quickly.
+      - value: "16"
+        newvalue: Power Cycle
+      - value: "17"
+        newvalue: Power Save - Warning
+        # The device is in a warning state, though also in a power save mode.
+      - value: "18"
+        newvalue: Paused
+        # The device is paused.
+      - value: "19"
+        newvalue: Not Ready
+      - value: "20"
+        newvalue: Not Configured
+      - value: "21"
+        newvalue: Quiesced
+        # The device is quiet.
+  - name: Win32_NetworkAdapter::NetConnectionStatus
+    mappings:
+      - value: "0"
+        newvalue: Disconnected
+      - value: "1"
+        newvalue: Connecting
+      - value: "2"
+        newvalue: Connected
+      - value: "3"
+        newvalue: Disconnecting
+      - value: "4"
+        newvalue: Hardware Not Present
+      - value: "5"
+        newvalue: Hardware Disabled
+      - value: "6"
+        newvalue: Hardware Malfunction
+      - value: "7"
+        newvalue: Media Disconnected
+      - value: "8"
+        newvalue: Authenticating
+      - value: "9"
+        newvalue: Authentication Succeeded
+      - value: "10"
+        newvalue: Authentication Failed
+      - value: "11"
+        newvalue: Invalid Address
+      - value: "12"
+        newvalue: Credentials Required
