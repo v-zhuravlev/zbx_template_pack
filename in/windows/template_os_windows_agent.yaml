@@ -32,7 +32,7 @@ templates:
         type: ZABBIX_PASSIVE
         key: system.cpu.util
       # Performance counters
-      - _id: system.cpu.interrupt
+      - _prototype: system.cpu.intr
         _group: CPU
         name: CPU interrupt time
         type: ZABBIX_PASSIVE
@@ -69,6 +69,15 @@ templates:
       #   delay: 0;m0-59
       #   description: |
       #     The Processor Information\% Processor Time shows how much the processor(s) is being utilized.
+      - _prototype: system.cpu.switches
+        key: system.cpu.switches
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\System\Context Switches/sec"]
+        _vendor_description: |
+          "Context Switches/sec is the combined rate at which all processors on the computer are switched from one thread to another.
+          Context switches occur when a running thread voluntarily relinquishes the processor, is preempted by a higher priority ready thread, or switches between user-mode and privileged (kernel) mode to use an Executive or subsystem service.
+          It is the sum of Thread\\Context Switches/sec for all threads running on all processors in the computer and is measured in numbers of switches.
+          There are context switch counters on the System and Thread objects. This counter displays the difference between the values observed in the last two samples, divided by the duration of the sample interval."
       - _id: system.cpu.priv
         _group: "CPU"
         name: CPU privileged time
@@ -516,12 +525,12 @@ templates:
       - _prototype: system.descr
         type: ZABBIX_PASSIVE
         key: system.uname
-      - _id: system.users.num
-        type: ZABBIX_PASSIVE
-        _group: General
-        key: system.users.num
-        name: Number of logged in users
-        description: Number of users who are currently logged
+      # - _id: system.users.num
+      #   type: ZABBIX_PASSIVE
+      #   _group: General
+      #   key: system.users.num
+      #   name: Number of logged in users
+      #   description: Number of users who are currently logged
       - _id: proc.num[]
         _group: "General"
         name: Number of processes
@@ -536,9 +545,9 @@ templates:
       - _prototype: system.sw.arch
         type: ZABBIX_PASSIVE
         key: system.sw.arch
-      - _prototype: system.sw.packages
-        type: ZABBIX_PASSIVE
-        key: system.sw.packages
+      # - _prototype: system.sw.packages
+      #   type: ZABBIX_PASSIVE
+      #   key: system.sw.packages
 
   - name: Template Module Windows network by Zabbix agent
     _zbx_ver: "4.2"
@@ -732,20 +741,55 @@ templates:
       - Template Module Windows memory by Zabbix agent
       - Template Module Windows network by Zabbix agent
       - Template Module Windows physical disks by Zabbix agent
-    # screens:
-    #   - name: "System performance"
-    #     hsize: 2
-    #     vsize: 2
-    #     screen_items:
-    #       - _graph_id: memory.usage
-    #         x: 0
-    #         y: 0
-    #       - _graph_id: cpu.usage
-    #         x: 1
-    #         y: 0
-    #       - _graph_id:
-    #         x: 0
-    #         y: 1
+    screens:
+      - name: "System performance"
+        hsize: 2
+        vsize: 6
+        screen_items:
+          - resourcetype: GRAPH
+            resource:
+              - name: CPU usage
+            x: 0
+            y: 0
+          - resourcetype: SIMPLE_GRAPH
+            resource:
+              - name: perf_counter_en["\System\Processor Queue Length"]
+            x: 1
+            y: 0
+          - resourcetype: GRAPH
+            resource:
+              - name: Memory utilization
+            x: 0
+            y: 1
+          - resourcetype: GRAPH
+            resource:
+              - name: Swap usage
+            x: 1
+            y: 1
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#FSNAME}: Disk space usage"
+            x: 0
+            y: 2
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#DEVNAME}: Disk read/write rates"
+            x: 0
+            y: 3
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#DEVNAME}: Disk utilization and queue"
+            x: 0
+            y: 4
+            colspan: 2
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "Interface {#IFNAME}({#IFALIAS}): Network traffic"
+            x: 0
+            y: 5
+            colspan: 2
 
 value_maps:
   - name: Win32_NetworkAdapter::AdapterTypeId

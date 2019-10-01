@@ -33,6 +33,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |CPU|CPU utilization|<p>CPU utilization in %</p>|ZABBIX_PASSIVE|system.cpu.util|
 |CPU|CPU interrupt time|<p>The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing </p><p>hardware interrupts during sample intervals. This value is an indirect indicator of the activity of </p><p>devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication </p><p>lines, network interface cards and other peripheral devices. This is an easy way to identify a potential </p><p>hardware failure. This should never be higher than 20%.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Interrupt Time"]|
+|CPU|Context switches per second|<p>"Context Switches/sec is the combined rate at which all processors on the computer are switched from one thread to another.</p><p>Context switches occur when a running thread voluntarily relinquishes the processor, is preempted by a higher priority ready thread, or switches between user-mode and privileged (kernel) mode to use an Executive or subsystem service.</p><p>It is the sum of Thread\\Context Switches/sec for all threads running on all processors in the computer and is measured in numbers of switches.</p><p>There are context switch counters on the System and Thread objects. This counter displays the difference between the values observed in the last two samples, divided by the duration of the sample interval."</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Context Switches/sec"]|
 |CPU|CPU privileged time|<p>The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent </p><p>executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt </p><p>Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode </p><p>functions of the Windows® Operating System.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Privileged Time"]|
 |CPU|CPU user time|<p>The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing </p><p>in User mode.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% User Time"]|
 |CPU|CPU queue length|<p>The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue </p><p>and are waiting to be executed.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Processor Queue Length"]|
@@ -243,11 +244,9 @@ There are no template links in this template.
 |General|System local time|<p>-</p>|ZABBIX_PASSIVE|system.localtime|
 |General|System name|<p>System host name.</p>|ZABBIX_PASSIVE|system.hostname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |General|System description|<p>-</p>|ZABBIX_PASSIVE|system.uname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|General|Number of logged in users|<p>Number of users who are currently logged</p>|ZABBIX_PASSIVE|system.users.num|
 |General|Number of processes|<p>-</p>|ZABBIX_PASSIVE|proc.num[]|
 |General|Number of threads|<p>The number of threads used by all running processes.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Threads"]|
 |Inventory|Operating system architecture|<p>-</p>|ZABBIX_PASSIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Inventory|Software installed|<p>-</p>|ZABBIX_PASSIVE|system.sw.packages<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Status|Uptime|<p>-</p>|ZABBIX_PASSIVE|system.uptime|
 
 ## Triggers

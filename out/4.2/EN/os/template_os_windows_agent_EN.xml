@@ -146,6 +146,68 @@ hardware failure. This should never be higher than 20%.</description>
                <master_item/>
             </item>
             <item>
+               <name>Context switches per second</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>perf_counter_en["\System\Context Switches/sec"]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>"Context Switches/sec is the combined rate at which all processors on the computer are switched from one thread to another.&#13;
+Context switches occur when a running thread voluntarily relinquishes the processor, is preempted by a higher priority ready thread, or switches between user-mode and privileged (kernel) mode to use an Executive or subsystem service.&#13;
+It is the sum of Thread\\Context Switches/sec for all threads running on all processors in the computer and is measured in numbers of switches.&#13;
+There are context switch counters on the System and Thread objects. This counter displays the difference between the values observed in the last two samples, divided by the duration of the sample interval."</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
                <name>CPU privileged time</name>
                <type>0</type>
                <snmp_community/>
@@ -1945,6 +2007,50 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                         </graph_item>
                      </graph_items>
                   </graph_prototype>
+                  <graph_prototype>
+                     <name>{#DEVNAME}: Disk utilization and queue</name>
+                     <width>900</width>
+                     <height>200</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>0</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>0</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Module Windows physical disks by Zabbix agent</host>
+                              <key>vfs.dev.queue_size[CurrentDiskQueueLength.{#DEVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>5</drawtype>
+                           <color>2774A4</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Module Windows physical disks by Zabbix agent</host>
+                              <key>vfs.dev.util[PercentDiskTime.{#DEVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
                </graph_prototypes>
                <host_prototypes/>
                <jmx_endpoint/>
@@ -2275,65 +2381,6 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <master_item/>
             </item>
             <item>
-               <name>Number of logged in users</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.users.num</key>
-               <delay>1m</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>3</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>Number of users who are currently logged</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>General</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing/>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
                <name>Number of processes</name>
                <type>0</type>
                <snmp_community/>
@@ -2462,72 +2509,6 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <trends>0</trends>
                <status>0</status>
                <value_type>1</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description/>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Inventory</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>20</type>
-                     <params>1d</params>
-                     <error_handler>0</error_handler>
-                     <error_handler_params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item/>
-            </item>
-            <item>
-               <name>Software installed</name>
-               <type>0</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>system.sw.packages</key>
-               <delay>1h</delay>
-               <history>2w</history>
-               <trends>0</trends>
-               <status>0</status>
-               <value_type>4</value_type>
                <allowed_hosts/>
                <units/>
                <snmpv3_contextname/>
@@ -3739,7 +3720,191 @@ Template tooling version used: 0.29</description>
                <name>Template Module Zabbix agent</name>
             </template>
          </templates>
-         <screens/>
+         <screens>
+            <screen>
+               <name>System performance</name>
+               <hsize>2</hsize>
+               <vsize>6</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>CPU usage</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>1</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <key>perf_counter_en["\System\Processor Queue Length"]</key>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Memory utilization</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Swap usage</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>2</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>{#FSNAME}: Disk space usage</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>3</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>{#DEVNAME}: Disk read/write rates</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>4</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>{#DEVNAME}: Disk utilization and queue</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <width>500</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>5</y>
+                     <colspan>2</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <style>0</style>
+                     <url/>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <resource>
+                        <name>Interface {#IFNAME}({#IFALIAS}): Network traffic</name>
+                        <host>Template OS Windows by Zabbix agent</host>
+                     </resource>
+                     <max_columns>3</max_columns>
+                     <application/>
+                  </screen_item>
+               </screen_items>
+            </screen>
+         </screens>
          <tags/>
       </template>
    </templates>
@@ -3772,6 +3937,50 @@ Template tooling version used: 0.29</description>
                <item>
                   <host>Template Module Windows CPU by Zabbix agent</host>
                   <key>system.cpu.util</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>CPU jumps</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>0</ymin_type_1>
+         <ymax_type_1>0</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>0</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template Module Windows CPU by Zabbix agent</host>
+                  <key>perf_counter_en["\System\Context Switches/sec"]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>0</drawtype>
+               <color>2774A4</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template Module Windows CPU by Zabbix agent</host>
+                  <key>perf_counter_en["\Processor Information(_total)\% Interrupt Time"]</key>
                </item>
             </graph_item>
          </graph_items>
