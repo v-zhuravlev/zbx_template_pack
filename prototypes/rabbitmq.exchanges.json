@@ -1,0 +1,353 @@
+[
+    {
+        "_id": "rabbitmq.exchange.messages.ack",
+        "key": "rabbitmq.exchange.messages.ack[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages acknowledged",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Number of messages delivered to clients and acknowledged",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                 "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.ack.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.ack.rate",
+        "key": "rabbitmq.exchange.messages.ack.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages acknowledged per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of messages delivered to clients and acknowledged per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                 "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.ack_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.confirm",
+        "key": "rabbitmq.exchange.messages.confirm[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages confirmed",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Count of messages confirmed",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                 "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.confirm.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.confirm.rate",
+        "key": "rabbitmq.exchange.messages.confirm.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages confirmed per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of messages confirmed per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                 "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.confirm_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.deliver_get",
+        "key": "rabbitmq.exchange.messages.deliver_get[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages delivered",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Sum of messages delivered in acknowledgement mode to consumers, in no-acknowledgement mode to consumers, in acknowledgement mode in response to basic.get, and in no-acknowledgement mode in response to basic.get",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.deliver_get.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.deliver_get.rate",
+        "key": "rabbitmq.exchange.messages.deliver_get.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages delivered per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate per second of the sum of messages delivered in acknowledgement mode to consumers, in no-acknowledgement mode to consumers, in acknowledgement mode in response to basic.get, and in no-acknowledgement mode in response to basic.get",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.deliver_get_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.publish",
+        "key": "rabbitmq.exchange.messages.publish[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages published",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Count of messages published",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.publish.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.publish.rate",
+        "key": "rabbitmq.exchange.messages.publish.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages published per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of messages published per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.publish_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.publish_in",
+        "key": "rabbitmq.exchange.messages.publish_in[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages publish_in",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Count of messages published from channels into this overview",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.publish_in.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.publish_in.rate",
+        "key": "rabbitmq.exchange.messages.publish_in.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages publish_in per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of messages published from channels into this overview per sec",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.publish_in_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.publish_out",
+        "key": "rabbitmq.exchange.messages.publish_out[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages publish_out",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Count of messages published from this overview into queues",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.publish_out.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.publish_out.rate",
+        "key": "rabbitmq.exchange.messages.publish_out.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages publish_out per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of messages published from this overview into queues per second,0,rabbitmq,total msgs pub out rate",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.publish_out_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.return_unroutable",
+        "key": "rabbitmq.exchange.messages.return_unroutable[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages returned unroutable",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Count of messages returned to publisher as unroutable",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.return_unroutable.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.return_unroutable.rate",
+        "key": "rabbitmq.exchange.messages.return_unroutable.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages returned unroutable per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of messages returned to publisher as unroutable per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.return_unroutable_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.redeliver",
+        "key": "rabbitmq.exchange.messages.redeliver[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages redelivered",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Count of subset of messages in deliver_get which had the redelivered flag set",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.redeliver.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.exchange.messages.redeliver.rate",
+        "key": "rabbitmq.exchange.messages.redeliver.rate[\"{#VHOST}/{#EXCHANGE}/{#TYPE}\"]",
+        "name": "Exchange {#VHOST}/{#EXCHANGE}/{#TYPE}: Messages redelivered per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.exchanges",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Exchange \"{#VHOST}/{#EXCHANGE}/{#TYPE}\"",
+        "description": "Rate of subset of messages in deliver_get which had the redelivered flag set per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#EXCHANGE}\" && @.vhost == \"{#VHOST}\" && @.type ==\"{#TYPE}\")].message_stats.redeliver_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+]

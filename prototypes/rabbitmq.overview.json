@@ -1,0 +1,683 @@
+[
+    {
+        "_id": "rabbitmq.overview.object_totals.connections",
+        "key": "rabbitmq.overview.object_totals.connections",
+        "name": "Connections total",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Total number of connections",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.object_totals.connections"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.connections.limit",
+                "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$RABBITMQ.CONN.MAX.WARN}",
+                "name": "Total number of connections is too high (over {$RABBITMQ.CONN.MAX.WARN} for 5m)",
+                "priority": "WARNING"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbit.connections.total",
+                "name": "Connections",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.overview.object_totals.connections",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.object_totals.channels",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.object_totals.consumers",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.object_totals.channels",
+        "key": "rabbitmq.overview.object_totals.channels",
+        "name": "Channels total",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Total number of channels",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.object_totals.channels"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.object_totals.queues",
+        "key": "rabbitmq.overview.object_totals.queues",
+        "name": "Queues total",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Total number of queues",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.object_totals.queues"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbit.queues.total",
+                "name": "Queues",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.overview.object_totals.queues",
+                        "drawtype": "GRADIENT_LINE"
+                    }
+                ]
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.object_totals.consumers",
+        "key": "rabbitmq.overview.object_totals.consumers",
+        "name": "Consumers total",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Total number of consumers",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.object_totals.consumers"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.object_totals.exchanges",
+        "key": "rabbitmq.overview.object_totals.exchanges",
+        "name": "Exchanges total",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Total number of exchanges",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.object_totals.exchanges"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.queue_totals.messages",
+        "key": "rabbitmq.overview.queue_totals.messages",
+        "name": "Messages total",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Total number of messages (ready plus unacknowledged)",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.queue_totals.messages"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbit.messages.total",
+                "name": "Messages",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.overview.queue_totals.messages",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.queue_totals.messages.ready",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.queue_totals.messages.unacknowledged",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.queue_totals.messages.ready",
+        "key": "rabbitmq.overview.queue_totals.messages.ready",
+        "name": "Messages ready for delivery",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Number of messages ready for deliver",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.queue_totals.messages_ready"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.queue_totals.messages.unacknowledged",
+        "key": "rabbitmq.overview.queue_totals.messages.unacknowledged",
+        "name": "Messages unacknowledged",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Number of unacknowledged messages",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.queue_totals.messages_unacknowledged"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.ack",
+        "key": "rabbitmq.overview.messages.ack",
+        "name": "Messages acknowledged",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Number of messages delivered to clients and acknowledged",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.ack",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.ack.rate",
+        "key": "rabbitmq.overview.messages.ack.rate",
+        "name": "Messages acknowledged per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of messages delivered to clients and acknowledged per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.ack_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.confirm",
+        "key": "rabbitmq.overview.messages.confirm",
+        "name": "Messages confirmed",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Count of messages confirmed",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.confirm",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.confirm.rate",
+        "key": "rabbitmq.overview.messages.confirm.rate",
+        "name": "Messages confirmed per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of messages confirmed per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.confirm_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.deliver_get",
+        "key": "rabbitmq.overview.messages.deliver_get",
+        "name": "Messages delivered",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Sum of messages delivered in acknowledgement mode to consumers, in no-acknowledgement mode to consumers, in acknowledgement mode in response to basic.get, and in no-acknowledgement mode in response to basic.get",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.deliver_get",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.deliver_get.rate",
+        "key": "rabbitmq.overview.messages.deliver_get.rate",
+        "name": "Messages delivered per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate per second of the sum of messages delivered in acknowledgement mode to consumers, in no-acknowledgement mode to consumers, in acknowledgement mode in response to basic.get, and in no-acknowledgement mode in response to basic.get",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.deliver_get_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.publish",
+        "key": "rabbitmq.overview.messages.publish",
+        "name": "Messages published",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Count of messages published",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.publish",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbit.messages.status",
+                "name": "Messages status",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.overview.messages.publish",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.ack",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.confirm",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.deliver_get",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.publish_in",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.publish_out",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.redeliver",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.return_unroutable",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.publish.rate",
+        "key": "rabbitmq.overview.messages.publish.rate",
+        "name": "Messages published per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of messages published per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.publish_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbit.messages.rate",
+                "name": "Messages per second",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.overview.messages.publish.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.ack.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.confirm.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.deliver_get.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.publish_in.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.publish_out.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.redeliver.rate",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.overview.messages.return_unroutable.rate",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.publish_in",
+        "key": "rabbitmq.overview.messages.publish_in",
+        "name": "Messages publish_in",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Count of messages published from channels into this overview",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.publish_in",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.publish_in.rate",
+        "key": "rabbitmq.overview.messages.publish_in.rate",
+        "name": "Messages publish_in per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of messages published from channels into this overview per sec",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.publish_in_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.publish_out",
+        "key": "rabbitmq.overview.messages.publish_out",
+        "name": "Messages publish_out",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Count of messages published from this overview into queues",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.publish_out",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.publish_out.rate",
+        "key": "rabbitmq.overview.messages.publish_out.rate",
+        "name": "Messages publish_out per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of messages published from this overview into queues per second,0,rabbitmq,total msgs pub out rate",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.publish_out_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.return_unroutable",
+        "key": "rabbitmq.overview.messages.return_unroutable",
+        "name": "Messages returned unroutable",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Count of messages returned to publisher as unroutable",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.return_unroutable",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.return_unroutable.rate",
+        "key": "rabbitmq.overview.messages.return_unroutable.rate",
+        "name": "Messages returned unroutable",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of messages returned to publisher as unroutable per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.return_unroutable_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.redeliver",
+        "key": "rabbitmq.overview.messages.redeliver",
+        "name": "Messages returned unroutable",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Count of subset of messages in deliver_get which had the redelivered flag set",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.redeliver",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.messages.redeliver.rate",
+        "key": "rabbitmq.overview.messages.redeliver.rate",
+        "name": "Messages returned unroutable",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Rate of subset of messages in deliver_get which had the redelivered flag set per second",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.message_stats.redeliver_details.rate",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.management_version",
+        "key": "rabbitmq.overview.management_version",
+        "name": "Management version",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "CHAR",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Version of the management plugin in use",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.management_version"
+            },
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ]
+    }
+
+    ,{
+        "_id": "rabbitmq.overview.rabbitmq_version",
+        "key": "rabbitmq.overview.rabbitmq_version",
+        "name": "Rabbitmq version",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.overview",
+        "history": "7d",
+        "value_type": "CHAR",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Version of RabbitMQ on the node which processed this request",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.rabbitmq_version"
+            },
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "triggers": [
+            {
+                "_prototype": "trigger.version.changed"
+            }
+        ]
+    }
+
+
+]
