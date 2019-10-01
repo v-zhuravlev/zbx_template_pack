@@ -333,7 +333,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Check system time (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.localtime.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
+|System time is out of sync (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.localtime.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
 |Systen name has changed (new name: {ITEM.VALUE})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.hostname.diff()}=1 and {TEMPLATE_NAME:system.hostname.strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |Configured max number of open filedescriptors is too low (< {$KERNEL.MAXFILES.MIN})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:kernel.maxfiles.last()}<{$KERNEL.MAXFILES.MIN}`|INFO||
 |Configured max number of processes is too low (< {$KERNEL.MAXPROC.MIN})|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:kernel.maxproc.last()}<{$KERNEL.MAXPROC.MIN}`|INFO|<p>**Depends on**:</p><p>- Getting closer to process limit (over 80% used)</p>|

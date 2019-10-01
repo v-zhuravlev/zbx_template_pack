@@ -5057,6 +5057,50 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
                         </graph_item>
                      </graph_items>
                   </graph_prototype>
+                  <graph_prototype>
+                     <name>{#DEVNAME}: Disk utilization and queue</name>
+                     <width>900</width>
+                     <height>200</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>0</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>0</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>1</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux by Prom</host>
+                              <key>vfs.dev.queue_size[node_exporter,"{#DEVNAME}"]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>5</drawtype>
+                           <color>2774A4</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template OS Linux by Prom</host>
+                              <key>vfs.dev.util[node_exporter,"{#DEVNAME}"]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
                </graph_prototypes>
                <host_prototypes/>
                <jmx_endpoint/>
@@ -5751,7 +5795,7 @@ Failed to fetch system metrics from node_exporter in time.</description>
          <expression>{Template OS Linux by Prom:system.localtime[node_exporter].fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Check system time (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
+         <name>System time is out of sync (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
