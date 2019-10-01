@@ -600,13 +600,12 @@ templates:
         _group: "Zabbix_raw_items"
         type: "ZABBIX_PASSIVE"
         name: Network interfaces WMI get
-        key: wmi.getall[root\cimv2,"select * from win32_networkadapter"]
+        key: wmi.getall[root\cimv2,"select * from win32_networkadapter where PhysicalAdapter=True"]
         value_type: "TEXT"
         delay: "1m"
         history: "1h"
     discovery_rules:
       - name: Network interfaces discovery
-        # key: net.if.discovery
         type: DEPENDENT
         key: "net.if.discovery"
         master_item: "net.if.get"
@@ -739,9 +738,8 @@ templates:
   - name: Template OS Windows by Zabbix agent
     _zbx_ver: "4.2"
     _classes:
-      - ZABBIX_ACTIVE
-    _classes:
       - OS
+      - ZABBIX_ACTIVE
     description: |
       Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
     _documentation:

@@ -311,7 +311,7 @@ There are no template links in this template.
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Speed||DEPENDENT|net.if.speed["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].Speed.first()`</p><p>⛔️ON_FAIL: `CUSTOM_VALUE -> 0`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Interface type||DEPENDENT|net.if.type["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Operational status||DEPENDENT|net.if.status["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()`</p>|
-|Zabbix_raw_items|Network interfaces WMI get|<p>-</p>|ZABBIX_ACTIVE|wmi.getall[root\cimv2,"select * from win32_networkadapter"]|
+|Zabbix_raw_items|Network interfaces WMI get|<p>-</p>|ZABBIX_ACTIVE|wmi.getall[root\cimv2,"select * from win32_networkadapter where PhysicalAdapter=True"]|
 
 ## Triggers
 
