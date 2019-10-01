@@ -391,6 +391,9 @@ No specific Zabbix configuration is required.
 
 Please report any issues with the template at https://support.zabbix.com
 
+You can also provide feedback, discuss the template or ask for help with it at
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux).
+
 ## Known Issues
 
 - Description: Network discovery. Zabbix agent as of 4.2 doesn't support items such as net.if.status, net.if.speed.

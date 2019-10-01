@@ -159,6 +159,9 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+You can also provide feedback, discuss the template or ask for help with it at
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux).
+
 ## Known Issues
 
 - Description: node_exporter v0.16.0 renamed many metrics. CPU utilisation for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter < 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  
