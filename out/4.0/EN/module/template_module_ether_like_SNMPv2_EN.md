@@ -18,21 +18,23 @@ There are no template links in this template.
 
 ## Discovery rules
 
-|Name|Description|Type|
-|----|-----------|----|
-|EtherLike-MIB Discovery|Discovering interfaces from IF-MIB and EtherLike-MIB. Interfaces with up(1) Operational Status are discovered.|SNMP|
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|EtherLike-MIB Discovery|<p>Discovering interfaces from IF-MIB and EtherLike-MIB. Interfaces with up(1) Operational Status are discovered.</p>|SNMP|net.if.duplex.discovery<p>**Filter**:</p>AND <p>- A: {#IFOPERSTATUS} MATCHES_REGEX `1`</p><p>- B: {#SNMPVALUE} MATCHES_REGEX `(2|3)`</p>|
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-|Interface {#IFNAME}({#IFALIAS}): Duplex status|MIB: EtherLike-MIB</br>The current mode of operation of the MAC</br>entity.  'unknown' indicates that the current</br>duplex mode could not be determined.</br>Management control of the duplex mode is</br>accomplished through the MAU MIB.  When</br>an interface does not support autonegotiation,</br>or when autonegotiation is not enabled, the</br>duplex mode is controlled using</br>ifMauDefaultType.  When autonegotiation is</br>supported and enabled, duplex mode is controlled</br>using ifMauAutoNegAdvertisedBits.  In either</br>case, the currently operating duplex mode is</br>reflected both in this object and in ifMauType.</br>Note that this object provides redundant</br>information with ifMauType.  Normally, redundant</br>objects are discouraged.  However, in this</br>instance, it allows a management application to</br>determine the duplex status of an interface</br>without having to know every possible value of</br>ifMauType.  This was felt to be sufficiently</br>valuable to justify the redundancy.</br>Reference: [IEEE 802.3 Std.], 30.3.1.1.32,aDuplexStatus.|SNMP|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Duplex status|<p>MIB: EtherLike-MIB</p><p>The current mode of operation of the MAC</p><p>entity.  'unknown' indicates that the current</p><p>duplex mode could not be determined.</p><p>Management control of the duplex mode is</p><p>accomplished through the MAU MIB.  When</p><p>an interface does not support autonegotiation,</p><p>or when autonegotiation is not enabled, the</p><p>duplex mode is controlled using</p><p>ifMauDefaultType.  When autonegotiation is</p><p>supported and enabled, duplex mode is controlled</p><p>using ifMauAutoNegAdvertisedBits.  In either</p><p>case, the currently operating duplex mode is</p><p>reflected both in this object and in ifMauType.</p><p>Note that this object provides redundant</p><p>information with ifMauType.  Normally, redundant</p><p>objects are discouraged.  However, in this</p><p>instance, it allows a management application to</p><p>determine the duplex status of an interface</p><p>without having to know every possible value of</p><p>ifMauType.  This was felt to be sufficiently</p><p>valuable to justify the redundancy.</p><p>Reference: [IEEE 802.3 Std.], 30.3.1.1.32,aDuplexStatus.</p>|SNMP|net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}]|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
-|Interface {#IFNAME}({#IFALIAS}): In half-duplex mode|Last value: {ITEM.LASTVALUE1}.</br>Please check autonegotiation settings and cabling|`{TEMPLATE_NAME:net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}].last()}=2`|WARNING|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|Interface {#IFNAME}({#IFALIAS}): In half-duplex mode|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check autonegotiation settings and cabling</p>|`{TEMPLATE_NAME:net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}].last()}=2`|WARNING|<p>Manual close: YES</p>|
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 
