@@ -33,7 +33,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |CPU|CPU utilization|<p>CPU utilization in %</p>|ZABBIX_PASSIVE|system.cpu.util|
 |CPU|CPU interrupt time|<p>The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing </p><p>hardware interrupts during sample intervals. This value is an indirect indicator of the activity of </p><p>devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication </p><p>lines, network interface cards and other peripheral devices. This is an easy way to identify a potential </p><p>hardware failure. This should never be higher than 20%.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Interrupt Time"]|
-|CPU|Context switches per second|<p>"Context Switches/sec is the combined rate at which all processors on the computer are switched from one thread to another.</p><p>Context switches occur when a running thread voluntarily relinquishes the processor, is preempted by a higher priority ready thread, or switches between user-mode and privileged (kernel) mode to use an Executive or subsystem service.</p><p>It is the sum of Thread\\Context Switches/sec for all threads running on all processors in the computer and is measured in numbers of switches.</p><p>There are context switch counters on the System and Thread objects. This counter displays the difference between the values observed in the last two samples, divided by the duration of the sample interval."</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Context Switches/sec"]|
+|CPU|Context switches per second|<p>Context Switches/sec is the combined rate at which all processors on the computer are switched from one thread to another.</p><p>Context switches occur when a running thread voluntarily relinquishes the processor, is preempted by a higher priority ready thread, or switches between user-mode and privileged (kernel) mode to use an Executive or subsystem service.</p><p>It is the sum of Thread\\Context Switches/sec for all threads running on all processors in the computer and is measured in numbers of switches.</p><p>There are context switch counters on the System and Thread objects. This counter displays the difference between the values observed in the last two samples, divided by the duration of the sample interval.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Context Switches/sec"]|
 |CPU|CPU privileged time|<p>The Processor Information\% Privileged Time counter shows the percent of time that the processor is spent </p><p>executing in Kernel (or Privileged) mode. Privileged mode includes services interrupts inside Interrupt </p><p>Service Routines (ISRs), executing Deferred Procedure Calls (DPCs), Device Driver calls and other kernel-mode </p><p>functions of the Windows® Operating System.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% Privileged Time"]|
 |CPU|CPU user time|<p>The Processor Information\% User Time counter shows the percent of time that the processor(s) is spent executing </p><p>in User mode.</p>|ZABBIX_PASSIVE|perf_counter_en["\Processor Information(_total)\% User Time"]|
 |CPU|CPU queue length|<p>The Processor Queue Length shows the number of threads that are observed as delayed in the processor Ready Queue </p><p>and are waiting to be executed.</p>|ZABBIX_PASSIVE|perf_counter_en["\System\Processor Queue Length"]|
@@ -124,12 +124,12 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.FS.FSDRIVETYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`fixed`|
-|{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`^\s$`|
-|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`.*`|
-|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
-|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`.*`|
-|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overriden on the host or linked template level.</p>|`^\s$`|
+|{$VFS.FS.FSDRIVETYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`fixed`|
+|{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^\s$`|
+|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*`|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
+|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*`|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^\s$`|
 |{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|`90`|
 |{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|`80`|
 
@@ -277,16 +277,16 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$NET.IF.IFALIAS.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`.*`|
-|{$NET.IF.IFALIAS.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`CHANGE_THIS`|
-|{$NET.IF.IFDESCR.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`.*`|
-|{$NET.IF.IFDESCR.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`CHANGE_THIS`|
-|{$NET.IF.IFNAME.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`.*`|
-|{$NET.IF.IFNAME.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer`|
-|{$NET.IF.IFNETENABLED.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`True`|
-|{$NET.IF.IFNETENABLED.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`CHANGE_THIS`|
-|{$NET.IF.PHYSICALADAPTER.MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`True`|
-|{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overriden on the host or linked template level.</p>|`CHANGE_THIS`|
+|{$NET.IF.IFALIAS.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`.*`|
+|{$NET.IF.IFALIAS.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_THIS`|
+|{$NET.IF.IFDESCR.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`.*`|
+|{$NET.IF.IFDESCR.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_THIS`|
+|{$NET.IF.IFNAME.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`.*`|
+|{$NET.IF.IFNAME.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer`|
+|{$NET.IF.IFNETENABLED.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`True`|
+|{$NET.IF.IFNETENABLED.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_THIS`|
+|{$NET.IF.PHYSICALADAPTER.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`True`|
+|{$NET.IF.PHYSICALADAPTER.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_THIS`|
 
 ## Template links
 
