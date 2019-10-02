@@ -1,0 +1,449 @@
+templates:
+  - name: Template App RabbitMQ cluster by HTTP
+    _zbx_ver: '4.2'
+    _classes:
+      - APP
+    description: |-
+      Get cluster metrics from RabbitMQ management plugin provided an HTTP-based API using HTTP agent.
+
+    _documentation: 
+      _tested_on:
+      - name: RabbitMQ
+        version: 3.5.7, 3.7.17, 3.7.18
+
+      _overview: |+
+        The template to monitor RabbitMQ by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+        Template App RabbitMQ Cluster — (Zabbix version >= 4.2) collects metrics by polling [RabbitMQ management plugin](https://www.rabbitmq.com/management.html) with HTTP agent remotely.
+
+      _setup: |
+        Enable the RabbitMQ management plugin. See [RabbitMQ’s documentation](https://www.rabbitmq.com/management.html) to enable it.
+
+        Create a user to monitor the service:
+        
+        ```bash
+        rabbitmqctl add_user zbx_monitor <PASSWORD>
+        rabbitmqctl set_permissions  -p / zbx_monitor "" "" ".*"
+        rabbitmqctl set_user_tags zbx_monitor monitoring
+        ```
+
+        Login and password are also set in macros:
+
+        - {$RABBITMQ.API.USER}
+        - {$RABBITMQ.API.PASSWORD}
+
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387226-discussion-thread-for-official-zabbix-template-rabbitmq
+
+    items:
+      - _prototype: rabbitmq.overview
+        url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/overview'
+        type: HTTP_AGENT
+        auth_type: BASIC
+        username: '{$RABBITMQ.API.USER}'
+        password: '{$RABBITMQ.API.PASSWORD}'
+        status_codes: '200'
+        follow_redirects: 1
+        retrieve_mode: BODY
+
+      - _prototype: rabbitmq.exchanges
+        url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/exchanges'
+        type: HTTP_AGENT
+        auth_type: BASIC
+        username: '{$RABBITMQ.API.USER}'
+        password: '{$RABBITMQ.API.PASSWORD}'
+        status_codes: '200'
+        follow_redirects: 1
+        retrieve_mode: BODY
+
+      - _prototype: rabbitmq.overview.object_totals.connections
+      - _prototype: rabbitmq.overview.object_totals.channels
+      - _prototype: rabbitmq.overview.object_totals.queues
+      - _prototype: rabbitmq.overview.object_totals.consumers
+      - _prototype: rabbitmq.overview.object_totals.exchanges
+      - _prototype: rabbitmq.overview.queue_totals.messages
+      - _prototype: rabbitmq.overview.queue_totals.messages.ready
+      - _prototype: rabbitmq.overview.queue_totals.messages.unacknowledged
+
+      - _prototype: rabbitmq.overview.messages.ack
+      - _prototype: rabbitmq.overview.messages.ack.rate
+      - _prototype: rabbitmq.overview.messages.confirm
+      - _prototype: rabbitmq.overview.messages.confirm.rate
+      - _prototype: rabbitmq.overview.messages.deliver_get
+      - _prototype: rabbitmq.overview.messages.deliver_get.rate
+      - _prototype: rabbitmq.overview.messages.publish
+      - _prototype: rabbitmq.overview.messages.publish.rate
+      - _prototype: rabbitmq.overview.messages.publish_in
+      - _prototype: rabbitmq.overview.messages.publish_in.rate
+      - _prototype: rabbitmq.overview.messages.publish_out
+      - _prototype: rabbitmq.overview.messages.publish_out.rate
+      - _prototype: rabbitmq.overview.messages.return_unroutable
+      - _prototype: rabbitmq.overview.messages.return_unroutable.rate
+      - _prototype: rabbitmq.overview.messages.redeliver
+      - _prototype: rabbitmq.overview.messages.redeliver.rate
+
+      # - _prototype: rabbitmq.overview.management_version
+      # - _prototype: rabbitmq.overview.rabbitmq_version
+
+    discovery_rules:
+      - name: Exchanges discovery
+        description: |
+          Individual exchange metrics
+
+        key: rabbitmq.exchanges.discovery
+        type: DEPENDENT
+        masterItem: rabbitmq.exchanges
+
+        lld_macro_paths:
+          - lld_macro: "{#EXCHANGE}"
+            path: "$.name"
+          - lld_macro: "{#TYPE}"
+            path: "$.type"
+          - lld_macro: "{#VHOST}"
+            path: "$.vhost"
+
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#EXCHANGE}"
+              value: "{$RABBITMQ.LLD.FILTER.EXCHANGE.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+
+            - macro: "{#EXCHANGE}"
+              value: "{$RABBITMQ.LLD.FILTER.EXCHANGE.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
+
+        items:
+          - _prototype: rabbitmq.exchange.messages.ack
+          - _prototype: rabbitmq.exchange.messages.ack.rate
+          - _prototype: rabbitmq.exchange.messages.confirm
+          - _prototype: rabbitmq.exchange.messages.confirm.rate
+          - _prototype: rabbitmq.exchange.messages.deliver_get
+          - _prototype: rabbitmq.exchange.messages.deliver_get.rate
+          - _prototype: rabbitmq.exchange.messages.publish
+          - _prototype: rabbitmq.exchange.messages.publish.rate
+          - _prototype: rabbitmq.exchange.messages.publish_in
+          - _prototype: rabbitmq.exchange.messages.publish_in.rate
+          - _prototype: rabbitmq.exchange.messages.publish_out
+          - _prototype: rabbitmq.exchange.messages.publish_out.rate
+          - _prototype: rabbitmq.exchange.messages.return_unroutable
+          - _prototype: rabbitmq.exchange.messages.return_unroutable.rate
+          - _prototype: rabbitmq.exchange.messages.redeliver
+          - _prototype: rabbitmq.exchange.messages.redeliver.rate
+
+    macros:
+      - macro: '{$RABBITMQ.API.USER}'
+        value: zbx_monitor
+      - macro: '{$RABBITMQ.API.PASSWORD}'
+        value: zabbix
+
+      - macro: '{$RABBITMQ.API.PORT}'
+        value: 15672
+        _description: The port of RabbitMQ API endpoint
+
+      - macro: '{$RABBITMQ.API.SCHEME}'
+        value: 'http'
+        _description: Request scheme which may be http or https
+
+      - macro: '{$RABBITMQ.LLD.FILTER.EXCHANGE.MATCHES}'
+        value: '.*'
+        _description: Filter of discoverable exchanges
+
+      - macro: '{$RABBITMQ.LLD.FILTER.EXCHANGE.NOT_MATCHES}'
+        value: 'CHANGE_IF_NEEDED'
+        _description: Filter to exclude discovered exchanges
+
+      - macro: '{$RABBITMQ.CONN.MAX.WARN}'
+        value: 1000
+        _description: Maximum RabbitMQ connections for trigger expression
+
+    screens:
+      - name: RabbitMQ overview
+        hsize: 2
+        vsize: 3
+        screen_items:
+        - _graph_id: rabbit.messages.total
+          x: 0
+          y: 0
+        - _graph_id: rabbit.connections.total
+          x: 1
+          y: 0
+        - _graph_id: rabbit.messages.status
+          x: 0
+          y: 1
+        - _graph_id: rabbit.queues.total
+          x: 1
+          y: 1
+        - _graph_id: rabbit.messages.rate
+          x: 0
+          y: 2
+
+  - name: Template App RabbitMQ node by HTTP
+    _zbx_ver: '4.2'
+    _classes:
+      - APP
+    description: |-
+      Get node metrics from RabbitMQ management plugin provided an HTTP-based API using HTTP agent.
+
+    _documentation: 
+      _tested_on:
+      - name: RabbitMQ
+        version: 3.5.7, 3.7.17, 3.7.18
+
+      _overview: |+
+        The template to monitor RabbitMQ by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+        Template App RabbitMQ Node — (Zabbix version >= 4.2) collects metrics by polling [RabbitMQ management plugin](https://www.rabbitmq.com/management.html) with HTTP agent remotely.
+
+      _setup: |
+        Enable the RabbitMQ management plugin. See [RabbitMQ’s documentation](https://www.rabbitmq.com/management.html) to enable it.
+
+        Create a user to monitor the service:
+        
+        ```bash
+        rabbitmqctl add_user zbx_monitor <PASSWORD>
+        rabbitmqctl set_permissions  -p / zbx_monitor "" "" ".*"
+        rabbitmqctl set_user_tags zbx_monitor monitoring
+        ```
+        
+        Login and password are also set in macros:
+
+        - {$RABBITMQ.API.USER}
+        - {$RABBITMQ.API.PASSWORD}
+
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387226-discussion-thread-for-official-zabbix-template-rabbitmq
+
+    items:
+      - _prototype: rabbitmq.overview
+        url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/overview'
+        type: HTTP_AGENT
+        auth_type: BASIC
+        username: '{$RABBITMQ.API.USER}'
+        password: '{$RABBITMQ.API.PASSWORD}'
+        status_codes: '200'
+        follow_redirects: 1
+        retrieve_mode: BODY
+
+      - _prototype: rabbitmq.nodes
+        url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/nodes/{$RABBITMQ.CLUSTER.NAME}@{HOST.NAME}?memory=true'
+        type: HTTP_AGENT
+        auth_type: BASIC
+        username: '{$RABBITMQ.API.USER}'
+        password: '{$RABBITMQ.API.PASSWORD}'
+        status_codes: '200'
+        follow_redirects: 1
+        retrieve_mode: BODY
+
+      - _prototype: rabbitmq.queues
+        url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/queues'
+        type: HTTP_AGENT
+        auth_type: BASIC
+        username: '{$RABBITMQ.API.USER}'
+        password: '{$RABBITMQ.API.PASSWORD}'
+        status_codes: '200'
+        follow_redirects: 1
+        retrieve_mode: BODY
+
+      - _prototype: rabbitmq.healthcheck
+        url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/healthchecks/node'
+        type: HTTP_AGENT
+        auth_type: BASIC
+        username: '{$RABBITMQ.API.USER}'
+        password: '{$RABBITMQ.API.PASSWORD}'
+        status_codes: '200'
+        follow_redirects: 1
+        retrieve_mode: BODY
+        value_map: RabbitMQ healthcheck
+
+
+      - _prototype: rabbitmq.overview.management_version
+      - _prototype: rabbitmq.overview.rabbitmq_version
+
+      - _prototype: rabbitmq.node.fd_used
+      - _prototype: rabbitmq.node.disk_free
+      - _prototype: rabbitmq.node.disk_free_limit
+      - _prototype: rabbitmq.node.mem_used
+      - _prototype: rabbitmq.node.mem_limit
+      - _prototype: rabbitmq.node.run_queue
+      - _prototype: rabbitmq.node.sockets_used
+      - _prototype: rabbitmq.node.sockets_total
+      - _prototype: rabbitmq.node.partitions
+      - _prototype: rabbitmq.node.running
+        value_map: Service state
+      - _prototype: rabbitmq.node.mem_alarm
+      - _prototype: rabbitmq.node.disk_free_alarm
+      - _prototype: rabbitmq.node.uptime
+
+      - _id: service.ping
+        name: Service ping
+        type: SIMPLE
+        key: net.tcp.service[http,"{HOST.CONN}","{$RABBITMQ.API.PORT}"]
+        value_type: UNSIGNED
+        delay: 1m
+        value_map: Service state
+        history: 7d
+        _group: RabbitMQ
+        _resource: RabbitMQ
+        preprocessing:
+        - type: DISCARD_UNCHANGED_HEARTBEAT
+          params: "10m"
+        triggers:
+        - _id: trigger.status
+          name: Service is down
+          expression: '{TEMPLATE_NAME:METRIC.last()}=0'
+          manual_close: 'YES'
+          priority: AVERAGE
+          _depends_on:
+          - trigger.proc.not_running
+
+      - _id: service.perf
+        name: Service response time
+        type: SIMPLE
+        key: net.tcp.service.perf[http,"{HOST.CONN}","{$RABBITMQ.API.PORT}"]
+        value_type: FLOAT
+        units: s
+        delay: 1m
+        history: 7d
+        _group: RabbitMQ
+        _resource: RabbitMQ
+        triggers:
+        - _id: trigger.perf.low
+          name: Service response time is too high (over {$RABBITMQ.RESPONSE_TIME.MAX.WARN}s for 5m)
+          expression: '{TEMPLATE_NAME:METRIC.min(5m)}>{$RABBITMQ.RESPONSE_TIME.MAX.WARN}'
+          manual_close: 'YES'
+          priority: WARNING
+          _depends_on:
+          - trigger.proc.not_running
+          - trigger.status
+
+    discovery_rules:
+      - name: Queues discovery
+        description: |
+          Individual queue metrics
+
+        key: rabbitmq.queues.discovery
+        type: DEPENDENT
+        masterItem: rabbitmq.queues
+
+        lld_macro_paths:
+          - lld_macro: "{#QUEUE}"
+            path: "$.name"
+          - lld_macro: "{#VHOST}"
+            path: "$.vhost"
+          - lld_macro: "{#NODE}"
+            path: "$.node"
+
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#QUEUE}"
+              value: "{$RABBITMQ.LLD.FILTER.QUEUE.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+
+            - macro: "{#QUEUE}"
+              value: "{$RABBITMQ.LLD.FILTER.QUEUE.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
+
+            - macro: "{#NODE}"
+              value: "{$RABBITMQ.CLUSTER.NAME}@{HOST.NAME}"
+              operator: "MATCHES_REGEX"
+              formulaid: "C"
+
+        items:
+        - _prototype: rabbitmq.queue.messages
+        - _prototype: rabbitmq.queue.messages.rate
+        - _prototype: rabbitmq.queue.consumers
+        - _prototype: rabbitmq.queue.memory
+        - _prototype: rabbitmq.queue.messages_ready
+        - _prototype: rabbitmq.queue.messages_ready.rate
+        - _prototype: rabbitmq.queue.messages_unacknowledged
+        - _prototype: rabbitmq.queue.messages_unacknowledged.rate
+
+        - _prototype: rabbitmq.queue.messages.ack
+        - _prototype: rabbitmq.queue.messages.ack.rate
+        - _prototype: rabbitmq.queue.messages.deliver
+        - _prototype: rabbitmq.queue.messages.deliver.rate
+        - _prototype: rabbitmq.queue.messages.deliver_get
+        - _prototype: rabbitmq.queue.messages.deliver_get.rate
+        - _prototype: rabbitmq.queue.messages.publish
+        - _prototype: rabbitmq.queue.messages.publish.rate
+        - _prototype: rabbitmq.queue.messages.redeliver
+        - _prototype: rabbitmq.queue.messages.redeliver.rate
+
+    macros:
+      - macro: '{$RABBITMQ.API.USER}'
+        value: zbx_monitor
+      - macro: '{$RABBITMQ.API.PASSWORD}'
+        value: zabbix
+
+      - macro: '{$RABBITMQ.CLUSTER.NAME}'
+        value: 'rabbit'
+        _description: The name of RabbitMQ cluster
+
+      - macro: '{$RABBITMQ.API.PORT}'
+        value: 15672
+        _description: The port of RabbitMQ API endpoint
+
+      - macro: '{$RABBITMQ.API.SCHEME}'
+        value: 'http'
+        _description: Request scheme which may be http or https
+
+      - macro: '{$RABBITMQ.LLD.FILTER.QUEUE.MATCHES}'
+        value: '.*'
+        _description: Filter of discoverable queues
+
+      - macro: '{$RABBITMQ.LLD.FILTER.QUEUE.NOT_MATCHES}'
+        value: 'CHANGE_IF_NEEDED'
+        _description: Filter to exclude discovered queues
+
+      - macro: '{$RABBITMQ.RESPONSE_TIME.MAX.WARN}'
+        value: 10
+        _description: Maximum RabbitMQ response time in seconds for trigger expression
+
+      - macro: '{$RABBITMQ.MESSAGES.MAX.WARN}'
+        value: 1000
+        _description: Maximum number of messages in the queue for trigger expression
+
+    screens:
+      - name: RabbitMQ node status
+        hsize: 2
+        vsize: 3
+        screen_items:
+        - _graph_id: rabbitmq.node.running
+          x: 0
+          y: 0
+        - _graph_id: rabbitmq.node.uptime
+          x: 1
+          y: 0
+        - _graph_id: rabbitmq.node.disk_free
+          x: 0
+          y: 1
+        - _graph_id: rabbitmq.node.mem_used
+          x: 1
+          y: 1
+        - _graph_id: rabbitmq.node.fd_used
+          x: 0
+          y: 2
+        - _graph_id: rabbitmq.node.sockets
+          x: 1
+          y: 2
+
+value_maps:
+  - name: RabbitMQ healthcheck
+    mappings:
+    - value: 0
+      newvalue: Failed
+    - value: 1
+      newvalue: Ok
+
+  - name: Service state
+    mappings:
+    - value: 0
+      newvalue: Down
+    - value: 1
+      newvalue: Up
