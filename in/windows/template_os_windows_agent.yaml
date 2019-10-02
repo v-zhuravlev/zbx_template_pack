@@ -102,6 +102,19 @@ templates:
               - trigger.cpu.high
               # interrupts are part of priv time
               - trigger.cpu.interrupt.high
+      - _id: system.cpu.dpc
+        _group: "CPU"
+        name: CPU DPC time
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Processor Information(_total)\% DPC Time"]
+        value_type: FLOAT
+        units: "%"
+        description: |
+          Processor DPC time is the time that a single processor spent receiving and servicing deferred procedure 
+          calls (DPCs). DPCs are interrupts that run at a lower priority than standard interrupts. % DPC Time is a 
+          component of % Privileged Time because DPCs are executed in privileged mode. If a high % DPC Time is 
+          sustained, there may be a processor bottleneck or an application or hardware related issue that can 
+          significantly diminish overall system performance.
       - _id: system.cpu.user
         _group: "CPU"
         name: CPU user time
@@ -218,6 +231,9 @@ templates:
       - macro: "{$MEMORY.UTIL.MAX}"
         _description: "The warning threshold of the Memory util item."
         value: "90"
+      - macro: "{$SWAP.PFREE.MIN.WARN}"
+        _description: "The warning threshold of the minimum swap."
+        value: "20"
     items:
       - _prototype: "vm.memory.used"
         key: "vm.memory.size[used]"
