@@ -232,7 +232,7 @@ templates:
         _description: "The warning threshold of the Memory util item."
         value: "90"
       - macro: "{$SWAP.PFREE.MIN.WARN}"
-        _description: "The warning threshold of the minimum swap."
+        _description: "The warning threshold of the minimum free swap."
         value: "20"
     items:
       - _prototype: "vm.memory.used"
@@ -463,14 +463,26 @@ templates:
         key: "vfs.dev.discovery"
         master_item: "vfs.dev.get"
         preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              output = JSON.parse(value).map(function(dev){
+                  return {
+                      "{#DEVNAME}": dev.Name,
+                      "{#DEVQUEUE}": dev.CurrentDiskQueueLength,
+                      "{#DEVREADS}": dev.DiskReadsPersec,
+                      "{#DEVTIME}": dev.PercentDiskTime,
+                      "{#DEVWRITES}": dev.DiskWritesPersec
+                  }})
+              return JSON.stringify({"data": output})
           # TODO fix
           # - type: JSONPATH
           #   params: $['Name']
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1h
-        lld_macro_paths:
-          - lld_macro: "{#DEVNAME}"
-            path: "$.Name"
+        # lld_macro_paths:
+        #   - lld_macro: "{#DEVNAME}"
+        #     path: "$.Name"
+
         filter:
           evalType: "AND"
           conditions:
@@ -548,9 +560,15 @@ templates:
       - _prototype: system.name
         type: ZABBIX_PASSIVE
         key: system.hostname
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
       - _prototype: system.descr
         type: ZABBIX_PASSIVE
         key: system.uname
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
       # - _id: system.users.num
       #   type: ZABBIX_PASSIVE
       #   _group: General
@@ -571,6 +589,9 @@ templates:
       - _prototype: system.sw.arch
         type: ZABBIX_PASSIVE
         key: system.sw.arch
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
       # - _prototype: system.sw.packages
       #   type: ZABBIX_PASSIVE
       #   key: system.sw.packages
@@ -626,19 +647,32 @@ templates:
         key: "net.if.discovery"
         master_item: "net.if.get"
         preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              output = JSON.parse(value).map(function(net){
+                  return {
+                      "{#IFNAME}": net.Name,
+                      "{#IFDESCR}": net.Description,
+                      "{#IFPHYSICALADAPTER}": net.PhysicalAdapter,
+                      "{#IFALIAS}" : net.NetConnectionID,
+                      "{#IFNETENABLED}": net.NetEnabled,
+                      "{#IFNETSTATUS}": net.NetConnectionStatus,
+                      "{#IFSPEED}": net.Speed
+                  }})
+              return JSON.stringify({"data": output})
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1h
-        lld_macro_paths:
-          - lld_macro: "{#IFNAME}"
-            path: "$.Name"
-          - lld_macro: "{#IFPHYSICALADAPTER}"
-            path: "$.PhysicalAdapter"
-          - lld_macro: "{#IFDESCR}"
-            path: "$.Description"
-          - lld_macro: "{#IFALIAS}"
-            path: "$.NetConnectionID"
-          - lld_macro: "{#IFNETENABLED}"
-            path: "$.NetEnabled"
+        # lld_macro_paths:
+        #   - lld_macro: "{#IFNAME}"
+        #     path: "$.Name"
+        #   - lld_macro: "{#IFPHYSICALADAPTER}"
+        #     path: "$.PhysicalAdapter"
+        #   - lld_macro: "{#IFDESCR}"
+        #     path: "$.Description"
+        #   - lld_macro: "{#IFALIAS}"
+        #     path: "$.NetConnectionID"
+        #   - lld_macro: "{#IFNETENABLED}"
+        #     path: "$.NetEnabled"
         filter:
           evalType: "AND"
           conditions:

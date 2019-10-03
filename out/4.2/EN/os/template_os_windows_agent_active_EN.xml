@@ -2134,13 +2134,22 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <lld_macro_paths>
-                  <lld_macro_path>
-                     <lld_macro>{#DEVNAME}</lld_macro>
-                     <path>$.Name</path>
-                  </lld_macro_path>
-               </lld_macro_paths>
+               <lld_macro_paths/>
                <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>output = JSON.parse(value).map(function(dev){
+    return {
+        "{#DEVNAME}": dev.Name,
+        "{#DEVQUEUE}": dev.CurrentDiskQueueLength,
+        "{#DEVREADS}": dev.DiskReadsPersec,
+        "{#DEVTIME}": dev.PercentDiskTime,
+        "{#DEVWRITES}": dev.DiskWritesPersec
+    }})
+return JSON.stringify({"data": output})</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                   <step>
                      <type>20</type>
                      <params>1h</params>
@@ -2351,7 +2360,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <preprocessing>
                   <step>
                      <type>20</type>
-                     <params>1h</params>
+                     <params>1d</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3099,7 +3108,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <snmp_oid/>
                      <key>net.if.in["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3166,7 +3175,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <snmp_oid/>
                      <key>net.if.out["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3302,7 +3311,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <snmp_oid/>
                      <key>net.if.type["{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3659,29 +3668,24 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <lld_macro_paths>
-                  <lld_macro_path>
-                     <lld_macro>{#IFNAME}</lld_macro>
-                     <path>$.Name</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFPHYSICALADAPTER}</lld_macro>
-                     <path>$.PhysicalAdapter</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFDESCR}</lld_macro>
-                     <path>$.Description</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFALIAS}</lld_macro>
-                     <path>$.NetConnectionID</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFNETENABLED}</lld_macro>
-                     <path>$.NetEnabled</path>
-                  </lld_macro_path>
-               </lld_macro_paths>
+               <lld_macro_paths/>
                <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>output = JSON.parse(value).map(function(net){
+    return {
+        "{#IFNAME}": net.Name,
+        "{#IFDESCR}": net.Description,
+        "{#IFPHYSICALADAPTER}": net.PhysicalAdapter,
+        "{#IFALIAS}" : net.NetConnectionID,
+        "{#IFNETENABLED}": net.NetEnabled,
+        "{#IFNETSTATUS}": net.NetConnectionStatus,
+        "{#IFSPEED}": net.Speed
+    }})
+return JSON.stringify({"data": output})</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                   <step>
                      <type>20</type>
                      <params>1h</params>
@@ -3810,7 +3814,7 @@ Template tooling version used: 0.30</description>
                <name>Template Module Windows physical disks by Zabbix agent active</name>
             </template>
             <template>
-               <name>Template Module Zabbix agent</name>
+               <name>Template Module Zabbix agent active</name>
             </template>
          </templates>
          <screens>
