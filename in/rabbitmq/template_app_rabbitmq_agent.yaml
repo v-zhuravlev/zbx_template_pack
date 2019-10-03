@@ -15,7 +15,7 @@ templates:
         The template to monitor RabbitMQ by Zabbix that work without any external scripts.
         Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-        Template App RabbitMQ Cluster — (Zabbix version >= 4.2) collects metrics by polling [RabbitMQ management plugin](https://www.rabbitmq.com/management.html) locally with Zabbix agent.
+        Template App RabbitMQ Cluster — (Zabbix version >= 4.2) collects metrics by polling [RabbitMQ management plugin](https://www.rabbitmq.com/management.html) with Zabbix agent.
 
       _setup: |
         Enable the RabbitMQ management plugin. See [RabbitMQ’s documentation](https://www.rabbitmq.com/management.html) to enable it.
@@ -33,7 +33,11 @@ templates:
         - {$RABBITMQ.API.USER}
         - {$RABBITMQ.API.PASSWORD}
 
-        If you use another API endpoint, then don't forget to change `{$RABBITMQ.API.ENDPOINT}` macro.
+        If your cluster consists of several nodes, it is recommended to assign the `cluster` template to a separate balancing host.
+        In the case of a single-node installation, you can assign the `cluster` template to one host with a `node` template.
+
+        If you use another API endpoint, then don't forget to change `{$RABBITMQ.API.CLUSTER_HOST}` macro.
+
         Install and setup [Zabbix agent](https://www.zabbix.com/documentation/current/manual/installation/install_from_packages).
       
       _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387226-discussion-thread-for-official-zabbix-template-rabbitmq
@@ -41,15 +45,23 @@ templates:
     items:
       - _prototype: rabbitmq.overview
         type: ZABBIX_PASSIVE
-        key: web.page.get["http://{$RABBITMQ.API.USER}:{$RABBITMQ.API.PASSWORD}@{$RABBITMQ.API.HOST}:{$RABBITMQ.API.PORT}/api/overview"]
+        key: web.page.get["http://{$RABBITMQ.API.USER}:{$RABBITMQ.API.PASSWORD}@{$RABBITMQ.API.CLUSTER_HOST}:{$RABBITMQ.API.PORT}/api/overview"]
         delay: 1m
         preprocessing:
           - type: REGEX
             params: "\\n\\s?\\n(.*)\n\\1"
+        triggers:
+          - _prototype: trigger.http_get
+            expression: '{TEMPLATE_NAME:METRIC.nodata(30m)}=1'
+            name: 'Failed to fetch overview data (or no data for 30m)'
+            description: 'Zabbix has not received data for items for the last 30 minutes'
+            _depends_on:
+              - trigger.status
+              - trigger.proc.not_running
 
       - _prototype: rabbitmq.exchanges
         type: ZABBIX_PASSIVE
-        key: web.page.get["http://{$RABBITMQ.API.USER}:{$RABBITMQ.API.PASSWORD}@{$RABBITMQ.API.HOST}:{$RABBITMQ.API.PORT}/api/exchanges"]
+        key: web.page.get["http://{$RABBITMQ.API.USER}:{$RABBITMQ.API.PASSWORD}@{$RABBITMQ.API.CLUSTER_HOST}:{$RABBITMQ.API.PORT}/api/exchanges"]
         delay: 1m
         preprocessing:
           - type: REGEX
@@ -138,9 +150,9 @@ templates:
       - macro: '{$RABBITMQ.API.PASSWORD}'
         value: zabbix
 
-      - macro: '{$RABBITMQ.API.HOST}'
+      - macro: '{$RABBITMQ.API.CLUSTER_HOST}'
         value: '127.0.0.1'
-        _description: The hostname or IP of RabbitMQ API endpoint
+        _description: The hostname or IP of RabbitMQ cluster API endpoint
 
       - macro: '{$RABBITMQ.API.PORT}'
         value: 15672
@@ -154,9 +166,9 @@ templates:
         value: 'CHANGE_IF_NEEDED'
         _description: Filter to exclude discovered exchanges
 
-      - macro: '{$RABBITMQ.CONN.MAX.WARN}'
-        value: 1000
-        _description: Maximum RabbitMQ connections for trigger expression
+      # - macro: '{$RABBITMQ.CONN.MAX.WARN}'
+      #   value: 1000
+      #   _description: Maximum RabbitMQ connections for trigger expression
 
     screens:
       - name: RabbitMQ overview
@@ -195,7 +207,7 @@ templates:
         The template to monitor RabbitMQ by Zabbix that work without any external scripts.
         Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-        Template App RabbitMQ Node — (Zabbix version >= 4.2) collects metrics by polling [RabbitMQ management plugin](https://www.rabbitmq.com/management.html) locally with Zabbix agent.
+        Template App RabbitMQ Node — (Zabbix version >= 4.2) collects metrics by polling [RabbitMQ management plugin](https://www.rabbitmq.com/management.html) with Zabbix agent.
         
         It also uses Zabbix agent to collect `RabbitMQ` Linux process stats like CPU usage, memory usage and whether process is running or not.
 
@@ -215,13 +227,15 @@ templates:
         - {$RABBITMQ.API.USER}
         - {$RABBITMQ.API.PASSWORD}
 
-        If you use another API endpoint, then don't forget to change `{$RABBITMQ.API.ENDPOINT}` macro.
+        If you use another API endpoint, then don't forget to change `{$RABBITMQ.API.HOST}` macro.
         Install and setup [Zabbix agent](https://www.zabbix.com/documentation/current/manual/installation/install_from_packages).
 
       _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387226-discussion-thread-for-official-zabbix-template-rabbitmq
 
     items:
       - _prototype: rabbitmq.overview
+        name: Get node overview
+        key: rabbitmq.get_node_overview
         type: ZABBIX_PASSIVE
         key: web.page.get["http://{$RABBITMQ.API.USER}:{$RABBITMQ.API.PASSWORD}@{$RABBITMQ.API.HOST}:{$RABBITMQ.API.PORT}/api/overview"]
         delay: 1m
@@ -260,7 +274,10 @@ templates:
             error_handler_params: 0
 
       - _prototype: rabbitmq.overview.management_version
+        key: rabbitmq.node.overview.management_version
+
       - _prototype: rabbitmq.overview.rabbitmq_version
+        key: rabbitmq.node.overview.rabbitmq_version
 
       - _prototype: rabbitmq.node.fd_used
       - _prototype: rabbitmq.node.disk_free
@@ -274,7 +291,9 @@ templates:
       - _prototype: rabbitmq.node.running
         value_map: Service state
       - _prototype: rabbitmq.node.mem_alarm
+        value_map: Alarm state
       - _prototype: rabbitmq.node.disk_free_alarm
+        value_map: Alarm state
       - _prototype: rabbitmq.node.uptime
 
       - _id: rabbitmq.proc.num
@@ -476,3 +495,10 @@ value_maps:
       newvalue: Down
     - value: 1
       newvalue: Up
+
+  - name: Alarm state
+    mappings:
+    - value: 0
+      newvalue: Ok
+    - value: 1
+      newvalue: Alarm

@@ -45,6 +45,14 @@ templates:
         status_codes: '200'
         follow_redirects: 1
         retrieve_mode: BODY
+        triggers:
+          - _prototype: trigger.http_get
+            expression: '{TEMPLATE_NAME:METRIC.nodata(30m)}=1'
+            name: 'Failed to fetch overview data (or no data for 30m)'
+            description: 'Zabbix has not received data for items for the last 30 minutes'
+            _depends_on:
+              - trigger.status
+              - trigger.proc.not_running
 
       - _prototype: rabbitmq.exchanges
         url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/exchanges'
@@ -155,9 +163,9 @@ templates:
         value: 'CHANGE_IF_NEEDED'
         _description: Filter to exclude discovered exchanges
 
-      - macro: '{$RABBITMQ.CONN.MAX.WARN}'
-        value: 1000
-        _description: Maximum RabbitMQ connections for trigger expression
+      # - macro: '{$RABBITMQ.CONN.MAX.WARN}'
+      #   value: 1000
+      #   _description: Maximum RabbitMQ connections for trigger expression
 
     screens:
       - name: RabbitMQ overview
@@ -218,6 +226,8 @@ templates:
 
     items:
       - _prototype: rabbitmq.overview
+        name: Get node overview
+        key: rabbitmq.get_node_overview
         url: '{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/overview'
         type: HTTP_AGENT
         auth_type: BASIC
@@ -258,9 +268,11 @@ templates:
         retrieve_mode: BODY
         value_map: RabbitMQ healthcheck
 
-
       - _prototype: rabbitmq.overview.management_version
+        key: rabbitmq.node.overview.management_version
+        
       - _prototype: rabbitmq.overview.rabbitmq_version
+        key: rabbitmq.node.overview.rabbitmq_version
 
       - _prototype: rabbitmq.node.fd_used
       - _prototype: rabbitmq.node.disk_free
@@ -274,7 +286,9 @@ templates:
       - _prototype: rabbitmq.node.running
         value_map: Service state
       - _prototype: rabbitmq.node.mem_alarm
+        value_map: Alarm state
       - _prototype: rabbitmq.node.disk_free_alarm
+        value_map: Alarm state
       - _prototype: rabbitmq.node.uptime
 
       - _id: service.ping
@@ -447,3 +461,10 @@ value_maps:
       newvalue: Down
     - value: 1
       newvalue: Up
+
+  - name: Alarm state
+    mappings:
+    - value: 0
+      newvalue: Ok
+    - value: 1
+      newvalue: Alarm

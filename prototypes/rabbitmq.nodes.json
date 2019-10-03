@@ -23,7 +23,7 @@
         "triggers": [
             {
                 "_id": "trigger.healthcheck",
-                "expression": "{TEMPLATE_NAME:METRIC.last(0)}=0",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
                 "name": "Node healthcheck failed",
                 "priority": "AVERAGE",
                 "description": "https://www.rabbitmq.com/monitoring.html#health-checks"
@@ -267,6 +267,7 @@
                 "_id": "trigger.partitions",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>0",
                 "name": "Number of network partitions is too high (more than 0 for 5m)",
+                "description":"https://www.rabbitmq.com/partitions.html#detecting",
                 "priority": "WARNING"
             }
         ]
@@ -344,7 +345,7 @@
         "triggers": [
             {
                 "_id": "trigger.memory.alarm",
-                "expression": "{TEMPLATE_NAME:METRIC.last(0)}=1",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}=1",
                 "name": "Memory alarm (Memory usage threshold has been reached)",
                 "description": "https://www.rabbitmq.com/memory.html",
                 "priority": "AVERAGE"
@@ -374,7 +375,7 @@
         "triggers": [
             {
                 "_id": "trigger.disk.alarm",
-                "expression": "{TEMPLATE_NAME:METRIC.last(0)}=1",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}=1",
                 "name": "Free disk space alarm (Free space threshold has been reached)",
                 "description": "https://www.rabbitmq.com/disk-alarms.html",
                 "priority": "AVERAGE"
