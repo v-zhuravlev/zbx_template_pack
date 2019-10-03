@@ -332,12 +332,13 @@ Please report any issues with the template at https://support.zabbix.com
 ## Overview
 
 For Zabbix version: 4.2  
-New official Windows template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+New official Windows template. Requires agent of Zabbix 4.4 and newer.
 
 
 This template was tested on:
 
-- Windows, version 10
+- Windows, version 7 and newer.
+- Windows Server, version 2008 R2 and newer.
 
 ## Setup
 
