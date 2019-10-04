@@ -68,6 +68,7 @@ Template tooling version used: 0.31</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_CRIT_STATUS:"critical"},eq)}=1 or {count(#1,{$FAN_CRIT_STATUS:"shutdown"},eq)}=1</expression>
                            <name>{#SENSOR_INFO}: Fan is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -75,6 +76,7 @@ Please check the fan unit</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1 or {count(#1,{$FAN_WARN_STATUS:"notFunctioning"},eq)}=1</expression>
                            <name>{#SENSOR_INFO}: Fan is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -120,6 +122,7 @@ Please check the fan unit</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_CRIT_STATUS:"critical"},eq)}=1 or {count(#1,{$PSU_CRIT_STATUS:"shutdown"},eq)}=1</expression>
                            <name>{#SENSOR_INFO}: Power supply is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -127,6 +130,7 @@ Please check the power supply unit for errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1 or {count(#1,{$PSU_WARN_STATUS:"notFunctioning"},eq)}=1</expression>
                            <name>{#SENSOR_INFO}: Power supply is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -193,6 +197,7 @@ The current measurement of the test point being instrumented.</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
                            <name>{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -209,6 +214,7 @@ or&#13;
                      <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                      <recovery_expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                      <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -220,6 +226,7 @@ or&#13;
                      <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                      <recovery_expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                      <name>{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -477,6 +484,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                            <name>{#SNMPVALUE}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                           <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -563,6 +571,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                            <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                           <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -819,6 +828,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                   <trigger>
                      <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                     <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>

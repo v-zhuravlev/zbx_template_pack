@@ -165,6 +165,7 @@ The overall condition. This object represents the overall status of the server i
                   <trigger>
                      <expression>{count(#1,{$HEALTH_CRIT_STATUS},eq)}=1</expression>
                      <name>System status is in critical state</name>
+                     <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for errors</description>
@@ -172,6 +173,7 @@ Please check the device for errors</description>
                   <trigger>
                      <expression>{count(#1,{$HEALTH_WARN_STATUS},eq)}=1</expression>
                      <name>System status is in warning state</name>
+                     <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for warnings</description>
@@ -236,6 +238,7 @@ Capacitor Failed (7)  The flash backed cache module capacitor is below the suffi
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"failed"},eq)}=1 or {count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS:"capacitorFailed"},eq)}=1</expression>
                            <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller battery is in critical state!</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -243,6 +246,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"degraded"},eq)}=1 or {count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS:"notPresent"},eq)}=1</expression>
                            <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller battery is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -278,6 +282,7 @@ Note that for some controller models, a cache module board that physically attac
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_CRIT_STATUS:"cacheModCriticalFailure"},eq)}=1</expression>
                            <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in critical state!</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -285,6 +290,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"invalid"},eq)}=1 or {count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModDegradedFailsafeSpeed"},eq)}=1 or {count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheReadCacheNotMapped"},eq)}=1 or {count(#1,{$DISK_ARRAY_CACHE_WARN_STATUS:"cacheModFlashMemNotAttached"},eq)}=1</expression>
                            <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -298,6 +304,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_OK_STATUS:"enabled"},ne)}=1</expression>
                            <name>#{#CACHE_CNTRL_INDEX}: Disk array cache controller is not in optimal state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -367,6 +374,7 @@ and any associated logical drives,physical drives, and array accelerators.</desc
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CRIT_STATUS},eq)}=1</expression>
                            <name>{#CNTLR_LOCATION}: Disk array controller is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -374,6 +382,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_WARN_STATUS},eq)}=1</expression>
                            <name>{#CNTLR_LOCATION}: Disk array controller is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -425,6 +434,7 @@ failed(4)  A non-redundant fan is not operating properly.</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
                            <name>Fan {#SNMPINDEX}: Fan is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -432,6 +442,7 @@ Please check the fan unit</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_WARN_STATUS},eq)}=1</expression>
                            <name>Fan {#SNMPINDEX}: Fan is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -585,6 +596,7 @@ replaceDrive(3)  Indicates that the drive has a S.M.A.R.T predictive failure  er
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDrive"},eq)}=1 or {count(#1,{$DISK_SMART_FAIL_STATUS:"replaceDriveSSDWearOut"},eq)}=1</expression>
                            <name>{#DISK_LOCATION}: Physical disk S.M.A.R.T. failed</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Disk probably requires replacement.</description>
@@ -624,6 +636,7 @@ predictiveFailure(4)  Indicates that the drive has a predictive failure error an
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_FAIL_STATUS},eq)}=1</expression>
                            <name>{#DISK_LOCATION}: Physical disk failed</name>
+                           <opdata>Current status: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check physical disk for warnings or errors</description>
@@ -631,6 +644,7 @@ Please check physical disk for warnings or errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_WARN_STATUS},eq)}=1</expression>
                            <name>{#DISK_LOCATION}: Physical disk is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check physical disk for warnings or errors</description>
@@ -681,6 +695,7 @@ failed(4)  A power supply component detects a condition that could  permanently 
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <name>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}: Power supply is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -688,6 +703,7 @@ Please check the power supply unit for errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_WARN_STATUS},eq)}=1</expression>
                            <name>Chassis {#CHASSIS_NUM}, bay {#BAY_NUM}: Power supply is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -763,6 +779,7 @@ Temperature readings of testpoint: {#SNMPINDEX}</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"{#SNMPINDEX}"}-3</recovery_expression>
                            <name>{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"{#SNMPINDEX}"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -779,6 +796,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"{#SNMPINDEX}"}-3</recovery_expression>
                            <name>{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"{#SNMPINDEX}"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -788,6 +806,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"{#SNMPINDEX}"}+3</recovery_expression>
                            <name>{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"{#SNMPINDEX}"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -841,6 +860,7 @@ Temperature readings of testpoint: Ambient</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"Ambient"}-3</recovery_expression>
                            <name>Ambient: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -857,6 +877,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
                            <name>Ambient: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -866,6 +887,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+3</recovery_expression>
                            <name>Ambient: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Ambient"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -914,6 +936,7 @@ Temperature readings of testpoint: CPU-{#SNMPINDEX}</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"CPU"}-3</recovery_expression>
                            <name>CPU-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -930,6 +953,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
                            <name>CPU-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -939,6 +963,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+3</recovery_expression>
                            <name>CPU-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -987,6 +1012,7 @@ Temperature readings of testpoint: I/O-{#SNMPINDEX}</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"I/O"}-3</recovery_expression>
                            <name>I/O-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"I/O"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1003,6 +1029,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"I/O"}-3</recovery_expression>
                            <name>I/O-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"I/O"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1012,6 +1039,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"I/O"}+3</recovery_expression>
                            <name>I/O-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"I/O"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -1060,6 +1088,7 @@ Temperature readings of testpoint: System-{#SNMPINDEX}</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"Device"}-3</recovery_expression>
                            <name>System-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Device"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1076,6 +1105,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"Device"}-3</recovery_expression>
                            <name>System-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Device"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1085,6 +1115,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"Device"}+3</recovery_expression>
                            <name>System-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Device"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -1133,6 +1164,7 @@ Temperature readings of testpoint: Memory-{#SNMPINDEX}</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"Memory"}-3</recovery_expression>
                            <name>Memory-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Memory"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1149,6 +1181,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"Memory"}-3</recovery_expression>
                            <name>Memory-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Memory"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1158,6 +1191,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"Memory"}+3</recovery_expression>
                            <name>Memory-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Memory"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -1206,6 +1240,7 @@ Temperature readings of testpoint: PSU-{#SNMPINDEX}</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:"PSU"}-3</recovery_expression>
                            <name>PSU-{#SNMPINDEX}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"PSU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1222,6 +1257,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:"PSU"}-3</recovery_expression>
                            <name>PSU-{#SNMPINDEX}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"PSU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1231,6 +1267,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"PSU"}+3</recovery_expression>
                            <name>PSU-{#SNMPINDEX}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"PSU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -1315,6 +1352,7 @@ differ from the advertised size of a drive.</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$VDISK_CRIT_STATUS},eq)}=1</expression>
                            <name>Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk failed</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check virtual disk for warnings or errors</description>
@@ -1322,6 +1360,7 @@ Please check virtual disk for warnings or errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$VDISK_OK_STATUS},ne)}=1</expression>
                            <name>Disk {#SNMPINDEX}({#DISK_NAME}): Virtual disk is not in OK state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check virtual disk for warnings or errors</description>

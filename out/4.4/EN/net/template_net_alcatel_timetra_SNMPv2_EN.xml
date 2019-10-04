@@ -76,6 +76,7 @@ The value of sgiCpuUsage indicates the current CPU utilization for the system.</
                   <trigger>
                      <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                     <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
@@ -328,6 +329,7 @@ Current status of the Fan tray.</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
                            <name>#{#SNMPINDEX}: Fan is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -371,6 +373,7 @@ A value of 'deviceStateFailed' represents a condition where at least one monitor
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <name>#{#SNMPINDEX}: Power supply is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -404,6 +407,7 @@ A value of 'deviceStateFailed' represents a condition where at least one monitor
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <name>#{#SNMPINDEX}: Power supply is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -452,6 +456,7 @@ The current temperature reading in degrees celsius from this hardware component'
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                            <name>{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -468,6 +473,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                            <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -477,6 +483,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
                            <name>{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>

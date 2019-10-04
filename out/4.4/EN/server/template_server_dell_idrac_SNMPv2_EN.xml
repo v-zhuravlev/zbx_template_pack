@@ -82,6 +82,7 @@ This attribute defines the firmware version of a remote access card.</descriptio
                      <expression>{diff()}=1 and {strlen()}&gt;0</expression>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Firmware has changed</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>INFO</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Firmware version has changed. Ack to close</description>
@@ -173,6 +174,7 @@ This attribute defines the overall rollup status of all components in the system
                   <trigger>
                      <expression>{count(#1,{$HEALTH_DISASTER_STATUS},eq)}=1</expression>
                      <name>System is in unrecoverable state!</name>
+                     <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -180,6 +182,7 @@ Please check the device for faults</description>
                   <trigger>
                      <expression>{count(#1,{$HEALTH_CRIT_STATUS},eq)}=1</expression>
                      <name>System status is in critical state</name>
+                     <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for errors</description>
@@ -193,6 +196,7 @@ Please check the device for errors</description>
                   <trigger>
                      <expression>{count(#1,{$HEALTH_WARN_STATUS},eq)}=1</expression>
                      <name>System status is in warning state</name>
+                     <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for warnings</description>
@@ -286,6 +290,7 @@ Possible values:&#13;
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_BATTERY_WARN_STATUS},eq)}=1</expression>
                            <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -299,6 +304,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_BATTERY_OK_STATUS},ne)}=1</expression>
                            <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is not in optimal state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -316,6 +322,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CACHE_BATTERY_CRIT_STATUS},eq)}=1</expression>
                            <name>Battery {#BATTERY_NUM}: Disk array cache controller battery is in critical state!</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -386,6 +393,7 @@ coolingDeviceSubTypeIsDiscrete, a value is not returned for this attribute.</des
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_CRIT_STATUS:"criticalUpper"},eq)}=1 or {count(#1,{$FAN_CRIT_STATUS:"nonRecoverableUpper"},eq)}=1 or {count(#1,{$FAN_CRIT_STATUS:"criticalLower"},eq)}=1 or {count(#1,{$FAN_CRIT_STATUS:"nonRecoverableLower"},eq)}=1 or {count(#1,{$FAN_CRIT_STATUS:"failed"},eq)}=1</expression>
                            <name>{#FAN_DESCR}: Fan is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -393,6 +401,7 @@ Please check the fan unit</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_WARN_STATUS:"nonCriticalUpper"},eq)}=1 or {count(#1,{$FAN_WARN_STATUS:"nonCriticalLower"},eq)}=1</expression>
                            <name>{#FAN_DESCR}: Fan is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -462,6 +471,7 @@ Possible values:&#13;
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_FAIL_STATUS:"nonRecoverable"},eq)}=1</expression>
                            <name>{#CNTLR_NAME}: Disk array controller is in unrecoverable state!</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>DISASTER</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -469,6 +479,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_CRIT_STATUS:"critical"},eq)}=1</expression>
                            <name>{#CNTLR_NAME}: Disk array controller is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -482,6 +493,7 @@ Please check the device for faults</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_ARRAY_WARN_STATUS:"nonCritical"},eq)}=1</expression>
                            <name>{#CNTLR_NAME}: Disk array controller is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the device for faults</description>
@@ -642,6 +654,7 @@ Indicates whether the physical disk has received a predictive failure alert.</de
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_SMART_FAIL_STATUS},eq)}=1</expression>
                            <name>{#DISK_NAME}: Physical disk S.M.A.R.T. failed</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Disk probably requires replacement.</description>
@@ -683,6 +696,7 @@ Possible values:&#13;
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_FAIL_STATUS:"critical"},eq)}=1 or {count(#1,{$DISK_FAIL_STATUS:"nonRecoverable"},eq)}=1</expression>
                            <name>{#DISK_NAME}: Physical disk failed</name>
+                           <opdata>Current status: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check physical disk for warnings or errors</description>
@@ -690,6 +704,7 @@ Please check physical disk for warnings or errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$DISK_WARN_STATUS:"nonCritical"},eq)}=1</expression>
                            <name>{#DISK_NAME}: Physical disk is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check physical disk for warnings or errors</description>
@@ -736,6 +751,7 @@ Please check physical disk for warnings or errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_CRIT_STATUS:"critical"},eq)}=1 or {count(#1,{$PSU_CRIT_STATUS:"nonRecoverable"},eq)}=1</expression>
                            <name>{#PSU_DESCR}: Power supply is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -743,6 +759,7 @@ Please check the power supply unit for errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_WARN_STATUS:"nonCritical"},eq)}=1</expression>
                            <name>{#PSU_DESCR}: Power supply is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -827,6 +844,7 @@ Please check the power supply unit for errors</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"Ambient"}+3</recovery_expression>
                            <name>{#SENSOR_LOCALE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"Ambient"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -843,6 +861,7 @@ or&#13;
                      <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                      <recovery_expression>{Template Server Dell iDRAC SNMPv2:sensor.temp.value[temperatureProbeReading.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"Ambient"}-3</recovery_expression>
                      <name>{#SENSOR_LOCALE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"Ambient"}</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -854,6 +873,7 @@ or&#13;
                      <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                      <recovery_expression>{Template Server Dell iDRAC SNMPv2:sensor.temp.value[temperatureProbeReading.Ambient.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"Ambient"}-3</recovery_expression>
                      <name>{#SENSOR_LOCALE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"Ambient"}</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -941,6 +961,7 @@ or&#13;
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:"CPU"}+3</recovery_expression>
                            <name>{#SENSOR_LOCALE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:"CPU"}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -957,6 +978,7 @@ or&#13;
                      <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                      <recovery_expression>{Template Server Dell iDRAC SNMPv2:sensor.temp.value[temperatureProbeReading.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_CRIT:"CPU"}-3</recovery_expression>
                      <name>{#SENSOR_LOCALE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:"CPU"}</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -968,6 +990,7 @@ or&#13;
                      <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                      <recovery_expression>{Template Server Dell iDRAC SNMPv2:sensor.temp.value[temperatureProbeReading.CPU.{#SNMPINDEX}].max(5m)}&lt;{$TEMP_WARN:"CPU"}-3</recovery_expression>
                      <name>{#SENSOR_LOCALE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:"CPU"}</name>
+                     <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -1121,6 +1144,7 @@ The data on the virtual disk might no longer be fault tolerant.</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$VDISK_CRIT_STATUS:"failed"},eq)}=1</expression>
                            <name>Disk {#SNMPVALUE}({#DISK_NAME}): Virtual disk failed</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check virtual disk for warnings or errors</description>
@@ -1128,6 +1152,7 @@ Please check virtual disk for warnings or errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$VDISK_WARN_STATUS:"degraded"},eq)}=1</expression>
                            <name>Disk {#SNMPVALUE}({#DISK_NAME}): Virtual disk is in warning state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check virtual disk for warnings or errors</description>

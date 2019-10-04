@@ -85,6 +85,7 @@ The status of the fan tray {#SNMPVALUE}.</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_CRIT_STATUS},eq)}=1</expression>
                            <name>Fan {#SNMPVALUE}: Fan is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -92,6 +93,7 @@ Please check the fan unit</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_OK_STATUS},ne)}=1</expression>
                            <name>Fan {#SNMPVALUE}: Fan is not in normal state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>INFO</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the fan unit</description>
@@ -134,6 +136,7 @@ CPU utilization in percentage for last 1 minute.</description>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                            <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                           <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
@@ -230,6 +233,7 @@ The status of the power supply {#SNMPVALUE}</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_CRIT_STATUS},eq)}=1</expression>
                            <name>PSU {#SNMPVALUE}: Power supply is in critical state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -237,6 +241,7 @@ Please check the power supply unit for errors</description>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_OK_STATUS},ne)}=1</expression>
                            <name>PSU {#SNMPVALUE}: Power supply is not in normal state</name>
+                           <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>INFO</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Please check the power supply unit for errors</description>
@@ -281,6 +286,7 @@ The temperature of the unit.</description>
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_WARN:""}-3</recovery_expression>
                            <name>Device {#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -297,6 +303,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{max(5m)}&lt;{$TEMP_CRIT:""}-3</recovery_expression>
                            <name>Device {#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
@@ -306,6 +313,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
                            <recovery_expression>{min(5m)}&gt;{$TEMP_CRIT_LOW:""}+3</recovery_expression>
                            <name>Device {#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
+                           <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
