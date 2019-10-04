@@ -147,10 +147,12 @@ The number of write accesses from this device since boot.</description>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.MATCHES}</macro>
                <value>.+</value>
+               <description>This macro is used in block devices discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.NOT_MATCHES}</macro>
                <value>^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)</value>
+               <description>This macro is used in block devices discovery. Can be overridden on the host or linked template level</description>
             </macro>
          </macros>
       </template>
@@ -732,6 +734,7 @@ return JSON.stringify([{"{#CPU.COUNT}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}"
             <macro>
                <macro>{$LOAD_AVG_PER_CPU.MAX.WARN}</macro>
                <value>1.5</value>
+               <description>Load per CPU considered sustainable. Tune if needed.</description>
             </macro>
          </macros>
       </template>
@@ -969,18 +972,22 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
             <macro>
                <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
                <value>.+</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
                <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
                <value>.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
                <value>^\s$</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.INODE.PFREE.MIN.CRIT}</macro>

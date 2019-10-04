@@ -380,18 +380,22 @@ This trigger might indicate disk {#DEVNAME} saturation.</description>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.MATCHES}</macro>
                <value>.+</value>
+               <description>This macro is used in block devices discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.NOT_MATCHES}</macro>
                <value>^(loop[0-9]*|sd[a-z][0-9]+|nbd[0-9]+|sr[0-9]+|fd[0-9]+|dm-[0-9]+|ram[0-9]+)</value>
+               <description>This macro is used in block devices discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.READ.AWAIT.WARN}</macro>
                <value>20</value>
+               <description>Disk read average response time (in ms) before the trigger would fire</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.WRITE.AWAIT.WARN}</macro>
                <value>20</value>
+               <description>Disk write average response time (in ms) before the trigger would fire</description>
             </macro>
          </macros>
       </template>
@@ -671,6 +675,7 @@ return (100 - value)</params>
             <macro>
                <macro>{$LOAD_AVG_PER_CPU.MAX.WARN}</macro>
                <value>1.5</value>
+               <description>Load per CPU considered sustainable. Tune if needed.</description>
             </macro>
          </macros>
       </template>
@@ -867,18 +872,22 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
             <macro>
                <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
                <value>.+</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
                <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
                <value>^(btrfs|ext2|ext3|ext4|reiser|xfs|ffs|ufs|jfs|jfs2|vxfs|hfs|apfs|refs|ntfs|fat32|zfs)$</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
                <value>^\s$</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.INODE.PFREE.MIN.CRIT}</macro>
@@ -1364,10 +1373,12 @@ The host uptime is less than 10 minutes</description>
             <macro>
                <macro>{$MEMORY.AVAILABLE.MIN}</macro>
                <value>20M</value>
+               <description>This macro is used as a threshold in memory available trigger.</description>
             </macro>
             <macro>
                <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
+               <description>This macro is used as a threshold in memory utilization trigger.</description>
             </macro>
             <macro>
                <macro>{$SWAP.PFREE.MIN.WARN}</macro>
@@ -1743,6 +1754,7 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
             <macro>
                <macro>{$NET.IF.IFNAME.NOT_MATCHES}</macro>
                <value>(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})</value>
+               <description>Filter out loopbacks, nulls, docker veth links and docker0 bridge by default</description>
             </macro>
          </macros>
          <screens>

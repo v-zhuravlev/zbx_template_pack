@@ -507,10 +507,12 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
             <macro>
                <macro>{$NET.IF.IFADMINSTATUS.MATCHES}</macro>
                <value>^.*</value>
+               <description>Ignore notPresent(6)</description>
             </macro>
             <macro>
                <macro>{$NET.IF.IFADMINSTATUS.NOT_MATCHES}</macro>
                <value>^2$</value>
+               <description>Ignore down(2) administrative status</description>
             </macro>
             <macro>
                <macro>{$NET.IF.IFALIAS.MATCHES}</macro>
@@ -535,6 +537,7 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
             <macro>
                <macro>{$NET.IF.IFNAME.NOT_MATCHES}</macro>
                <value>(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})</value>
+               <description>Filter out loopbacks, nulls, docker veth links and docker0 bridge by default</description>
             </macro>
             <macro>
                <macro>{$NET.IF.IFOPERSTATUS.MATCHES}</macro>
@@ -543,6 +546,7 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
             <macro>
                <macro>{$NET.IF.IFOPERSTATUS.NOT_MATCHES}</macro>
                <value>^6$</value>
+               <description>Ignore notPresent(6)</description>
             </macro>
             <macro>
                <macro>{$NET.IF.IFTYPE.MATCHES}</macro>
