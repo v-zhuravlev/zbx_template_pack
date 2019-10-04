@@ -16,7 +16,7 @@
 MIBs used:&#13;
 ICS-CHASSIS-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module Generic SNMPv2</name>
@@ -79,8 +79,7 @@ Template tooling version used: 0.31</description>
                      <name>Firmware has changed</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Firmware version has changed. Ack to close</description>
+                     <description>Firmware version has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -150,8 +149,7 @@ The operational status of the fan unit.</description>
                            <name>{#SNMPVALUE}: Fan is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -199,16 +197,14 @@ Actual status of the power supply:&#13;
                            <name>{#SNMPVALUE}: Power supply is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_WARN_STATUS},eq)}=1</expression>
                            <name>{#SNMPVALUE}: Power supply is in warning state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                            <dependencies>
                               <dependency>
                                  <name>{#SNMPVALUE}: Power supply is in critical state</name>
@@ -283,7 +279,6 @@ The current value read from the sensor.</description>
                            <name>{#SENSOR_INFO}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -298,8 +293,7 @@ or&#13;
                      <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                   </trigger_prototype>
                   <trigger_prototype>
                      <expression>{Template Net Intel_Qlogic Infiniband SNMPv2:sensor.temp.value[icsChassisSensorSlotValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}&#13;
@@ -310,8 +304,7 @@ or&#13;
                      <name>{#SENSOR_INFO}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <dependencies>
                         <dependency>
                            <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
@@ -371,8 +364,7 @@ The serial number of the FRU.  If not available, this value is a zero-length str
                            <recovery_mode>NONE</recovery_mode>
                            <name>{#ENT_NAME}: Device has been replaced (new serial number received)</name>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                           <description>Device serial number has changed. Ack to close</description>
                            <manual_close>YES</manual_close>
                         </trigger_prototype>
                      </trigger_prototypes>

@@ -38,7 +38,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Zabbix agent is not available (for {$AGENT.TIMEOUT})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>For passive only agents, host availability is used with {$AGENT.TIMEOUT} as time threshold.</p>|`{TEMPLATE_NAME:zabbix[host,agent,available].max({$AGENT.TIMEOUT})}=0`|AVERAGE|<p>Manual close: YES</p>|
+|Zabbix agent is not available (for {$AGENT.TIMEOUT})|<p>For passive only agents, host availability is used with {$AGENT.TIMEOUT} as time threshold.</p>|`{TEMPLATE_NAME:zabbix[host,agent,available].max({$AGENT.TIMEOUT})}=0`|AVERAGE|<p>Manual close: YES</p>|
 
 ## Feedback
 
@@ -82,7 +82,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Zabbix agent is not available (or nodata for {$AGENT.NODATA_TIMEOUT})|<p>Last value: {ITEM.LASTVALUE1}.</p><p>For active agents, nodata() with agent.ping is used with {$AGENT.NODATA_TIMEOUT} as time threshold.</p>|`{TEMPLATE_NAME:agent.ping.nodata({$AGENT.NODATA_TIMEOUT})}=1`|AVERAGE|<p>Manual close: YES</p>|
+|Zabbix agent is not available (or nodata for {$AGENT.NODATA_TIMEOUT})|<p>For active agents, nodata() with agent.ping is used with {$AGENT.NODATA_TIMEOUT} as time threshold.</p>|`{TEMPLATE_NAME:agent.ping.nodata({$AGENT.NODATA_TIMEOUT})}=1`|AVERAGE|<p>Manual close: YES</p>|
 
 ## Feedback
 

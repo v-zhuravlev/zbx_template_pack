@@ -32,7 +32,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Interface {#IFNAME}({#IFALIAS}): In half-duplex mode|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check autonegotiation settings and cabling</p>|`{TEMPLATE_NAME:net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}].last()}=2`|WARNING|<p>Manual close: YES</p>|
+|Interface {#IFNAME}({#IFALIAS}): In half-duplex mode|<p>Please check autonegotiation settings and cabling</p>|`{TEMPLATE_NAME:net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}].last()}=2`|WARNING|<p>Manual close: YES</p>|
 
 ## Feedback
 

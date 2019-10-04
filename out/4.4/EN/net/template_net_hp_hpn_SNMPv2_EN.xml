@@ -21,7 +21,7 @@ ENTITY-SENSORS-MIB&#13;
 ENTITY-MIB&#13;
 STATISTICS-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
@@ -82,7 +82,6 @@ Reference: http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c0259
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -120,8 +119,7 @@ A    the function set available in your router&#13;
                      <name>Firmware has changed</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Firmware version has changed. Ack to close</description>
+                     <description>Firmware version has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -155,8 +153,7 @@ Firmware version has changed. Ack to close</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Device has been replaced (new serial number received)</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                     <description>Device serial number has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -278,16 +275,14 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                            <name>{#ENT_DESCR}: Fan is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1</expression>
                            <name>{#ENT_DESCR}: Fan is in warning state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                            <dependencies>
                               <dependency>
                                  <name>{#ENT_DESCR}: Fan is in critical state</name>
@@ -375,7 +370,6 @@ The number of currently allocated bytes.</description>
                            <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                            <name>#{#SNMPVALUE}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -470,16 +464,14 @@ Actual status indicated by the sensor: {#ENT_DESCR}</description>
                            <name>{#ENT_DESCR}: Power supply is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1</expression>
                            <name>{#ENT_DESCR}: Power supply is in warning state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                            <dependencies>
                               <dependency>
                                  <name>{#ENT_DESCR}: Power supply is in critical state</name>
@@ -541,8 +533,7 @@ entPhySensorScale, and entPhySensorPrecision objects must also be examined.</des
                            <name>{#SENSOR_INFO}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                           <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                            <dependencies>
                               <dependency>
                                  <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
@@ -558,8 +549,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                           <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
@@ -568,7 +558,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <name>{#SENSOR_INFO}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>

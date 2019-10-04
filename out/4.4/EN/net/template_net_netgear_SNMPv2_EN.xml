@@ -17,7 +17,7 @@ MIBs used:&#13;
 FASTPATH-SWITCHING-MIB&#13;
 FASTPATH-BOXSERVICES-PRIVATE-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module Generic SNMPv2</name>
@@ -81,7 +81,6 @@ CPU utilization in %</description>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -139,8 +138,7 @@ Serial number of the switch</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Device has been replaced (new serial number received)</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                     <description>Device serial number has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -175,8 +173,7 @@ Operating System running on this unit</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Operating system description has changed</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+                     <description>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -232,7 +229,6 @@ The total Memory allocated for the tasks</description>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -272,8 +268,7 @@ The status of fan</description>
                            <name>#{#SNMPVALUE}: Fan is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -313,8 +308,7 @@ The status of power supply</description>
                            <name>#{#SNMPVALUE}: Power supply is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -373,7 +367,6 @@ The temperature value reported by sensor</description>
                            <name>#{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -388,8 +381,7 @@ or&#13;
                      <name>#{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                   </trigger_prototype>
                   <trigger_prototype>
                      <expression>{Template Net Netgear Fastpath SNMPv2:sensor.temp.value[boxServicesTempSensorTemperature.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}&#13;
@@ -400,8 +392,7 @@ or&#13;
                      <name>#{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <dependencies>
                         <dependency>
                            <name>#{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>

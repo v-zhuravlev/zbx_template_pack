@@ -19,7 +19,7 @@
 MIBs used:&#13;
 CISCO-ENVMON-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -70,16 +70,14 @@ Template tooling version used: 0.31</description>
                            <name>{#SENSOR_INFO}: Fan is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_WARN_STATUS:"warning"},eq)}=1 or {count(#1,{$FAN_WARN_STATUS:"notFunctioning"},eq)}=1</expression>
                            <name>{#SENSOR_INFO}: Fan is in warning state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                            <dependencies>
                               <dependency>
                                  <name>{#SENSOR_INFO}: Fan is in critical state</name>
@@ -124,16 +122,14 @@ Please check the fan unit</description>
                            <name>{#SENSOR_INFO}: Power supply is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_WARN_STATUS:"warning"},eq)}=1 or {count(#1,{$PSU_WARN_STATUS:"notFunctioning"},eq)}=1</expression>
                            <name>{#SENSOR_INFO}: Power supply is in warning state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                            <dependencies>
                               <dependency>
                                  <name>{#SENSOR_INFO}: Power supply is in critical state</name>
@@ -199,7 +195,6 @@ The current measurement of the test point being instrumented.</description>
                            <name>{#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -216,8 +211,7 @@ or&#13;
                      <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                   </trigger_prototype>
                   <trigger_prototype>
                      <expression>{Template Module Cisco CISCO-ENVMON-MIB SNMPv2:sensor.temp.value[ciscoEnvMonTemperatureValue.{#SNMPINDEX}].avg(5m)}&gt;{$TEMP_WARN:""}&#13;
@@ -228,8 +222,7 @@ or&#13;
                      <name>{#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <dependencies>
                         <dependency>
                            <name>{#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
@@ -320,7 +313,7 @@ or&#13;
 MIBs used:&#13;
 CISCO-MEMORY-POOL-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -395,7 +388,6 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                            <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                            <name>{#SNMPVALUE}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -434,7 +426,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
 MIBs used:&#13;
 CISCO-PROCESS-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -486,7 +478,6 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                            <name>{#SNMPVALUE}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                            <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -525,7 +516,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
 MIBs used:&#13;
 CISCO-PROCESS-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -573,7 +564,6 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                            <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                            <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -613,7 +603,7 @@ MIBs used:&#13;
 ENTITY-MIB&#13;
 SNMPv2-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -678,8 +668,7 @@ Template tooling version used: 0.31</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Device has been replaced (new serial number received)</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                     <description>Device serial number has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -718,8 +707,7 @@ Device serial number has changed. Ack to close</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Operating system description has changed</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+                     <description>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -777,8 +765,7 @@ Operating system description has changed. Possible reasons that system has been 
                            <recovery_mode>NONE</recovery_mode>
                            <name>{#ENT_NAME}: Device has been replaced (new serial number received)</name>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                           <description>Device serial number has changed. Ack to close</description>
                            <manual_close>YES</manual_close>
                         </trigger_prototype>
                      </trigger_prototypes>
@@ -795,7 +782,7 @@ Device serial number has changed. Ack to close</description>
 MIBs used:&#13;
 OLD-CISCO-CPU-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -830,7 +817,6 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -847,7 +833,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <name>Template Net Cisco IOS prior to 12.0_3_T SNMPv2</name>
          <description>Cisco IOS Software releases prior to 12.0(3)T&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
@@ -882,7 +868,7 @@ Known Issues:&#13;
   Version: IOS for example: 12.1(22)EA11, 15.4(3)M2&#13;
   Device: C2911, C7600&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
@@ -917,7 +903,7 @@ Template tooling version used: 0.31</description>
          <name>Template Net Cisco IOS versions 12.0_3_T-12.2_3.5 SNMPv2</name>
          <description>Cisco IOS Software releases later to 12.0(3)T and prior to 12.2(3.5)&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>

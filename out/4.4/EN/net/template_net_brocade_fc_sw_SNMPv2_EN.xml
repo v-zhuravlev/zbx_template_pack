@@ -22,7 +22,7 @@ Known Issues:&#13;
   Version: v6.3.1c, v7.0.0c,  v7.4.1c&#13;
   Device: all&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module Generic SNMPv2</name>
@@ -82,7 +82,6 @@ System's CPU usage.</description>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -115,8 +114,7 @@ System's CPU usage.</description>
                      <name>Firmware has changed</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Firmware version has changed. Ack to close</description>
+                     <description>Firmware version has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -150,8 +148,7 @@ Firmware version has changed. Ack to close</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Device has been replaced (new serial number received)</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                     <description>Device serial number has changed. Ack to close</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -185,16 +182,14 @@ faulty(4) means the switch is not operational.</description>
                      <name>System status is in critical state</name>
                      <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>HIGH</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the device for errors</description>
+                     <description>Please check the device for errors</description>
                   </trigger>
                   <trigger>
                      <expression>{count(#1,{$HEALTH_WARN_STATUS:"offline"},eq)}=1 or {count(#1,{$HEALTH_WARN_STATUS:"testing"},eq)}=1</expression>
                      <name>System status is in warning state</name>
                      <opdata>Current state: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the device for warnings</description>
+                     <description>Please check the device for warnings</description>
                      <dependencies>
                         <dependency>
                            <name>System status is in critical state</name>
@@ -225,7 +220,6 @@ Memory utilization in %</description>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -290,16 +284,14 @@ The fan value will be in RPM(revolution per minute)</description>
                            <name>{#SENSOR_INFO}: Fan is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_OK_STATUS},ne)}=1</expression>
                            <name>{#SENSOR_INFO}: Fan is not in normal state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                            <dependencies>
                               <dependency>
                                  <name>{#SENSOR_INFO}: Fan is in critical state</name>
@@ -353,16 +345,14 @@ Please check the fan unit</description>
                            <name>{#SENSOR_INFO}: Power supply is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_OK_STATUS},ne)}=1</expression>
                            <name>{#SENSOR_INFO}: Power supply is not in normal state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                            <dependencies>
                               <dependency>
                                  <name>{#SENSOR_INFO}: Power supply is in critical state</name>
@@ -436,8 +426,7 @@ Temperature readings of testpoint: {#SENSOR_INFO}</description>
                            <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                           <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
@@ -446,7 +435,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <name>{#SENSOR_INFO}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -461,8 +449,7 @@ or&#13;
                      <name>{#SENSOR_INFO}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                      <opdata>Current value: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                     <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <dependencies>
                         <dependency>
                            <name>{#SENSOR_INFO}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>

@@ -24,7 +24,7 @@ Known Issues:&#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -143,7 +143,6 @@ version</params>
                      <expression>{last()}&lt;{$KERNEL.MAXFILES.MIN}</expression>
                      <name>Configured max number of open filedescriptors is too low (&lt; {$KERNEL.MAXFILES.MIN})</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <dependencies>
                         <dependency>
                            <name>Running out of file descriptors (less than &lt; 20% free)</name>
@@ -171,8 +170,7 @@ version</params>
                      <expression>{nodata(30m)}=1</expression>
                      <name>node_exporter is not available (or no data for 30m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Failed to fetch system metrics from node_exporter in time.</description>
+                     <description>Failed to fetch system metrics from node_exporter in time.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -781,7 +779,6 @@ return (100 - value)</params>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <dependencies>
                         <dependency>
                            <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
@@ -852,7 +849,6 @@ return (100 - value)</params>
                      <expression>{fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
                      <name>System time is out of sync (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -892,8 +888,7 @@ nodename</params>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Systen name has changed (new name: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-System name has changed. Ack to close.</description>
+                     <description>System name has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -955,8 +950,7 @@ machine</params>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Operating system description has changed</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+                     <description>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1062,8 +1056,7 @@ return (Math.floor(Date.now()/1000)-Number(value));</params>
                      <expression>{last()}&lt;10m</expression>
                      <name>{HOST.NAME} has been restarted (uptime &lt; 10m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The device uptime is less than 10 minutes</description>
+                     <description>The device uptime is less than 10 minutes</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -1137,7 +1130,6 @@ The device uptime is less than 10 minutes</description>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <dependencies>
                         <dependency>
                            <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
@@ -1460,8 +1452,7 @@ return newvalue;</params>
                            <name>Interface {#IFNAME}({#IFALIAS}): Link down</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger expression works as follows:&#13;
+                           <description>This trigger expression works as follows:&#13;
 1. Can be triggered if operations status is down.&#13;
 2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
 3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
@@ -1518,8 +1509,7 @@ and&#13;
                      <name>Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before</name>
                      <opdata>Current reported speed: {ITEM.VALUE1}</opdata>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <description>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1542,8 +1532,7 @@ and&#13;
                      <name>Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before</name>
                      <opdata>Current reported speed: {ITEM.VALUE1}</opdata>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <description>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1563,7 +1552,6 @@ This Ethernet connection has transitioned down from its known maximum speed. Thi
                      <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <opdata>In: {ITEM.VALUE1}, out: {ITEM.VALUE3}, speed: {ITEM.VALUE2}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1582,8 +1570,7 @@ and {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].max(5
                      <name>Interface {#IFNAME}({#IFALIAS}): High error rate ( &gt; {$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)</name>
                      <opdata>errors in: {ITEM.VALUE1}, errors out: {ITEM.VALUE2}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
+                     <description>Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1913,8 +1900,7 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <expression>{Template OS Linux by Prom:vfs.dev.read.await[node_exporter,"{#DEVNAME}"].min(15m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template OS Linux by Prom:vfs.dev.write.await[node_exporter,"{#DEVNAME}"].min(15m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
                      <name>{#DEVNAME}: Disk read/write request response are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 15m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 15m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger might indicate disk {#DEVNAME} saturation.</description>
+                     <description>This trigger might indicate disk {#DEVNAME} saturation.</description>
                      <manual_close>YES</manual_close>
                   </trigger_prototype>
                </trigger_prototypes>
@@ -2115,8 +2101,7 @@ return (inode_free/inode_total)*100;</params>
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                            <opdata>Free inodes: {ITEM.VALUE1}%</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-It may become impossible to write to disk if there are no index nodes left.&#13;
+                           <description>It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                         </trigger_prototype>
                         <trigger_prototype>
@@ -2124,8 +2109,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
                            <opdata>Free inodes: {ITEM.VALUE1}%</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-It may become impossible to write to disk if there are no index nodes left.&#13;
+                           <description>It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                            <dependencies>
                               <dependency>
@@ -2199,8 +2183,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <opdata>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})</opdata>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
 Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 5G.&#13;
@@ -2213,8 +2196,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <opdata>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
 Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 10G.&#13;
@@ -2671,8 +2653,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
          <opdata>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
          <priority>WARNING</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger is ignored, if there is no swap configured</description>
+         <description>This trigger is ignored, if there is no swap configured</description>
          <dependencies>
             <dependency>
                <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
@@ -2689,22 +2670,19 @@ This trigger is ignored, if there is no swap configured</description>
          <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
          <opdata>Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
          <priority>AVERAGE</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
       </trigger>
       <trigger>
          <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
          <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
          <opdata>Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}</opdata>
          <priority>AVERAGE</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Per CPU load average is too high. Your system may be slow to respond.</description>
+         <description>Per CPU load average is too high. Your system may be slow to respond.</description>
       </trigger>
       <trigger>
          <expression>{Template OS Linux by Prom:fd.open[node_exporter].last()}/{Template OS Linux by Prom:kernel.maxfiles[node_exporter].last()}*100&gt;80</expression>
          <name>Running out of file descriptors (less than &lt; 20% free)</name>
          <opdata>{ITEM.LASTVALUE1} of {ITEM.LASTVALUE2} file descriptors are in use.</opdata>
          <priority>WARNING</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
       </trigger>
    </triggers>
    <graphs>

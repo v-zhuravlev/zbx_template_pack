@@ -37,9 +37,9 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Unavailable by ICMP ping|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Last three attempts returned timeout.  Please check device connectivity.</p>|`{TEMPLATE_NAME:icmpping.max(#3)}=0`|HIGH||
-|High ICMP ping loss|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:icmppingloss.min(5m)}>{$ICMP_LOSS_WARN} and {TEMPLATE_NAME:icmppingloss.min(5m)}<100`|WARNING|<p>**Depends on**:</p><p>- Unavailable by ICMP ping</p>|
-|High ICMP ping response time|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:icmppingsec.avg(5m)}>{$ICMP_RESPONSE_TIME_WARN}`|WARNING|<p>**Depends on**:</p><p>- High ICMP ping loss</p><p>- Unavailable by ICMP ping</p>|
+|Unavailable by ICMP ping|<p>Last three attempts returned timeout.  Please check device connectivity.</p>|`{TEMPLATE_NAME:icmpping.max(#3)}=0`|HIGH||
+|High ICMP ping loss|<p>-</p>|`{TEMPLATE_NAME:icmppingloss.min(5m)}>{$ICMP_LOSS_WARN} and {TEMPLATE_NAME:icmppingloss.min(5m)}<100`|WARNING|<p>**Depends on**:</p><p>- Unavailable by ICMP ping</p>|
+|High ICMP ping response time|<p>-</p>|`{TEMPLATE_NAME:icmppingsec.avg(5m)}>{$ICMP_RESPONSE_TIME_WARN}`|WARNING|<p>**Depends on**:</p><p>- High ICMP ping loss</p><p>- Unavailable by ICMP ping</p>|
 
 ## Feedback
 

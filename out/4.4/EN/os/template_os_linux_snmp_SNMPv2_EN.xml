@@ -17,7 +17,7 @@
          <description>MIBs used:&#13;
 UCD-DISKIO-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -163,7 +163,7 @@ The number of write accesses from this device since boot.</description>
 HOST-RESOURCES-MIB&#13;
 UCD-SNMP-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -613,7 +613,6 @@ return (100 - value)
                            <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                            <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -746,7 +745,7 @@ return JSON.stringify([{"{#CPU.COUNT}": value, "{#SNMPINDEX}": 0, "{#SINGLETON}"
 HOST-RESOURCES-MIB&#13;
 UCD-SNMP-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -822,8 +821,7 @@ If having problems collecting this item make sure access to UCD-SNMP-MIB is allo
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                            <opdata>Free inodes: {ITEM.VALUE1}%</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-It may become impossible to write to disk if there are no index nodes left.&#13;
+                           <description>It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                         </trigger_prototype>
                         <trigger_prototype>
@@ -831,8 +829,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
                            <opdata>Free inodes: {ITEM.VALUE1}%</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-It may become impossible to write to disk if there are no index nodes left.&#13;
+                           <description>It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                            <dependencies>
                               <dependency>
@@ -912,8 +909,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <opdata>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})</opdata>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
 Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 5G.&#13;
@@ -926,8 +922,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <opdata>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: &lt; 24h.&#13;
 Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 10G.&#13;
@@ -1022,7 +1017,7 @@ Known Issues:&#13;
 &#13;
   Description: Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1212,7 +1207,6 @@ Total memory in Bytes</description>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <dependencies>
                         <dependency>
                            <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
@@ -1245,7 +1239,7 @@ Total memory in Bytes</description>
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
@@ -1467,8 +1461,7 @@ Template tooling version used: 0.31</description>
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
          <opdata>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
          <priority>WARNING</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger is ignored, if there is no swap configured</description>
+         <description>This trigger is ignored, if there is no swap configured</description>
          <dependencies>
             <dependency>
                <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
@@ -1485,15 +1478,13 @@ This trigger is ignored, if there is no swap configured</description>
          <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
          <opdata>Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
          <priority>AVERAGE</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.</description>
       </trigger>
       <trigger>
          <expression>{Template Module Linux CPU SNMPv2:system.cpu.load.avg1[laLoad.1].min(5m)}/{Template Module Linux CPU SNMPv2:system.cpu.num[snmp].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
          <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
          <opdata>Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}</opdata>
          <priority>AVERAGE</priority>
-         <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Per CPU load average is too high. Your system may be slow to respond.</description>
+         <description>Per CPU load average is too high. Your system may be slow to respond.</description>
       </trigger>
    </triggers>
    <graphs>

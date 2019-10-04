@@ -16,7 +16,7 @@
 MIBs used:&#13;
 F10-S-SERIES-CHASSIS-MIB&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <templates>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
@@ -87,16 +87,14 @@ The status of the fan tray {#SNMPVALUE}.</description>
                            <name>Fan {#SNMPVALUE}: Fan is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$FAN_OK_STATUS},ne)}=1</expression>
                            <name>Fan {#SNMPVALUE}: Fan is not in normal state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the fan unit</description>
+                           <description>Please check the fan unit</description>
                            <dependencies>
                               <dependency>
                                  <name>Fan {#SNMPVALUE}: Fan is in critical state</name>
@@ -138,7 +136,6 @@ CPU utilization in percentage for last 1 minute.</description>
                            <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                            <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -163,7 +160,6 @@ Total memory usage in percentage.</description>
                            <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                            <name>#{#SNMPINDEX}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -235,16 +231,14 @@ The status of the power supply {#SNMPVALUE}</description>
                            <name>PSU {#SNMPVALUE}: Power supply is in critical state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{count(#1,{$PSU_OK_STATUS},ne)}=1</expression>
                            <name>PSU {#SNMPVALUE}: Power supply is not in normal state</name>
                            <opdata>Current state: {ITEM.VALUE1}</opdata>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Please check the power supply unit for errors</description>
+                           <description>Please check the power supply unit for errors</description>
                            <dependencies>
                               <dependency>
                                  <name>PSU {#SNMPVALUE}: Power supply is in critical state</name>
@@ -288,8 +282,7 @@ The temperature of the unit.</description>
                            <name>Device {#SNMPVALUE}: Temperature is above warning threshold: &gt;{$TEMP_WARN:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>WARNING</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                           <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                            <dependencies>
                               <dependency>
                                  <name>Device {#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
@@ -305,8 +298,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <name>Device {#SNMPVALUE}: Temperature is above critical threshold: &gt;{$TEMP_CRIT:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>HIGH</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-This trigger uses temperature sensor values as well as temperature sensor status if available</description>
+                           <description>This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{avg(5m)}&lt;{$TEMP_CRIT_LOW:""}</expression>
@@ -315,7 +307,6 @@ This trigger uses temperature sensor values as well as temperature sensor status
                            <name>Device {#SNMPVALUE}: Temperature is too low: &lt;{$TEMP_CRIT_LOW:""}</name>
                            <opdata>Current value: {ITEM.VALUE1}</opdata>
                            <priority>AVERAGE</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -372,8 +363,7 @@ The unit's serial number.</description>
                            <recovery_mode>NONE</recovery_mode>
                            <name>#{#SNMPVALUE}: Device has been replaced (new serial number received)</name>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Device serial number has changed. Ack to close</description>
+                           <description>Device serial number has changed. Ack to close</description>
                            <manual_close>YES</manual_close>
                         </trigger_prototype>
                      </trigger_prototypes>
@@ -431,8 +421,7 @@ Current code version of this unit.</description>
                            <recovery_mode>NONE</recovery_mode>
                            <name>#{#SNMPVALUE}: Operating system description has changed</name>
                            <priority>INFO</priority>
-                           <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+                           <description>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                            <manual_close>YES</manual_close>
                         </trigger_prototype>
                      </trigger_prototypes>

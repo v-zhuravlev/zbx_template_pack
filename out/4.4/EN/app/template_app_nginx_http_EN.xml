@@ -17,7 +17,7 @@ https://nginx.ru/en/docs/http/ngx_http_stub_status_module.html.&#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Applications</name>
@@ -49,7 +49,6 @@ Template tooling version used: 0.31</description>
                      <expression>{min(5m)}&gt;{$NGINX.RESPONSE_TIME.MAX.WARN}</expression>
                      <name>Nginx: Service response time is too high (over {$NGINX.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -84,7 +83,6 @@ Template tooling version used: 0.31</description>
                      <expression>{last()}=0</expression>
                      <name>Nginx: Service is down</name>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -175,8 +173,7 @@ if (a) {
                      <name>Nginx: High connections drop rate (more than {$NGINX.DROP_RATE.MAX.WARN} for 5m)</name>
                      <opdata>Current rate: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.</description>
+                     <description>The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.</description>
                      <dependencies>
                         <dependency>
                            <name>Nginx: Service is down</name>
@@ -312,8 +309,7 @@ https://nginx.org/en/docs/http/ngx_http_stub_status_module.html</description>
  {nodata(30m)}=1</expression>
                      <name>Nginx: Failed to fetch stub status page (or no data for 30m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Zabbix has not received data for items for the last 30 minutes.</description>
+                     <description>Zabbix has not received data for items for the last 30 minutes.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -408,8 +404,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Nginx: Version has changed (new version: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Nginx version has changed. Ack to close.</description>
+                     <description>Nginx version has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>

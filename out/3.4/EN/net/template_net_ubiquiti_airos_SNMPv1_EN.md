@@ -47,9 +47,9 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[loadValue.2].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
-|Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[memoryUsedPercentage].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util[loadValue.2].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|Firmware has changed|<p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware.diff()}=1 and {TEMPLATE_NAME:system.hw.firmware.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:vm.memory.util[memoryUsedPercentage].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 
 ## Feedback
 

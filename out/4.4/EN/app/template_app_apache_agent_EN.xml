@@ -16,7 +16,7 @@ https://httpd.apache.org/docs/current/mod/mod_status.html&#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384764-discussion-thread-for-official-zabbix-template-apache&#13;
 &#13;
-Template tooling version used: 0.31</description>
+Template tooling version used: 0.32</description>
          <groups>
             <group>
                <name>Templates/Applications</name>
@@ -169,8 +169,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                      <expression>{last()}&lt;10m</expression>
                      <name>Apache: has been restarted (uptime &lt; 10m)</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Uptime is less than 10 minutes</description>
+                     <description>Uptime is less than 10 minutes</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -208,8 +207,7 @@ Uptime is less than 10 minutes</description>
                      <recovery_mode>NONE</recovery_mode>
                      <name>Apache: Version has changed (new version: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Apache version has changed. Ack to close.</description>
+                     <description>Apache version has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -516,7 +514,6 @@ Apache version has changed. Ack to close.</description>
                      <expression>{min(5m)}&gt;{$APACHE.RESPONSE_TIME.MAX.WARN}</expression>
                      <name>Apache: Service response time is too high (over {$APACHE.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -554,7 +551,6 @@ Apache version has changed. Ack to close.</description>
                      <expression>{last()}=0</expression>
                      <name>Apache: Service is down</name>
                      <priority>AVERAGE</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -616,7 +612,6 @@ Apache version has changed. Ack to close.</description>
                      <expression>{last()}=0</expression>
                      <name>Apache: Process is not running</name>
                      <priority>HIGH</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
                   </trigger>
                </triggers>
             </item>
@@ -683,8 +678,7 @@ return JSON.stringify(output);</params>
                      <expression>{nodata(30m)}=1</expression>
                      <name>Apache: Failed to fetch status page (or no data for 30m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Zabbix has not received data for items for the last 30 minutes.</description>
+                     <description>Zabbix has not received data for items for the last 30 minutes.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
