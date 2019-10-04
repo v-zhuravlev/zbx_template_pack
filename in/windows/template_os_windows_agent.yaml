@@ -102,6 +102,19 @@ templates:
               - trigger.cpu.high
               # interrupts are part of priv time
               - trigger.cpu.interrupt.high
+      - _id: system.cpu.dpc
+        _group: "CPU"
+        name: CPU DPC time
+        type: ZABBIX_PASSIVE
+        key: perf_counter_en["\Processor Information(_total)\% DPC Time"]
+        value_type: FLOAT
+        units: "%"
+        description: |
+          Processor DPC time is the time that a single processor spent receiving and servicing deferred procedure 
+          calls (DPCs). DPCs are interrupts that run at a lower priority than standard interrupts. % DPC Time is a 
+          component of % Privileged Time because DPCs are executed in privileged mode. If a high % DPC Time is 
+          sustained, there may be a processor bottleneck or an application or hardware related issue that can 
+          significantly diminish overall system performance.
       - _id: system.cpu.user
         _group: "CPU"
         name: CPU user time
@@ -218,6 +231,9 @@ templates:
       - macro: "{$MEMORY.UTIL.MAX}"
         _description: "The warning threshold of the Memory util item."
         value: "90"
+      - macro: "{$SWAP.PFREE.MIN.WARN}"
+        _description: "The warning threshold of the minimum free swap."
+        value: "20"
     items:
       - _prototype: "vm.memory.used"
         key: "vm.memory.size[used]"
@@ -447,14 +463,26 @@ templates:
         key: "vfs.dev.discovery"
         master_item: "vfs.dev.get"
         preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              output = JSON.parse(value).map(function(dev){
+                  return {
+                      "{#DEVNAME}": dev.Name,
+                      "{#DEVQUEUE}": dev.CurrentDiskQueueLength,
+                      "{#DEVREADS}": dev.DiskReadsPersec,
+                      "{#DEVTIME}": dev.PercentDiskTime,
+                      "{#DEVWRITES}": dev.DiskWritesPersec
+                  }})
+              return JSON.stringify({"data": output})
           # TODO fix
           # - type: JSONPATH
           #   params: $['Name']
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1h
-        lld_macro_paths:
-          - lld_macro: "{#DEVNAME}"
-            path: "$.Name"
+        # lld_macro_paths:
+        #   - lld_macro: "{#DEVNAME}"
+        #     path: "$.Name"
+
         filter:
           evalType: "AND"
           conditions:
@@ -532,9 +560,15 @@ templates:
       - _prototype: system.name
         type: ZABBIX_PASSIVE
         key: system.hostname
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
       - _prototype: system.descr
         type: ZABBIX_PASSIVE
         key: system.uname
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
       # - _id: system.users.num
       #   type: ZABBIX_PASSIVE
       #   _group: General
@@ -555,6 +589,9 @@ templates:
       - _prototype: system.sw.arch
         type: ZABBIX_PASSIVE
         key: system.sw.arch
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
       # - _prototype: system.sw.packages
       #   type: ZABBIX_PASSIVE
       #   key: system.sw.packages
@@ -610,19 +647,32 @@ templates:
         key: "net.if.discovery"
         master_item: "net.if.get"
         preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              output = JSON.parse(value).map(function(net){
+                  return {
+                      "{#IFNAME}": net.Name,
+                      "{#IFDESCR}": net.Description,
+                      "{#IFPHYSICALADAPTER}": net.PhysicalAdapter,
+                      "{#IFALIAS}" : net.NetConnectionID,
+                      "{#IFNETENABLED}": net.NetEnabled,
+                      "{#IFNETSTATUS}": net.NetConnectionStatus,
+                      "{#IFSPEED}": net.Speed
+                  }})
+              return JSON.stringify({"data": output})
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1h
-        lld_macro_paths:
-          - lld_macro: "{#IFNAME}"
-            path: "$.Name"
-          - lld_macro: "{#IFPHYSICALADAPTER}"
-            path: "$.PhysicalAdapter"
-          - lld_macro: "{#IFDESCR}"
-            path: "$.Description"
-          - lld_macro: "{#IFALIAS}"
-            path: "$.NetConnectionID"
-          - lld_macro: "{#IFNETENABLED}"
-            path: "$.NetEnabled"
+        # lld_macro_paths:
+        #   - lld_macro: "{#IFNAME}"
+        #     path: "$.Name"
+        #   - lld_macro: "{#IFPHYSICALADAPTER}"
+        #     path: "$.PhysicalAdapter"
+        #   - lld_macro: "{#IFDESCR}"
+        #     path: "$.Description"
+        #   - lld_macro: "{#IFALIAS}"
+        #     path: "$.NetConnectionID"
+        #   - lld_macro: "{#IFNETENABLED}"
+        #     path: "$.NetEnabled"
         filter:
           evalType: "AND"
           conditions:
@@ -741,14 +791,16 @@ templates:
       - OS
       - ZABBIX_ACTIVE
     description: |
-      Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+      Official Windows template. Requires agent of Zabbix 4.4 and newer.
     _documentation:
       _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows
       _tested_on:
         - name: Windows
-          version: "10"
+          version: 7 and newer.
+        - name: Windows Server
+          version: 2008 R2 and newer.
       _overview: |
-        New official Windows template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.
+        New official Windows template. Requires agent of Zabbix 4.4 and newer.
       _setup: |
         Install Zabbix agent to Windows OS according to Zabbix documentation.
     templates:

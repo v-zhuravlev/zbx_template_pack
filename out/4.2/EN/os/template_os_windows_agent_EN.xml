@@ -270,6 +270,69 @@ functions of the Windows® Operating System.</description>
                <master_item/>
             </item>
             <item>
+               <name>CPU DPC time</name>
+               <type>0</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>perf_counter_en["\Processor Information(_total)\% DPC Time"]</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
+               <status>0</status>
+               <value_type>0</value_type>
+               <allowed_hosts/>
+               <units>%</units>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <description>Processor DPC time is the time that a single processor spent receiving and servicing deferred procedure &#13;
+calls (DPCs). DPCs are interrupts that run at a lower priority than standard interrupts. % DPC Time is a &#13;
+component of % Privileged Time because DPCs are executed in privileged mode. If a high % DPC Time is &#13;
+sustained, there may be a processor bottleneck or an application or hardware related issue that can &#13;
+significantly diminish overall system performance.</description>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <output_format>0</output_format>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <master_item/>
+            </item>
+            <item>
                <name>CPU user time</name>
                <type>0</type>
                <snmp_community/>
@@ -1108,7 +1171,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
             </macro>
             <macro>
                <macro>{$SWAP.PFREE.MIN.WARN}</macro>
-               <value>50</value>
+               <value>20</value>
             </macro>
          </macros>
          <templates/>
@@ -2071,13 +2134,22 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <lld_macro_paths>
-                  <lld_macro_path>
-                     <lld_macro>{#DEVNAME}</lld_macro>
-                     <path>$.Name</path>
-                  </lld_macro_path>
-               </lld_macro_paths>
+               <lld_macro_paths/>
                <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>output = JSON.parse(value).map(function(dev){
+    return {
+        "{#DEVNAME}": dev.Name,
+        "{#DEVQUEUE}": dev.CurrentDiskQueueLength,
+        "{#DEVREADS}": dev.DiskReadsPersec,
+        "{#DEVTIME}": dev.PercentDiskTime,
+        "{#DEVWRITES}": dev.DiskWritesPersec
+    }})
+return JSON.stringify({"data": output})</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                   <step>
                      <type>20</type>
                      <params>1h</params>
@@ -2288,7 +2360,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <preprocessing>
                   <step>
                      <type>20</type>
-                     <params>1h</params>
+                     <params>1d</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3036,7 +3108,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <snmp_oid/>
                      <key>net.if.in["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3103,7 +3175,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <snmp_oid/>
                      <key>net.if.out["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3239,7 +3311,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <snmp_oid/>
                      <key>net.if.type["{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -3596,29 +3668,24 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-               <lld_macro_paths>
-                  <lld_macro_path>
-                     <lld_macro>{#IFNAME}</lld_macro>
-                     <path>$.Name</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFPHYSICALADAPTER}</lld_macro>
-                     <path>$.PhysicalAdapter</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFDESCR}</lld_macro>
-                     <path>$.Description</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFALIAS}</lld_macro>
-                     <path>$.NetConnectionID</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFNETENABLED}</lld_macro>
-                     <path>$.NetEnabled</path>
-                  </lld_macro_path>
-               </lld_macro_paths>
+               <lld_macro_paths/>
                <preprocessing>
+                  <step>
+                     <type>21</type>
+                     <params>output = JSON.parse(value).map(function(net){
+    return {
+        "{#IFNAME}": net.Name,
+        "{#IFDESCR}": net.Description,
+        "{#IFPHYSICALADAPTER}": net.PhysicalAdapter,
+        "{#IFALIAS}" : net.NetConnectionID,
+        "{#IFNETENABLED}": net.NetEnabled,
+        "{#IFNETSTATUS}": net.NetConnectionStatus,
+        "{#IFSPEED}": net.Speed
+    }})
+return JSON.stringify({"data": output})</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                   <step>
                      <type>20</type>
                      <params>1h</params>
@@ -3711,7 +3778,7 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
       <template>
          <template>Template OS Windows by Zabbix agent</template>
          <name>Template OS Windows by Zabbix agent</name>
-         <description>Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.&#13;
+         <description>Official Windows template. Requires agent of Zabbix 4.4 and newer.&#13;
 &#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows&#13;
