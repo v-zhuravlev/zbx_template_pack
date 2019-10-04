@@ -69,10 +69,9 @@ Template tooling version used: 0.31</description>
                   <trigger>
                      <expression>{nodata(30m)}=1</expression>
                      <name>RabbitMQ: Failed to fetch overview data (or no data for 30m)</name>
-                     <url>https://www.rabbitmq.com/monitoring.html#cluster-wide-metrics</url>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Zabbix has not received data for items for the last 30 minutes.</description>
+Zabbix has not received data for items for the last 30 minutes</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -372,7 +371,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                </master_item>
             </item>
             <item>
-               <name>RabbitMQ: Messages returned unroutable</name>
+               <name>RabbitMQ: Messages returned redeliver</name>
                <type>DEPENDENT</type>
                <key>rabbitmq.overview.messages.redeliver</key>
                <delay>0</delay>
@@ -396,7 +395,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                </master_item>
             </item>
             <item>
-               <name>RabbitMQ: Messages returned unroutable</name>
+               <name>RabbitMQ: Messages returned redeliver per second</name>
                <type>DEPENDENT</type>
                <key>rabbitmq.overview.messages.redeliver.rate</key>
                <delay>0</delay>
@@ -445,7 +444,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                </master_item>
             </item>
             <item>
-               <name>RabbitMQ: Messages returned unroutable</name>
+               <name>RabbitMQ: Messages returned unroutable per second</name>
                <type>DEPENDENT</type>
                <key>rabbitmq.overview.messages.return_unroutable.rate</key>
                <delay>0</delay>
@@ -512,14 +511,6 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                <master_item>
                   <key>rabbitmq.get_overview</key>
                </master_item>
-               <triggers>
-                  <trigger>
-                     <expression>{min(5m)}&gt;{$RABBITMQ.CONN.MAX.WARN}</expression>
-                     <name>RabbitMQ: Total number of connections is too high (over {$RABBITMQ.CONN.MAX.WARN} for 5m)</name>
-                     <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
-                  </trigger>
-               </triggers>
             </item>
             <item>
                <name>RabbitMQ: Consumers total</name>
@@ -1108,10 +1099,6 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                <value>zbx_monitor</value>
             </macro>
             <macro>
-               <macro>{$RABBITMQ.CONN.MAX.WARN}</macro>
-               <value>1000</value>
-            </macro>
-            <macro>
                <macro>{$RABBITMQ.LLD.FILTER.EXCHANGE.MATCHES}</macro>
                <value>.*</value>
             </macro>
@@ -1320,6 +1307,24 @@ Template tooling version used: 0.31</description>
                </triggers>
             </item>
             <item>
+               <name>RabbitMQ: Get node overview</name>
+               <type>HTTP_AGENT</type>
+               <key>rabbitmq.get_node_overview</key>
+               <history>1h</history>
+               <trends>0</trends>
+               <value_type>TEXT</value_type>
+               <authtype>BASIC</authtype>
+               <username>{$RABBITMQ.API.USER}</username>
+               <password>{$RABBITMQ.API.PASSWORD}</password>
+               <description>The HTTP API endpoint that returns cluster-wide metrics</description>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <url>{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/overview</url>
+            </item>
+            <item>
                <name>RabbitMQ: Get nodes</name>
                <type>HTTP_AGENT</type>
                <key>rabbitmq.get_nodes</key>
@@ -1336,29 +1341,10 @@ Template tooling version used: 0.31</description>
                   </application>
                </applications>
                <url>{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/nodes/{$RABBITMQ.CLUSTER.NAME}@{HOST.NAME}?memory=true</url>
-            </item>
-            <item>
-               <name>RabbitMQ: Get overview</name>
-               <type>HTTP_AGENT</type>
-               <key>rabbitmq.get_overview</key>
-               <history>1h</history>
-               <trends>0</trends>
-               <value_type>TEXT</value_type>
-               <authtype>BASIC</authtype>
-               <username>{$RABBITMQ.API.USER}</username>
-               <password>{$RABBITMQ.API.PASSWORD}</password>
-               <description>The HTTP API endpoint that returns cluster-wide metrics</description>
-               <applications>
-                  <application>
-                     <name>Zabbix raw items</name>
-                  </application>
-               </applications>
-               <url>{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/overview</url>
                <triggers>
                   <trigger>
                      <expression>{nodata(30m)}=1</expression>
-                     <name>RabbitMQ: Failed to fetch overview data (or no data for 30m)</name>
-                     <url>https://www.rabbitmq.com/monitoring.html#cluster-wide-metrics</url>
+                     <name>RabbitMQ: Failed to fetch nodes data (or no data for 30m)</name>
                      <priority>WARNING</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Zabbix has not received data for items for the last 30 minutes.</description>
@@ -1422,7 +1408,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                <url>{$RABBITMQ.API.SCHEME}://{HOST.CONN}:{$RABBITMQ.API.PORT}/api/healthchecks/node</url>
                <triggers>
                   <trigger>
-                     <expression>{last(0)}=0</expression>
+                     <expression>{last()}=0</expression>
                      <name>RabbitMQ: Node healthcheck failed</name>
                      <priority>AVERAGE</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
@@ -1465,6 +1451,9 @@ https://www.rabbitmq.com/monitoring.html#health-checks</description>
                      <name>RabbitMQ</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Alarm state</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -1480,7 +1469,7 @@ https://www.rabbitmq.com/monitoring.html#health-checks</description>
                </master_item>
                <triggers>
                   <trigger>
-                     <expression>{last(0)}=1</expression>
+                     <expression>{last()}=1</expression>
                      <name>RabbitMQ: Free disk space alarm (Free space threshold has been reached)</name>
                      <priority>AVERAGE</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
@@ -1545,6 +1534,9 @@ https://www.rabbitmq.com/disk-alarms.html</description>
                      <name>RabbitMQ</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Alarm state</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -1560,7 +1552,7 @@ https://www.rabbitmq.com/disk-alarms.html</description>
                </master_item>
                <triggers>
                   <trigger>
-                     <expression>{last(0)}=1</expression>
+                     <expression>{last()}=1</expression>
                      <name>RabbitMQ: Memory alarm (Memory usage threshold has been reached)</name>
                      <priority>AVERAGE</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
@@ -1615,6 +1607,73 @@ https://www.rabbitmq.com/memory.html</description>
                </master_item>
             </item>
             <item>
+               <name>RabbitMQ: Management plugin version</name>
+               <type>DEPENDENT</type>
+               <key>rabbitmq.node.overview.management_version</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <trends>0</trends>
+               <value_type>CHAR</value_type>
+               <description>Version of the management plugin in use</description>
+               <applications>
+                  <application>
+                     <name>RabbitMQ</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JSONPATH</type>
+                     <params>$.management_version</params>
+                  </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1d</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>rabbitmq.get_node_overview</key>
+               </master_item>
+            </item>
+            <item>
+               <name>RabbitMQ: RabbitMQ version</name>
+               <type>DEPENDENT</type>
+               <key>rabbitmq.node.overview.rabbitmq_version</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <trends>0</trends>
+               <value_type>CHAR</value_type>
+               <description>Version of RabbitMQ on the node which processed this request</description>
+               <applications>
+                  <application>
+                     <name>RabbitMQ</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JSONPATH</type>
+                     <params>$.rabbitmq_version</params>
+                  </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1d</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>rabbitmq.get_node_overview</key>
+               </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{diff()}=1 and {strlen()}&gt;0</expression>
+                     <recovery_mode>NONE</recovery_mode>
+                     <name>RabbitMQ: Version has changed (new version: {ITEM.VALUE})</name>
+                     <priority>INFO</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+RabbitMQ version has changed. Ack to close.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
                <name>RabbitMQ: Number of network partitions</name>
                <type>DEPENDENT</type>
                <key>rabbitmq.node.partitions</key>
@@ -1644,7 +1703,8 @@ https://www.rabbitmq.com/memory.html</description>
                      <expression>{min(5m)}&gt;0</expression>
                      <name>RabbitMQ: Number of network partitions is too high (more than 0 for 5m)</name>
                      <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+https://www.rabbitmq.com/partitions.html#detecting</description>
                   </trigger>
                </triggers>
             </item>
@@ -1792,73 +1852,6 @@ RabbitMQ node is not running</description>
                      <priority>INFO</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Uptime is less than 10 minutes</description>
-                     <manual_close>YES</manual_close>
-                  </trigger>
-               </triggers>
-            </item>
-            <item>
-               <name>RabbitMQ: Management version</name>
-               <type>DEPENDENT</type>
-               <key>rabbitmq.overview.management_version</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <trends>0</trends>
-               <value_type>CHAR</value_type>
-               <description>Version of the management plugin in use</description>
-               <applications>
-                  <application>
-                     <name>RabbitMQ</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.management_version</params>
-                  </step>
-                  <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
-                  </step>
-               </preprocessing>
-               <master_item>
-                  <key>rabbitmq.get_overview</key>
-               </master_item>
-            </item>
-            <item>
-               <name>RabbitMQ: Rabbitmq version</name>
-               <type>DEPENDENT</type>
-               <key>rabbitmq.overview.rabbitmq_version</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <trends>0</trends>
-               <value_type>CHAR</value_type>
-               <description>Version of RabbitMQ on the node which processed this request</description>
-               <applications>
-                  <application>
-                     <name>RabbitMQ</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.rabbitmq_version</params>
-                  </step>
-                  <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
-                  </step>
-               </preprocessing>
-               <master_item>
-                  <key>rabbitmq.get_overview</key>
-               </master_item>
-               <triggers>
-                  <trigger>
-                     <expression>{diff()}=1 and {strlen()}&gt;0</expression>
-                     <recovery_mode>NONE</recovery_mode>
-                     <name>RabbitMQ: Version has changed (new version: {ITEM.VALUE})</name>
-                     <priority>INFO</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-RabbitMQ version has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -3007,6 +3000,19 @@ RabbitMQ version has changed. Ack to close.</description>
             <mapping>
                <value>1</value>
                <newvalue>Up</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Alarm state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Ok</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Alarm</newvalue>
             </mapping>
          </mappings>
       </value_map>

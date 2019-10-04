@@ -24,6 +24,23 @@
          </applications>
          <items>
             <item>
+               <name>CPU DPC time</name>
+               <key>perf_counter_en["\Processor Information(_total)\% DPC Time"]</key>
+               <history>7d</history>
+               <value_type>FLOAT</value_type>
+               <units>%</units>
+               <description>Processor DPC time is the time that a single processor spent receiving and servicing deferred procedure &#13;
+calls (DPCs). DPCs are interrupts that run at a lower priority than standard interrupts. % DPC Time is a &#13;
+component of % Privileged Time because DPCs are executed in privileged mode. If a high % DPC Time is &#13;
+sustained, there may be a processor bottleneck or an application or hardware related issue that can &#13;
+significantly diminish overall system performance.</description>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+            </item>
+            <item>
                <name>CPU interrupt time</name>
                <key>perf_counter_en["\Processor Information(_total)\% Interrupt Time"]</key>
                <history>7d</history>
@@ -451,7 +468,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                <preprocessing>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1h</params>
+                     <params>1d</params>
                   </step>
                </preprocessing>
                <triggers>
@@ -768,7 +785,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
             </macro>
             <macro>
                <macro>{$SWAP.PFREE.MIN.WARN}</macro>
-               <value>50</value>
+               <value>20</value>
             </macro>
          </macros>
       </template>
@@ -891,7 +908,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <name>Interface {#IFNAME}({#IFALIAS}): Inbound packets with errors</name>
                      <key>net.if.in["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -947,7 +964,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <name>Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors</name>
                      <key>net.if.out["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -1054,7 +1071,7 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                      <type>DEPENDENT</type>
                      <key>net.if.type["{#IFNAME}"]</key>
                      <delay>0</delay>
-                     <history>1w</history>
+                     <history>7d</history>
                      <trends>0d</trends>
                      <application_prototypes>
                         <application_prototype>
@@ -1206,29 +1223,21 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                <master_item>
                   <key>wmi.getall[root\cimv2,"select * from win32_networkadapter where PhysicalAdapter=True"]</key>
                </master_item>
-               <lld_macro_paths>
-                  <lld_macro_path>
-                     <lld_macro>{#IFNAME}</lld_macro>
-                     <path>$.Name</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFPHYSICALADAPTER}</lld_macro>
-                     <path>$.PhysicalAdapter</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFDESCR}</lld_macro>
-                     <path>$.Description</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFALIAS}</lld_macro>
-                     <path>$.NetConnectionID</path>
-                  </lld_macro_path>
-                  <lld_macro_path>
-                     <lld_macro>{#IFNETENABLED}</lld_macro>
-                     <path>$.NetEnabled</path>
-                  </lld_macro_path>
-               </lld_macro_paths>
                <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>output = JSON.parse(value).map(function(net){
+    return {
+        "{#IFNAME}": net.Name,
+        "{#IFDESCR}": net.Description,
+        "{#IFPHYSICALADAPTER}": net.PhysicalAdapter,
+        "{#IFALIAS}" : net.NetConnectionID,
+        "{#IFNETENABLED}": net.NetEnabled,
+        "{#IFNETSTATUS}": net.NetConnectionStatus,
+        "{#IFSPEED}": net.Speed
+    }})
+return JSON.stringify({"data": output})</params>
+                  </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
                      <params>1h</params>
@@ -1511,13 +1520,19 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                <master_item>
                   <key>wmi.getall[root\cimv2,"select * from win32_perfformatteddata_perfdisk_physicaldisk"]</key>
                </master_item>
-               <lld_macro_paths>
-                  <lld_macro_path>
-                     <lld_macro>{#DEVNAME}</lld_macro>
-                     <path>$.Name</path>
-                  </lld_macro_path>
-               </lld_macro_paths>
                <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>output = JSON.parse(value).map(function(dev){
+    return {
+        "{#DEVNAME}": dev.Name,
+        "{#DEVQUEUE}": dev.CurrentDiskQueueLength,
+        "{#DEVREADS}": dev.DiskReadsPersec,
+        "{#DEVTIME}": dev.PercentDiskTime,
+        "{#DEVWRITES}": dev.DiskWritesPersec
+    }})
+return JSON.stringify({"data": output})</params>
+                  </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
                      <params>1h</params>
@@ -1543,7 +1558,7 @@ Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
       <template>
          <template>Template OS Windows by Zabbix agent</template>
          <name>Template OS Windows by Zabbix agent</name>
-         <description>Official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or newer.&#13;
+         <description>Official Windows template. Requires agent of Zabbix 4.4 and newer.&#13;
 &#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows&#13;
