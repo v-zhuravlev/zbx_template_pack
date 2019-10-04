@@ -52,7 +52,7 @@ No specific Zabbix configuration is required.
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
 |Fans|#{#SNMPVALUE}: Fan status|<p>MIB: FASTPATH-BOXSERVICES-PRIVATE-MIB</p><p>The status of fan</p>|SNMP|sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}]|
-|Inventory|Operating system|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>Operating System running on this unit</p>|SNMP|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>Operating System running on this unit</p>|SNMP|system.sw.os[agentInventoryOperatingSystem.0]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Hardware model name|<p>MIB: FASTPATH-SWITCHING-MIB</p>|SNMP|system.hw.model<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Hardware serial number|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>Serial number of the switch</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Memory|Available memory|<p>MIB: FASTPATH-SWITCHING-MIB</p><p>The total memory freed for utilization.</p>|SNMP|vm.memory.available[agentSwitchCpuProcessMemFree.0]|
@@ -67,6 +67,7 @@ No specific Zabbix configuration is required.
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |#{#SNMPVALUE}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[boxServicesFanItemState.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE||
+|Operating system description has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</p>|`{TEMPLATE_NAME:system.sw.os[agentInventoryOperatingSystem.0].diff()}=1 and {TEMPLATE_NAME:system.sw.os[agentInventoryOperatingSystem.0].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[memoryUsedPercentage.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 |#{#SNMPVALUE}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[boxServicesPowSupplyItemState.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"failed"},eq)}=1`|AVERAGE||

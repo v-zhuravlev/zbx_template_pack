@@ -22,17 +22,17 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$FAN_CRIT_STATUS:"bad"}|<p>-</p>|2|
-|{$FAN_WARN_STATUS:"warning"}|<p>-</p>|3|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$PSU_CRIT_STATUS:"bad"}|<p>-</p>|2|
-|{$PSU_WARN_STATUS:"warning"}|<p>-</p>|3|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT_STATUS}|<p>-</p>|2|
-|{$TEMP_CRIT}|<p>-</p>|60|
-|{$TEMP_WARN_STATUS}|<p>-</p>|3|
-|{$TEMP_WARN}|<p>-</p>|50|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS:"bad"}|<p>-</p>|`2`|
+|{$FAN_WARN_STATUS:"warning"}|<p>-</p>|`3`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS:"bad"}|<p>-</p>|`2`|
+|{$PSU_WARN_STATUS:"warning"}|<p>-</p>|`3`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT_STATUS}|<p>-</p>|`2`|
+|{$TEMP_CRIT}|<p>-</p>|`60`|
+|{$TEMP_WARN_STATUS}|<p>-</p>|`3`|
+|{$TEMP_WARN}|<p>-</p>|`50`|
 
 ## Template links
 

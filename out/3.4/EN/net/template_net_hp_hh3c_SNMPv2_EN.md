@@ -24,16 +24,16 @@ No specific Zabbix configuration is required.
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$FAN_CRIT_STATUS:"fanError"}|<p>-</p>|41|
-|{$FAN_CRIT_STATUS:"hardwareFaulty"}|<p>-</p>|91|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$PSU_CRIT_STATUS:"hardwareFaulty"}|<p>-</p>|91|
-|{$PSU_CRIT_STATUS:"psuError"}|<p>-</p>|51|
-|{$PSU_CRIT_STATUS:"rpsError"}|<p>-</p>|61|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT}|<p>-</p>|60|
-|{$TEMP_WARN}|<p>-</p>|50|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS:"fanError"}|<p>-</p>|`41`|
+|{$FAN_CRIT_STATUS:"hardwareFaulty"}|<p>-</p>|`91`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS:"hardwareFaulty"}|<p>-</p>|`91`|
+|{$PSU_CRIT_STATUS:"psuError"}|<p>-</p>|`51`|
+|{$PSU_CRIT_STATUS:"rpsError"}|<p>-</p>|`61`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`60`|
+|{$TEMP_WARN}|<p>-</p>|`50`|
 
 ## Template links
 
@@ -76,6 +76,7 @@ No specific Zabbix configuration is required.
 |{#ENT_NAME}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"fanError"},eq)}=1 or {TEMPLATE_NAME:sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS:"hardwareFaulty"},eq)}=1`|AVERAGE||
 |{#ENT_NAME}: Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |{#ENT_NAME}: Firmware has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Firmware version has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.firmware[entPhysicalFirmwareRev.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|{#ENT_NAME}: Operating system description has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</p>|`{TEMPLATE_NAME:system.sw.os[entPhysicalSoftwareRev.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.sw.os[entPhysicalSoftwareRev.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |{#MODULE_NAME}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[hh3cEntityExtMemUsage.{#SNMPINDEX}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 |{#ENT_NAME}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"psuError"},eq)}=1 or {TEMPLATE_NAME:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"rpsError"},eq)}=1 or {TEMPLATE_NAME:sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS:"hardwareFaulty"},eq)}=1`|AVERAGE||
 |{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}|<p>Last value: {ITEM.LASTVALUE1}.</p><p>This trigger uses temperature sensor values as well as temperature sensor status if available</p>|`{TEMPLATE_NAME:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].avg(5m)}>{$TEMP_WARN:""}`<p>Recovery expression:</p>`{TEMPLATE_NAME:sensor.temp.value[hh3cEntityExtTemperature.{#SNMPINDEX}].max(5m)}<{$TEMP_WARN:""}-3`|WARNING|<p>**Depends on**:</p><p>- {#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}</p>|

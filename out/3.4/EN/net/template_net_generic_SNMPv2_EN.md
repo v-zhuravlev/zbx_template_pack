@@ -28,13 +28,15 @@ No specific Zabbix configuration is required.
 
 ## Items collected
 
-|Name|Description|Type|
-|----|-----------|----|
-
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
 
 ## Triggers
 
-|Name|Description|Expression|Severity|
-|----|-----------|----|----|
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
 
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
 

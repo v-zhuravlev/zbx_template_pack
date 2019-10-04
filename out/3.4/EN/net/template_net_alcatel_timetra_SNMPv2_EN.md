@@ -15,13 +15,13 @@ For Zabbix version: 3.4
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
-|{$FAN_CRIT_STATUS}|<p>-</p>|4|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
-|{$PSU_CRIT_STATUS}|<p>-</p>|4|
-|{$TEMP_CRIT_LOW}|<p>-</p>|5|
-|{$TEMP_CRIT}|<p>-</p>|75|
-|{$TEMP_WARN}|<p>-</p>|65|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
+|{$FAN_CRIT_STATUS}|<p>-</p>|`4`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
+|{$PSU_CRIT_STATUS}|<p>-</p>|`4`|
+|{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
+|{$TEMP_CRIT}|<p>-</p>|`75`|
+|{$TEMP_WARN}|<p>-</p>|`65`|
 
 ## Template links
 
@@ -47,7 +47,7 @@ For Zabbix version: 3.4
 |CPU|CPU utilization|<p>MIB: TIMETRA-SYSTEM-MIB</p><p>The value of sgiCpuUsage indicates the current CPU utilization for the system.</p>|SNMP|system.cpu.util[sgiCpuUsage.0]|
 |Fans|#{#SNMPINDEX}: Fan status|<p>MIB: TIMETRA-SYSTEM-MIB</p><p>Current status of the Fan tray.</p>|SNMP|sensor.fan.status[tmnxChassisFanOperStatus.{#SNMPINDEX}]|
 |Inventory|Hardware model name|<p>MIB: SNMPv2-MIB</p>|SNMP|system.hw.model<p>**Preprocessing**:</p><p>- REGEX: `^(\w|-|\.|/)+ (\w|-|\.|/)+ (.+) Copyright \3`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Inventory|Operating system|<p>MIB: SNMPv2-MIB</p>|SNMP|system.sw.os<p>**Preprocessing**:</p><p>- REGEX: `^((\w|-|\.|/)+) \1`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system|<p>MIB: SNMPv2-MIB</p>|SNMP|system.sw.os[sysDescr.0]<p>**Preprocessing**:</p><p>- REGEX: `^((\w|-|\.|/)+) \1`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|{#ENT_NAME}: Hardware serial number|<p>MIB: TIMETRA-CHASSIS-MIB</p>|SNMP|system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Memory|Used memory|<p>MIB: TIMETRA-SYSTEM-MIB</p><p>The value of sgiKbMemoryUsed indicates the total pre-allocated pool memory, in kilobytes, currently in use on the system.</p>|SNMP|vm.memory.used[sgiKbMemoryUsed.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Available memory|<p>MIB: TIMETRA-SYSTEM-MIB</p><p>The value of sgiKbMemoryAvailable indicates the amount of free memory, in kilobytes, in the overall system that is not allocated to memory pools, but is available in case a memory pool needs to grow.</p>|SNMP|vm.memory.available[sgiKbMemoryAvailable.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
@@ -63,6 +63,7 @@ For Zabbix version: 3.4
 |----|-----------|----|----|----|
 |High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[sgiCpuUsage.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 |#{#SNMPINDEX}: Fan is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the fan unit</p>|`{TEMPLATE_NAME:sensor.fan.status[tmnxChassisFanOperStatus.{#SNMPINDEX}].count(#1,{$FAN_CRIT_STATUS},eq)}=1`|AVERAGE||
+|Operating system description has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</p>|`{TEMPLATE_NAME:system.sw.os[sysDescr.0].diff()}=1 and {TEMPLATE_NAME:system.sw.os[sysDescr.0].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |{#ENT_NAME}: Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[tmnxHwSerialNumber.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.util[vm.memory.util.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 |#{#SNMPINDEX}: Power supply is in critical state|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Please check the power supply unit for errors</p>|`{TEMPLATE_NAME:sensor.psu.status[tmnxChassisPowerSupply1Status.{#SNMPINDEX}].count(#1,{$PSU_CRIT_STATUS},eq)}=1`|AVERAGE||

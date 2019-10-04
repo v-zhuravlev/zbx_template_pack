@@ -20,7 +20,7 @@ MY-MEMORY-MIB&#13;
 ENTITY-MIB&#13;
 MY-SYSTEM-MIB&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.31</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -229,7 +229,7 @@ networking software.</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.171.10.97.2.1.1.2.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[mySystemSwVersion.0]</key>
                <delay>3600</delay>
                <history>14</history>
                <trends>0</trends>
@@ -850,6 +850,23 @@ Please check the fan unit</description>
          <priority>1</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Firmware version has changed. Ack to close</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net D-Link DES 7200 SNMPv2:system.sw.os[mySystemSwVersion.0].diff()}=1 and {Template Net D-Link DES 7200 SNMPv2:system.sw.os[mySystemSwVersion.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>

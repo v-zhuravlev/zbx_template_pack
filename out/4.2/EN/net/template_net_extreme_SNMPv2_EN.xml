@@ -18,7 +18,7 @@ EXTREME-SOFTWARE-MONITOR-MIB&#13;
 EXTREME-SYSTEM-MIB&#13;
 ENTITY-MIB&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.31</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -497,7 +497,7 @@ Temperature status of testpoint: Device</description>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1916.1.1.1.13.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[extremePrimarySoftwareRev.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -1441,6 +1441,23 @@ Device serial number has changed. Ack to close</description>
          <priority>1</priority>
          <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Firmware version has changed. Ack to close</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net Extreme EXOS SNMPv2:system.sw.os[extremePrimarySoftwareRev.0].diff()}=1 and {Template Net Extreme EXOS SNMPv2:system.sw.os[extremePrimarySoftwareRev.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>

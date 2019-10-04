@@ -23,7 +23,7 @@ Known Issues:&#13;
   Version: 1910-48 Switch Software Version 5.20.99, Release 1116 Copyright(c)2010-2016 Hewlett Packard Enterprise Development LP&#13;
   Device: HP 1910-48&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.31</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -966,6 +966,23 @@ Device serial number has changed. Ack to close</description>
                      <priority>1</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Firmware version has changed. Ack to close</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:system.sw.os[entPhysicalSoftwareRev.{#SNMPINDEX}].diff()}=1 and {Template Net HP Comware HH3C SNMPv2:system.sw.os[entPhysicalSoftwareRev.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#ENT_NAME}: Operating system description has changed</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>

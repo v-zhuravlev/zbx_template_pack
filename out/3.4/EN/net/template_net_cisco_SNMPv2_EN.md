@@ -203,7 +203,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Inventory|Hardware model name|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.model<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Hardware serial number|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.serialnumber<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Inventory|Operating system|<p>MIB: SNMPv2-MIB</p>|SNMP|system.sw.os<p>**Preprocessing**:</p><p>- REGEX: `Version (.+), RELEASE \1`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system|<p>MIB: SNMPv2-MIB</p>|SNMP|system.sw.os[sysDescr.0]<p>**Preprocessing**:</p><p>- REGEX: `Version (.+), RELEASE \1`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|{#ENT_NAME}: Hardware serial number|<p>MIB: ENTITY-MIB</p>|SNMP|system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 
 ## Triggers
@@ -211,6 +211,7 @@ There are no template links in this template.
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber.diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|Operating system description has changed|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</p>|`{TEMPLATE_NAME:system.sw.os[sysDescr.0].diff()}=1 and {TEMPLATE_NAME:system.sw.os[sysDescr.0].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |{#ENT_NAME}: Device has been replaced (new serial number received)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Device serial number has changed. Ack to close</p>|`{TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].diff()}=1 and {TEMPLATE_NAME:system.hw.serialnumber[entPhysicalSerialNum.{#SNMPINDEX}].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 
 ## Feedback

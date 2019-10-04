@@ -16,7 +16,7 @@
 MIBs used:&#13;
 F10-S-SERIES-CHASSIS-MIB&#13;
 &#13;
-Template tooling version used: 0.29</description>
+Template tooling version used: 0.31</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -850,6 +850,23 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <priority>1</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.&#13;
 Device serial number has changed. Ack to close</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:system.sw.os[chStackUnitCodeVersion.{#SNMPINDEX}].diff()}=1 and {Template Net Dell Force S-Series SNMPv2:system.sw.os[chStackUnitCodeVersion.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#SNMPVALUE}: Operating system description has changed</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
