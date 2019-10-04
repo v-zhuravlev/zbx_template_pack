@@ -3,7 +3,7 @@
 
 ## Overview
 
-For Zabbix version: 4.2  
+For Zabbix version: 4.4  
 
 ## Setup
 

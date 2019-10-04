@@ -14,8 +14,15 @@ templates:
         - description: Doesn't have any temperature sensors
           version: RouterOS 6.38.5
           device: Mikrotik 941-2nD, Mikrotik 951G-2HnD
+    macros:
+      - macro: '{$TEMP_CRIT:"CPU"}'
+        value: "75"
+      - macro: '{$TEMP_WARN:"CPU"}'
+        value: "70"
+      - macro: "{$MEMORY.UTIL.MAX}"
+        value: "90"
     discovery_rules:
-      - name: CPU Discovery
+      - name: CPU discovery
         oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
         key: hrProcessorLoad.discovery
         description: HOST-RESOURCES-MIB::hrProcessorTable discovery
@@ -29,7 +36,7 @@ templates:
               that this processor was not idle. Implementations may approximate this one
               minute smoothing period if necessary.
             _resource: "#{#SNMPINDEX}"
-      - name: Temperature Discovery CPU
+      - name: Temperature CPU discovery
         oid: discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.11]
         key: mtxrHlProcessorTemperature.discovery
         description:
@@ -53,7 +60,7 @@ templates:
             preprocessing:
               - type: MULTIPLIER
                 params: "0.1"
-      - name: Storage Discovery
+      - name: Storage discovery
         oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]
         key: storage.discovery
         description: HOST-RESOURCES-MIB::hrStorage discovery with storage filter
@@ -128,6 +135,7 @@ templates:
             params: "1024"
       - _prototype: vm.memory.util
         _snmpObject: memoryUsedPercentage.Memory
+        params: last("__vm.memory.used__")/last("__vm.memory.total__")*100
         type: CALCULATED
       - _prototype: sensor.temp.value
         type: SNMP
@@ -161,8 +169,3 @@ templates:
         _snmpObject: mtxrFirmwareVersion.0
         _mib: MIKROTIK-MIB
         _vendor_description: Current firmware version
-    macros:
-      - macro: '{$TEMP_CRIT:"CPU"}'
-        value: "75"
-      - macro: '{$TEMP_WARN:"CPU"}'
-        value: "70"
