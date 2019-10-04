@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template App Apache by HTTP</template>
-         <name>Template App Apache by HTTP</name>
+         <template>Template App Apache by Zabbix agent</template>
+         <name>Template App Apache by Zabbix agent</name>
          <description>Get metrics from mod_status module using HTTP agent.&#13;
 https://httpd.apache.org/docs/current/mod/mod_status.html&#13;
 &#13;
@@ -56,7 +56,7 @@ Template tooling version used: 0.30</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -89,86 +89,8 @@ BytesPerSec is not used, as it counts average since last Apache server start.</d
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
-            </item>
-            <item>
-               <name>Apache: Get status</name>
-               <type>HTTP_AGENT</type>
-               <key>apache.get_status</key>
-               <history>1h</history>
-               <trends>0</trends>
-               <value_type>TEXT</value_type>
-               <description>Getting data from a machine-readable version of the Apache status page.&#13;
-https://httpd.apache.org/docs/current/mod/mod_status.html</description>
-               <applications>
-                  <application>
-                     <name>Zabbix raw items</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JAVASCRIPT</type>
-                     <params>// Convert Apache status to JSON
-var lines = value.split("\n");
-var fields = {},
-    output = {},
-    workers = {
-        "_": 0, "S": 0, "R": 0,
-        "W": 0, "K": 0, "D": 0,
-        "C": 0, "L": 0, "G": 0,
-        "I": 0, ".": 0
-    };
-
-// Get all "Key: Value" pairs as an object
-for (var i = 0; i &lt; lines.length; i++) {
-    var line = lines[i].match(/([A-z0-9 ]+): (.*)/);
-    if (line !== null) {
-        output[line[1]] = isNaN(line[2]) ? line[2] : Number(line[2]);
-    }
-}
-
-// For versions without "ServerUptimeSeconds" metric
-output.ServerUptimeSeconds = output.ServerUptimeSeconds || output.Uptime
- 
-// Parse "Scoreboard" to get worker count.
-if (typeof output.Scoreboard === 'string') {
-    for (var i = 0; i &lt; output.Scoreboard.length; i++) {
-        var char = output.Scoreboard[i];
-        workers[char]++;
-    }
-}
- 
-// Add worker data to the output
-output.Workers = {
-    waiting: workers["_"], starting: workers["S"], reading: workers["R"],
-    sending: workers["W"], keepalive: workers["K"], dnslookup: workers["D"],
-    closing: workers["C"], logging: workers["L"], finishing: workers["G"],
-    cleanup: workers["I"], slot: workers["."]
-};
- 
-// Return JSON string
-return JSON.stringify(output);</params>
-                  </step>
-               </preprocessing>
-               <url>{$APACHE.STATUS.SCHEME}://{HOST.CONN}:{$APACHE.STATUS.PORT}/{$APACHE.STATUS.PATH}</url>
-               <retrieve_mode>BOTH</retrieve_mode>
-               <triggers>
-                  <trigger>
-                     <expression>{nodata(30m)}=1</expression>
-                     <name>Apache: Failed to fetch status page (or no data for 30m)</name>
-                     <priority>WARNING</priority>
-                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
-Zabbix has not received data for items for the last 30 minutes.</description>
-                     <manual_close>YES</manual_close>
-                     <dependencies>
-                        <dependency>
-                           <name>Apache: Service is down</name>
-                           <expression>{Template App Apache by HTTP:net.tcp.service[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"].last()}=0</expression>
-                        </dependency>
-                     </dependencies>
-                  </trigger>
-               </triggers>
             </item>
             <item>
                <name>Apache: Total requests</name>
@@ -189,7 +111,7 @@ Zabbix has not received data for items for the last 30 minutes.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -217,7 +139,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -240,7 +162,7 @@ ReqPerSec is not used, as it counts average since last Apache server start.</des
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -278,7 +200,7 @@ Uptime is less than 10 minutes</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -311,7 +233,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -333,7 +255,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -355,7 +277,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -377,7 +299,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -399,7 +321,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -421,7 +343,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -443,7 +365,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -465,7 +387,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -487,7 +409,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -509,7 +431,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -531,7 +453,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -553,7 +475,7 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
@@ -575,13 +497,12 @@ Apache version has changed. Ack to close.</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
             </item>
             <item>
                <name>Apache: Service response time</name>
-               <type>SIMPLE</type>
-               <key>net.tcp.service.perf[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"]</key>
+               <key>net.tcp.service.perf[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"]</key>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>s</units>
@@ -599,8 +520,12 @@ Apache version has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
+                           <name>Apache: Process is not running</name>
+                           <expression>{Template App Apache by Zabbix agent:proc.num["{$APACHE.PROCESS_NAME}"].last()}=0</expression>
+                        </dependency>
+                        <dependency>
                            <name>Apache: Service is down</name>
-                           <expression>{Template App Apache by HTTP:net.tcp.service[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"].last()}=0</expression>
+                           <expression>{Template App Apache by Zabbix agent:net.tcp.service[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"].last()}=0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -608,8 +533,7 @@ Apache version has changed. Ack to close.</description>
             </item>
             <item>
                <name>Apache: Service ping</name>
-               <type>SIMPLE</type>
-               <key>net.tcp.service[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"]</key>
+               <key>net.tcp.service[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"]</key>
                <history>7d</history>
                <applications>
                   <application>
@@ -632,6 +556,146 @@ Apache version has changed. Ack to close.</description>
                      <priority>AVERAGE</priority>
                      <description>Last value: {ITEM.LASTVALUE1}.</description>
                      <manual_close>YES</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Apache: Process is not running</name>
+                           <expression>{Template App Apache by Zabbix agent:proc.num["{$APACHE.PROCESS_NAME}"].last()}=0</expression>
+                        </dependency>
+                     </dependencies>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
+               <name>Apache: CPU utilization</name>
+               <key>proc.cpu.util["{$APACHE.PROCESS_NAME}"]</key>
+               <history>7d</history>
+               <value_type>FLOAT</value_type>
+               <units>%</units>
+               <description>Process CPU utilization percentage.</description>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+            </item>
+            <item>
+               <name>Apache: Memory usage (rss)</name>
+               <key>proc.mem["{$APACHE.PROCESS_NAME}",,,,rss]</key>
+               <history>7d</history>
+               <units>B</units>
+               <description>Resident set size memory used by process in bytes.</description>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+            </item>
+            <item>
+               <name>Apache: Memory usage (vsize)</name>
+               <key>proc.mem["{$APACHE.PROCESS_NAME}",,,,vsize]</key>
+               <history>7d</history>
+               <units>B</units>
+               <description>Virtual memory size used by process in bytes.</description>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+            </item>
+            <item>
+               <name>Apache: Number of processes running</name>
+               <key>proc.num["{$APACHE.PROCESS_NAME}"]</key>
+               <history>7d</history>
+               <applications>
+                  <application>
+                     <name>Apache</name>
+                  </application>
+               </applications>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}=0</expression>
+                     <name>Apache: Process is not running</name>
+                     <priority>HIGH</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.</description>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
+               <name>Apache: Get status</name>
+               <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
+               <history>1h</history>
+               <trends>0</trends>
+               <value_type>TEXT</value_type>
+               <description>Getting data from a machine-readable version of the Apache status page.&#13;
+https://httpd.apache.org/docs/current/mod/mod_status.html</description>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>// Convert Apache status to JSON
+var lines = value.split("\n");
+var fields = {},
+    output = {},
+    workers = {
+        "_": 0, "S": 0, "R": 0,
+        "W": 0, "K": 0, "D": 0,
+        "C": 0, "L": 0, "G": 0,
+        "I": 0, ".": 0
+    };
+
+// Get all "Key: Value" pairs as an object
+for (var i = 0; i &lt; lines.length; i++) {
+    var line = lines[i].match(/([A-z0-9 ]+): (.*)/);
+    if (line !== null) {
+        output[line[1]] = isNaN(line[2]) ? line[2] : Number(line[2]);
+    }
+}
+
+// For versions without "ServerUptimeSeconds" metric
+output.ServerUptimeSeconds = output.ServerUptimeSeconds || output.Uptime
+ 
+// Parse "Scoreboard" to get worker count
+if (typeof output.Scoreboard === 'string') {
+    for (var i = 0; i &lt; output.Scoreboard.length; i++) {
+        var char = output.Scoreboard[i];
+        workers[char]++;
+    }
+}
+ 
+// Add worker data to the output
+output.Workers = {
+    waiting: workers["_"], starting: workers["S"], reading: workers["R"],
+    sending: workers["W"], keepalive: workers["K"], dnslookup: workers["D"],
+    closing: workers["C"], logging: workers["L"], finishing: workers["G"],
+    cleanup: workers["I"], slot: workers["."]
+};
+ 
+// Return JSON string
+return JSON.stringify(output);</params>
+                  </step>
+               </preprocessing>
+               <triggers>
+                  <trigger>
+                     <expression>{nodata(30m)}=1</expression>
+                     <name>Apache: Failed to fetch status page (or no data for 30m)</name>
+                     <priority>WARNING</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}.&#13;
+Zabbix has not received data for items for the last 30 minutes.</description>
+                     <manual_close>YES</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Apache: Process is not running</name>
+                           <expression>{Template App Apache by Zabbix agent:proc.num["{$APACHE.PROCESS_NAME}"].last()}=0</expression>
+                        </dependency>
+                        <dependency>
+                           <name>Apache: Service is down</name>
+                           <expression>{Template App Apache by Zabbix agent:net.tcp.service[http,"{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PORT}"].last()}=0</expression>
+                        </dependency>
+                     </dependencies>
                   </trigger>
                </triggers>
             </item>
@@ -666,7 +730,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>apache.get_status</key>
+                        <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -688,7 +752,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>apache.get_status</key>
+                        <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -710,7 +774,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>apache.get_status</key>
+                        <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -732,7 +796,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>apache.get_status</key>
+                        <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -754,7 +818,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>apache.get_status</key>
+                        <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -776,7 +840,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>apache.get_status</key>
+                        <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                      </master_item>
                   </item_prototype>
                </item_prototypes>
@@ -787,7 +851,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                         <graph_item>
                            <color>1A7C11</color>
                            <item>
-                              <host>Template App Apache by HTTP</host>
+                              <host>Template App Apache by Zabbix agent</host>
                               <key>apache.connections[async_closing{#SINGLETON}]</key>
                            </item>
                         </graph_item>
@@ -795,7 +859,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                            <sortorder>1</sortorder>
                            <color>2774A4</color>
                            <item>
-                              <host>Template App Apache by HTTP</host>
+                              <host>Template App Apache by Zabbix agent</host>
                               <key>apache.connections[async_keep_alive{#SINGLETON}]</key>
                            </item>
                         </graph_item>
@@ -803,7 +867,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                            <sortorder>2</sortorder>
                            <color>F63100</color>
                            <item>
-                              <host>Template App Apache by HTTP</host>
+                              <host>Template App Apache by Zabbix agent</host>
                               <key>apache.connections[async_writing{#SINGLETON}]</key>
                            </item>
                         </graph_item>
@@ -812,7 +876,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                            <drawtype>BOLD_LINE</drawtype>
                            <color>A54F10</color>
                            <item>
-                              <host>Template App Apache by HTTP</host>
+                              <host>Template App Apache by Zabbix agent</host>
                               <key>apache.connections[total{#SINGLETON}]</key>
                            </item>
                         </graph_item>
@@ -825,7 +889,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                            <drawtype>GRADIENT_LINE</drawtype>
                            <color>1A7C11</color>
                            <item>
-                              <host>Template App Apache by HTTP</host>
+                              <host>Template App Apache by Zabbix agent</host>
                               <key>apache.process[num{#SINGLETON}]</key>
                            </item>
                         </graph_item>
@@ -833,7 +897,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                   </graph_prototype>
                </graph_prototypes>
                <master_item>
-                  <key>apache.get_status</key>
+                  <key>web.page.get["{$APACHE.STATUS.HOST}","{$APACHE.STATUS.PATH}","{$APACHE.STATUS.PORT}"]</key>
                </master_item>
                <preprocessing>
                   <step>
@@ -849,8 +913,16 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
          </discovery_rules>
          <macros>
             <macro>
+               <macro>{$APACHE.PROCESS_NAME}</macro>
+               <value>httpd</value>
+            </macro>
+            <macro>
                <macro>{$APACHE.RESPONSE_TIME.MAX.WARN}</macro>
                <value>10</value>
+            </macro>
+            <macro>
+               <macro>{$APACHE.STATUS.HOST}</macro>
+               <value>127.0.0.1</value>
             </macro>
             <macro>
                <macro>{$APACHE.STATUS.PATH}</macro>
@@ -859,10 +931,6 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
             <macro>
                <macro>{$APACHE.STATUS.PORT}</macro>
                <value>80</value>
-            </macro>
-            <macro>
-               <macro>{$APACHE.STATUS.SCHEME}</macro>
-               <value>http</value>
             </macro>
          </macros>
          <screens>
@@ -876,7 +944,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                      <style>0</style>
                      <resource>
                         <name>Apache: Requests per second</name>
-                        <host>Template App Apache by HTTP</host>
+                        <host>Template App Apache by Zabbix agent</host>
                      </resource>
                      <width>500</width>
                      <height>100</height>
@@ -898,7 +966,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                      <style>0</style>
                      <resource>
                         <name>Apache: Workers total</name>
-                        <host>Template App Apache by HTTP</host>
+                        <host>Template App Apache by Zabbix agent</host>
                      </resource>
                      <width>500</width>
                      <height>100</height>
@@ -920,7 +988,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                      <style>0</style>
                      <resource>
                         <name>Apache: Current async connections{#SINGLETON}</name>
-                        <host>Template App Apache by HTTP</host>
+                        <host>Template App Apache by Zabbix agent</host>
                      </resource>
                      <width>500</width>
                      <height>100</height>
@@ -942,7 +1010,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                      <style>0</style>
                      <resource>
                         <name>Apache: Current async processes{#SINGLETON}</name>
-                        <host>Template App Apache by HTTP</host>
+                        <host>Template App Apache by Zabbix agent</host>
                      </resource>
                      <width>500</width>
                      <height>100</height>
@@ -964,7 +1032,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                      <style>0</style>
                      <resource>
                         <name>Apache: Worker states</name>
-                        <host>Template App Apache by HTTP</host>
+                        <host>Template App Apache by Zabbix agent</host>
                      </resource>
                      <width>500</width>
                      <height>100</height>
@@ -988,13 +1056,33 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
    </templates>
    <graphs>
       <graph>
+         <name>Apache: Memory usage</name>
+         <graph_items>
+            <graph_item>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template App Apache by Zabbix agent</host>
+                  <key>proc.mem["{$APACHE.PROCESS_NAME}",,,,vsize]</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <color>2774A4</color>
+               <item>
+                  <host>Template App Apache by Zabbix agent</host>
+                  <key>proc.mem["{$APACHE.PROCESS_NAME}",,,,rss]</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
          <name>Apache: Requests per second</name>
          <graph_items>
             <graph_item>
                <drawtype>GRADIENT_LINE</drawtype>
                <color>1A7C11</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.requests.rate</key>
                </item>
             </graph_item>
@@ -1006,7 +1094,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.dnslookup</key>
                </item>
             </graph_item>
@@ -1014,7 +1102,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.cleanup</key>
                </item>
             </graph_item>
@@ -1022,7 +1110,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>2</sortorder>
                <color>F63100</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.logging</key>
                </item>
             </graph_item>
@@ -1030,7 +1118,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>3</sortorder>
                <color>A54F10</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.reading</key>
                </item>
             </graph_item>
@@ -1038,7 +1126,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>4</sortorder>
                <color>FC6EA3</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.sending</key>
                </item>
             </graph_item>
@@ -1046,7 +1134,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>5</sortorder>
                <color>6C59DC</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.starting</key>
                </item>
             </graph_item>
@@ -1054,7 +1142,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>6</sortorder>
                <color>AC8C14</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.closing</key>
                </item>
             </graph_item>
@@ -1062,7 +1150,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>7</sortorder>
                <color>611F27</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.finishing</key>
                </item>
             </graph_item>
@@ -1070,7 +1158,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>8</sortorder>
                <color>F230E0</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.keepalive</key>
                </item>
             </graph_item>
@@ -1078,7 +1166,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>9</sortorder>
                <color>FFAD40</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.slot</key>
                </item>
             </graph_item>
@@ -1086,7 +1174,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>10</sortorder>
                <color>40CDFF</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers.waiting</key>
                </item>
             </graph_item>
@@ -1099,7 +1187,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers_total.busy</key>
                </item>
             </graph_item>
@@ -1107,7 +1195,7 @@ https://httpd.apache.org/docs/current/mod/event.html</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template App Apache by HTTP</host>
+                  <host>Template App Apache by Zabbix agent</host>
                   <key>apache.workers_total.idle</key>
                </item>
             </graph_item>
