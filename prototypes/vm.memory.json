@@ -51,7 +51,7 @@
 			{
 				"_id": "trigger.memory.available.min",
 				"name": "Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})",
-				//"opdata": "({ITEM.VALUE1} of {ITEM.VALUE2})"
+				"opdata": "Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}",
 				"_documentation": "Second item is added for name enrichment and as a 'safe' check.",
 				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}<{$MEMORY.AVAILABLE.MIN} and {TEMPLATE_NAME:__vm.memory.total__.last()}>0",
 				"priority": "AVERAGE"
@@ -185,7 +185,7 @@
 			{
 				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}<{$SWAP.PFREE.MIN.WARN} and {TEMPLATE_NAME:__system.swap.total__.last()}>0",
 				"name": "High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)",
-				//"opdata": "(free: {ITEM.VALUE1}, total: {ITEM.VALUE2})",
+				"opdata": "Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}",
 				"priority": "WARNING",
 				"description": "This trigger is ignored, if there is no swap configured",
 				"_depends_on": [

@@ -21,6 +21,7 @@
 				"manual_close": "YES",
 				"name": "Link down",
 				"description": "This trigger expression works as follows:\n1. Can be triggered if operations status is down.\n2. {$IFCONTROL:\"{#IFNAME}\"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.\n3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)\n\nWARNING: if closed manually - won't fire again on next poll, because of .diff.",
+				"opdata": "Current state: {ITEM.VALUE1}",
 				"priority": "AVERAGE",
 				"_translations": {
 					"RU": {
@@ -66,6 +67,7 @@
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.avg(15m)}<(({$IF.UTIL.MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()} and\n{TEMPLATE_NAME:__net.if.out__.avg(15m)}<(({$IF.UTIL.MAX:\"{#IFNAME}\"}-3)/100)*{TEMPLATE_NAME:__net.if.speed__.last()}",
 				"manual_close": "YES",
 				"name": "High bandwidth usage ( > {$IF.UTIL.MAX:\"{#IFNAME}\"}% )",
+				"opdata": "In: {ITEM.VALUE1}, out: {ITEM.VALUE3}, speed: {ITEM.VALUE2}",
 				"priority": "WARNING",
 				"_depends_on": [
 					"net.if.down"
@@ -175,6 +177,7 @@
 				"recovery_expression": "{TEMPLATE_NAME:METRIC.max(5m)}<{$IF.ERRORS.WARN:\"{#IFNAME}\"}*0.8\nand {TEMPLATE_NAME:__net.if.out.errors__.max(5m)}<{$IF.ERRORS.WARN:\"{#IFNAME}\"}*0.8",
 				"manual_close": "YES",
 				"name": "High error rate ( > {$IF.ERRORS.WARN:\"{#IFNAME}\"} for 5m)",
+				"opdata": "errors in: {ITEM.VALUE1}, errors out: {ITEM.VALUE2}",
 				"priority": "WARNING",
 				"description": "Recovers when below 80% of {$IF.ERRORS.WARN:\"{#IFNAME}\"} threshold",
 				"_depends_on": [

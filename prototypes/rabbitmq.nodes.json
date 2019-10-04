@@ -25,13 +25,13 @@
                 "_id": "trigger.healthcheck",
                 "expression": "{TEMPLATE_NAME:METRIC.last(0)}=0",
                 "name": "Node healthcheck failed",
+                "opdata": "Current state: {ITEM.VALUE1}",
                 "priority": "AVERAGE",
                 "description": "https://www.rabbitmq.com/monitoring.html#health-checks"
             }
         ]
-    }
-
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.fd_used",
         "key": "rabbitmq.node.fd_used",
         "name": "Used file descriptors",
@@ -60,8 +60,8 @@
                 ]
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.disk_free",
         "key": "rabbitmq.node.disk_free",
         "name": "Free disk space",
@@ -96,8 +96,8 @@
                 ]
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.disk_free_limit",
         "key": "rabbitmq.node.disk_free_limit",
         "name": "Disk free limit",
@@ -115,8 +115,8 @@
                 "params": "$.disk_free_limit"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.mem_used",
         "key": "rabbitmq.node.mem_used",
         "name": "Memory used",
@@ -151,8 +151,8 @@
                 ]
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.mem_limit",
         "key": "rabbitmq.node.mem_limit",
         "name": "Memory limit",
@@ -170,8 +170,8 @@
                 "params": "$.mem_limit"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.run_queue",
         "key": "rabbitmq.node.run_queue",
         "name": "Runtime run queue",
@@ -188,8 +188,8 @@
                 "params": "$.run_queue"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.sockets_used",
         "key": "rabbitmq.node.sockets_used",
         "name": "Sockets used",
@@ -222,8 +222,8 @@
                 ]
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.sockets_total",
         "key": "rabbitmq.node.sockets_total",
         "name": "Sockets available",
@@ -240,8 +240,8 @@
                 "params": "$.sockets_total"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.partitions",
         "key": "rabbitmq.node.partitions",
         "name": "Number of network partitions",
@@ -267,11 +267,13 @@
                 "_id": "trigger.partitions",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>0",
                 "name": "Number of network partitions is too high (more than 0 for 5m)",
+                "opdata": "Current value: {ITEM.VALUE1}",
+                "description": "https://www.rabbitmq.com/partitions.html#detecting",
                 "priority": "WARNING"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.running",
         "key": "rabbitmq.node.running",
         "name": "Is running",
@@ -296,6 +298,7 @@
                 "_id": "trigger.node.is_running",
                 "expression": "{TEMPLATE_NAME:METRIC.max(5m)}=0",
                 "name": "Node is not running",
+                "opdata": "Current state: {ITEM.VALUE1}",
                 "priority": "AVERAGE",
                 "description": "RabbitMQ node is not running",
                 "_depends_on": [
@@ -320,8 +323,8 @@
                 ]
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.mem_alarm",
         "key": "rabbitmq.node.mem_alarm",
         "name": "Memory alarm",
@@ -346,12 +349,13 @@
                 "_id": "trigger.memory.alarm",
                 "expression": "{TEMPLATE_NAME:METRIC.last(0)}=1",
                 "name": "Memory alarm (Memory usage threshold has been reached)",
+                "opdata": "Current state: {ITEM.VALUE1}",
                 "description": "https://www.rabbitmq.com/memory.html",
                 "priority": "AVERAGE"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.disk_free_alarm",
         "key": "rabbitmq.node.disk_free_alarm",
         "name": "Disk free alarm",
@@ -376,12 +380,13 @@
                 "_id": "trigger.disk.alarm",
                 "expression": "{TEMPLATE_NAME:METRIC.last(0)}=1",
                 "name": "Free disk space alarm (Free space threshold has been reached)",
+                "opdata": "Current state: {ITEM.VALUE1}",
                 "description": "https://www.rabbitmq.com/disk-alarms.html",
                 "priority": "AVERAGE"
             }
         ]
-    }
-    ,{
+    },
+    {
         "_id": "rabbitmq.node.uptime",
         "key": "rabbitmq.node.uptime",
         "name": "Uptime",
@@ -421,5 +426,4 @@
             }
         ]
     }
-
 ]

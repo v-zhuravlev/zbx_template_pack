@@ -9,13 +9,24 @@
         "_group": "Zabbix_raw_items",
         "_resource": "RabbitMQ",
         "value_type": "TEXT",
-        "description": "The HTTP API endpoint that returns cluster-wide metrics",
+        "description": "The HTTP API endpoint that returns cluster-wide metrics"
+    },
+    {
+        "_id": "rabbitmq.nodes",
+        "key": "rabbitmq.get_nodes",
+        "name": "Get nodes",
+        "delay": "1m",
+        "history": "1h",
+        "trends": "0",
+        "_group": "Zabbix_raw_items",
+        "_resource": "RabbitMQ",
+        "value_type": "TEXT",
+        "description": "The HTTP API endpoint that returns nodes metrics",
         "triggers": [
             {
                 "_prototype": "trigger.http_get",
                 "expression": "{TEMPLATE_NAME:METRIC.nodata(30m)}=1",
-                "name": "Failed to fetch overview data (or no data for 30m)",
-                "url": "https://www.rabbitmq.com/monitoring.html#cluster-wide-metrics",
+                "name": "Failed to fetch nodes data (or no data for 30m)",
                 "description": "Zabbix has not received data for items for the last 30 minutes.",
                 "_depends_on": [
                     "trigger.status",
