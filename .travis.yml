@@ -6,6 +6,7 @@ services:
 language: python
 
 env:
+  - LANG=EN ZABBIX_VERSION=trunk
   - LANG=EN ZABBIX_VERSION=4.2
   - LANG=RU ZABBIX_VERSION=4.2
   - LANG=EN ZABBIX_VERSION=4.0
@@ -22,11 +23,9 @@ before_install:
   - while ! python check-api.py; do sleep 5; done
   - popd
 
-install: true  
-
+install: true
 
 script:
   - pushd bin
   - ./import-templates.py ../out/${ZABBIX_VERSION}/${LANG}/module
   - find ../out/${ZABBIX_VERSION}/${LANG}/* -type d -not -name module -exec ./import-templates.py {} \;
-
