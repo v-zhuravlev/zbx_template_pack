@@ -782,7 +782,9 @@ return (100 - value)</params>
                      <dependencies>
                         <dependency>
                            <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
-                           <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+                           <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg5[node_exporter].last()}&gt;0&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}&gt;0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -2670,9 +2672,11 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <priority>AVERAGE</priority>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+         <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg5[node_exporter].last()}&gt;0&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}&gt;0</expression>
          <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
-         <opdata>Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}</opdata>
+         <opdata>Load averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}</opdata>
          <priority>AVERAGE</priority>
          <description>Per CPU load average is too high. Your system may be slow to respond.</description>
       </trigger>

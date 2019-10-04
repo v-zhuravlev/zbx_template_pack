@@ -132,7 +132,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
+|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN} and {Template OS Linux by Prom:system.cpu.load.avg5[node_exporter].last()}>0 and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}>0`|AVERAGE||
 |High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util[node_exporter].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
 |System time is out of sync (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>-</p>|`{TEMPLATE_NAME:system.localtime[node_exporter].fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
 |Systen name has changed (new name: {ITEM.VALUE})|<p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.name[node_exporter].diff()}=1 and {TEMPLATE_NAME:system.name[node_exporter].strlen()}>0`|INFO|<p>Manual close: YES</p>|

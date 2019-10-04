@@ -51,7 +51,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent:system.cpu.num.last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}`|AVERAGE||
+|Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent:system.cpu.num.last()}>{$LOAD_AVG_PER_CPU.MAX.WARN} and {Template Module Linux CPU by Zabbix agent:system.cpu.load[all,avg5].last()}>0 and {Template Module Linux CPU by Zabbix agent:system.cpu.load[all,avg15].last()}>0`|AVERAGE||
 |High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util.min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
 
 ## Feedback

@@ -42,10 +42,10 @@
 			{
 				"_id": "trigger.cpu.load.warn",
 				"name": "Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)",
-				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}/{TEMPLATE_NAME:__system.cpu.num__.last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}",
+				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}/{TEMPLATE_NAME:__system.cpu.num__.last()}>{$LOAD_AVG_PER_CPU.MAX.WARN}\nand {TEMPLATE_NAME:__system.cpu.load.avg5__.last()}>0\nand {TEMPLATE_NAME:__system.cpu.load.avg15__.last()}>0",
 				"priority": "AVERAGE",
 				"description": "Per CPU load average is too high. Your system may be slow to respond.",
-				"opdata": "Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}"
+				"opdata": "Load averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}"
 			}
 		],
 		"graphs": [

@@ -536,7 +536,9 @@ return (100 - value)</params>
                      <dependencies>
                         <dependency>
                            <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
-                           <expression>{Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent active:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+                           <expression>{Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent active:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}&#13;
+and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg5].last()}&gt;0&#13;
+and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg15].last()}&gt;0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -2107,9 +2109,11 @@ Template tooling version used: 0.32</description>
          <priority>AVERAGE</priority>
       </trigger>
       <trigger>
-         <expression>{Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent active:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+         <expression>{Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent active:system.cpu.num.last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}&#13;
+and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg5].last()}&gt;0&#13;
+and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg15].last()}&gt;0</expression>
          <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
-         <opdata>Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}</opdata>
+         <opdata>Load averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}</opdata>
          <priority>AVERAGE</priority>
          <description>Per CPU load average is too high. Your system may be slow to respond.</description>
       </trigger>

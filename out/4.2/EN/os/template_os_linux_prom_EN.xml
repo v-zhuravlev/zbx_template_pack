@@ -6035,7 +6035,9 @@ The device uptime is less than 10 minutes</description>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+         <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg5[node_exporter].last()}&gt;0&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}&gt;0</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
@@ -6044,7 +6046,7 @@ The device uptime is less than 10 minutes</description>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}&#13;
+         <description>Load averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}&#13;
 Per CPU load average is too high. Your system may be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -6067,7 +6069,9 @@ Per CPU load average is too high. Your system may be slow to respond.</descripti
          <dependencies>
             <dependency>
                <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
-               <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}</expression>
+               <expression>{Template OS Linux by Prom:system.cpu.load.avg1[node_exporter].min(5m)}/{Template OS Linux by Prom:system.cpu.num[node_exporter].last()}&gt;{$LOAD_AVG_PER_CPU.MAX.WARN}&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg5[node_exporter].last()}&gt;0&#13;
+and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}&gt;0</expression>
                <recovery_expression/>
             </dependency>
          </dependencies>
