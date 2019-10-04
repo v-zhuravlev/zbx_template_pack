@@ -519,7 +519,7 @@
                     "preprocessing": [
                         {
                             "type": "JAVASCRIPT",
-                            "params": "var parsed = value.split(\"\\n\").reduce(function(acc, x, i) {\n  acc[\"values\"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)\n  acc[\"lld\"].push({\"{#DEVNAME}\":x.split(/ +/)[3]});\n  return acc;\n}, {\"values\":{}, \"lld\": []});\n\nreturn JSON.stringify(parsed);"
+                            "params": "var parsed = value.split(\"\\n\").reduce(function(acc, x, i) {\n  parts = x.trim().split(/ +/)\n  acc[\"values\"][parts[2]] = parts\n  acc[\"lld\"].push({\"{#DEVNAME}\":parts[2]})\n  return acc;\n}, {\"values\":{}, \"lld\": []});\n\nreturn JSON.stringify(parsed);"
                         }
                     ]
                 }

@@ -2048,8 +2048,9 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                   <step>
                      <type>21</type>
                      <params>var parsed = value.split("\n").reduce(function(acc, x, i) {
-  acc["values"][x.split(/ +/)[3]] = x.split(/ +/).slice(1)
-  acc["lld"].push({"{#DEVNAME}":x.split(/ +/)[3]});
+  parts = x.trim().split(/ +/)
+  acc["values"][parts[2]] = parts
+  acc["lld"].push({"{#DEVNAME}":parts[2]})
   return acc;
 }, {"values":{}, "lld": []});
 
