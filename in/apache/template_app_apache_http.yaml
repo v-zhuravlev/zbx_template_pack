@@ -1,264 +1,262 @@
 templates:
-- name: Template App Apache by HTTP
-  _zbx_ver: '4.2'
-  _classes:
-  - APP
-  description: |-
-    Get metrics from mod_status module using HTTP agent.
-    https://httpd.apache.org/docs/current/mod/mod_status.html
+  - name: Template App Apache by HTTP
+    _zbx_ver: "4.2"
+    _classes:
+      - APP
+    description: |-
+      Get metrics from mod_status module using HTTP agent.
+      https://httpd.apache.org/docs/current/mod/mod_status.html
 
-  _documentation:
-    _tested_on:
-      - name: Apache
-        version: 2.4.41
+    _documentation:
+      _tested_on:
+        - name: Apache
+          version: 2.4.41
 
-    _overview: |+
-      The template to monitor Apache HTTPD by Zabbix that work without any external scripts.
-      Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  
-      `Template App Apache by HTTP` - (Zabbix version >= 4.2) - collects metrics by polling [mod_status](https://httpd.apache.org/docs/current/mod/mod_status.html) with HTTP agent remotely:  
-      
-      ```text
-      127.0.0.1
-      ServerVersion: Apache/2.4.41 (Unix)
-      ServerMPM: event
-      Server Built: Aug 14 2019 00:35:10
-      CurrentTime: Friday, 16-Aug-2019 12:38:40 UTC
-      RestartTime: Wednesday, 14-Aug-2019 07:58:26 UTC
-      ParentServerConfigGeneration: 1
-      ParentServerMPMGeneration: 0
-      ServerUptimeSeconds: 189613
-      ServerUptime: 2 days 4 hours 40 minutes 13 seconds
-      Load1: 4.60
-      Load5: 1.20
-      Load15: 0.47
-      Total Accesses: 27860
-      Total kBytes: 33011
-      Total Duration: 54118
-      CPUUser: 18.02
-      CPUSystem: 31.76
-      CPUChildrenUser: 0
-      CPUChildrenSystem: 0
-      CPULoad: .0262535
-      Uptime: 189613
-      ReqPerSec: .146931
-      BytesPerSec: 178.275
-      BytesPerReq: 1213.33
-      DurationPerReq: 1.9425
-      BusyWorkers: 7
-      IdleWorkers: 93
-      Processes: 4
-      Stopping: 0
-      BusyWorkers: 7
-      IdleWorkers: 93
-      ConnsTotal: 13
-      ConnsAsyncWriting: 0
-      ConnsAsyncKeepAlive: 5
-      ConnsAsyncClosing: 0
-      Scoreboard: __________________________________________W_____________W___________________LW_____W______W_W_______............................................................................................................................................................................................................................................................................................................
+      _overview: |+
+        The template to monitor Apache HTTPD by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.  
+        `Template App Apache by HTTP` - (Zabbix version >= 4.2) - collects metrics by polling [mod_status](https://httpd.apache.org/docs/current/mod/mod_status.html) with HTTP agent remotely:  
 
-      ```
+        ```text
+        127.0.0.1
+        ServerVersion: Apache/2.4.41 (Unix)
+        ServerMPM: event
+        Server Built: Aug 14 2019 00:35:10
+        CurrentTime: Friday, 16-Aug-2019 12:38:40 UTC
+        RestartTime: Wednesday, 14-Aug-2019 07:58:26 UTC
+        ParentServerConfigGeneration: 1
+        ParentServerMPMGeneration: 0
+        ServerUptimeSeconds: 189613
+        ServerUptime: 2 days 4 hours 40 minutes 13 seconds
+        Load1: 4.60
+        Load5: 1.20
+        Load15: 0.47
+        Total Accesses: 27860
+        Total kBytes: 33011
+        Total Duration: 54118
+        CPUUser: 18.02
+        CPUSystem: 31.76
+        CPUChildrenUser: 0
+        CPUChildrenSystem: 0
+        CPULoad: .0262535
+        Uptime: 189613
+        ReqPerSec: .146931
+        BytesPerSec: 178.275
+        BytesPerReq: 1213.33
+        DurationPerReq: 1.9425
+        BusyWorkers: 7
+        IdleWorkers: 93
+        Processes: 4
+        Stopping: 0
+        BusyWorkers: 7
+        IdleWorkers: 93
+        ConnsTotal: 13
+        ConnsAsyncWriting: 0
+        ConnsAsyncKeepAlive: 5
+        ConnsAsyncClosing: 0
+        Scoreboard: __________________________________________W_____________W___________________LW_____W______W_W_______............................................................................................................................................................................................................................................................................................................
 
-    _setup: | 
-      Setup [mod_status](https://httpd.apache.org/docs/current/mod/mod_status.html)
+        ```
 
-      Check module availability: `httpd -M 2>/dev/null | grep status_module`
+      _setup: |
+        Setup [mod_status](https://httpd.apache.org/docs/current/mod/mod_status.html)
 
-      Example configuration of Apache:
-      
-      ```text
-      <Location "/server-status">
-        SetHandler server-status
-        Require host example.com
-      </Location>
-      ```
+        Check module availability: `httpd -M 2>/dev/null | grep status_module`
 
-      If you use another path, then don't forget to change `{$APACHE.STATUS.PATH}` macro.
+        Example configuration of Apache:
 
-    _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384764-discussion-thread-for-official-zabbix-template-apache
-        
-  items:
-  - _prototype: apache.status
-    type: HTTP_AGENT
-    url: '{$APACHE.STATUS.SCHEME}://{HOST.CONN}:{$APACHE.STATUS.PORT}/{$APACHE.STATUS.PATH}'
-    status_codes: '200'
-    follow_redirects: 1
-    retrieve_mode: BODY_AND_HEADERS
-    preprocessing:
-    - type: JAVASCRIPT
-      params: |-
-        // Convert Apache status to JSON
-        var lines = value.split("\n");
-        var fields = {},
-            output = {},
-            workers = {
-                "_": 0, "S": 0, "R": 0,
-                "W": 0, "K": 0, "D": 0,
-                "C": 0, "L": 0, "G": 0,
-                "I": 0, ".": 0
-            };
+        ```text
+        <Location "/server-status">
+          SetHandler server-status
+          Require host example.com
+        </Location>
+        ```
 
-        // Get all "Key: Value" pairs as an object
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].match(/([A-z0-9 ]+): (.*)/);
-            if (line !== null) {
-                output[line[1]] = isNaN(line[2]) ? line[2] : Number(line[2]);
-            }
-        }
-        
-        // For versions without "ServerUptimeSeconds" metric
-        output.ServerUptimeSeconds = output.ServerUptimeSeconds || output.Uptime
-         
-        // Parse "Scoreboard" to get worker count.
-        if (typeof output.Scoreboard === 'string') {
-            for (var i = 0; i < output.Scoreboard.length; i++) {
-                var char = output.Scoreboard[i];
-                workers[char]++;
-            }
-        }
-         
-        // Add worker data to the output
-        output.Workers = {
-            waiting: workers["_"], starting: workers["S"], reading: workers["R"],
-            sending: workers["W"], keepalive: workers["K"], dnslookup: workers["D"],
-            closing: workers["C"], logging: workers["L"], finishing: workers["G"],
-            cleanup: workers["I"], slot: workers["."]
-        };
-         
-        // Return JSON string
-        return JSON.stringify(output);
+        If you use another path, then don't forget to change `{$APACHE.STATUS.PATH}` macro.
 
-  - _id: service.ping
-    name: Service ping
-    type: SIMPLE
-    key: net.tcp.service[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"]
-    value_type: UNSIGNED
-    delay: 1m
-    value_map: Service state
-    history: 7d
-    _group: Apache
-    _resource: Apache
-    preprocessing:
-    - type: DISCARD_UNCHANGED_HEARTBEAT
-      params: "10m"
-    triggers:
-    - _id: trigger.status
-      name: Service is down
-      expression: '{TEMPLATE_NAME:METRIC.last()}=0'
-      manual_close: 'YES'
-      priority: AVERAGE
-      _depends_on:
-      - trigger.proc.not_running
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384764-discussion-thread-for-official-zabbix-template-apache
 
-  - _id: service.perf
-    name: Service response time
-    type: SIMPLE
-    key: net.tcp.service.perf[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"]
-    value_type: FLOAT
-    units: s
-    delay: 1m
-    history: 7d
-    _group: Apache
-    _resource: Apache
-    triggers:
-    - _id: trigger.perf.low
-      name: Service response time is too high (over {$APACHE.RESPONSE_TIME.MAX.WARN}s for 5m)
-      expression: '{TEMPLATE_NAME:METRIC.min(5m)}>{$APACHE.RESPONSE_TIME.MAX.WARN}'
-      manual_close: 'YES'
-      priority: WARNING
-      _depends_on:
-      - trigger.proc.not_running
-      - trigger.status
-
-
-  - _prototype: apache.bytes
-  - _prototype: apache.bytes.rate
-  - _prototype: apache.requests.rate
-  - _prototype: apache.requests
-
-  # - _prototype: apache.cpuload
-  - _prototype: apache.uptime
-  - _prototype: apache.version
-
-  - _prototype: apache.workers_total.busy
-  - _prototype: apache.workers_total.idle
-
-  - _prototype: apache.workers.closing
-  - _prototype: apache.workers.dnslookup
-  - _prototype: apache.workers.finishing
-  - _prototype: apache.workers.cleanup
-  - _prototype: apache.workers.keepalive
-  - _prototype: apache.workers.logging
-  - _prototype: apache.workers.reading
-  - _prototype: apache.workers.sending
-  - _prototype: apache.workers.slot
-  - _prototype: apache.workers.starting
-  - _prototype: apache.workers.waiting
-  
-  discovery_rules:
-  - name: Event MPM discovery
-    description: |
-      Additional metrics if event MPM is used
-      https://httpd.apache.org/docs/current/mod/event.html
-    key: apache.mpm.event.discovery
-    type: DEPENDENT
-    masterItem: apache.status
-    preprocessing:
-    - type: JSONPATH
-      params: $.ServerMPM
-    - type: JAVASCRIPT
-      params: |-
-        return JSON.stringify(value === 'event' ? [{'{#SINGLETON}': ''}] : []);
     items:
-    - _prototype: apache.connections.async_closing
-    - _prototype: apache.connections.async_keep_alive
-    - _prototype: apache.connections.async_writing
-    - _prototype: apache.connections.total
-    - _prototype: apache.bytes.per_request
-    - _prototype: apache.process.num
+      - _prototype: apache.status
+        type: HTTP_AGENT
+        url: "{$APACHE.STATUS.SCHEME}://{HOST.CONN}:{$APACHE.STATUS.PORT}/{$APACHE.STATUS.PATH}"
+        status_codes: "200"
+        follow_redirects: "YES"
+        retrieve_mode: BOTH
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              // Convert Apache status to JSON
+              var lines = value.split("\n");
+              var fields = {},
+                  output = {},
+                  workers = {
+                      "_": 0, "S": 0, "R": 0,
+                      "W": 0, "K": 0, "D": 0,
+                      "C": 0, "L": 0, "G": 0,
+                      "I": 0, ".": 0
+                  };
 
+              // Get all "Key: Value" pairs as an object
+              for (var i = 0; i < lines.length; i++) {
+                  var line = lines[i].match(/([A-z0-9 ]+): (.*)/);
+                  if (line !== null) {
+                      output[line[1]] = isNaN(line[2]) ? line[2] : Number(line[2]);
+                  }
+              }
 
-  macros:
-  - macro: '{$APACHE.STATUS.PORT}'
-    value: 80
-    _description: The port of Apache status page
+              // For versions without "ServerUptimeSeconds" metric
+              output.ServerUptimeSeconds = output.ServerUptimeSeconds || output.Uptime
+               
+              // Parse "Scoreboard" to get worker count.
+              if (typeof output.Scoreboard === 'string') {
+                  for (var i = 0; i < output.Scoreboard.length; i++) {
+                      var char = output.Scoreboard[i];
+                      workers[char]++;
+                  }
+              }
+               
+              // Add worker data to the output
+              output.Workers = {
+                  waiting: workers["_"], starting: workers["S"], reading: workers["R"],
+                  sending: workers["W"], keepalive: workers["K"], dnslookup: workers["D"],
+                  closing: workers["C"], logging: workers["L"], finishing: workers["G"],
+                  cleanup: workers["I"], slot: workers["."]
+              };
+               
+              // Return JSON string
+              return JSON.stringify(output);
 
-  - macro: '{$APACHE.STATUS.PATH}'
-    value: 'server-status?auto'
-    _description: The URL path
+      - _id: service.ping
+        name: Service ping
+        type: SIMPLE
+        key: net.tcp.service[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"]
+        value_type: UNSIGNED
+        delay: 1m
+        value_map: Service state
+        history: 7d
+        _group: Apache
+        _resource: Apache
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
+        triggers:
+          - _id: trigger.status
+            name: Service is down
+            expression: "{TEMPLATE_NAME:METRIC.last()}=0"
+            manual_close: "YES"
+            priority: AVERAGE
+            _depends_on:
+              - trigger.proc.not_running
 
-  - macro: '{$APACHE.STATUS.SCHEME}'
-    value: 'http'
-    _description: Request scheme which may be http or https
+      - _id: service.perf
+        name: Service response time
+        type: SIMPLE
+        key: net.tcp.service.perf[http,"{HOST.CONN}","{$APACHE.STATUS.PORT}"]
+        value_type: FLOAT
+        units: s
+        delay: 1m
+        history: 7d
+        _group: Apache
+        _resource: Apache
+        triggers:
+          - _id: trigger.perf.low
+            name: Service response time is too high (over {$APACHE.RESPONSE_TIME.MAX.WARN}s for 5m)
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$APACHE.RESPONSE_TIME.MAX.WARN}"
+            manual_close: "YES"
+            priority: WARNING
+            _depends_on:
+              - trigger.proc.not_running
+              - trigger.status
 
-  - macro: '{$APACHE.RESPONSE_TIME.MAX.WARN}'
-    value: 10
-    _description: Maximum Apache response time in seconds for trigger expression
+      - _prototype: apache.bytes
+      - _prototype: apache.bytes.rate
+      - _prototype: apache.requests.rate
+      - _prototype: apache.requests
 
-  screens:
-  - name: Apache performance
-    hsize: 2
-    vsize: 3
-    screen_items:
-    - _graph_id: apache.requests.rate
-      x: 0
-      y: 0
-    - _graph_id: apache.workers.total
-      x: 1
-      y: 0
-    - _graph_id: apache.async.connections
-      x: 0
-      y: 1
-    - _graph_id: apache.async.processes
-      x: 1
-      y: 1
-    - _graph_id: apache.workers.states
-      x: 0
-      y: 2
+      # - _prototype: apache.cpuload
+      - _prototype: apache.uptime
+      - _prototype: apache.version
+
+      - _prototype: apache.workers_total.busy
+      - _prototype: apache.workers_total.idle
+
+      - _prototype: apache.workers.closing
+      - _prototype: apache.workers.dnslookup
+      - _prototype: apache.workers.finishing
+      - _prototype: apache.workers.cleanup
+      - _prototype: apache.workers.keepalive
+      - _prototype: apache.workers.logging
+      - _prototype: apache.workers.reading
+      - _prototype: apache.workers.sending
+      - _prototype: apache.workers.slot
+      - _prototype: apache.workers.starting
+      - _prototype: apache.workers.waiting
+
+    discovery_rules:
+      - name: Event MPM discovery
+        description: |
+          Additional metrics if event MPM is used
+          https://httpd.apache.org/docs/current/mod/event.html
+        key: apache.mpm.event.discovery
+        type: DEPENDENT
+        masterItem: apache.status
+        preprocessing:
+          - type: JSONPATH
+            params: $.ServerMPM
+          - type: JAVASCRIPT
+            params: |-
+              return JSON.stringify(value === 'event' ? [{'{#SINGLETON}': ''}] : []);
+        items:
+          - _prototype: apache.connections.async_closing
+          - _prototype: apache.connections.async_keep_alive
+          - _prototype: apache.connections.async_writing
+          - _prototype: apache.connections.total
+          - _prototype: apache.bytes.per_request
+          - _prototype: apache.process.num
+
+    macros:
+      - macro: "{$APACHE.STATUS.PORT}"
+        value: "80"
+        _description: The port of Apache status page
+
+      - macro: "{$APACHE.STATUS.PATH}"
+        value: "server-status?auto"
+        _description: The URL path
+
+      - macro: "{$APACHE.STATUS.SCHEME}"
+        value: "http"
+        _description: Request scheme which may be http or https
+
+      - macro: "{$APACHE.RESPONSE_TIME.MAX.WARN}"
+        value: "10"
+        _description: Maximum Apache response time in seconds for trigger expression
+
+    screens:
+      - name: Apache performance
+        hsize: 2
+        vsize: 3
+        screen_items:
+          - _graph_id: apache.requests.rate
+            x: 0
+            y: 0
+          - _graph_id: apache.workers.total
+            x: 1
+            y: 0
+          - _graph_id: apache.async.connections
+            x: 0
+            y: 1
+          - _graph_id: apache.async.processes
+            x: 1
+            y: 1
+          - _graph_id: apache.workers.states
+            x: 0
+            y: 2
 
 value_maps:
-- name: Service state
-  mappings:
-  - value: 0
-    newvalue: Down
-  - value: 1
-    newvalue: Up
+  - name: Service state
+    mappings:
+      - value: "0"
+        newvalue: Down
+      - value: "1"
+        newvalue: Up
