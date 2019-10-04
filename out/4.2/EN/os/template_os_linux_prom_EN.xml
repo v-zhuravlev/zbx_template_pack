@@ -3452,7 +3452,7 @@ return newvalue;</params>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description/>
+                     <description>In: {ITEM.VALUE1}, out: {ITEM.VALUE3}, speed: {ITEM.VALUE2}</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3476,7 +3476,8 @@ and {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].max(5
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
+                     <description>errors in: {ITEM.VALUE1}, errors out: {ITEM.VALUE2}&#13;
+Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3509,7 +3510,8 @@ and&#13;
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <description>Current reported speed: {ITEM.VALUE1}&#13;
+This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3537,7 +3539,8 @@ and&#13;
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <description>Current reported speed: {ITEM.VALUE1}&#13;
+This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3559,7 +3562,8 @@ and&#13;
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>This trigger expression works as follows:&#13;
+                     <description>Current state: {ITEM.VALUE1}&#13;
+This trigger expression works as follows:&#13;
 1. Can be triggered if operations status is down.&#13;
 2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
 3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
@@ -4141,7 +4145,8 @@ return (inode_free/inode_total)*100;</params>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 5G.&#13;
  - The disk will be full in less than 24 hours.</description>
@@ -4161,7 +4166,8 @@ return (inode_free/inode_total)*100;</params>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 10G.&#13;
  - The disk will be full in less than 24 hours.</description>
@@ -4187,7 +4193,8 @@ return (inode_free/inode_total)*100;</params>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>It may become impossible to write to disk if there are no index nodes left.&#13;
+                     <description>Free inodes: {ITEM.VALUE1}%&#13;
+It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -4204,7 +4211,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>It may become impossible to write to disk if there are no index nodes left.&#13;
+                     <description>Free inodes: {ITEM.VALUE1}%&#13;
+It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -4952,7 +4960,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>This trigger might indicate disk {#DEVNAME} saturation.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+This trigger might indicate disk {#DEVNAME} saturation.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -5907,7 +5916,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>Failed to fetch system metrics from node_exporter in time.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Failed to fetch system metrics from node_exporter in time.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -5923,7 +5933,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -5939,7 +5949,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>System name has changed. Ack to close.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+System name has changed. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -5955,7 +5966,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -5977,7 +5988,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>{ITEM.LASTVALUE1} of {ITEM.LASTVALUE2} file descriptors are in use.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -5993,7 +6004,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies>
@@ -6015,7 +6027,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>The device uptime is less than 10 minutes</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The device uptime is less than 10 minutes</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -6031,7 +6044,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Per CPU load average is too high. Your system may be slow to respond.</description>
+         <description>Load Averages(1m 5m 15m): ({ITEM.VALUE1} {ITEM.VALUE3} {ITEM.VALUE4}), # of CPUs: {ITEM.VALUE2}&#13;
+Per CPU load average is too high. Your system may be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -6047,7 +6061,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Current utilization: {ITEM.VALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -6069,7 +6083,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -6091,7 +6105,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description/>
+         <description>Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -6107,7 +6121,8 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>This trigger is ignored, if there is no swap configured</description>
+         <description>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}&#13;
+This trigger is ignored, if there is no swap configured</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>

@@ -1456,7 +1456,8 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 5G.&#13;
  - The disk will be full in less than 24 hours.</description>
@@ -1476,7 +1477,8 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
+                     <description>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1})&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
  Second condition should be one of the following:&#13;
  - The disk free space is less than 10G.&#13;
  - The disk will be full in less than 24 hours.</description>
@@ -2014,7 +2016,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description/>
+                     <description>Last value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -3457,7 +3459,7 @@ return JSON.stringify({"data": output})</params>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description/>
+                     <description>In: {ITEM.VALUE1}, out: {ITEM.VALUE3}, speed: {ITEM.VALUE2}</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3481,7 +3483,8 @@ and {Template Module Windows network by Zabbix agent active:net.if.out["{#IFNAME
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
+                     <description>errors in: {ITEM.VALUE1}, errors out: {ITEM.VALUE2}&#13;
+Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3514,7 +3517,8 @@ and&#13;
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
+                     <description>Current reported speed: {ITEM.VALUE1}&#13;
+This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies>
@@ -3536,7 +3540,8 @@ and&#13;
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>This trigger expression works as follows:&#13;
+                     <description>Current state: {ITEM.VALUE1}&#13;
+This trigger expression works as follows:&#13;
 1. Can be triggered if operations status is down.&#13;
 2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.&#13;
 3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)&#13;
@@ -4207,7 +4212,7 @@ Template tooling version used: 0.32</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Current utilization: {ITEM.VALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -4223,7 +4228,8 @@ Template tooling version used: 0.32</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>"The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+"The CPU Interrupt Time in the last 5 minutes exceeds {$CPU.INTERRUPT.CRIT.MAX}%."&#13;
 The Processor Information\% Interrupt Time is the time the processor spends receiving and servicing &#13;
 hardware interrupts during sample intervals. This value is an indirect indicator of the activity of &#13;
 devices that generate interrupts, such as the system clock, the mouse, disk drivers, data communication &#13;
@@ -4250,7 +4256,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>The CPU privileged time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The CPU privileged time in the last 5 minutes exceeds {$CPU.PRIV.CRIT.MAX}%.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -4277,7 +4284,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The CPU Queue Length in the last 5 minutes exceeds {$CPU.QUEUE.CRIT.MAX}%.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -4299,7 +4307,7 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -4315,7 +4323,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>This trigger is ignored, if there is no swap configured</description>
+         <description>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}&#13;
+This trigger is ignored, if there is no swap configured</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -4337,7 +4346,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE_CRIT.MIN} for 5 minutes. If the number is less than 5,000, there may well be a memory leak.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The Memory Free System Page Table Entries is less than {$MEM.PAGE_TABLE_CRIT.MIN} for 5 minutes. If the number is less than 5,000, there may well be a memory leak.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -4359,7 +4369,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>The Memory Pages/sec in the last 5 minutes exceeds {$MEM.PAGE_SEC.CRIT.MAX}. If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The Memory Pages/sec in the last 5 minutes exceeds {$MEM.PAGE_SEC.CRIT.MAX}. If the value is greater than 1,000, as a result of excessive paging, there may be a memory leak.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies>
@@ -4381,7 +4392,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>The device uptime is less than 10 minutes.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The device uptime is less than 10 minutes.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -4397,7 +4409,7 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description/>
+         <description>Last value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -4413,7 +4425,8 @@ hardware failure. This should never be higher than 20%.</description>
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>System name has changed. Ack to close.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+System name has changed. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
