@@ -184,6 +184,7 @@ and are waiting to be executed.</description>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.VALUE1}</opdata>
                      <priority>WARNING</priority>
+                     <description>CPU load is too much.</description>
                   </trigger>
                </triggers>
             </item>
@@ -207,6 +208,7 @@ and are waiting to be executed.</description>
             <macro>
                <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
+               <description>The critical threshold of the CPU utilisation in %.</description>
             </macro>
          </macros>
       </template>
@@ -406,10 +408,12 @@ and are waiting to be executed.</description>
             <macro>
                <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
                <value>90</value>
+               <description>The critical threshold of the filesystem utilisation in percent.</description>
             </macro>
             <macro>
                <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
                <value>80</value>
+               <description>The warning threshold of the filesystem utilisation in percent.</description>
             </macro>
          </macros>
       </template>
@@ -449,6 +453,7 @@ and are waiting to be executed.</description>
                <name>Number of processes</name>
                <key>proc.num[]</key>
                <history>7d</history>
+               <description>The number of processes.</description>
                <applications>
                   <application>
                      <name>General</name>
@@ -491,6 +496,7 @@ and are waiting to be executed.</description>
                <key>system.localtime</key>
                <history>7d</history>
                <units>unixtime</units>
+               <description>System local time of host.</description>
                <applications>
                   <application>
                      <name>General</name>
@@ -501,6 +507,7 @@ and are waiting to be executed.</description>
                      <expression>{fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
                      <name>System time is out of sync (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
                      <priority>WARNING</priority>
+                     <description>The host system time is different from the Zabbix server time.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -512,6 +519,7 @@ and are waiting to be executed.</description>
                <history>2w</history>
                <trends>0</trends>
                <value_type>CHAR</value_type>
+               <description>Operating system architecture of host.</description>
                <applications>
                   <application>
                      <name>Inventory</name>
@@ -531,6 +539,7 @@ and are waiting to be executed.</description>
                <history>2w</history>
                <trends>0</trends>
                <value_type>CHAR</value_type>
+               <description>System description of host.</description>
                <applications>
                   <application>
                      <name>General</name>
@@ -550,6 +559,7 @@ and are waiting to be executed.</description>
                <history>2w</history>
                <trends>0d</trends>
                <units>uptime</units>
+               <description>System uptime in 'N days, hh:mm:ss' format.</description>
                <applications>
                   <application>
                      <name>Status</name>
@@ -570,6 +580,7 @@ and are waiting to be executed.</description>
             <macro>
                <macro>{$SYSTEM.FUZZYTIME.MAX}</macro>
                <value>60</value>
+               <description>The threshold for difference of system time in seconds.</description>
             </macro>
          </macros>
       </template>
@@ -692,6 +703,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <key>system.swap.size[,free]</key>
                <history>7d</history>
                <units>B</units>
+               <description>The free space size of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -704,6 +716,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>%</units>
+               <description>The free space size of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -715,6 +728,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <key>system.swap.size[,total]</key>
                <history>7d</history>
                <units>B</units>
+               <description>The total space size of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -764,6 +778,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
+                     <description>There is little free memory.</description>
                   </trigger>
                </triggers>
             </item>
@@ -815,6 +830,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
+               <description>Raw data of win32_networkadapter.</description>
                <applications>
                   <application>
                      <name>Zabbix raw items</name>
@@ -888,12 +904,14 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      </condition>
                   </conditions>
                </filter>
+               <description>Discovery of installed network interfaces.</description>
                <item_prototypes>
                   <item_prototype>
                      <name>Interface {#IFNAME}({#IFALIAS}): Inbound packets discarded</name>
                      <key>net.if.in["{#IFNAME}",dropped]</key>
                      <delay>3m</delay>
                      <history>7d</history>
+                     <description>Incoming traffic statistics of number of dropped packets on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -911,6 +929,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <key>net.if.in["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
                      <history>7d</history>
+                     <description>Incoming traffic statistics of number of errors on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -929,6 +948,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <delay>3m</delay>
                      <history>7d</history>
                      <units>bps</units>
+                     <description>Incoming traffic statistics on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -950,6 +970,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <key>net.if.out["{#IFNAME}",dropped]</key>
                      <delay>3m</delay>
                      <history>7d</history>
+                     <description>Outgoing traffic statistics of number of dropped packets on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -967,6 +988,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <key>net.if.out["{#IFNAME}",errors]</key>
                      <delay>3m</delay>
                      <history>7d</history>
+                     <description>Outgoing traffic statistics of number of errors on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -985,6 +1007,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <delay>3m</delay>
                      <history>7d</history>
                      <units>bps</units>
+                     <description>Outgoing traffic statistics on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -1009,6 +1032,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <history>7d</history>
                      <trends>0d</trends>
                      <units>bps</units>
+                     <description>The link speed on network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -1033,6 +1057,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>0</trends>
+                     <description>The status of the network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -1075,6 +1100,7 @@ WARNING: if closed manually - won't fire again on next poll, because of .diff.</
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>0d</trends>
+                     <description>The type of the network interface.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Interface {#IFNAME}({#IFALIAS})</name>
@@ -1133,6 +1159,7 @@ and&#13;
                      <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <opdata>In: {ITEM.VALUE1}, out: {ITEM.VALUE3}, speed: {ITEM.VALUE2}</opdata>
                      <priority>WARNING</priority>
+                     <description>The network interface is loaded too much.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1355,6 +1382,7 @@ return JSON.stringify({"data": output})</params>
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
+               <description>Raw data of win32_perfformatteddata_perfdisk_physicaldisk.</description>
                <applications>
                   <application>
                      <name>Zabbix raw items</name>
@@ -1384,6 +1412,7 @@ return JSON.stringify({"data": output})</params>
                      </condition>
                   </conditions>
                </filter>
+               <description>Discovery of installed physical disks.</description>
                <item_prototypes>
                   <item_prototype>
                      <name>{#DEVNAME}: Disk average queue size (avgqu-sz)</name>
@@ -1392,6 +1421,7 @@ return JSON.stringify({"data": output})</params>
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <description>Current Disk Queue Length is the number of requests outstanding on the disk at the time the performance data is collected.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -1414,6 +1444,7 @@ return JSON.stringify({"data": output})</params>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>!r/s</units>
+                     <description>Rate of read operations on the disk.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -1437,6 +1468,7 @@ return JSON.stringify({"data": output})</params>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
                      <units>%</units>
+                     <description>This performance counter is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -1456,6 +1488,7 @@ return JSON.stringify({"data": output})</params>
                            <expression>{min(15m)}&gt;{$VFS.DEV.UTIL.MAX.WARN}</expression>
                            <name>{#DEVNAME}: Disk is overloaded (util &gt; {$VFS.DEV.UTIL.MAX.WARN}% for 15m)</name>
                            <priority>WARNING</priority>
+                           <description>The disk is utilised too long.</description>
                            <manual_close>YES</manual_close>
                         </trigger_prototype>
                      </trigger_prototypes>
@@ -1467,6 +1500,7 @@ return JSON.stringify({"data": output})</params>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>!w/s</units>
+                     <description>Rate of write operations on the disk.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -1555,14 +1589,17 @@ return JSON.stringify({"data": output})</params>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.MATCHES}</macro>
                <value>.*</value>
+               <description>This macro is used in physical disks discovery. Can be overridden on the host or linked template level.</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.DEVNAME.NOT_MATCHES}</macro>
                <value>_Total</value>
+               <description>This macro is used in physical disks discovery. Can be overridden on the host or linked template level.</description>
             </macro>
             <macro>
                <macro>{$VFS.DEV.UTIL.MAX.WARN}</macro>
                <value>95</value>
+               <description>The warning threshold of disk time utilasation in percent.</description>
             </macro>
          </macros>
       </template>
