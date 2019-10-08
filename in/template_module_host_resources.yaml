@@ -4,6 +4,20 @@ templates:
     _classes:
       - SNMPv1
       - SNMPv2
+    _zbx_ver: "4.0"
+    macros:
+      - macro: "{$VFS.FS.FSNAME.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+        value: "^(/dev|/sys|/run|/proc|.+/shm$)"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSTYPE.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+        value: "^\\s$"
+        _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
     discovery_rules:
       - name: "Storage Discovery"
         oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
@@ -12,13 +26,29 @@ templates:
         filter:
           evaltype: OR
           conditions:
+            # - macro: "{#STORAGE_TYPE}"
+            #   value: ".+(4|9)"
+            #   # OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9
+            #   formulaid: A
+            # - macro: "{#STORAGE_TYPE}"
+            #   value: ".+(hrStorageFixedDisk|hrStorageFlashMemory)"
+            #   formulaid: B
+            - macro: "{#SNMPVALUE}"
+              value: "{$VFS.FS.FSTYPE.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+            - macro: "{#SNMPVALUE}"
+              value: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
             - macro: "{#STORAGE_TYPE}"
-              value: ".+(4|9)"
-              # OID: 1.3.6.1.2.1.25.2.1.4 or flash: 1.3.6.1.2.1.25.2.1.9
-              formulaid: B
+              value: "{$VFS.FS.FSNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "C"
             - macro: "{#STORAGE_TYPE}"
-              value: ".+(hrStorageFixedDisk|hrStorageFlashMemory)"
-              formulaid: A
+              value: "{$VFS.FS.FSNAME.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "D"
         items:
           - _prototype: vfs.fs.units
             oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
@@ -60,6 +90,7 @@ templates:
     _classes:
       - SNMPv1
       - SNMPv2
+    _zbx_ver: "4.0"
     discovery_rules:
       - name: "Memory Discovery"
         oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
@@ -109,6 +140,7 @@ templates:
     _classes:
       - SNMPv1
       - SNMPv2
+    _zbx_ver: "4.0"
     discovery_rules:
       - name: CPU Discovery
         oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
@@ -133,3 +165,4 @@ templates:
     _classes:
       - SNMPv1
       - SNMPv2
+    _zbx_ver: "4.0"
