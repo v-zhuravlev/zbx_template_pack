@@ -166,6 +166,7 @@ templates:
 
   - name: "Template Module HOST-RESOURCES-MIB"
     description: "HOST-RESOURCES-MIB: CPU, memory and storage(vfs.fs.file) linked together."
+    _zbx_ver: "4.0"
     templates:
       - Template Module HOST-RESOURCES-MIB CPU SNMPvX
       - Template Module HOST-RESOURCES-MIB memory SNMPvX
@@ -173,4 +174,25 @@ templates:
     _classes:
       - SNMPv1
       - SNMPv2
-    _zbx_ver: "4.0"
+    screens:
+      - name: System performance
+        hsize: 2
+        vsize: 2
+        screen_items:
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "#{#SNMPINDEX}: CPU utilization"
+            x: 0
+            y: 0
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#MEMNAME}: Memory utilization"
+            x: 1
+            y: 0
+          - resourcetype: GRAPH_PROTOTYPE
+            resource:
+              - name: "{#FSNAME}: Disk space usage"
+            x: 0
+            y: 1
+            colspan: 2
+
