@@ -78,6 +78,7 @@ templates:
             _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
             type: CALCULATED
             _resource: "{#FSNAME}"
+  
   - name: "Template Module HOST-RESOURCES-MIB memory"
     _classes:
       - SNMPv1
@@ -85,6 +86,8 @@ templates:
     _zbx_ver: "4.0"
     macros:
       - macro: "{$MEMORY.UTIL.MAX}"
+        _description: |
+          The warning threshold of the "Physical memory: Memory utilization" item.
         value: "90"
       - macro: "{$MEMORY.TYPE.NOT_MATCHES}"
         value: "CHANGE_IF_NEEDED"
