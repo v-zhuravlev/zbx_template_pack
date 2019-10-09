@@ -3,7 +3,7 @@
 
 ## Overview
 
-For Zabbix version: 3.4  
+For Zabbix version: 4.4  
 
 This template was tested on:
 
