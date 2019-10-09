@@ -31,7 +31,7 @@ There are no template links in this template.
 |Monitoring_agent|Version of Zabbix agent running|<p>-</p>|ZABBIX_PASSIVE|agent.version<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Monitoring_agent|Host name of Zabbix agent running|<p>-</p>|ZABBIX_PASSIVE|agent.hostname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Monitoring_agent|Version of Zabbix agent running|<p>-</p>|ZABBIX_PASSIVE|agent.version<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Monitoring_agent|Zabbix agent ping|<p>The agent always returns 1 for this item. It could be used in combination with nodata() for availability check.</p>|ZABBIX_ACTIVE|agent.ping|
+|Monitoring_agent|Zabbix agent ping|<p>The agent always returns 1 for this item. It could be used in combination with nodata() for availability check.</p>|ZABBIX_PASSIVE|agent.ping|
 |Status|Zabbix agent availability|<p>Monitoring agent availability status</p>|INTERNAL|zabbix[host,agent,available]|
 
 ## Triggers
