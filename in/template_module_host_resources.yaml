@@ -17,7 +17,7 @@ templates:
           This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level.
       - macro: "{$VFS.FS.FSTYPE.NOT_MATCHES}"
-        value: "^\\s$"
+        value: "CHANGE_IF_NEEDED"
         _description:
           This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level.
@@ -28,9 +28,7 @@ templates:
           or linked template level.
     discovery_rules:
       - name: "Storage Discovery"
-        # oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
         oid: "discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
-        # key: "storage.discovery"
         key: "vfs.fs.discovery[snmp]"
         description: "HOST-RESOURCES-MIB::hrStorage discovery with storage filter."
         filter:
@@ -53,41 +51,6 @@ templates:
               operator: NOT_MATCHES_REGEX
               formulaid: D
         items:
-          # - _prototype: vfs.fs.units
-          #   oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
-          #   _snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
-          #   _mib: "HOST-RESOURCES-MIB"
-          #   _vendor_description: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one.  Otherwise this number will typically be one."
-          #   _resource: "{#FSNAME}"
-
-          # - _prototype: vfs.fs.units.used
-          #   oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
-          #   _snmpObject: "hrStorageUsed.{#SNMPINDEX}"
-          #   _mib: "HOST-RESOURCES-MIB"
-          #   _vendor_description: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
-          #   _resource: "{#FSNAME}"
-
-          # - _prototype: vfs.fs.units.total
-          #   oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
-          #   _snmpObject: "hrStorageSize.{#SNMPINDEX}"
-          #   _mib: "HOST-RESOURCES-MIB"
-          #   _vendor_description: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified."
-          #   _resource: "{#FSNAME}"
-
-          # - _prototype: vfs.fs.used
-          #   _snmpObject: "storageUsed.{#SNMPINDEX}"
-          #   type: CALCULATED
-          #   _resource: "{#FSNAME}"
-
-          # - _prototype: vfs.fs.total
-          #   _snmpObject: "storageTotal.{#SNMPINDEX}"
-          #   type: CALCULATED
-          #   _resource: "{#FSNAME}"
-
-          # - _prototype: vfs.fs.pused
-          #   _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
-          #   type: CALCULATED
-          #   _resource: "{#FSNAME}"
 
           - _prototype: vfs.fs.used
             oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
@@ -110,7 +73,6 @@ templates:
             preprocessing:
               - type: MULTIPLIER
                 params: "{#ALLOC_UNITS}"
-
           - _prototype: vfs.fs.pused
             application_prototype: Filesystem __RESOURCE__
             _snmpObject: "storageUsedPercentage.{#SNMPINDEX}"
@@ -122,19 +84,20 @@ templates:
       - SNMPv2
     _zbx_ver: "4.0"
     macros:
-      - macro: "{$VM.MEM.TYPE.NOT_MATCHES}"
-        value: "^\\s$"
+      - macro: "{$MEMORY.UTIL.MAX}"
+        value: "90"
+      - macro: "{$MEMORY.TYPE.NOT_MATCHES}"
+        value: "CHANGE_IF_NEEDED"
         _description:
           This macro is used in filesystems discovery. Can be overridden on the host
-          or linked template level.
-      - macro: "{$VM.MEM.TYPE.MATCHES}"
+          or linked template level if you need to filter out results.
+      - macro: "{$MEMORY.TYPE.MATCHES}"
         value: ".*(\\.2|hrStorageRam)$"
         _description:
           This macro is used in filesystems discovery. Can be overridden on the host
           or linked template level.
     discovery_rules:
       - name: "Memory Discovery"
-        # oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]"
         oid: "discovery[{#MEMNAME},1.3.6.1.2.1.25.2.3.1.3,{#MEMTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]"
         key: "vm.memory.discovery"
         description: "HOST-RESOURCES-MIB::hrStorage discovery with memory filter"
@@ -142,40 +105,14 @@ templates:
           evaltype: AND
           conditions:
             - macro: "{#MEMTYPE}"
-              value: "{$VM.MEM.TYPE.MATCHES}"
+              value: "{$MEMORY.TYPE.MATCHES}"
               operator: MATCHES_REGEX
               formulaid: A
             - macro: "{#MEMTYPE}"
-              value: "{$VM.MEM.TYPE.NOT_MATCHES}"
+              value: "{$MEMORY.TYPE.NOT_MATCHES}"
               operator: NOT_MATCHES_REGEX
               formulaid: B
         items:
-          # - _prototype: "vm.memory.units"
-          #   oid: "1.3.6.1.2.1.25.2.3.1.4.{#SNMPINDEX}"
-          #   _snmpObject: "hrStorageAllocationUnits.{#SNMPINDEX}"
-          #   _mib: "HOST-RESOURCES-MIB"
-          #   _vendor_description: "The size, in bytes, of the data objects allocated from this pool.\nIf this entry is monitoring sectors, blocks, buffers, or packets, for example,\nthis number will commonly be greater than one. Otherwise this number will typically be one."
-          #   _resource: "#{#SNMPINDEX}"
-          # - _prototype: "vm.memory.units.used"
-          #   oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
-          #   _snmpObject: "hrStorageUsed.{#SNMPINDEX}"
-          #   _mib: "HOST-RESOURCES-MIB"
-          #   _vendor_description: "The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits."
-          #   _resource: "#{#SNMPINDEX}"
-          # - _prototype: "vm.memory.units.total"
-          #   oid: "1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}"
-          #   _snmpObject: "hrStorageSize.{#SNMPINDEX}"
-          #   _mib: "HOST-RESOURCES-MIB"
-          #   _vendor_description: "The size of the storage represented by this entry, in units of hrStorageAllocationUnits.\nThis object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.\nFor example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified."
-          #   _resource: "#{#SNMPINDEX}"
-          # - _prototype: "vm.memory.used"
-          #   _snmpObject: "memoryUsed.{#SNMPINDEX}"
-          #   type: CALCULATED
-          #   _resource: "#{#SNMPINDEX}"
-          # - _prototype: "vm.memory.total"
-          #   _snmpObject: "memoryTotal.{#SNMPINDEX}"
-          #   type: CALCULATED
-          #   _resource: "#{#SNMPINDEX}"
 
           - _prototype: "vm.memory.used"
             oid: "1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}"
@@ -203,7 +140,7 @@ templates:
           - _prototype: "vm.memory.util"
             _snmpObject: "memoryUsedPercentage.{#SNMPINDEX}"
             type: CALCULATED
-            params: (last("__vm.memory.used__")/last("__vm.memory.total__")*100)
+            params: last("__vm.memory.used__")/last("__vm.memory.total__")*100
             _resource: "{#MEMNAME}"
             application_prototype: Filesystem __RESOURCE__
             
@@ -228,7 +165,7 @@ templates:
               Implementations may approximate this one minute smoothing period if necessary.
 
   - name: "Template Module HOST-RESOURCES-MIB"
-    description: "HOST-RESOURCES-MIB: CPU, memory and storage"
+    description: "HOST-RESOURCES-MIB: CPU, memory and storage(vfs.fs.file) linked together."
     templates:
       - Template Module HOST-RESOURCES-MIB CPU SNMPvX
       - Template Module HOST-RESOURCES-MIB memory SNMPvX

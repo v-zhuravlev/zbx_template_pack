@@ -18,7 +18,7 @@ For Zabbix version: 4.2
 |{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.+`|
 |{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
 |{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$`|
-|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^\s$`|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_IF_NEEDED`|
 |{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|`90`|
 |{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|`80`|
 
@@ -67,8 +67,9 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VM.MEM.TYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*(\.2|hrStorageRam)$`|
-|{$VM.MEM.TYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^\s$`|
+|{$MEMORY.TYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*(\.2|hrStorageRam)$`|
+|{$MEMORY.TYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level if you need to filter out results.</p>|`CHANGE_IF_NEEDED`|
+|{$MEMORY.UTIL.MAX}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -78,7 +79,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Memory Discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</p>|SNMP|vm.memory.discovery<p>**Filter**:</p>AND <p>- A: {#MEMTYPE} MATCHES_REGEX `{$VM.MEM.TYPE.MATCHES}`</p><p>- B: {#MEMTYPE} NOT_MATCHES_REGEX `{$VM.MEM.TYPE.NOT_MATCHES}`</p>|
+|Memory Discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</p>|SNMP|vm.memory.discovery<p>**Filter**:</p>AND <p>- A: {#MEMTYPE} MATCHES_REGEX `{$MEMORY.TYPE.MATCHES}`</p><p>- B: {#MEMTYPE} NOT_MATCHES_REGEX `{$MEMORY.TYPE.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -86,7 +87,7 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Memory|{#MEMNAME}: Used memory|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vm.memory.used[hrStorageUsed.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
 |Memory|{#MEMNAME}: Total memory|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</p>|SNMP|vm.memory.total[hrStorageSize.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
-|Memory|{#MEMNAME}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[memoryUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vm.memory.used[hrStorageUsed.{#SNMPINDEX}]")/last("vm.memory.total[hrStorageSize.{#SNMPINDEX}]")*100)`|
+|Memory|{#MEMNAME}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[memoryUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`last("vm.memory.used[hrStorageUsed.{#SNMPINDEX}]")/last("vm.memory.total[hrStorageSize.{#SNMPINDEX}]")*100`|
 
 ## Triggers
 

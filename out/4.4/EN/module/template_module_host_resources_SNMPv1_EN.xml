@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+   <version>4.4</version>
+   <date>2015-12-30T14:41:30Z</date>
+   <groups>
+      <group>
+         <name>Templates/Modules</name>
+      </group>
+   </groups>
+   <templates>
+      <template>
+         <template>Template Module HOST-RESOURCES-MIB CPU SNMPv1</template>
+         <name>Template Module HOST-RESOURCES-MIB CPU SNMPv1</name>
+         <description>MIBs used:&#13;
+HOST-RESOURCES-MIB&#13;
+&#13;
+Template tooling version used: 0.32</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>CPU</name>
+            </application>
+         </applications>
+         <discovery_rules>
+            <discovery_rule>
+               <name>CPU Discovery</name>
+               <type>SNMPV1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]</snmp_oid>
+               <key>hrProcessorLoad.discovery</key>
+               <delay>1h</delay>
+               <description>HOST-RESOURCES-MIB::hrProcessorTable discovery</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>#{#SNMPINDEX}: CPU utilization</name>
+                     <type>SNMPV1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}</snmp_oid>
+                     <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <value_type>FLOAT</value_type>
+                     <units>%</units>
+                     <description>MIB: HOST-RESOURCES-MIB&#13;
+The average, over the last minute, of the percentage of time that this processor was not idle.&#13;
+Implementations may approximate this one minute smoothing period if necessary.</description>
+                     <applications>
+                        <application>
+                           <name>CPU</name>
+                        </application>
+                     </applications>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+                           <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                           <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
+                           <priority>WARNING</priority>
+                        </trigger_prototype>
+                     </trigger_prototypes>
+                  </item_prototype>
+               </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>#{#SNMPINDEX}: CPU utilization</name>
+                     <ymin_type_1>FIXED</ymin_type_1>
+                     <ymax_type_1>FIXED</ymax_type_1>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template Module HOST-RESOURCES-MIB CPU SNMPv1</host>
+                              <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
+            </discovery_rule>
+         </discovery_rules>
+         <macros>
+            <macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
+      </template>
+      <template>
+         <template>Template Module HOST-RESOURCES-MIB memory SNMPv1</template>
+         <name>Template Module HOST-RESOURCES-MIB memory SNMPv1</name>
+         <description>MIBs used:&#13;
+HOST-RESOURCES-MIB&#13;
+&#13;
+Template tooling version used: 0.32</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Memory</name>
+            </application>
+         </applications>
+         <discovery_rules>
+            <discovery_rule>
+               <name>Memory Discovery</name>
+               <type>SNMPV1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#MEMNAME},1.3.6.1.2.1.25.2.3.1.3,{#MEMTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]</snmp_oid>
+               <key>vm.memory.discovery</key>
+               <delay>1h</delay>
+               <filter>
+                  <evaltype>AND</evaltype>
+                  <conditions>
+                     <condition>
+                        <macro>{#MEMTYPE}</macro>
+                        <value>{$MEMORY.TYPE.MATCHES}</value>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#MEMTYPE}</macro>
+                        <value>{$MEMORY.TYPE.NOT_MATCHES}</value>
+                        <operator>NOT_MATCHES_REGEX</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <description>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>{#MEMNAME}: Total memory</name>
+                     <type>SNMPV1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
+                     <key>vm.memory.total[hrStorageSize.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>MIB: HOST-RESOURCES-MIB&#13;
+The size of the storage represented by this entry, in units of hrStorageAllocationUnits.&#13;
+This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.&#13;
+For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#MEMNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <preprocessing>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>{#ALLOC_UNITS}</params>
+                        </step>
+                     </preprocessing>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#MEMNAME}: Used memory</name>
+                     <type>SNMPV1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
+                     <key>vm.memory.used[hrStorageUsed.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>MIB: HOST-RESOURCES-MIB&#13;
+The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#MEMNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <preprocessing>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>{#ALLOC_UNITS}</params>
+                        </step>
+                     </preprocessing>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#MEMNAME}: Memory utilization</name>
+                     <type>CALCULATED</type>
+                     <key>vm.memory.util[memoryUsedPercentage.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <value_type>FLOAT</value_type>
+                     <units>%</units>
+                     <params>last("vm.memory.used[hrStorageUsed.{#SNMPINDEX}]")/last("vm.memory.total[hrStorageSize.{#SNMPINDEX}]")*100</params>
+                     <description>Memory utilization in %</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#MEMNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
+                           <name>{#MEMNAME}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
+                           <priority>AVERAGE</priority>
+                        </trigger_prototype>
+                     </trigger_prototypes>
+                  </item_prototype>
+               </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>{#MEMNAME}: Memory utilization</name>
+                     <ymin_type_1>FIXED</ymin_type_1>
+                     <ymax_type_1>FIXED</ymax_type_1>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template Module HOST-RESOURCES-MIB memory SNMPv1</host>
+                              <key>vm.memory.util[memoryUsedPercentage.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
+            </discovery_rule>
+         </discovery_rules>
+         <macros>
+            <macro>
+               <macro>{$MEMORY.TYPE.MATCHES}</macro>
+               <value>.*(\.2|hrStorageRam)$</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$MEMORY.TYPE.NOT_MATCHES}</macro>
+               <value>CHANGE_IF_NEEDED</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level if you need to filter out results.</description>
+            </macro>
+            <macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
+               <value>90</value>
+            </macro>
+         </macros>
+      </template>
+      <template>
+         <template>Template Module HOST-RESOURCES-MIB SNMPv1</template>
+         <name>Template Module HOST-RESOURCES-MIB SNMPv1</name>
+         <description>HOST-RESOURCES-MIB: CPU, memory and storage(vfs.fs.file) linked together.&#13;
+&#13;
+Template tooling version used: 0.32</description>
+         <templates>
+            <template>
+               <name>Template Module HOST-RESOURCES-MIB CPU SNMPv1</name>
+            </template>
+            <template>
+               <name>Template Module HOST-RESOURCES-MIB memory SNMPv1</name>
+            </template>
+            <template>
+               <name>Template Module HOST-RESOURCES-MIB storage SNMPv1</name>
+            </template>
+         </templates>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+      </template>
+      <template>
+         <template>Template Module HOST-RESOURCES-MIB storage SNMPv1</template>
+         <name>Template Module HOST-RESOURCES-MIB storage SNMPv1</name>
+         <description>MIBs used:&#13;
+HOST-RESOURCES-MIB&#13;
+&#13;
+Template tooling version used: 0.32</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Storage</name>
+            </application>
+         </applications>
+         <discovery_rules>
+            <discovery_rule>
+               <name>Storage Discovery</name>
+               <type>SNMPV1</type>
+               <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+               <snmp_oid>discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#FSTYPE},1.3.6.1.2.1.25.2.3.1.2,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4]</snmp_oid>
+               <key>vfs.fs.discovery[snmp]</key>
+               <delay>1h</delay>
+               <filter>
+                  <evaltype>AND</evaltype>
+                  <conditions>
+                     <condition>
+                        <macro>{#FSTYPE}</macro>
+                        <value>{$VFS.FS.FSTYPE.MATCHES}</value>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSTYPE}</macro>
+                        <value>{$VFS.FS.FSTYPE.NOT_MATCHES}</value>
+                        <operator>NOT_MATCHES_REGEX</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSNAME.MATCHES}</value>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#FSNAME}</macro>
+                        <value>{$VFS.FS.FSNAME.NOT_MATCHES}</value>
+                        <operator>NOT_MATCHES_REGEX</operator>
+                        <formulaid>D</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <description>HOST-RESOURCES-MIB::hrStorage discovery with storage filter.</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>{#FSNAME}: Space utilization</name>
+                     <type>CALCULATED</type>
+                     <key>vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <value_type>FLOAT</value_type>
+                     <units>%</units>
+                     <params>(last("vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]")/last("vfs.fs.total[hrStorageSize.{#SNMPINDEX}]"))*100</params>
+                     <description>Space utilization in % for {#FSNAME}</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#FSNAME}: Total space</name>
+                     <type>SNMPV1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
+                     <key>vfs.fs.total[hrStorageSize.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>MIB: HOST-RESOURCES-MIB&#13;
+The size of the storage represented by this entry, in units of hrStorageAllocationUnits.&#13;
+This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.&#13;
+For example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <preprocessing>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>{#ALLOC_UNITS}</params>
+                        </step>
+                     </preprocessing>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>{#FSNAME}: Used space</name>
+                     <type>SNMPV1</type>
+                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+                     <snmp_oid>1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
+                     <key>vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]</key>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>MIB: HOST-RESOURCES-MIB&#13;
+The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Filesystem {#FSNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <preprocessing>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>{#ALLOC_UNITS}</params>
+                        </step>
+                     </preprocessing>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
+                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                     <opdata>Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})</opdata>
+                     <priority>AVERAGE</priority>
+                     <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - The disk free space is less than 5G.&#13;
+ - The disk will be full in less than 24 hours.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
+(({Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})&lt;10G or {Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
+                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
+                     <opdata>Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})</opdata>
+                     <priority>WARNING</priority>
+                     <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - The disk free space is less than 10G.&#13;
+ - The disk will be full in less than 24 hours.</description>
+                     <manual_close>YES</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                           <expression>{Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
+(({Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})&lt;5G or {Template Module HOST-RESOURCES-MIB storage SNMPv1:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
+                        </dependency>
+                     </dependencies>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>{#FSNAME}: Disk space usage</name>
+                     <width>600</width>
+                     <height>340</height>
+                     <type>PIE</type>
+                     <show_3d>YES</show_3d>
+                     <graph_items>
+                        <graph_item>
+                           <color>969696</color>
+                           <calc_fnc>LAST</calc_fnc>
+                           <type>GRAPH_SUM</type>
+                           <item>
+                              <host>Template Module HOST-RESOURCES-MIB storage SNMPv1</host>
+                              <key>vfs.fs.total[hrStorageSize.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <color>C80000</color>
+                           <calc_fnc>LAST</calc_fnc>
+                           <item>
+                              <host>Template Module HOST-RESOURCES-MIB storage SNMPv1</host>
+                              <key>vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
+            </discovery_rule>
+         </discovery_rules>
+         <macros>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.MATCHES}</macro>
+               <value>.+</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSNAME.NOT_MATCHES}</macro>
+               <value>^(/dev|/sys|/run|/proc|.+/shm$)</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.MATCHES}</macro>
+               <value>.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.FSTYPE.NOT_MATCHES}</macro>
+               <value>CHANGE_IF_NEEDED</value>
+               <description>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
+               <value>80</value>
+            </macro>
+         </macros>
+      </template>
+   </templates>
+</zabbix_export>
