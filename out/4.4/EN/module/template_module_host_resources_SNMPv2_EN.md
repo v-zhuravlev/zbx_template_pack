@@ -30,7 +30,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Storage Discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter.</p>|SNMP|vfs.fs.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
+|Storage discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter.</p>|SNMP|vfs.fs.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -79,7 +79,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Memory Discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</p>|SNMP|vm.memory.discovery<p>**Filter**:</p>AND <p>- A: {#MEMTYPE} MATCHES_REGEX `{$MEMORY.TYPE.MATCHES}`</p><p>- B: {#MEMTYPE} NOT_MATCHES_REGEX `{$MEMORY.TYPE.NOT_MATCHES}`</p>|
+|Memory discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</p>|SNMP|vm.memory.discovery<p>**Filter**:</p>AND <p>- A: {#MEMTYPE} MATCHES_REGEX `{$MEMORY.TYPE.MATCHES}`</p><p>- B: {#MEMTYPE} NOT_MATCHES_REGEX `{$MEMORY.TYPE.NOT_MATCHES}`</p>|
 
 ## Items collected
 
@@ -125,7 +125,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|CPU Discovery|<p>HOST-RESOURCES-MIB::hrProcessorTable discovery</p>|SNMP|hrProcessorLoad.discovery|
+|CPU discovery|<p>HOST-RESOURCES-MIB::hrProcessorTable discovery</p>|SNMP|hrProcessorLoad.discovery|
 
 ## Items collected
 
