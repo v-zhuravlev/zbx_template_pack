@@ -429,79 +429,6 @@ https://nginx.org/en/docs/http/ngx_http_stub_status_module.html</description>
                </master_item>
             </item>
             <item>
-               <name>Nginx: Connections dropped per second</name>
-               <type>18</type>
-               <snmp_community/>
-               <snmp_oid/>
-               <key>nginx.connections.dropped.rate</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <trends>365d</trends>
-               <status>0</status>
-               <value_type>0</value_type>
-               <allowed_hosts/>
-               <units/>
-               <snmpv3_contextname/>
-               <snmpv3_securityname/>
-               <snmpv3_securitylevel>0</snmpv3_securitylevel>
-               <snmpv3_authprotocol>0</snmpv3_authprotocol>
-               <snmpv3_authpassphrase/>
-               <snmpv3_privprotocol>0</snmpv3_privprotocol>
-               <snmpv3_privpassphrase/>
-               <params/>
-               <ipmi_sensor/>
-               <authtype>0</authtype>
-               <username/>
-               <password/>
-               <publickey/>
-               <privatekey/>
-               <port/>
-               <description>The total number of dropped client connections.</description>
-               <inventory_link>0</inventory_link>
-               <applications>
-                  <application>
-                     <name>Nginx</name>
-                  </application>
-               </applications>
-               <valuemap/>
-               <logtimefmt/>
-               <preprocessing>
-                  <step>
-                     <type>21</type>
-                     <params>var a = value.match(/server accepts handled requests\s+([0-9]+) ([0-9]+) ([0-9]+)/)
-if (a) {
-    return a[1]-a[2]
-}</params>
-                  </step>
-                  <step>
-                     <type>10</type>
-                     <params/>
-                  </step>
-               </preprocessing>
-               <jmx_endpoint/>
-               <timeout>3s</timeout>
-               <url/>
-               <query_fields/>
-               <posts/>
-               <status_codes>200</status_codes>
-               <follow_redirects>1</follow_redirects>
-               <post_type>0</post_type>
-               <http_proxy/>
-               <headers/>
-               <retrieve_mode>0</retrieve_mode>
-               <request_method>0</request_method>
-               <output_format>0</output_format>
-               <allow_traps>0</allow_traps>
-               <ssl_cert_file/>
-               <ssl_key_file/>
-               <ssl_key_password/>
-               <verify_peer>0</verify_peer>
-               <verify_host>0</verify_host>
-               <master_item>
-                  <key>web.page.get["{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PATH}","{$NGINX.STUB_STATUS.PORT}"]</key>
-               </master_item>
-            </item>
-            <item>
                <name>Nginx: Connections handled per second</name>
                <type>18</type>
                <snmp_community/>
@@ -1513,34 +1440,6 @@ Zabbix has not received data for items for the last 30 minutes.</description>
          <description>Last value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>1</manual_close>
-         <dependencies>
-            <dependency>
-               <name>Nginx: Process is not running</name>
-               <expression>{Template App Nginx by Zabbix agent:proc.num[nginx].last()}=0</expression>
-               <recovery_expression/>
-            </dependency>
-            <dependency>
-               <name>Nginx: Service is down</name>
-               <expression>{Template App Nginx by Zabbix agent:net.tcp.service[http,"{$NGINX.STUB_STATUS.HOST}","{$NGINX.STUB_STATUS.PORT}"].last()}=0</expression>
-               <recovery_expression/>
-            </dependency>
-         </dependencies>
-         <tags/>
-      </trigger>
-      <trigger>
-         <expression>{Template App Nginx by Zabbix agent:nginx.connections.dropped.rate.min(5m)} &gt; {$NGINX.DROP_RATE.MAX.WARN}</expression>
-         <recovery_mode>0</recovery_mode>
-         <recovery_expression/>
-         <name>Nginx: High connections drop rate (more than {$NGINX.DROP_RATE.MAX.WARN} for 5m)</name>
-         <correlation_mode>0</correlation_mode>
-         <correlation_tag/>
-         <url/>
-         <status>0</status>
-         <priority>2</priority>
-         <description>Current rate: {ITEM.LASTVALUE1}&#13;
-The dropping rate connections is greater than {$NGINX.DROP_RATE.MAX.WARN} for the last 5 minutes.</description>
-         <type>0</type>
-         <manual_close>0</manual_close>
          <dependencies>
             <dependency>
                <name>Nginx: Process is not running</name>
