@@ -3,7 +3,7 @@
 
 ## Overview
 
-For Zabbix version: 4.2  
+For Zabbix version: 4.4  
 
 ## Setup
 
@@ -55,7 +55,7 @@ Please report any issues with the template at https://support.zabbix.com
 
 ## Overview
 
-For Zabbix version: 4.2  
+For Zabbix version: 4.4  
 
 ## Setup
 
@@ -103,7 +103,7 @@ Please report any issues with the template at https://support.zabbix.com
 
 ## Overview
 
-For Zabbix version: 4.2  
+For Zabbix version: 4.4  
 
 ## Setup
 
@@ -147,7 +147,7 @@ Please report any issues with the template at https://support.zabbix.com
 
 ## Overview
 
-For Zabbix version: 4.2  
+For Zabbix version: 4.4  
 
 ## Setup
 

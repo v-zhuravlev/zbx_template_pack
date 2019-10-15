@@ -15,8 +15,12 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|90|
-|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|80|
+|{$VFS.FS.FSNAME.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.+`|
+|{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
+|{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*(\.4|\.9|hrStorageFixedDisk|hrStorageFlashMemory)$`|
+|{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_IF_NEEDED`|
+|{$VFS.FS.PUSED.MAX.CRIT}|<p>-</p>|`90`|
+|{$VFS.FS.PUSED.MAX.WARN}|<p>-</p>|`80`|
 
 ## Template links
 
@@ -26,25 +30,22 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Storage Discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter</p>|SNMP|storage.discovery<p>**Filter**:</p>OR <p>- B: {#STORAGE_TYPE} MATCHES_REGEX `.+(4|9)`</p><p>- A: {#STORAGE_TYPE} MATCHES_REGEX `.+(hrStorageFixedDisk|hrStorageFlashMemory)`</p>|
+|Storage discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with storage filter.</p>|SNMP|vfs.fs.discovery[snmp]<p>**Filter**:</p>AND <p>- A: {#FSTYPE} MATCHES_REGEX `{$VFS.FS.FSTYPE.MATCHES}`</p><p>- B: {#FSTYPE} NOT_MATCHES_REGEX `{$VFS.FS.FSTYPE.NOT_MATCHES}`</p><p>- C: {#FSNAME} MATCHES_REGEX `{$VFS.FS.FSNAME.MATCHES}`</p><p>- D: {#FSNAME} NOT_MATCHES_REGEX `{$VFS.FS.FSNAME.NOT_MATCHES}`</p>|
 
 ## Items collected
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Storage|{#SNMPVALUE}: Used space|<p>Used storage in Bytes</p>|CALCULATED|vfs.fs.used[storageUsed.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vfs.fs.units.used[hrStorageUsed.{#SNMPINDEX}]")*last("vfs.fs.units[hrStorageAllocationUnits.{#SNMPINDEX}]"))`|
-|Storage|{#SNMPVALUE}: Total space|<p>Total space in Bytes</p>|CALCULATED|vfs.fs.total[storageTotal.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vfs.fs.units.total[hrStorageSize.{#SNMPINDEX}]")*last("vfs.fs.units[hrStorageAllocationUnits.{#SNMPINDEX}]"))`|
-|Storage|{#SNMPVALUE}: Space utilization|<p>Space utilization in % for {#SNMPVALUE}</p>|CALCULATED|vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vfs.fs.units.used[hrStorageUsed.{#SNMPINDEX}]")/last("vfs.fs.units.total[hrStorageSize.{#SNMPINDEX}]"))*100`|
-|Zabbix_raw_items|{#SNMPVALUE}: Storage units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size, in bytes, of the data objects allocated from this pool.</p><p>If this entry is monitoring sectors, blocks, buffers, or packets, for example,</p><p>this number will commonly be greater than one.  Otherwise this number will typically be one.</p>|SNMP|vfs.fs.units[hrStorageAllocationUnits.{#SNMPINDEX}]|
-|Zabbix_raw_items|{#SNMPVALUE}: Used storage in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vfs.fs.units.used[hrStorageUsed.{#SNMPINDEX}]|
-|Zabbix_raw_items|{#SNMPVALUE}: Total space in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.</p>|SNMP|vfs.fs.units.total[hrStorageSize.{#SNMPINDEX}]|
+|Storage|{#FSNAME}: Used space|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
+|Storage|{#FSNAME}: Total space|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main storage allocated to a buffer pool might be modified or the amount of disk space allocated to virtual storage might be modified.</p>|SNMP|vfs.fs.total[hrStorageSize.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
+|Storage|{#FSNAME}: Space utilization|<p>Space utilization in % for {#FSNAME}</p>|CALCULATED|vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vfs.fs.used[hrStorageUsed.{#SNMPINDEX}]")/last("vfs.fs.total[hrStorageSize.{#SNMPINDEX}]"))*100`|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|{#SNMPVALUE}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#SNMPVALUE}"}%)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#SNMPVALUE}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 5G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.CRIT:"{#SNMPVALUE}"} and (({Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|AVERAGE|<p>Manual close: YES</p>|
-|{#SNMPVALUE}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"{#SNMPVALUE}"}%)|<p>Last value: {ITEM.LASTVALUE1}.</p><p>Space used: {ITEM.VALUE3} of {ITEM.VALUE2} ({ITEM.VALUE1}), time left till full: < 24h.</p><p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#SNMPVALUE}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 10G.</p><p> - The disk will be full in less than 24hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.WARN:"{#SNMPVALUE}"} and (({Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.total[storageTotal.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.used[storageUsed.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- {#SNMPVALUE}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#SNMPVALUE}"}%)</p>|
+|{#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)|<p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 5G.</p><p> - The disk will be full in less than 24 hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and (({Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})<5G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|AVERAGE|<p>Manual close: YES</p>|
+|{#FSNAME}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)|<p>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.</p><p> Second condition should be one of the following:</p><p> - The disk free space is less than 10G.</p><p> - The disk will be full in less than 24 hours.</p>|`{TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].last()}>{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and (({Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Module HOST-RESOURCES-MIB storage SNMPv2:vfs.fs.used[hrStorageUsed.{#SNMPINDEX}].last()})<10G or {TEMPLATE_NAME:vfs.fs.pused[storageUsedPercentage.{#SNMPINDEX}].timeleft(1h,,100)}<1d)`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- {#FSNAME}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</p>|
 
 ## Feedback
 
@@ -66,7 +67,9 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$MEMORY.UTIL.MAX}|<p>-</p>|90|
+|{$MEMORY.TYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*(\.2|hrStorageRam)$`|
+|{$MEMORY.TYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level if you need to filter out results.</p>|`CHANGE_IF_NEEDED`|
+|{$MEMORY.UTIL.MAX}|<p>The warning threshold of the "Physical memory: Memory utilization" item.</p>|`90`|
 
 ## Template links
 
@@ -76,24 +79,21 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Memory Discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</p>|SNMP|memory.discovery<p>**Filter**:</p>OR <p>- B: {#STORAGE_TYPE} MATCHES_REGEX `.+2$`</p><p>- A: {#STORAGE_TYPE} MATCHES_REGEX `.+hrStorageRam`</p>|
+|Memory discovery|<p>HOST-RESOURCES-MIB::hrStorage discovery with memory filter</p>|SNMP|vm.memory.discovery<p>**Filter**:</p>AND <p>- A: {#MEMTYPE} MATCHES_REGEX `{$MEMORY.TYPE.MATCHES}`</p><p>- B: {#MEMTYPE} NOT_MATCHES_REGEX `{$MEMORY.TYPE.NOT_MATCHES}`</p>|
 
 ## Items collected
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Memory|#{#SNMPINDEX}: Used memory|<p>Used memory in Bytes</p>|CALCULATED|vm.memory.used[memoryUsed.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}]")*last("vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]"))`|
-|Memory|#{#SNMPINDEX}: Total memory|<p>Total memory in Bytes</p>|CALCULATED|vm.memory.total[memoryTotal.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]")*last("vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]"))`|
-|Memory|#{#SNMPINDEX}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`(last("vm.memory.used[memoryUsed.{#SNMPINDEX}]")/last("vm.memory.total[memoryTotal.{#SNMPINDEX}]"))*100`|
-|Zabbix_raw_items|#{#SNMPINDEX}: Memory units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size, in bytes, of the data objects allocated from this pool.</p><p>If this entry is monitoring sectors, blocks, buffers, or packets, for example,</p><p>this number will commonly be greater than one. Otherwise this number will typically be one.</p>|SNMP|vm.memory.units[hrStorageAllocationUnits.{#SNMPINDEX}]|
-|Zabbix_raw_items|#{#SNMPINDEX}: Used memory in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vm.memory.units.used[hrStorageUsed.{#SNMPINDEX}]|
-|Zabbix_raw_items|#{#SNMPINDEX}: Total memory in units|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</p>|SNMP|vm.memory.units.total[hrStorageSize.{#SNMPINDEX}]|
+|Memory|{#MEMNAME}: Used memory|<p>MIB: HOST-RESOURCES-MIB</p><p>The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</p>|SNMP|vm.memory.used[hrStorageUsed.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
+|Memory|{#MEMNAME}: Total memory|<p>MIB: HOST-RESOURCES-MIB</p><p>The size of the storage represented by this entry, in units of hrStorageAllocationUnits.</p><p>This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.</p><p>For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</p>|SNMP|vm.memory.total[hrStorageSize.{#SNMPINDEX}]<p>**Preprocessing**:</p><p>- MULTIPLIER: `{#ALLOC_UNITS}`</p>|
+|Memory|{#MEMNAME}: Memory utilization|<p>Memory utilization in %</p>|CALCULATED|vm.memory.util[memoryUsedPercentage.{#SNMPINDEX}]<p>**Expression**:</p>`last("vm.memory.used[hrStorageUsed.{#SNMPINDEX}]")/last("vm.memory.total[hrStorageSize.{#SNMPINDEX}]")*100`|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|#{#SNMPINDEX}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:vm.memory.pused[memoryUsedPercentage.{#SNMPINDEX}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|{#MEMNAME}: High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:vm.memory.util[memoryUsedPercentage.{#SNMPINDEX}].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 
 ## Feedback
 
@@ -115,7 +115,7 @@ For Zabbix version: 4.0
 
 |Name|Description|Default|
 |----|-----------|-------|
-|{$CPU.UTIL.CRIT}|<p>-</p>|90|
+|{$CPU.UTIL.CRIT}|<p>-</p>|`90`|
 
 ## Template links
 
@@ -125,7 +125,7 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|CPU Discovery|<p>HOST-RESOURCES-MIB::hrProcessorTable discovery</p>|SNMP|hrProcessorLoad.discovery|
+|CPU discovery|<p>HOST-RESOURCES-MIB::hrProcessorTable discovery</p>|SNMP|hrProcessorLoad.discovery|
 
 ## Items collected
 
@@ -137,7 +137,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>Last value: {ITEM.LASTVALUE1}.</p>|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 
