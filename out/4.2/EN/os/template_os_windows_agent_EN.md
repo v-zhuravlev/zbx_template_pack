@@ -18,7 +18,7 @@ For Zabbix version: 4.2
 |{$CPU.INTERRUPT.CRIT.MAX}|<p>The critical threshold of the % Interrupt Time counter.</p>|`50`|
 |{$CPU.PRIV.CRIT.MAX}|<p>The threshold of the % Privileged Time counter.</p>|`30`|
 |{$CPU.QUEUE.CRIT.MAX}|<p>The threshold of the Processor Queue Length counter.</p>|`3`|
-|{$CPU.UTIL.CRIT}|<p>The critical threshold of the CPU utilisation in %.</p>|`90`|
+|{$CPU.UTIL.CRIT}|<p>The critical threshold of the CPU utilization in %.</p>|`90`|
 
 ## Template links
 
@@ -131,8 +131,8 @@ For Zabbix version: 4.2
 |{$VFS.FS.FSNAME.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^(/dev|/sys|/run|/proc|.+/shm$)`|
 |{$VFS.FS.FSTYPE.MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`.*`|
 |{$VFS.FS.FSTYPE.NOT_MATCHES}|<p>This macro is used in filesystems discovery. Can be overridden on the host or linked template level.</p>|`^\s$`|
-|{$VFS.FS.PUSED.MAX.CRIT}|<p>The critical threshold of the filesystem utilisation in percent.</p>|`90`|
-|{$VFS.FS.PUSED.MAX.WARN}|<p>The warning threshold of the filesystem utilisation in percent.</p>|`80`|
+|{$VFS.FS.PUSED.MAX.CRIT}|<p>The critical threshold of the filesystem utilization in percent.</p>|`90`|
+|{$VFS.FS.PUSED.MAX.WARN}|<p>The warning threshold of the filesystem utilization in percent.</p>|`80`|
 
 ## Template links
 
@@ -342,7 +342,7 @@ This template was tested on:
 
 ## Setup
 
-Install Zabbix agent to Windows OS according to Zabbix documentation.
+Install Zabbix agent on Windows OS according to Zabbix documentation.
 
 
 ## Zabbix configuration

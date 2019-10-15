@@ -40,13 +40,13 @@ There are no template links in this template.
 |Memory|Available memory|<p>Please note that memory utilization is a rough estimate, since memory available is calculated as free+buffers+cached, which is not 100% accurate, but the best we can get using SNMP.</p>|CALCULATED|vm.memory.available[snmp]<p>**Expression**:</p>`last("vm.memory.free[memAvailReal.0]")+last("vm.memory.buffers[memBuffer.0]")+last("vm.memory.cached[memCached.0]")`|
 |Memory|Total swap space|<p>MIB: UCD-SNMP-MIB</p><p>The total amount of swap space configured for this host.</p>|SNMP|system.swap.total[memTotalSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
 |Memory|Free swap space|<p>MIB: UCD-SNMP-MIB</p><p>The amount of swap space currently unused or available.</p>|SNMP|system.swap.free[memAvailSwap.0]<p>**Preprocessing**:</p><p>- MULTIPLIER: `1024`</p>|
-|Memory|Free swap space in %|<p>-</p>|CALCULATED|system.swap.pfree[snmp]<p>**Expression**:</p>`last("system.swap.free[memAvailSwap.0]")/last("system.swap.total[memTotalSwap.0]")*100`|
+|Memory|Free swap space in %|<p>The free space size of swap volume/file in percent.</p>|CALCULATED|system.swap.pfree[snmp]<p>**Expression**:</p>`last("system.swap.free[memAvailSwap.0]")/last("system.swap.total[memTotalSwap.0]")*100`|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:vm.memory.util[snmp].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>There is little free memory.</p>|`{TEMPLATE_NAME:vm.memory.util[snmp].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 |Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})|<p>-</p>|`{TEMPLATE_NAME:vm.memory.available[snmp].min(5m)}<{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory SNMPv2:vm.memory.total[memTotalReal.0].last()}>0`|AVERAGE||
 |High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.pfree[snmp].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template Module Linux memory SNMPv2:system.swap.total[memTotalSwap.0].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 
@@ -160,7 +160,7 @@ There are no template links in this template.
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].min(5m)}/{Template Module Linux CPU SNMPv2:system.cpu.num[snmp].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN} and {Template Module Linux CPU SNMPv2:system.cpu.load.avg5[laLoad.2].last()}>0 and {Template Module Linux CPU SNMPv2:system.cpu.load.avg15[laLoad.3].last()}>0`|AVERAGE||
-|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU load is too much.</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 

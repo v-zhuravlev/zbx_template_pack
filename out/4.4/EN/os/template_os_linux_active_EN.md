@@ -52,7 +52,7 @@ There are no template links in this template.
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load[all,avg1].min(5m)}/{Template Module Linux CPU by Zabbix agent active:system.cpu.num.last()}>{$LOAD_AVG_PER_CPU.MAX.WARN} and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg5].last()}>0 and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg15].last()}>0`|AVERAGE||
-|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util.min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU load is too much.</p>|`{TEMPLATE_NAME:system.cpu.util.min(5m)}>{$CPU.UTIL.CRIT}`|WARNING|<p>**Depends on**:</p><p>- Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</p>|
 
 ## Feedback
 
@@ -149,15 +149,15 @@ There are no template links in this template.
 |Memory|Memory utilization|<p>Memory used percentage is calculated as (100-pavailable)</p>|ZABBIX_ACTIVE|vm.memory.size[pavailable]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return (100-value);`</p>|
 |Memory|Total memory|<p>Total memory in Bytes</p>|ZABBIX_ACTIVE|vm.memory.size[total]|
 |Memory|Available memory|<p>Available memory, in Linux, available = free + buffers + cache. On other platforms calculation may vary. See also: https://www.zabbix.com/documentation/current/manual/appendix/items/vm.memory.size_params</p>|ZABBIX_ACTIVE|vm.memory.size[available]|
-|Memory|Total swap space|<p>-</p>|ZABBIX_ACTIVE|system.swap.size[,total]|
-|Memory|Free swap space|<p>-</p>|ZABBIX_ACTIVE|system.swap.size[,free]|
-|Memory|Free swap space in %|<p>-</p>|ZABBIX_ACTIVE|system.swap.size[,pfree]|
+|Memory|Total swap space|<p>The total space size of swap volume/file in bytes.</p>|ZABBIX_ACTIVE|system.swap.size[,total]|
+|Memory|Free swap space|<p>The free space size of swap volume/file in bytes.</p>|ZABBIX_ACTIVE|system.swap.size[,free]|
+|Memory|Free swap space in %|<p>The free space size of swap volume/file in percent.</p>|ZABBIX_ACTIVE|system.swap.size[,pfree]|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:vm.memory.size[pavailable].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>There is little free memory.</p>|`{TEMPLATE_NAME:vm.memory.size[pavailable].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE|<p>**Depends on**:</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 |Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})|<p>-</p>|`{TEMPLATE_NAME:vm.memory.size[available].min(5m)}<{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory by Zabbix agent active:vm.memory.size[total].last()}>0`|AVERAGE||
 |High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)|<p>This trigger is ignored, if there is no swap configured</p>|`{TEMPLATE_NAME:system.swap.size[,pfree].min(5m)}<{$SWAP.PFREE.MIN.WARN} and {Template Module Linux memory by Zabbix agent active:system.swap.size[,total].last()}>0`|WARNING|<p>**Depends on**:</p><p>- High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)</p><p>- Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</p>|
 
@@ -204,8 +204,8 @@ There are no template links in this template.
 |Storage|{#DEVNAME}: Disk write rate|<p>w/s. The number (after merges) of write requests completed per second for the device.</p>|DEPENDENT|vfs.dev.write.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][7]`</p><p>- CHANGE_PER_SECOND|
 |Storage|{#DEVNAME}: Disk read request avg waiting time (r_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.read.await[{#DEVNAME}]<p>**Expression**:</p>`(last("vfs.dev.read.time.rate[{#DEVNAME}]")/(last("vfs.dev.read.rate[{#DEVNAME}]")+(last("vfs.dev.read.rate[{#DEVNAME}]")=0)))*1000*(last("vfs.dev.read.rate[{#DEVNAME}]") > 0)`|
 |Storage|{#DEVNAME}: Disk write request avg waiting time (w_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.write.await[{#DEVNAME}]<p>**Expression**:</p>`(last("vfs.dev.write.time.rate[{#DEVNAME}]")/(last("vfs.dev.write.rate[{#DEVNAME}]")+(last("vfs.dev.write.rate[{#DEVNAME}]")=0)))*1000*(last("vfs.dev.write.rate[{#DEVNAME}]") > 0)`|
-|Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>-</p>|DEPENDENT|vfs.dev.queue_size[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][13]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
-|Storage|{#DEVNAME}: Disk utilization|<p>-</p>|DEPENDENT|vfs.dev.util[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][12]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.1`</p>|
+|Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>Current Disk Queue Length is the number of requests outstanding on the disk at the time the performance data is collected.</p>|DEPENDENT|vfs.dev.queue_size[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][13]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
+|Storage|{#DEVNAME}: Disk utilization|<p>This performance counter is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</p>|DEPENDENT|vfs.dev.util[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][12]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.1`</p>|
 |Zabbix_raw_items|Get /proc/diskstats|<p>-</p>|ZABBIX_ACTIVE|vfs.file.contents[/proc/diskstats]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var parsed = value.split("\n").reduce(function(acc, x, i) {   parts = x.trim().split(/ +/)   acc["values"][parts[2]] = parts   acc["lld"].push({"{#DEVNAME}":parts[2]})   return acc; }, {"values":{}, "lld": []}); return JSON.stringify(parsed);`</p>|
 |Zabbix_raw_items|{#DEVNAME}: Disk read time (rate)|<p>Rate of total read time counter. Used in r_await calculation</p>|DEPENDENT|vfs.dev.read.time.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][6]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
 |Zabbix_raw_items|{#DEVNAME}: Disk write time (rate)|<p>Rate of total write time counter. Used in w_await calculation</p>|DEPENDENT|vfs.dev.write.time.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][10]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
@@ -281,7 +281,7 @@ Please report any issues with the template at https://support.zabbix.com
 
 ## Known Issues
 
-- Description: High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth.
+- Description: High interface utilization trigger is removed since currently it is not possible to retrieve interface speed to determine the max bandwidth.
 
 # Template Module Linux generic by Zabbix agent active
 
@@ -315,7 +315,7 @@ There are no template links in this template.
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
 |General|System boot time|<p>-</p>|ZABBIX_ACTIVE|system.boottime<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
-|General|System local time|<p>-</p>|ZABBIX_ACTIVE|system.localtime|
+|General|System local time|<p>System local time of host.</p>|ZABBIX_ACTIVE|system.localtime|
 |General|System name|<p>System host name.</p>|ZABBIX_ACTIVE|system.hostname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |General|System description|<p>The information as normally returned by 'uname -a'.</p>|ZABBIX_ACTIVE|system.uname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |General|Number of logged in users|<p>Number of users who are currently logged in.</p>|ZABBIX_ACTIVE|system.users.num|
@@ -324,16 +324,16 @@ There are no template links in this template.
 |General|Number of processes|<p>-</p>|ZABBIX_ACTIVE|proc.num|
 |General|Number of running processes|<p>-</p>|ZABBIX_ACTIVE|proc.num[,,run]|
 |Inventory|Operating system|<p>-</p>|ZABBIX_ACTIVE|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Inventory|Operating system architecture|<p>-</p>|ZABBIX_ACTIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system architecture|<p>Operating system architecture of host.</p>|ZABBIX_ACTIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Software installed|<p>-</p>|ZABBIX_ACTIVE|system.sw.packages<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Security|Checksum of /etc/passwd|<p>-</p>|ZABBIX_ACTIVE|vfs.file.cksum[/etc/passwd]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
-|Status|System uptime|<p>-</p>|ZABBIX_ACTIVE|system.uptime|
+|Status|System uptime|<p>System uptime in 'N days, hh:mm:ss' format.</p>|ZABBIX_ACTIVE|system.uptime|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|System time is out of sync (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>-</p>|`{TEMPLATE_NAME:system.localtime.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
+|System time is out of sync (diff with Zabbix server > {$SYSTEM.FUZZYTIME.MAX}s)|<p>The host system time is different from the Zabbix server time.</p>|`{TEMPLATE_NAME:system.localtime.fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0`|WARNING|<p>Manual close: YES</p>|
 |Systen name has changed (new name: {ITEM.VALUE})|<p>System name has changed. Ack to close.</p>|`{TEMPLATE_NAME:system.hostname.diff()}=1 and {TEMPLATE_NAME:system.hostname.strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |Configured max number of open filedescriptors is too low (< {$KERNEL.MAXFILES.MIN})|<p>-</p>|`{TEMPLATE_NAME:kernel.maxfiles.last()}<{$KERNEL.MAXFILES.MIN}`|INFO||
 |Configured max number of processes is too low (< {$KERNEL.MAXPROC.MIN})|<p>-</p>|`{TEMPLATE_NAME:kernel.maxproc.last()}<{$KERNEL.MAXPROC.MIN}`|INFO|<p>**Depends on**:</p><p>- Getting closer to process limit (over 80% used)</p>|
@@ -355,7 +355,7 @@ New official Linux template. Requires agent of Zabbix 3.0.14, 3.4.5 and 4.0.0 or
 
 ## Setup
 
-Install Zabbix agent to Linux OS according to Zabbix documentation.
+Install Zabbix agent on Linux OS according to Zabbix documentation.
 
 ## Zabbix configuration
 
