@@ -400,6 +400,7 @@ and&#13;
                      <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <opdata>In: {ITEM.VALUE1}, out: {ITEM.VALUE3}, speed: {ITEM.VALUE2}</opdata>
                      <priority>WARNING</priority>
+                     <description>The network interface is loaded too much.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -506,8 +507,7 @@ and {Template Module Interfaces Windows SNMPv2:net.if.out.errors[ifOutErrors.{#S
             </macro>
             <macro>
                <macro>{$NET.IF.IFADMINSTATUS.MATCHES}</macro>
-               <value>^.*</value>
-               <description>Ignore notPresent(6)</description>
+               <value>^.*$</value>
             </macro>
             <macro>
                <macro>{$NET.IF.IFADMINSTATUS.NOT_MATCHES}</macro>
@@ -528,7 +528,7 @@ and {Template Module Interfaces Windows SNMPv2:net.if.out.errors[ifOutErrors.{#S
             </macro>
             <macro>
                <macro>{$NET.IF.IFDESCR.NOT_MATCHES}</macro>
-               <value>CHANGE_IF_NEEDED</value>
+               <value>Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer|isatap|ISATAP</value>
             </macro>
             <macro>
                <macro>{$NET.IF.IFNAME.MATCHES}</macro>
