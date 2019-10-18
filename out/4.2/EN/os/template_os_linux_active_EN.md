@@ -315,7 +315,7 @@ There are no template links in this template.
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
 |General|System boot time|<p>-</p>|ZABBIX_ACTIVE|system.boottime<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
-|General|System local time|<p>System local time of host.</p>|ZABBIX_ACTIVE|system.localtime|
+|General|System local time|<p>System local time of the host.</p>|ZABBIX_ACTIVE|system.localtime|
 |General|System name|<p>System host name.</p>|ZABBIX_ACTIVE|system.hostname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |General|System description|<p>The information as normally returned by 'uname -a'.</p>|ZABBIX_ACTIVE|system.uname<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |General|Number of logged in users|<p>Number of users who are currently logged in.</p>|ZABBIX_ACTIVE|system.users.num|
@@ -324,7 +324,7 @@ There are no template links in this template.
 |General|Number of processes|<p>-</p>|ZABBIX_ACTIVE|proc.num|
 |General|Number of running processes|<p>-</p>|ZABBIX_ACTIVE|proc.num[,,run]|
 |Inventory|Operating system|<p>-</p>|ZABBIX_ACTIVE|system.sw.os<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Inventory|Operating system architecture|<p>Operating system architecture of host.</p>|ZABBIX_ACTIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Inventory|Operating system architecture|<p>Operating system architecture of the host.</p>|ZABBIX_ACTIVE|system.sw.arch<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Inventory|Software installed|<p>-</p>|ZABBIX_ACTIVE|system.sw.packages<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Security|Checksum of /etc/passwd|<p>-</p>|ZABBIX_ACTIVE|vfs.file.cksum[/etc/passwd]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |Status|System uptime|<p>System uptime in 'N days, hh:mm:ss' format.</p>|ZABBIX_ACTIVE|system.uptime|
