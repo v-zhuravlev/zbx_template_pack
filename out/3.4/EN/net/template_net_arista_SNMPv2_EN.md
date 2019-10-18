@@ -22,6 +22,7 @@ No specific Zabbix configuration is required.
 |Name|Description|Default|
 |----|-----------|-------|
 |{$FAN_CRIT_STATUS}|<p>-</p>|`3`|
+|{$MEMORY.NAME.NOT_MATCHES}|<p>Filter is overriden to ignore RAM(Cache) and RAM(Buffers) memory objects.</p>|`(Buffer|Cache)`|
 |{$PSU_CRIT_STATUS}|<p>-</p>|`2`|
 |{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
 |{$TEMP_CRIT}|<p>-</p>|`60`|

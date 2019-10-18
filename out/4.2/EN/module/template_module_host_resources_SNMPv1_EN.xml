@@ -494,6 +494,18 @@ Template tooling version used: 0.33</description>
                         <operator>9</operator>
                         <formulaid>B</formulaid>
                      </condition>
+                     <condition>
+                        <macro>{#MEMNAME}</macro>
+                        <value>{$MEMORY.NAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#MEMNAME}</macro>
+                        <value>{$MEMORY.NAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>D</formulaid>
+                     </condition>
                   </conditions>
                </filter>
                <lifetime>30d</lifetime>
@@ -530,7 +542,11 @@ Template tooling version used: 0.33</description>
                      <description>MIB: HOST-RESOURCES-MIB&#13;
 The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.</description>
                      <inventory_link>0</inventory_link>
-                     <applications/>
+                     <applications>
+                        <application>
+                           <name>Memory</name>
+                        </application>
+                     </applications>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing>
@@ -542,11 +558,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                         </step>
                      </preprocessing>
                      <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>{#MEMNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
+                     <application_prototypes/>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -600,7 +612,11 @@ The size of the storage represented by this entry, in units of hrStorageAllocati
 This object is writable to allow remote configuration of the size of the storage area in those cases where such an operation makes sense and is possible on the underlying system.&#13;
 For example, the amount of main memory allocated to a buffer pool might be modified or the amount of disk space allocated to virtual memory might be modified.</description>
                      <inventory_link>0</inventory_link>
-                     <applications/>
+                     <applications>
+                        <application>
+                           <name>Memory</name>
+                        </application>
+                     </applications>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing>
@@ -612,11 +628,7 @@ For example, the amount of main memory allocated to a buffer pool might be modif
                         </step>
                      </preprocessing>
                      <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>{#MEMNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
+                     <application_prototypes/>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -667,16 +679,16 @@ For example, the amount of main memory allocated to a buffer pool might be modif
                      <port/>
                      <description>Memory utilization in %</description>
                      <inventory_link>0</inventory_link>
-                     <applications/>
+                     <applications>
+                        <application>
+                           <name>Memory</name>
+                        </application>
+                     </applications>
                      <valuemap/>
                      <logtimefmt/>
                      <preprocessing/>
                      <jmx_endpoint/>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>{#MEMNAME}</name>
-                        </application_prototype>
-                     </application_prototypes>
+                     <application_prototypes/>
                      <timeout>3s</timeout>
                      <url/>
                      <query_fields/>
@@ -777,6 +789,14 @@ The system is running out of free memory.</description>
          </discovery_rules>
          <httptests/>
          <macros>
+            <macro>
+               <macro>{$MEMORY.NAME.MATCHES}</macro>
+               <value>.*</value>
+            </macro>
+            <macro>
+               <macro>{$MEMORY.NAME.NOT_MATCHES}</macro>
+               <value>CHANGE_IF_NEEDED</value>
+            </macro>
             <macro>
                <macro>{$MEMORY.TYPE.MATCHES}</macro>
                <value>.*(\.2|hrStorageRam)$</value>
