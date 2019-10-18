@@ -181,7 +181,7 @@ For Zabbix version: 4.4
 |----|-----------|-------|
 |{$VFS.DEV.DEVNAME.MATCHES}|<p>This macro is used in physical disks discovery. Can be overridden on the host or linked template level.</p>|`.*`|
 |{$VFS.DEV.DEVNAME.NOT_MATCHES}|<p>This macro is used in physical disks discovery. Can be overridden on the host or linked template level.</p>|`_Total`|
-|{$VFS.DEV.UTIL.MAX.WARN}|<p>The warning threshold of disk time utilasation in percent.</p>|`95`|
+|{$VFS.DEV.UTIL.MAX.WARN}|<p>The warning threshold of disk time utilization in percent.</p>|`95`|
 
 ## Template links
 
