@@ -82,6 +82,7 @@ return JSON.stringify(parsed);</params>
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <description>Current average disk queue, the number of requests outstanding on the disk at the time the performance data is collected.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -187,6 +188,7 @@ return JSON.stringify(parsed);</params>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
                      <units>%</units>
+                     <description>This item is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -526,6 +528,7 @@ return (100 - value)</params>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
                      <priority>WARNING</priority>
+                     <description>CPU utilization is too high. The system might be slow to respond.</description>
                      <dependencies>
                         <dependency>
                            <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
@@ -1048,7 +1051,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                   <trigger>
                      <expression>{diff()}=1 and {strlen()}&gt;0</expression>
                      <recovery_mode>NONE</recovery_mode>
-                     <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+                     <name>System name has changed (new name: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
                      <description>System name has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
@@ -1060,6 +1063,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <key>system.localtime</key>
                <history>7d</history>
                <units>unixtime</units>
+               <description>System local time of the host.</description>
                <applications>
                   <application>
                      <name>General</name>
@@ -1070,6 +1074,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <expression>{fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
                      <name>System time is out of sync (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
                      <priority>WARNING</priority>
+                     <description>The host system time is different from the Zabbix server time.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -1081,6 +1086,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <history>2w</history>
                <trends>0</trends>
                <value_type>CHAR</value_type>
+               <description>Operating system architecture of the host.</description>
                <applications>
                   <application>
                      <name>Inventory</name>
@@ -1122,7 +1128,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+                           <name>System name has changed (new name: {ITEM.VALUE})</name>
                            <expression>{Template Module Linux generic by Zabbix agent:system.hostname.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.hostname.strlen()}&gt;0</expression>
                         </dependency>
                      </dependencies>
@@ -1175,6 +1181,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <history>2w</history>
                <trends>0d</trends>
                <units>uptime</units>
+               <description>System uptime in 'N days, hh:mm:ss' format.</description>
                <applications>
                   <application>
                      <name>Status</name>
@@ -1231,7 +1238,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                            <expression>{Template Module Linux generic by Zabbix agent:system.sw.os.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.sw.os.strlen()}&gt;0</expression>
                         </dependency>
                         <dependency>
-                           <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+                           <name>System name has changed (new name: {ITEM.VALUE})</name>
                            <expression>{Template Module Linux generic by Zabbix agent:system.hostname.diff()}=1 and {Template Module Linux generic by Zabbix agent:system.hostname.strlen()}&gt;0</expression>
                         </dependency>
                      </dependencies>
@@ -1274,6 +1281,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <key>system.swap.size[,free]</key>
                <history>7d</history>
                <units>B</units>
+               <description>The free space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1286,6 +1294,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>%</units>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1297,6 +1306,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <key>system.swap.size[,total]</key>
                <history>7d</history>
                <units>B</units>
+               <description>The total space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1338,6 +1348,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
+                     <description>The system is running out of free memory.</description>
                      <dependencies>
                         <dependency>
                            <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
@@ -1382,7 +1393,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
          <name>Template Module Linux network interfaces by Zabbix agent</name>
          <description>Known Issues:&#13;
 &#13;
-  Description: High interface utilization trigger is removed, since current it is not possible to retrieve interface speed to determine the max bandwidth.&#13;
+  Description: High interface utilization trigger is removed since currently it is not possible to retrieve interface speed to determine the max bandwidth.&#13;
 &#13;
 Template tooling version used: 0.32</description>
          <groups>

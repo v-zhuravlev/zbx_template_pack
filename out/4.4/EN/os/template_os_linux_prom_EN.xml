@@ -15,7 +15,7 @@
 &#13;
 Known Issues:&#13;
 &#13;
-  Description: node_exporter v0.16.0 renamed many metrics. CPU utilisation for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter &lt; 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  &#13;
+  Description: node_exporter v0.16.0 renamed many metrics. CPU utilization for 'guest' and 'guest_nice' metrics are not supported in this template with node_exporter &lt; 0.16. Disk IO metrics are not supported. Other metrics provided as 'best effort'.  &#13;
  See https://github.com/prometheus/node_exporter/releases/tag/v0.16.0 for details.&#13;
   Version: below 0.16.0&#13;
 &#13;
@@ -779,6 +779,7 @@ return (100 - value)</params>
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
                      <priority>WARNING</priority>
+                     <description>CPU utilization is too high. The system might be slow to respond.</description>
                      <dependencies>
                         <dependency>
                            <name>Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)</name>
@@ -831,6 +832,7 @@ and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}&gt;0
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>unixtime</units>
+               <description>System local time of the host.</description>
                <applications>
                   <application>
                      <name>General</name>
@@ -851,6 +853,7 @@ and {Template OS Linux by Prom:system.cpu.load.avg15[node_exporter].last()}&gt;0
                      <expression>{fuzzytime({$SYSTEM.FUZZYTIME.MAX})}=0</expression>
                      <name>System time is out of sync (diff with Zabbix server &gt; {$SYSTEM.FUZZYTIME.MAX}s)</name>
                      <priority>WARNING</priority>
+                     <description>The host system time is different from the Zabbix server time.</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
@@ -888,7 +891,7 @@ nodename</params>
                   <trigger>
                      <expression>{diff()}=1 and {strlen()}&gt;0</expression>
                      <recovery_mode>NONE</recovery_mode>
-                     <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+                     <name>System name has changed (new name: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
                      <description>System name has changed. Ack to close.</description>
                      <manual_close>YES</manual_close>
@@ -903,6 +906,7 @@ nodename</params>
                <history>2w</history>
                <trends>0</trends>
                <value_type>CHAR</value_type>
+               <description>Operating system architecture of the host.</description>
                <applications>
                   <application>
                      <name>Inventory</name>
@@ -956,7 +960,7 @@ machine</params>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Systen name has changed (new name: {ITEM.VALUE})</name>
+                           <name>System name has changed (new name: {ITEM.VALUE})</name>
                            <expression>{Template OS Linux by Prom:system.name[node_exporter].diff()}=1 and {Template OS Linux by Prom:system.name[node_exporter].strlen()}&gt;0</expression>
                         </dependency>
                      </dependencies>
@@ -971,6 +975,7 @@ machine</params>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>B</units>
+               <description>The free space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -995,6 +1000,7 @@ machine</params>
                <value_type>FLOAT</value_type>
                <units>%</units>
                <params>last("system.swap.free[node_exporter]")/last("system.swap.total[node_exporter]")*100</params>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1009,6 +1015,7 @@ machine</params>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>B</units>
+               <description>The total space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1033,6 +1040,7 @@ machine</params>
                <history>2w</history>
                <trends>0d</trends>
                <units>uptime</units>
+               <description>System uptime in 'N days, hh:mm:ss' format.</description>
                <applications>
                   <application>
                      <name>Status</name>
@@ -1132,6 +1140,7 @@ return (Math.floor(Date.now()/1000)-Number(value));</params>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
+                     <description>The system is running out of free memory.</description>
                      <dependencies>
                         <dependency>
                            <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
@@ -1554,6 +1563,7 @@ and&#13;
                      <name>Interface {#IFNAME}({#IFALIAS}): High bandwidth usage ( &gt; {$IF.UTIL.MAX:"{#IFNAME}"}% )</name>
                      <opdata>In: {ITEM.LASTVALUE1}, out: {ITEM.LASTVALUE3}, speed: {ITEM.LASTVALUE2}</opdata>
                      <priority>WARNING</priority>
+                     <description>The network interface utilization is close to its estimated maximum bandwidth.</description>
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
@@ -1700,6 +1710,7 @@ and {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].max(5
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <description>Current average disk queue, the number of requests outstanding on the disk at the time the performance data is collected.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>
@@ -1800,6 +1811,7 @@ and {Template OS Linux by Prom:net.if.out.errors[node_exporter"{#IFNAME}"].max(5
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
                      <units>%</units>
+                     <description>This item is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</description>
                      <application_prototypes>
                         <application_prototype>
                            <name>Disk {#DEVNAME}</name>

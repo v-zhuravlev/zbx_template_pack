@@ -17,6 +17,9 @@ templates:
       - macro: "{$CPU.QUEUE.CRIT.MAX}"
         _description: The threshold of the Processor Queue Length counter.
         value: "3"
+      - macro: "{$CPU.UTIL.CRIT}"
+        _description: The critical threshold of the CPU utilization in %.
+        value: "90"
     #   - macro: "{$CPU.NUMBER.MATCHES}"
     #     _description: CPU index or number of CPU/CPU core.
     #     value: ^.+$
@@ -161,7 +164,7 @@ templates:
               - trigger.cpu.high
       #       - _id: system.cpu.util.avg
       #         _group: "CPU"
-      #         name: CPU utilisation, in %
+      #         name: CPU utilization, in %
       #         type: CALCULATED
       #         params: "( last(system.cpu.util[0]) +
       # last(system.cpu.util[1]) +
@@ -384,6 +387,12 @@ templates:
       - macro: "{$VFS.FS.FSDRIVETYPE.NOT_MATCHES}"
         value: "^\\s$"
         _description: "This macro is used in filesystems discovery. Can be overridden on the host or linked template level."
+      - macro: "{$VFS.FS.PUSED.MAX.CRIT}"
+        _description: "The critical threshold of the filesystem utilization in percent." 
+        value: "90"
+      - macro: "{$VFS.FS.PUSED.MAX.WARN}"
+        _description: "The warning threshold of the filesystem utilization in percent."
+        value: "80"
     discovery_rules:
       - name: "Mounted filesystem discovery"
         key: "vfs.fs.discovery"
@@ -442,10 +451,13 @@ templates:
       - ZABBIX_ACTIVE
     macros:
       - macro: "{$VFS.DEV.DEVNAME.MATCHES}"
+        _description: "This macro is used in physical disks discovery. Can be overridden on the host or linked template level."
         value: ".*"
       - macro: "{$VFS.DEV.DEVNAME.NOT_MATCHES}"
+        _description: "This macro is used in physical disks discovery. Can be overridden on the host or linked template level."
         value: "_Total"
       - macro: "{$VFS.DEV.UTIL.MAX.WARN}"
+        _description: "The warning threshold of disk time utilization in percent."
         value: "95"
     items:
       - _id: vfs.dev.get
@@ -456,8 +468,10 @@ templates:
         value_type: TEXT
         delay: "1m"
         history: "1h"
+        description: "Raw data of win32_perfformatteddata_perfdisk_physicaldisk."
     discovery_rules:
       - name: Physical disks discovery
+        description: "Discovery of installed physical disks."
         # key: net.if.discovery
         type: DEPENDENT
         key: "vfs.dev.discovery"
@@ -544,6 +558,7 @@ templates:
       - ZABBIX_ACTIVE
     macros:
       - macro: "{$SYSTEM.FUZZYTIME.MAX}"
+        _description: "The threshold for difference of system time in seconds."
         value: "60"
     items:
       - _prototype: "system.uptime"
@@ -580,6 +595,7 @@ templates:
         name: Number of processes
         type: ZABBIX_PASSIVE
         key: proc.num[]
+        description: "The number of processes."
       - _id: sys.threads
         _group: "General"
         name: Number of threads
@@ -607,7 +623,6 @@ templates:
       - macro: "{$NET.IF.IFNAME.NOT_MATCHES}"
         value: "Miniport|Virtual|Teredo|Kernel|Loopback|Bluetooth|HTTPS|6to4|QoS|Layer"
         _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
-
       - macro: "{$NET.IF.IFALIAS.MATCHES}"
         value: ".*"
         _description: "This macro is used in Network interface discovery. Can be overridden on the host or linked template level."
@@ -641,11 +656,13 @@ templates:
         value_type: "TEXT"
         delay: "1m"
         history: "1h"
+        description: "Raw data of win32_networkadapter."
     discovery_rules:
       - name: Network interfaces discovery
         type: DEPENDENT
         key: "net.if.discovery"
         master_item: "net.if.get"
+        description: "Discovery of installed network interfaces."
         preprocessing:
           - type: JAVASCRIPT
             params: |-
@@ -720,33 +737,33 @@ templates:
           - _prototype: "net.if.in"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
-            _vendor_description: ""
+            _vendor_description: "Incoming traffic on the network interface."
             key: 'net.if.in["{#IFNAME}"]'
           - _prototype: "net.if.out"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}"]'
-            _vendor_description: ""
+            _vendor_description: "Outgoing traffic on the network interface."
           - _prototype: "net.if.in.discards"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",dropped]'
-            _vendor_description: ""
+            _vendor_description: "The number of incoming packets dropped on the network interface."
           - _prototype: "net.if.out.discards"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",dropped]'
-            _vendor_description: ""
+            _vendor_description: "The number of outgoing packets dropped on the network interface."
           - _prototype: "net.if.in.errors"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",errors]'
-            _vendor_description: ""
+            _vendor_description: "The number of incoming packets with errors on the network interface."
           - _prototype: "net.if.out.errors"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",errors]'
-            _vendor_description: ""
+            _vendor_description: "The number of outgoing packets with errors on the network interface."
           - _prototype: "net.if.speed"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -757,7 +774,7 @@ templates:
                 params: '$[?(@.Name == "{#IFNAME}")].Speed.first()'
                 error_handler: CUSTOM_VALUE
                 error_handler_params: "0"
-            _vendor_description: ""
+            _vendor_description: "Estimated bandwidth of the network interface if any."
           - _prototype: "net.if.type"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -767,7 +784,7 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()'
-            _vendor_description: ""
+            _vendor_description: "The type of the network interface."
           - _prototype: net.if.status
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -777,7 +794,7 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()'
-            _vendor_description: ""
+            _vendor_description: "The operational status of the network interface."
     screens:
       - hsize: 1
         vsize: 1
@@ -802,7 +819,7 @@ templates:
       _overview: |
         New official Windows template. Requires agent of Zabbix 4.4 and newer.
       _setup: |
-        Install Zabbix agent to Windows OS according to Zabbix documentation.
+        Install Zabbix agent on Windows OS according to Zabbix documentation.
     templates:
       - Template Module Zabbix agent
       - Template Module Windows CPU by Zabbix agent

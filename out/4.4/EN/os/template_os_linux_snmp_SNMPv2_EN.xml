@@ -613,6 +613,7 @@ return (100 - value)
                            <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                            <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
                            <priority>WARNING</priority>
+                           <description>CPU utilization is too high. The system might be slow to respond.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -1057,6 +1058,7 @@ The amount of swap space currently unused or available.</description>
                <value_type>FLOAT</value_type>
                <units>%</units>
                <params>last("system.swap.free[memAvailSwap.0]")/last("system.swap.total[memTotalSwap.0]")*100</params>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1205,6 +1207,7 @@ Total memory in Bytes</description>
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
+                     <description>The system is running out of free memory.</description>
                      <dependencies>
                         <dependency>
                            <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>

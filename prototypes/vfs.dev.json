@@ -2,6 +2,7 @@
 	{
 		"_id": "vfs.dev.read.rate",
 		"name": "Disk read rate",
+		"description": "Rate of read operations on the disk.",
 		"_group": "Storage",
 		"value_type": "FLOAT",
 		"graphs": [
@@ -24,6 +25,7 @@
 	{
 		"_id": "vfs.dev.write.rate",
 		"name": "Disk write rate",
+		"description": "Rate of write operations on the disk.",
 		"_group": "Storage",
 		"value_type": "FLOAT"
 	},
@@ -86,6 +88,7 @@
 	{
 		"_id": "vfs.dev.queue_size",
 		"name": "Disk average queue size (avgqu-sz)",
+		"description": "Current average disk queue, the number of requests outstanding on the disk at the time the performance data is collected.",
 		"_group": "Storage",
 		"update": "1m",
 		"value_type": "FLOAT",
@@ -108,6 +111,7 @@
 	{
 		"_id": "vfs.dev.util",
 		"name": "Disk utilization",
+		"description": "This item is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.",
 		"_group": "Storage",
 		"update": "1m",
 		"value_type": "FLOAT",
@@ -120,6 +124,7 @@
 		"priority": "WARNING",
 		"expression": "{TEMPLATE_NAME:METRIC.min(15m)}>{$VFS.DEV.UTIL.MAX.WARN}",
 		"manual_close": "YES",
+		"description": "The disk appears to be under heavy load",
 		"_depends_on": [
 			"trigger.vfs.dev.await"
 		]
