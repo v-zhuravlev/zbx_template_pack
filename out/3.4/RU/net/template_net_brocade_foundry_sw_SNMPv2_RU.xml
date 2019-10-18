@@ -14,9 +14,12 @@
       <template>
          <template>Template Module Brocade_Foundry Performance SNMPv2</template>
          <name>Template Module Brocade_Foundry Performance SNMPv2</name>
-         <description>Template Module Brocade_Foundry Performance version: 0.15&#13;
+         <description>Template Module Brocade_Foundry Performance&#13;
+&#13;
 MIBs used:&#13;
-FOUNDRY-SN-AGENT-MIB</description>
+FOUNDRY-SN-AGENT-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -37,8 +40,8 @@ FOUNDRY-SN-AGENT-MIB</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1991.1.1.2.1.52.0</snmp_oid>
                <key>system.cpu.util[snAgGblCpuUtil1MinAvg.0]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -78,9 +81,9 @@ The statistics collection of 1 minute CPU utilization.</description>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1991.1.1.2.1.53.0</snmp_oid>
-               <key>vm.memory.pused[snAgGblDynMemUtil.0]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <key>vm.memory.util[snAgGblDynMemUtil.0]</key>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -122,11 +125,11 @@ For NI platforms, refer to snAgentBrdMemoryUtil100thPercent</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -136,15 +139,12 @@ For NI platforms, refer to snAgentBrdMemoryUtil100thPercent</description>
       <template>
          <template>Template Net Brocade_Foundry Nonstackable SNMPv2</template>
          <name>Template Net Brocade_Foundry Nonstackable SNMPv2</name>
-         <description>Template Net Brocade_Foundry Nonstackable version: 0.15&#13;
-Overview: For devices(old Foundry devices, MLXe and so on) that doesn't support Stackable SNMP Tables: snChasFan2Table, snChasPwrSupply2Table,snAgentTemp2Table -&#13;
-FOUNDRY-SN-AGENT-MIB::snChasFanTable, snChasPwrSupplyTable,snAgentTempTable are used instead.&#13;
-For example:&#13;
-The objects in table snChasPwrSupply2Table is not supported on the NetIron and the FastIron SX devices.&#13;
-snChasFan2Table is not supported on  on the NetIron devices.&#13;
-snAgentTemp2Table is not supported on old versions of MLXe&#13;
+         <description>Template Net Brocade_Foundry Nonstackable&#13;
+&#13;
 MIBs used:&#13;
-FOUNDRY-SN-AGENT-MIB</description>
+FOUNDRY-SN-AGENT-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -290,7 +290,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <key>sensor.psu.status[snChasPwrSupplyOperStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -338,7 +338,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -355,7 +355,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -413,7 +413,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <key>sensor.fan.status[snChasFanOperStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -461,7 +461,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -478,7 +478,7 @@ The version of the running software in the form'major.minor.maintenance[letters]
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -588,7 +588,7 @@ Temperature of the sensor represented by this row. Each unit is 0.5 degrees Cels
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -611,7 +611,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -628,7 +628,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -733,7 +733,7 @@ For those non-applicable management module, it returns no-such-name.</descriptio
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -756,7 +756,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -773,7 +773,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -832,15 +832,19 @@ This trigger uses temperature sensor values as well as temperature sensor status
       <template>
          <template>Template Net Brocade_Foundry Stackable SNMPv2</template>
          <name>Template Net Brocade_Foundry Stackable SNMPv2</name>
-         <description>Template Brocade_Foundry Stackable version: 0.15&#13;
-Overview: For devices(most of the IronWare Brocade devices) that support Stackable SNMP Tables in FOUNDRY-SN-AGENT-MIB: snChasFan2Table, snChasPwrSupply2Table,snAgentTemp2Table - so objects from all Stack members are provided.&#13;
+         <description>Template Brocade_Foundry Stackable&#13;
+&#13;
 MIBs used:&#13;
 FOUNDRY-SN-AGENT-MIB&#13;
 FOUNDRY-SN-STACKING-MIB&#13;
+&#13;
 Known Issues:&#13;
-description : Correct fan(returns fan status as 'other(1)' and temperature (returns 0) for the non-master Switches are not available in SNMP&#13;
-version : Version 08.0.40b and above&#13;
-device : ICX 7750 in stack</description>
+&#13;
+  Description: Correct fan(returns fan status as 'other(1)' and temperature (returns 0) for the non-master Switches are not available in SNMP&#13;
+  Version: Version 08.0.40b and above&#13;
+  Device: ICX 7750 in stack&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -945,7 +949,7 @@ The version of the running software in the form 'major.minor.maintenance[letters
                      <key>sensor.psu.status[snChasPwrSupply2OperStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -993,7 +997,7 @@ The version of the running software in the form 'major.minor.maintenance[letters
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1010,7 +1014,7 @@ The version of the running software in the form 'major.minor.maintenance[letters
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1068,7 +1072,7 @@ The version of the running software in the form 'major.minor.maintenance[letters
                      <key>sensor.fan.status[snChasFan2OperStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -1116,7 +1120,7 @@ The version of the running software in the form 'major.minor.maintenance[letters
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1133,7 +1137,7 @@ The version of the running software in the form 'major.minor.maintenance[letters
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1243,7 +1247,7 @@ Temperature of the sensor represented by this row. Each unit is 0.5 degrees Cels
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1266,7 +1270,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1283,7 +1287,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -1462,7 +1466,7 @@ The serial number of the chassis for each unit. If the serial number is unknown 
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
@@ -1580,7 +1584,7 @@ The serial number of the chassis for each unit. If the serial number is unknown 
                <type>0</type>
                <item>
                   <host>Template Module Brocade_Foundry Performance SNMPv2</host>
-                  <key>vm.memory.pused[snAgGblDynMemUtil.0]</key>
+                  <key>vm.memory.util[snAgGblDynMemUtil.0]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -1588,32 +1592,34 @@ The serial number of the chassis for each unit. If the serial number is unknown 
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Module Brocade_Foundry Performance SNMPv2:system.cpu.util[snAgGblCpuUtil1MinAvg.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Module Brocade_Foundry Performance SNMPv2:system.cpu.util[snAgGblCpuUtil1MinAvg.0].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Высокая загрузка процессора</name>
+         <name>Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <priority>2</priority>
+         <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Module Brocade_Foundry Performance SNMPv2:vm.memory.pused[snAgGblDynMemUtil.0].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Module Brocade_Foundry Performance SNMPv2:vm.memory.util[snAgGblDynMemUtil.0].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Мало свободной памяти ОЗУ</name>
+         <name>Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -1629,7 +1635,7 @@ The serial number of the chassis for each unit. If the serial number is unknown 
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>
@@ -1646,7 +1652,7 @@ The serial number of the chassis for each unit. If the serial number is unknown 
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>
@@ -1663,7 +1669,7 @@ The serial number of the chassis for each unit. If the serial number is unknown 
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>

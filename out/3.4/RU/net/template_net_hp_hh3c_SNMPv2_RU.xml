@@ -11,16 +11,19 @@
       <template>
          <template>Template Net HP Comware HH3C SNMPv2</template>
          <name>Template Net HP Comware HH3C SNMPv2</name>
-         <description>Template Net HP Comware (HH3C) version: 0.15&#13;
-Overview: http://certifiedgeek.weebly.com/blog/hp-comware-snmp-mib-for-cpu-memory-and-temperature&#13;
-http://www.h3c.com.hk/products___solutions/technology/system_management/configuration_example/200912/656451_57_0.htm&#13;
+         <description>Template Net HP Comware (HH3C)&#13;
+&#13;
 MIBs used:&#13;
 ENTITY-MIB&#13;
 HH3C-ENTITY-EXT-MIB&#13;
+&#13;
 Known Issues:&#13;
-description : No temperature sensors. All entities of them return 0 for HH3C-ENTITY-EXT-MIB::hh3cEntityExtTemperature&#13;
-version : 1910-48 Switch Software Version 5.20.99, Release 1116 Copyright(c)2010-2016 Hewlett Packard Enterprise Development LP&#13;
-device : HP 1910-48</description>
+&#13;
+  Description: No temperature sensors. All entities of them return 0 for HH3C-ENTITY-EXT-MIB::hh3cEntityExtTemperature&#13;
+  Version: 1910-48 Switch Software Version 5.20.99, Release 1116 Copyright(c)2010-2016 Hewlett Packard Enterprise Development LP&#13;
+  Device: HP 1910-48&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -99,8 +102,8 @@ device : HP 1910-48</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.25506.2.6.1.1.1.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[hh3cEntityExtCpuUsage.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -143,9 +146,9 @@ is not sensible with the number of CPU on the entity</description>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.25506.2.6.1.1.1.1.8.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[hh3cEntityExtMemUsage.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -185,32 +188,34 @@ percent of memory are used.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net HP Comware HH3C SNMPv2:system.cpu.util[hh3cEntityExtCpuUsage.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:system.cpu.util[hh3cEntityExtCpuUsage.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#MODULE_NAME}: Высокая загрузка процессора</name>
+                     <name>{#MODULE_NAME}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net HP Comware HH3C SNMPv2:vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:vm.memory.util[hh3cEntityExtMemUsage.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#MODULE_NAME}: Мало свободной памяти ОЗУ</name>
+                     <name>{#MODULE_NAME}: Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -277,7 +282,7 @@ percent of memory are used.</description>
                            <type>0</type>
                            <item>
                               <host>Template Net HP Comware HH3C SNMPv2</host>
-                              <key>vm.memory.pused[hh3cEntityExtMemUsage.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[hh3cEntityExtMemUsage.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -392,7 +397,7 @@ The temperature for the {#SNMPVALUE}.</description>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -415,7 +420,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -432,7 +437,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -490,7 +495,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <key>sensor.fan.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -540,7 +545,7 @@ fanError(41) means that the fan stops working.</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -599,7 +604,7 @@ fanError(41) means that the fan stops working.</description>
                      <key>sensor.psu.status[hh3cEntityExtErrorStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -650,7 +655,7 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -923,7 +928,7 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
@@ -940,8 +945,25 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net HP Comware HH3C SNMPv2:system.sw.os[entPhysicalSoftwareRev.{#SNMPINDEX}].diff()}=1 and {Template Net HP Comware HH3C SNMPv2:system.sw.os[entPhysicalSoftwareRev.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>{#ENT_NAME}: Operating system description has changed</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -956,7 +978,7 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -968,7 +990,7 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                <value>91</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -1033,55 +1055,55 @@ rpsError(61) means the Redundant Power Supply is in the state of fault.</descrip
                <newvalue>entityAbsent</newvalue>
             </mapping>
             <mapping>
-               <value>5</value>
+               <value>11</value>
                <newvalue>poeError</newvalue>
             </mapping>
             <mapping>
-               <value>6</value>
+               <value>21</value>
                <newvalue>stackError</newvalue>
             </mapping>
             <mapping>
-               <value>7</value>
+               <value>22</value>
                <newvalue>stackPortBlocked</newvalue>
             </mapping>
             <mapping>
-               <value>8</value>
+               <value>23</value>
                <newvalue>stackPortFailed</newvalue>
             </mapping>
             <mapping>
-               <value>9</value>
+               <value>31</value>
                <newvalue>sfpRecvError</newvalue>
             </mapping>
             <mapping>
-               <value>10</value>
+               <value>32</value>
                <newvalue>sfpSendError</newvalue>
             </mapping>
             <mapping>
-               <value>11</value>
+               <value>33</value>
                <newvalue>sfpBothError</newvalue>
             </mapping>
             <mapping>
-               <value>12</value>
+               <value>41</value>
                <newvalue>fanError</newvalue>
             </mapping>
             <mapping>
-               <value>13</value>
+               <value>51</value>
                <newvalue>psuError</newvalue>
             </mapping>
             <mapping>
-               <value>14</value>
+               <value>61</value>
                <newvalue>rpsError</newvalue>
             </mapping>
             <mapping>
-               <value>15</value>
+               <value>71</value>
                <newvalue>moduleFaulty</newvalue>
             </mapping>
             <mapping>
-               <value>16</value>
+               <value>81</value>
                <newvalue>sensorError</newvalue>
             </mapping>
             <mapping>
-               <value>17</value>
+               <value>91</value>
                <newvalue>hardwareFaulty</newvalue>
             </mapping>
          </mappings>

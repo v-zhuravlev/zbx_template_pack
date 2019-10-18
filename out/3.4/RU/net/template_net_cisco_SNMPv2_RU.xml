@@ -14,9 +14,12 @@
       <template>
          <template>Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2</template>
          <name>Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2</name>
-         <description>Template Cisco CISCO-MEMORY-POOL-MIB version: 0.15&#13;
+         <description>Template Cisco CISCO-MEMORY-POOL-MIB&#13;
+&#13;
 MIBs used:&#13;
-CISCO-MEMORY-POOL-MIB</description>
+CISCO-MEMORY-POOL-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -68,8 +71,8 @@ http://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.used[ciscoMemoryPoolUsed.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -107,13 +110,13 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <master_item_prototype/>
                   </item_prototype>
                   <item_prototype>
-                     <name>{#SNMPVALUE}: Available memory</name>
+                     <name>{#SNMPVALUE}: Free memory</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.9.9.48.1.1.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.free[ciscoMemoryPoolFree.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -155,9 +158,9 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>vm.memory.pused[vm.memory.pused.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[vm.memory.util.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -170,7 +173,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPINDEX}])/(last(vm.memory.free[ciscoMemoryPoolFree.{#SNMPINDEX}])+last(vm.memory.used[ciscoMemoryPoolUsed.{#SNMPINDEX}])))*100</params>
+                     <params>last("vm.memory.used[ciscoMemoryPoolUsed.{#SNMPINDEX}]")/(last("vm.memory.free[ciscoMemoryPoolFree.{#SNMPINDEX}]")+last("vm.memory.used[ciscoMemoryPoolUsed.{#SNMPINDEX}]"))*100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -195,16 +198,17 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2:vm.memory.pused[vm.memory.pused.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2:vm.memory.util[vm.memory.util.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
+                     <name>{#SNMPVALUE}: Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -239,7 +243,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                            <type>0</type>
                            <item>
                               <host>Template Module Cisco CISCO-MEMORY-POOL-MIB SNMPv2</host>
-                              <key>vm.memory.pused[vm.memory.pused.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[vm.memory.util.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -252,7 +256,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <httptests/>
          <macros>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -262,9 +266,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
       <template>
          <template>Template Module Cisco CISCO-PROCESS-MIB SNMPv2</template>
          <name>Template Module Cisco CISCO-PROCESS-MIB SNMPv2</name>
-         <description>Template Cisco CISCO-PROCESS-MIB version: 0.15&#13;
+         <description>Template Cisco CISCO-PROCESS-MIB&#13;
+&#13;
 MIBs used:&#13;
-CISCO-PROCESS-MIB</description>
+CISCO-PROCESS-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -319,8 +326,8 @@ In case of a single CPU, cpmCPUTotalTable has only one entry.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.9.9.109.1.1.1.1.8.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -360,16 +367,17 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-PROCESS-MIB SNMPv2:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Module Cisco CISCO-PROCESS-MIB SNMPv2:system.cpu.util[cpmCPUTotal5minRev.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: Высокая загрузка процессора</name>
+                     <name>#{#SNMPINDEX}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -417,7 +425,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -427,9 +435,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
       <template>
          <template>Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2</template>
          <name>Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2</name>
-         <description>Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 version: 0.15&#13;
+         <description>Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5&#13;
+&#13;
 MIBs used:&#13;
-CISCO-PROCESS-MIB</description>
+CISCO-PROCESS-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -484,8 +495,8 @@ In case of a single CPU, cpmCPUTotalTable has only one entry.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.9.9.109.1.1.1.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -529,16 +540,17 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Module Cisco CISCO-PROCESS-MIB IOS versions 12.0_3_T-12.2_3.5 SNMPv2:system.cpu.util[cpmCPUTotal5min.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Высокая загрузка процессора</name>
+                     <name>{#SNMPVALUE}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -586,7 +598,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -596,9 +608,12 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
       <template>
          <template>Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2</template>
          <name>Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2</name>
-         <description>Template Cisco OLD-CISCO-CPU-MIB version: 0.15&#13;
+         <description>Template Cisco OLD-CISCO-CPU-MIB&#13;
+&#13;
 MIBs used:&#13;
-OLD-CISCO-CPU-MIB</description>
+OLD-CISCO-CPU-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -616,8 +631,8 @@ OLD-CISCO-CPU-MIB</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.9.2.1.58</snmp_oid>
                <key>system.cpu.util[avgBusy5]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -658,7 +673,7 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -668,10 +683,13 @@ Reference: http://www.cisco.com/c/en/us/support/docs/ip/simple-network-managemen
       <template>
          <template>Template Module Cisco Inventory SNMPv2</template>
          <name>Template Module Cisco Inventory SNMPv2</name>
-         <description>Template Cisco Inventory version: 0.15&#13;
+         <description>Template Cisco Inventory&#13;
+&#13;
 MIBs used:&#13;
 ENTITY-MIB&#13;
-SNMPv2-MIB</description>
+SNMPv2-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -770,7 +788,7 @@ SNMPv2-MIB</description>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[sysDescr.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -913,7 +931,7 @@ SNMPv2-MIB</description>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
@@ -934,9 +952,12 @@ SNMPv2-MIB</description>
       <template>
          <template>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</template>
          <name>Template Module Cisco CISCO-ENVMON-MIB SNMPv2</name>
-         <description>Template Cisco CISCO-ENVMON-MIB version: 0.15&#13;
+         <description>Template Cisco CISCO-ENVMON-MIB&#13;
+&#13;
 MIBs used:&#13;
-CISCO-ENVMON-MIB</description>
+CISCO-ENVMON-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1039,7 +1060,7 @@ The current measurement of the test point being instrumented.</description>
                      <key>sensor.temp.status[ciscoEnvMonTemperatureState.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -1090,7 +1111,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1121,7 +1142,7 @@ or&#13;
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1138,7 +1159,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -1189,7 +1210,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <key>sensor.psu.status[ciscoEnvMonSupplyState.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -1237,7 +1258,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1254,7 +1275,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1312,7 +1333,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <key>sensor.fan.status[ciscoEnvMonFanState.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -1360,7 +1381,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1377,7 +1398,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -1469,11 +1490,15 @@ This trigger uses temperature sensor values as well as temperature sensor status
       <template>
          <template>Template Net Cisco IOS SNMPv2</template>
          <name>Template Net Cisco IOS SNMPv2</name>
-         <description>Template Cisco IOS Software releases 12.2(3.5) or later version: 0.15&#13;
+         <description>Template Cisco IOS Software releases 12.2(3.5) or later&#13;
+&#13;
 Known Issues:&#13;
-description : no if(in|out)(Errors|Discards) are available for vlan ifType&#13;
-version : IOS for example: 12.1(22)EA11, 15.4(3)M2&#13;
-device : C2911, C7600</description>
+&#13;
+  Description: no if(in|out)(Errors|Discards) are available for vlan ifType&#13;
+  Version: IOS for example: 12.1(22)EA11, 15.4(3)M2&#13;
+  Device: C2911, C7600&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -1512,7 +1537,9 @@ device : C2911, C7600</description>
       <template>
          <template>Template Net Cisco IOS versions 12.0_3_T-12.2_3.5 SNMPv2</template>
          <name>Template Net Cisco IOS versions 12.0_3_T-12.2_3.5 SNMPv2</name>
-         <description>Cisco IOS Software releases later to 12.0(3)T and prior to 12.2(3.5) version: 0.15</description>
+         <description>Cisco IOS Software releases later to 12.0(3)T and prior to 12.2(3.5)&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -1548,7 +1575,9 @@ device : C2911, C7600</description>
       <template>
          <template>Template Net Cisco IOS prior to 12.0_3_T SNMPv2</template>
          <name>Template Net Cisco IOS prior to 12.0_3_T SNMPv2</name>
-         <description>Cisco IOS Software releases prior to 12.0(3)T version: 0.15</description>
+         <description>Cisco IOS Software releases prior to 12.0(3)T&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -1615,16 +1644,17 @@ device : C2911, C7600</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2:system.cpu.util[avgBusy5].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Module Cisco OLD-CISCO-CPU-MIB SNMPv2:system.cpu.util[avgBusy5].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Высокая загрузка процессора</name>
+         <name>Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <priority>2</priority>
+         <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -1640,8 +1670,25 @@ device : C2911, C7600</description>
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Module Cisco Inventory SNMPv2:system.sw.os[sysDescr.0].diff()}=1 and {Template Module Cisco Inventory SNMPv2:system.sw.os[sysDescr.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>

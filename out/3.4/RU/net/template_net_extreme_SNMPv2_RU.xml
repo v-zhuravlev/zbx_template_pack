@@ -11,11 +11,14 @@
       <template>
          <template>Template Net Extreme EXOS SNMPv2</template>
          <name>Template Net Extreme EXOS SNMPv2</name>
-         <description>Template Extreme EXOS version: 0.15&#13;
+         <description>Template Extreme EXOS&#13;
+&#13;
 MIBs used:&#13;
 EXTREME-SOFTWARE-MONITOR-MIB&#13;
 EXTREME-SYSTEM-MIB&#13;
-ENTITY-MIB</description>
+ENTITY-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -48,8 +51,8 @@ ENTITY-MIB</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1916.1.32.1.2.0</snmp_oid>
                <key>system.cpu.util[extremeCpuMonitorTotalUtilization.0]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -135,7 +138,7 @@ Reference: https://gtacknowledge.extremenetworks.com/articles/Q_A/Does-EXOS-supp
                <key>sensor.temp.status[extremeOverTemperatureAlarm.0]</key>
                <delay>3m</delay>
                <history>2w</history>
-               <trends>0</trends>
+               <trends>0d</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
@@ -340,7 +343,7 @@ Temperature status of testpoint: Device</description>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.1916.1.1.1.13.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[extremePrimarySoftwareRev.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -418,9 +421,9 @@ This will also be reported in RMON2 probeSoftwareRev if this is the software ima
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1916.1.32.2.2.1.3.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.free[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.available[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -467,8 +470,8 @@ Total amount of free memory in Kbytes in the system.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1916.1.32.2.2.1.2.{#SNMPINDEX}</snmp_oid>
                      <key>vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -514,9 +517,9 @@ Total amount of DRAM in Kbytes in the system.</description>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
-                     <key>vm.memory.pused[{#SNMPVALUE}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[{#SNMPVALUE}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -529,7 +532,7 @@ Total amount of DRAM in Kbytes in the system.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>((last(vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}])-last(vm.memory.free[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]))/last(vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]))*100</params>
+                     <params>(last("vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]") - last("vm.memory.available[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]")) / last("vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]") * 100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -554,16 +557,17 @@ Total amount of DRAM in Kbytes in the system.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Extreme EXOS SNMPv2:vm.memory.pused[{#SNMPVALUE}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Extreme EXOS SNMPv2:vm.memory.util[{#SNMPVALUE}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
+                     <name>#{#SNMPVALUE}: Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -571,6 +575,50 @@ Total amount of DRAM in Kbytes in the system.</description>
                   </trigger_prototype>
                </trigger_prototypes>
                <graph_prototypes>
+                  <graph_prototype>
+                     <name>#{#SNMPVALUE}: Memory usage</name>
+                     <width>900</width>
+                     <height>200</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>0</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>0</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>1</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>2</drawtype>
+                           <color>1A7C11</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Net Extreme EXOS SNMPv2</host>
+                              <key>vm.memory.total[extremeMemoryMonitorSystemTotal.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>5</drawtype>
+                           <color>2774A4</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>2</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Net Extreme EXOS SNMPv2</host>
+                              <key>vm.memory.available[extremeMemoryMonitorSystemFree.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
                   <graph_prototype>
                      <name>#{#SNMPVALUE}: Memory utilization</name>
                      <width>900</width>
@@ -598,7 +646,7 @@ Total amount of DRAM in Kbytes in the system.</description>
                            <type>0</type>
                            <item>
                               <host>Template Net Extreme EXOS SNMPv2</host>
-                              <key>vm.memory.pused[{#SNMPVALUE}]</key>
+                              <key>vm.memory.util[{#SNMPVALUE}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -647,7 +695,7 @@ Total amount of DRAM in Kbytes in the system.</description>
                      <key>sensor.psu.status[extremePowerSupplyStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -696,7 +744,7 @@ Status of the power supply {#SNMPVALUE}</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -748,7 +796,7 @@ Status of the power supply {#SNMPVALUE}</description>
                      <key>sensor.fan.status[extremeFanOperational.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -791,7 +839,7 @@ Operational status of a cooling fan.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.1916.1.1.1.9.1.4.{#SNMPINDEX}</snmp_oid>
                      <key>sensor.fan.speed[extremeFanSpeed.{#SNMPINDEX}]</key>
-                     <delay>5m</delay>
+                     <delay>1m</delay>
                      <history>30d</history>
                      <trends>365d</trends>
                      <status>0</status>
@@ -840,7 +888,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -856,7 +904,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -864,7 +912,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</description>
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -938,16 +986,17 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Net Extreme EXOS SNMPv2:system.cpu.util[extremeCpuMonitorTotalUtilization.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net Extreme EXOS SNMPv2:system.cpu.util[extremeCpuMonitorTotalUtilization.0].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Высокая загрузка процессора</name>
+         <name>Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <priority>2</priority>
+         <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -963,7 +1012,7 @@ The speed (RPM) of a cooling fan in the fantray {#SNMPVALUE}</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -990,7 +1039,7 @@ or&#13;
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -1007,7 +1056,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <description>Current value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -1023,7 +1072,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>
@@ -1040,8 +1089,25 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net Extreme EXOS SNMPv2:system.sw.os[extremePrimarySoftwareRev.0].diff()}=1 and {Template Net Extreme EXOS SNMPv2:system.sw.os[extremePrimarySoftwareRev.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>

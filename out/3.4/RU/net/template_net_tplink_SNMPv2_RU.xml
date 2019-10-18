@@ -11,20 +11,23 @@
       <template>
          <template>Template Net TP-LINK SNMPv2</template>
          <name>Template Net TP-LINK SNMPv2</name>
-         <description>Template Net TP-LINK JetStream version: 0.15&#13;
-Overview: Link to MIBs: http://www.tp-linkru.com/download/T2600G-28TS.html#MIBs_Files&#13;
-Sample device overview page: http://www.tp-linkru.com/products/details/cat-39_T2600G-28TS.html#overview&#13;
-emulation page(web): http://www.tp-linkru.com/resources/simulator/T2600G-28TS(UN)_1.0/Index.htm&#13;
+         <description>Template Net TP-LINK JetStream&#13;
+&#13;
 MIBs used:&#13;
 TPLINK-SYSINFO-MIB&#13;
 TPLINK-SYSMONITOR-MIB&#13;
+&#13;
 Known Issues:&#13;
-description : default sysLocation, sysName and sysContact is not filled with proper data. Real hostname and location can be found only in private branch(TPLINK-SYSINFO-MIB). Please check whether this problem exists in the latest firware: http://www.tp-linkru.com/download/T2600G-28TS.html#Firmware&#13;
-version : 2.0.0 Build 20170628 Rel.55184(Beta)&#13;
-device : T2600G-28TS 2.0&#13;
-description : The Serial number of the product(tpSysInfoSerialNum) is missing in HW versions prior to V2_170323&#13;
-version : prior to version V2_170323&#13;
-device : T2600G-28TS 2.0</description>
+&#13;
+  Description: default sysLocation, sysName and sysContact is not filled with proper data. Real hostname and location can be found only in private branch(TPLINK-SYSINFO-MIB). Please check whether this problem exists in the latest firware: http://www.tp-linkru.com/download/T2600G-28TS.html#Firmware&#13;
+  Version: 2.0.0 Build 20170628 Rel.55184(Beta)&#13;
+  Device: T2600G-28TS 2.0&#13;
+&#13;
+  Description: The Serial number of the product(tpSysInfoSerialNum) is missing in HW versions prior to V2_170323&#13;
+  Version: prior to version V2_170323&#13;
+  Device: T2600G-28TS 2.0&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -250,8 +253,8 @@ The hardware version of the product.</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.11863.6.4.1.1.1.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[tpSysMonitorCpu1Minute.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -291,16 +294,17 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net TP-LINK SNMPv2:system.cpu.util[tpSysMonitorCpu1Minute.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net TP-LINK SNMPv2:system.cpu.util[tpSysMonitorCpu1Minute.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPVALUE}: Высокая загрузка процессора</name>
+                     <name>#{#SNMPVALUE}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -381,9 +385,9 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.11863.6.4.1.2.1.1.2.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[tpSysMonitorMemoryUtilization.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[tpSysMonitorMemoryUtilization.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -423,16 +427,17 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net TP-LINK SNMPv2:vm.memory.pused[tpSysMonitorMemoryUtilization.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net TP-LINK SNMPv2:vm.memory.util[tpSysMonitorMemoryUtilization.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
+                     <name>#{#SNMPVALUE}: Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -467,7 +472,7 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
                            <type>0</type>
                            <item>
                               <host>Template Net TP-LINK SNMPv2</host>
-                              <key>vm.memory.pused[tpSysMonitorMemoryUtilization.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[tpSysMonitorMemoryUtilization.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -480,11 +485,11 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
          </macros>
@@ -511,7 +516,7 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>
@@ -528,7 +533,7 @@ Reference: http://www.tp-link.com/faq-1330.html</description>
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>

@@ -11,10 +11,13 @@
       <template>
          <template>Template Net QTech QSW SNMPv2</template>
          <name>Template Net QTech QSW SNMPv2</name>
-         <description>Template Net QTech QSW version: 0.15&#13;
+         <description>Template Net QTech QSW&#13;
+&#13;
 MIBs used:&#13;
 QTECH-MIB&#13;
-ENTITY-MIB</description>
+ENTITY-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -48,8 +51,8 @@ ENTITY-MIB</description>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.27514.100.1.11.10.0</snmp_oid>
                <key>system.cpu.util[switchCpuUsage.0]</key>
-               <delay>180</delay>
-               <history>30</history>
+               <delay>60</delay>
+               <history>7</history>
                <trends>365</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -92,8 +95,8 @@ ENTITY-MIB</description>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.27514.100.1.11.7.0</snmp_oid>
                <key>vm.memory.used[switchMemoryBusy.0]</key>
-               <delay>180</delay>
-               <history>30</history>
+               <delay>60</delay>
+               <history>7</history>
                <trends>365</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -136,8 +139,8 @@ Used memory in Bytes</description>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.27514.100.1.11.6.0</snmp_oid>
                <key>vm.memory.total[switchMemorySize.0]</key>
-               <delay>180</delay>
-               <history>30</history>
+               <delay>60</delay>
+               <history>7</history>
                <trends>365</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -179,9 +182,9 @@ Total memory in Bytes</description>
                <snmp_community/>
                <multiplier>0</multiplier>
                <snmp_oid/>
-               <key>vm.memory.pused[vm.memory.pused.0]</key>
-               <delay>180</delay>
-               <history>30</history>
+               <key>vm.memory.util[vm.memory.util.0]</key>
+               <delay>60</delay>
+               <history>7</history>
                <trends>365</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -197,7 +200,7 @@ Total memory in Bytes</description>
                <snmpv3_privpassphrase/>
                <formula>0</formula>
                <delay_flex/>
-               <params>(last(vm.memory.used[switchMemoryBusy.0])/last(vm.memory.total[switchMemorySize.0]))*100</params>
+               <params>last("vm.memory.used[switchMemoryBusy.0]")/last("vm.memory.total[switchMemorySize.0]")*100</params>
                <ipmi_sensor/>
                <data_type>0</data_type>
                <authtype>0</authtype>
@@ -394,7 +397,7 @@ Total memory in Bytes</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <multiplier>0</multiplier>
                <snmp_oid>1.3.6.1.4.1.27514.100.1.3.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[sysSoftwareVersion.0]</key>
                <delay>3600</delay>
                <history>14</history>
                <trends>0</trends>
@@ -568,7 +571,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -670,7 +673,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -684,7 +687,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
          </discovery_rules>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -692,7 +695,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
                <value>1</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -786,7 +789,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
                <type>0</type>
                <item>
                   <host>Template Net QTech QSW SNMPv2</host>
-                  <key>vm.memory.pused[vm.memory.pused.0]</key>
+                  <key>vm.memory.util[vm.memory.util.0]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -794,32 +797,34 @@ Temperature readings of testpoint: __RESOURCE__</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Net QTech QSW SNMPv2:system.cpu.util[switchCpuUsage.0].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+         <expression>{Template Net QTech QSW SNMPv2:system.cpu.util[switchCpuUsage.0].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Высокая загрузка процессора</name>
+         <name>Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
-         <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <priority>2</priority>
+         <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
          <tags/>
       </trigger>
       <trigger>
-         <expression>{Template Net QTech QSW SNMPv2:vm.memory.pused[vm.memory.pused.0].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Net QTech QSW SNMPv2:vm.memory.util[vm.memory.util.0].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Мало свободной памяти ОЗУ</name>
+         <name>Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -835,7 +840,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>
@@ -852,8 +857,25 @@ Temperature readings of testpoint: __RESOURCE__</description>
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net QTech QSW SNMPv2:system.sw.os[sysSoftwareVersion.0].diff()}=1 and {Template Net QTech QSW SNMPv2:system.sw.os[sysSoftwareVersion.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
@@ -869,7 +891,7 @@ Temperature readings of testpoint: __RESOURCE__</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -892,7 +914,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -909,7 +931,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <description>Current value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>

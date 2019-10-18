@@ -11,17 +11,22 @@
       <template>
          <template>Template Net Mikrotik SNMPv2</template>
          <name>Template Net Mikrotik SNMPv2</name>
-         <description>Template Net Mikrotik version: 0.15&#13;
+         <description>Template Net Mikrotik&#13;
+&#13;
 MIBs used:&#13;
 HOST-RESOURCES-MIB&#13;
 MIKROTIK-MIB&#13;
+&#13;
 Known Issues:&#13;
-description : Doesn't have ifHighSpeed filled. fixed in more recent versions&#13;
-version : RouterOS 6.28 or lower&#13;
-device : &#13;
-description : Doesn't have any temperature sensors&#13;
-version : RouterOS 6.38.5&#13;
-device : Mikrotik 941-2nD, Mikrotik 951G-2HnD</description>
+&#13;
+  Description: Doesn't have ifHighSpeed filled. fixed in more recent versions&#13;
+  Version: RouterOS 6.28 or lower&#13;
+&#13;
+  Description: Doesn't have any temperature sensors&#13;
+  Version: RouterOS 6.38.5&#13;
+  Device: Mikrotik 941-2nD, Mikrotik 951G-2HnD&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -51,8 +56,8 @@ device : Mikrotik 941-2nD, Mikrotik 951G-2HnD</description>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.25.2.3.1.6.65536</snmp_oid>
                <key>vm.memory.used[hrStorageUsed.Memory]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -116,8 +121,8 @@ The amount of the storage represented by this entry that is allocated, in units 
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.25.2.3.1.5.65536</snmp_oid>
                <key>vm.memory.total[hrStorageSize.Memory]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>3</value_type>
@@ -188,9 +193,9 @@ might be modified.</description>
                <type>15</type>
                <snmp_community/>
                <snmp_oid/>
-               <key>vm.memory.pused[memoryUsedPercentage.Memory]</key>
-               <delay>3m</delay>
-               <history>30d</history>
+               <key>vm.memory.util[memoryUsedPercentage.Memory]</key>
+               <delay>1m</delay>
+               <history>7d</history>
                <trends>365d</trends>
                <status>0</status>
                <value_type>0</value_type>
@@ -203,7 +208,7 @@ might be modified.</description>
                <snmpv3_authpassphrase/>
                <snmpv3_privprotocol>0</snmpv3_privprotocol>
                <snmpv3_privpassphrase/>
-               <params>(last(vm.memory.used[hrStorageUsed.Memory])/last(vm.memory.total[hrStorageSize.Memory]))*100</params>
+               <params>last("vm.memory.used[hrStorageUsed.Memory]")/last("vm.memory.total[hrStorageSize.Memory]")*100</params>
                <ipmi_sensor/>
                <authtype>0</authtype>
                <username/>
@@ -313,7 +318,7 @@ Reference: http://wiki.mikrotik.com/wiki/Manual:SNMP</description>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.4.1.14988.1.1.4.4.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[mtxrLicVersion.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -550,7 +555,7 @@ Current firmware version</description>
          </items>
          <discovery_rules>
             <discovery_rule>
-               <name>CPU Discovery</name>
+               <name>CPU discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]</snmp_oid>
@@ -587,8 +592,8 @@ Current firmware version</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -645,16 +650,17 @@ The average, over the last minute, of the percentage of time that this processor
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Mikrotik SNMPv2:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net Mikrotik SNMPv2:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: Высокая загрузка процессора</name>
+                     <name>#{#SNMPINDEX}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -716,7 +722,7 @@ The average, over the last minute, of the percentage of time that this processor
                <verify_host>0</verify_host>
             </discovery_rule>
             <discovery_rule>
-               <name>Temperature Discovery CPU</name>
+               <name>Temperature CPU discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.11]</snmp_oid>
@@ -826,7 +832,7 @@ Since temperature of CPU is not available on all Mikrotik hardware, this is done
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -849,7 +855,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -866,7 +872,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -895,7 +901,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <verify_host>0</verify_host>
             </discovery_rule>
             <discovery_rule>
-               <name>Storage Discovery</name>
+               <name>Storage discovery</name>
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]</snmp_oid>
@@ -945,8 +951,8 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}</snmp_oid>
                      <key>vfs.fs.used[hrStorageSize.{#SNMPINDEX}]</key>
-                     <delay>5m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -1011,8 +1017,8 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}</snmp_oid>
                      <key>vfs.fs.total[hrStorageSize.{#SNMPINDEX}]</key>
-                     <delay>5m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
@@ -1080,13 +1086,13 @@ might be modified.</description>
                      <master_item/>
                   </item_prototype>
                   <item_prototype>
-                     <name>Disk-{#SNMPINDEX}: Storage utilization</name>
+                     <name>Disk-{#SNMPINDEX}: Space utilization</name>
                      <type>15</type>
                      <snmp_community/>
                      <snmp_oid/>
                      <key>vfs.fs.pused[hrStorageSize.{#SNMPINDEX}]</key>
-                     <delay>5m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -1099,7 +1105,7 @@ might be modified.</description>
                      <snmpv3_authpassphrase/>
                      <snmpv3_privprotocol>0</snmpv3_privprotocol>
                      <snmpv3_privpassphrase/>
-                     <params>(last(vfs.fs.used[hrStorageSize.{#SNMPINDEX}])/last(vfs.fs.total[hrStorageSize.{#SNMPINDEX}]))*100</params>
+                     <params>(last("vfs.fs.used[hrStorageSize.{#SNMPINDEX}]")/last("vfs.fs.total[hrStorageSize.{#SNMPINDEX}]"))*100</params>
                      <ipmi_sensor/>
                      <authtype>0</authtype>
                      <username/>
@@ -1107,7 +1113,7 @@ might be modified.</description>
                      <publickey/>
                      <privatekey/>
                      <port/>
-                     <description>Storage utilization in % for Disk-{#SNMPINDEX}</description>
+                     <description>Space utilization in % for Disk-{#SNMPINDEX}</description>
                      <inventory_link>0</inventory_link>
                      <applications>
                         <application>
@@ -1142,45 +1148,101 @@ might be modified.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and&#13;
+(({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})&lt;5G or {Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Disk-{#SNMPINDEX}: Мало свободного места</name>
+                     <name>Disk-{#SNMPINDEX}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - The disk free space is less than 5G.&#13;
+ - The disk will be full in less than 24 hours.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_WARN}</expression>
+                     <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"} and&#13;
+(({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})&lt;10G or {Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>Disk-{#SNMPINDEX}: Мало свободного места</name>
+                     <name>Disk-{#SNMPINDEX}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})&#13;
+Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}.&#13;
+ Second condition should be one of the following:&#13;
+ - The disk free space is less than 10G.&#13;
+ - The disk will be full in less than 24 hours.</description>
                      <type>0</type>
-                     <manual_close>0</manual_close>
+                     <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>Disk-{#SNMPINDEX}: Мало свободного места</name>
-                           <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].avg(5m)}&gt;{$STORAGE_UTIL_CRIT}</expression>
+                           <name>Disk-{#SNMPINDEX}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}%)</name>
+                           <expression>{Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and&#13;
+(({Template Net Mikrotik SNMPv2:vfs.fs.total[hrStorageSize.{#SNMPINDEX}].last()}-{Template Net Mikrotik SNMPv2:vfs.fs.used[hrStorageSize.{#SNMPINDEX}].last()})&lt;5G or {Template Net Mikrotik SNMPv2:vfs.fs.pused[hrStorageSize.{#SNMPINDEX}].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
                         </dependency>
                      </dependencies>
                      <tags/>
                   </trigger_prototype>
                </trigger_prototypes>
-               <graph_prototypes/>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Disk-{#SNMPINDEX}: Disk space usage</name>
+                     <width>600</width>
+                     <height>340</height>
+                     <yaxismin>0</yaxismin>
+                     <yaxismax>100</yaxismax>
+                     <show_work_period>1</show_work_period>
+                     <show_triggers>1</show_triggers>
+                     <type>2</type>
+                     <show_legend>1</show_legend>
+                     <show_3d>1</show_3d>
+                     <percent_left>0.0000</percent_left>
+                     <percent_right>0.0000</percent_right>
+                     <ymin_type_1>0</ymin_type_1>
+                     <ymax_type_1>0</ymax_type_1>
+                     <ymin_item_1>0</ymin_item_1>
+                     <ymax_item_1>0</ymax_item_1>
+                     <graph_items>
+                        <graph_item>
+                           <sortorder>0</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>969696</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>2</type>
+                           <item>
+                              <host>Template Net Mikrotik SNMPv2</host>
+                              <key>vfs.fs.total[hrStorageSize.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>0</drawtype>
+                           <color>C80000</color>
+                           <yaxisside>0</yaxisside>
+                           <calc_fnc>9</calc_fnc>
+                           <type>0</type>
+                           <item>
+                              <host>Template Net Mikrotik SNMPv2</host>
+                              <key>vfs.fs.used[hrStorageSize.{#SNMPINDEX}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <host_prototypes/>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -1205,20 +1267,12 @@ might be modified.</description>
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_CRIT}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
-               <macro>{$STORAGE_UTIL_WARN}</macro>
-               <value>80</value>
             </macro>
             <macro>
                <macro>{$TEMP_CRIT:"CPU"}</macro>
@@ -1239,6 +1293,14 @@ might be modified.</description>
             <macro>
                <macro>{$TEMP_WARN}</macro>
                <value>50</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.CRIT}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$VFS.FS.PUSED.MAX.WARN}</macro>
+               <value>80</value>
             </macro>
          </macros>
          <templates>
@@ -1280,7 +1342,7 @@ might be modified.</description>
                <type>0</type>
                <item>
                   <host>Template Net Mikrotik SNMPv2</host>
-                  <key>vm.memory.pused[memoryUsedPercentage.Memory]</key>
+                  <key>vm.memory.util[memoryUsedPercentage.Memory]</key>
                </item>
             </graph_item>
          </graph_items>
@@ -1288,16 +1350,17 @@ might be modified.</description>
    </graphs>
    <triggers>
       <trigger>
-         <expression>{Template Net Mikrotik SNMPv2:vm.memory.pused[memoryUsedPercentage.Memory].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+         <expression>{Template Net Mikrotik SNMPv2:vm.memory.util[memoryUsedPercentage.Memory].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
          <recovery_mode>0</recovery_mode>
          <recovery_expression/>
-         <name>Мало свободной памяти ОЗУ</name>
+         <name>Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
          <correlation_mode>0</correlation_mode>
          <correlation_tag/>
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>
@@ -1313,7 +1376,7 @@ might be modified.</description>
          <url/>
          <status>0</status>
          <priority>2</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -1336,7 +1399,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -1353,9 +1416,26 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>3</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+         <description>Current value: {ITEM.LASTVALUE1}</description>
          <type>0</type>
          <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net Mikrotik SNMPv2:system.sw.os[mtxrLicVersion.0].diff()}=1 and {Template Net Mikrotik SNMPv2:system.sw.os[mtxrLicVersion.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
          <dependencies/>
          <tags/>
       </trigger>
@@ -1369,7 +1449,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>
@@ -1386,7 +1466,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current value: {ITEM.LASTVALUE1}&#13;
 Версия прошивки изменилась. Подтвердите и закройте.</description>
          <type>0</type>
          <manual_close>1</manual_close>

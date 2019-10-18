@@ -11,9 +11,12 @@
       <template>
          <template>Template Net Dell Force S-Series SNMPv2</template>
          <name>Template Net Dell Force S-Series SNMPv2</name>
-         <description>Template Dell Force S-Series version: 0.15&#13;
+         <description>Template Dell Force S-Series&#13;
+&#13;
 MIBs used:&#13;
-F10-S-SERIES-CHASSIS-MIB</description>
+F10-S-SERIES-CHASSIS-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -79,8 +82,8 @@ F10-S-SERIES-CHASSIS-MIB</description>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.3.{#SNMPINDEX}</snmp_oid>
                      <key>system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -121,9 +124,9 @@ CPU utilization in percentage for last 1 minute.</description>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.6027.3.10.1.2.9.1.5.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -162,32 +165,34 @@ Total memory usage in percentage.</description>
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Dell Force S-Series SNMPv2:system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:system.cpu.util[chStackUnitCpuUtil1Min.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: Высокая загрузка процессора</name>
+                     <name>#{#SNMPINDEX}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Dell Force S-Series SNMPv2:vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>#{#SNMPINDEX}: Мало свободной памяти ОЗУ</name>
+                     <name>#{#SNMPINDEX}: Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -254,7 +259,7 @@ Total memory usage in percentage.</description>
                            <type>0</type>
                            <item>
                               <host>Template Net Dell Force S-Series SNMPv2</host>
-                              <key>vm.memory.pused[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[chStackUnitMemUsageUtil.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -303,7 +308,7 @@ Total memory usage in percentage.</description>
                      <key>sensor.psu.status[chSysPowerSupplyOperStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -352,7 +357,7 @@ The status of the power supply {#SNMPVALUE}</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -369,7 +374,7 @@ The status of the power supply {#SNMPVALUE}</description>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -427,7 +432,7 @@ The status of the power supply {#SNMPVALUE}</description>
                      <key>sensor.fan.status[chSysFanTrayOperStatus.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -476,7 +481,7 @@ The status of the fan tray {#SNMPVALUE}.</description>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -493,7 +498,7 @@ The status of the fan tray {#SNMPVALUE}.</description>
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -770,7 +775,7 @@ Current code version of this unit.</description>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -793,7 +798,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -810,7 +815,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -826,8 +831,25 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>1</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
+                     <type>0</type>
+                     <manual_close>1</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+                  <trigger_prototype>
+                     <expression>{Template Net Dell Force S-Series SNMPv2:system.sw.os[chStackUnitCodeVersion.{#SNMPINDEX}].diff()}=1 and {Template Net Dell Force S-Series SNMPv2:system.sw.os[chStackUnitCodeVersion.{#SNMPINDEX}].strlen()}&gt;0</expression>
+                     <recovery_mode>2</recovery_mode>
+                     <recovery_expression/>
+                     <name>#{#SNMPVALUE}: Operating system description has changed</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>1</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
                      <type>0</type>
                      <manual_close>1</manual_close>
                      <dependencies/>
@@ -842,7 +864,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -854,7 +876,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                <value>1</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>

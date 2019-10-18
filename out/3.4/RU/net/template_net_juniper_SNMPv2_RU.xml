@@ -11,11 +11,14 @@
       <template>
          <template>Template Net Juniper SNMPv2</template>
          <name>Template Net Juniper SNMPv2</name>
-         <description>Template Net Juniper version: 0.15&#13;
+         <description>Template Net Juniper&#13;
+&#13;
 MIBs used:&#13;
 JUNIPER-ALARM-MIB&#13;
 JUNIPER-MIB&#13;
-SNMPv2-MIB</description>
+SNMPv2-MIB&#13;
+&#13;
+Template tooling version used: 0.33</description>
          <groups>
             <group>
                <name>Templates/Network devices</name>
@@ -53,7 +56,7 @@ SNMPv2-MIB</description>
                <key>system.status[jnxRedAlarmState.0]</key>
                <delay>30s</delay>
                <history>2w</history>
-               <trends>0</trends>
+               <trends>0d</trends>
                <status>0</status>
                <value_type>3</value_type>
                <allowed_hosts/>
@@ -186,7 +189,7 @@ The name, model, or detailed description of the box,indicating which product the
                <type>4</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
-               <key>system.sw.os</key>
+               <key>system.sw.os[sysDescr.0]</key>
                <delay>1h</delay>
                <history>2w</history>
                <trends>0</trends>
@@ -221,7 +224,7 @@ The name, model, or detailed description of the box,indicating which product the
                <preprocessing>
                   <step>
                      <type>5</type>
-                     <params>kernel (JUNOS [0-9a-zA-Z\.]+)
+                     <params>kernel (JUNOS [0-9a-zA-Z\.\-]+)
 \1</params>
                   </step>
                </preprocessing>
@@ -274,10 +277,10 @@ http://kb.juniper.net/InfoCenter/index?page=content&amp;id=KB17526&amp;actp=sear
                      <name>{#SNMPVALUE}: Загрузка процессора</name>
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.21.{#SNMPINDEX}</snmp_oid>
-                     <key>system.cpu.util[jnxOperating5MinLoadAvg.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.8.{#SNMPINDEX}</snmp_oid>
+                     <key>system.cpu.util[jnxOperatingCPU.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -299,7 +302,7 @@ http://kb.juniper.net/InfoCenter/index?page=content&amp;id=KB17526&amp;actp=sear
                      <privatekey/>
                      <port/>
                      <description>MIB: JUNIPER-MIB&#13;
-The CPU Load Average over the last 5 minutes Here it will be shown as percentage valueZero if unavailable or inapplicable.&#13;
+The CPU utilization in percentage of this subject. Zero if unavailable or inapplicable.&#13;
 Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX%20SNMP%20Monitoring%20Guide_v1.1.pdf</description>
                      <inventory_link>0</inventory_link>
                      <applications>
@@ -319,9 +322,9 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                      <type>4</type>
                      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
                      <snmp_oid>1.3.6.1.4.1.2636.3.1.13.1.11.{#SNMPINDEX}</snmp_oid>
-                     <key>vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}]</key>
-                     <delay>3m</delay>
-                     <history>30d</history>
+                     <key>vm.memory.util[jnxOperatingBuffer.{#SNMPINDEX}]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
                      <trends>365d</trends>
                      <status>0</status>
                      <value_type>0</value_type>
@@ -361,32 +364,34 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                </item_prototypes>
                <trigger_prototypes>
                   <trigger_prototype>
-                     <expression>{Template Net Juniper SNMPv2:system.cpu.util[jnxOperating5MinLoadAvg.{#SNMPINDEX}].avg(5m)}&gt;{$CPU_UTIL_MAX}</expression>
+                     <expression>{Template Net Juniper SNMPv2:system.cpu.util[jnxOperatingCPU.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Высокая загрузка процессора</name>
+                     <name>{#SNMPVALUE}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
-                     <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <priority>2</priority>
+                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
                      <tags/>
                   </trigger_prototype>
                   <trigger_prototype>
-                     <expression>{Template Net Juniper SNMPv2:vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}].avg(5m)}&gt;{$MEMORY_UTIL_MAX}</expression>
+                     <expression>{Template Net Juniper SNMPv2:vm.memory.util[jnxOperatingBuffer.{#SNMPINDEX}].min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#SNMPVALUE}: Мало свободной памяти ОЗУ</name>
+                     <name>{#SNMPVALUE}: Мало свободной памяти ОЗУ ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The system is running out of free memory.</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -421,7 +426,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                            <type>0</type>
                            <item>
                               <host>Template Net Juniper SNMPv2</host>
-                              <key>system.cpu.util[jnxOperating5MinLoadAvg.{#SNMPINDEX}]</key>
+                              <key>system.cpu.util[jnxOperatingCPU.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -453,7 +458,7 @@ Reference: http://kb.juniper.net/library/CUSTOMERSERVICE/GLOBAL_JTAC/BK26199/SRX
                            <type>0</type>
                            <item>
                               <host>Template Net Juniper SNMPv2</host>
-                              <key>vm.memory.pused[jnxOperatingBuffer.{#SNMPINDEX}]</key>
+                              <key>vm.memory.util[jnxOperatingBuffer.{#SNMPINDEX}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -557,7 +562,7 @@ The temperature in Celsius (degrees C) of {#SENSOR_INFO}</description>
                      <url/>
                      <status>0</status>
                      <priority>2</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -580,7 +585,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>4</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current value: {ITEM.LASTVALUE1}&#13;
 This trigger uses temperature sensor values as well as temperature sensor status if available</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -597,7 +602,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.</description>
+                     <description>Current value: {ITEM.LASTVALUE1}</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
                      <dependencies/>
@@ -648,7 +653,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <key>sensor.fan.status[jnxOperatingState.4.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -696,7 +701,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте вентилятор</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -748,7 +753,7 @@ This trigger uses temperature sensor values as well as temperature sensor status
                      <key>sensor.psu.status[jnxOperatingState.2.{#SNMPINDEX}]</key>
                      <delay>3m</delay>
                      <history>2w</history>
-                     <trends>0</trends>
+                     <trends>0d</trends>
                      <status>0</status>
                      <value_type>3</value_type>
                      <allowed_hosts/>
@@ -798,7 +803,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
                      <url/>
                      <status>0</status>
                      <priority>3</priority>
-                     <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+                     <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте блок питания</description>
                      <type>0</type>
                      <manual_close>0</manual_close>
@@ -814,7 +819,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
          <httptests/>
          <macros>
             <macro>
-               <macro>{$CPU_UTIL_MAX}</macro>
+               <macro>{$CPU.UTIL.CRIT}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -826,7 +831,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
                <value>3</value>
             </macro>
             <macro>
-               <macro>{$MEMORY_UTIL_MAX}</macro>
+               <macro>{$MEMORY.UTIL.MAX}</macro>
                <value>90</value>
             </macro>
             <macro>
@@ -880,7 +885,7 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
          <url/>
          <status>0</status>
          <priority>4</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Current state: {ITEM.LASTVALUE1}&#13;
 Проверьте устройство</description>
          <type>0</type>
          <manual_close>0</manual_close>
@@ -897,8 +902,25 @@ This is fixed in Junos 13.3R7 https://forums.juniper.net/t5/Routing/PEM-0-not-OK
          <url/>
          <status>0</status>
          <priority>1</priority>
-         <description>Последнее значение: {ITEM.LASTVALUE1}.&#13;
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
 Изменился серийный номер устройства. Подтвердите и закройте.</description>
+         <type>0</type>
+         <manual_close>1</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template Net Juniper SNMPv2:system.sw.os[sysDescr.0].diff()}=1 and {Template Net Juniper SNMPv2:system.sw.os[sysDescr.0].strlen()}&gt;0</expression>
+         <recovery_mode>2</recovery_mode>
+         <recovery_expression/>
+         <name>Operating system description has changed</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>1</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.</description>
          <type>0</type>
          <manual_close>1</manual_close>
          <dependencies/>
