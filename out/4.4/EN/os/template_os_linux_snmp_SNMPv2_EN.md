@@ -160,7 +160,7 @@ There are no template links in this template.
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
 |Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)|<p>Per CPU load average is too high. Your system may be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.load.avg1[laLoad.1].min(5m)}/{Template Module Linux CPU SNMPv2:system.cpu.num[snmp].last()}>{$LOAD_AVG_PER_CPU.MAX.WARN} and {Template Module Linux CPU SNMPv2:system.cpu.load.avg5[laLoad.2].last()}>0 and {Template Module Linux CPU SNMPv2:system.cpu.load.avg15[laLoad.3].last()}>0`|AVERAGE||
-|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU load is too much.</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU utilization is too high. The system might be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.util[snmp,{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 
