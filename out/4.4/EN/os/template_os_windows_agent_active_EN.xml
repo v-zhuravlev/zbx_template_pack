@@ -726,7 +726,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <key>system.swap.size[,free]</key>
                <history>7d</history>
                <units>B</units>
-               <description>The free space size of swap volume/file in bytes.</description>
+               <description>The free space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -740,7 +740,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>%</units>
-               <description>The free space size of swap volume/file in percent.</description>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -753,7 +753,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
                <key>system.swap.size[,total]</key>
                <history>7d</history>
                <units>B</units>
-               <description>The total space size of swap volume/file in bytes.</description>
+               <description>The total space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1866,7 +1866,7 @@ Template tooling version used: 0.32</description>
       <trigger>
          <expression>{Template Module Windows memory by Zabbix agent active:system.swap.size[,pfree].min(5m)}&lt;{$SWAP.PFREE.MIN.WARN} and {Template Module Windows memory by Zabbix agent active:system.swap.size[,total].last()}&gt;0</expression>
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
-         <opdata>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Free: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>WARNING</priority>
          <description>This trigger is ignored, if there is no swap configured</description>
          <dependencies>

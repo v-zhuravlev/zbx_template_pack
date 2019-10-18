@@ -1058,7 +1058,7 @@ The amount of swap space currently unused or available.</description>
                <value_type>FLOAT</value_type>
                <units>%</units>
                <params>last("system.swap.free[memAvailSwap.0]")/last("system.swap.total[memTotalSwap.0]")*100</params>
-               <description>The free space size of swap volume/file in percent.</description>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1460,7 +1460,7 @@ Template tooling version used: 0.32</description>
       <trigger>
          <expression>{Template Module Linux memory SNMPv2:system.swap.pfree[snmp].min(5m)}&lt;{$SWAP.PFREE.MIN.WARN} and {Template Module Linux memory SNMPv2:system.swap.total[memTotalSwap.0].last()}&gt;0</expression>
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
-         <opdata>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Free: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>WARNING</priority>
          <description>This trigger is ignored, if there is no swap configured</description>
          <dependencies>
@@ -1477,7 +1477,7 @@ Template tooling version used: 0.32</description>
       <trigger>
          <expression>{Template Module Linux memory SNMPv2:vm.memory.available[snmp].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory SNMPv2:vm.memory.total[memTotalReal.0].last()}&gt;0</expression>
          <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
-         <opdata>Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Available: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>AVERAGE</priority>
       </trigger>
       <trigger>

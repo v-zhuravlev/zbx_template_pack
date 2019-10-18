@@ -975,7 +975,7 @@ machine</params>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>B</units>
-               <description>The free space size of swap volume/file in bytes.</description>
+               <description>The free space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1000,7 +1000,7 @@ machine</params>
                <value_type>FLOAT</value_type>
                <units>%</units>
                <params>last("system.swap.free[node_exporter]")/last("system.swap.total[node_exporter]")*100</params>
-               <description>The free space size of swap volume/file in percent.</description>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1015,7 +1015,7 @@ machine</params>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>B</units>
-               <description>The total space size of swap volume/file in bytes.</description>
+               <description>The total space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -2663,7 +2663,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <trigger>
          <expression>{Template OS Linux by Prom:system.swap.pfree[node_exporter].min(5m)}&lt;{$SWAP.PFREE.MIN.WARN} and {Template OS Linux by Prom:system.swap.total[node_exporter].last()}&gt;0</expression>
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
-         <opdata>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Free: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>WARNING</priority>
          <description>This trigger is ignored, if there is no swap configured</description>
          <dependencies>
@@ -2680,7 +2680,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <trigger>
          <expression>{Template OS Linux by Prom:vm.memory.available[node_exporter].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template OS Linux by Prom:vm.memory.total[node_exporter].last()}&gt;0</expression>
          <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
-         <opdata>Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Available: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>AVERAGE</priority>
       </trigger>
       <trigger>

@@ -1281,7 +1281,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <key>system.swap.size[,free]</key>
                <history>7d</history>
                <units>B</units>
-               <description>The free space size of swap volume/file in bytes.</description>
+               <description>The free space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1294,7 +1294,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>%</units>
-               <description>The free space size of swap volume/file in percent.</description>
+               <description>The free space of swap volume/file in percent.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -1306,7 +1306,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <key>system.swap.size[,total]</key>
                <history>7d</history>
                <units>B</units>
-               <description>The total space size of swap volume/file in bytes.</description>
+               <description>The total space of swap volume/file in bytes.</description>
                <applications>
                   <application>
                      <name>Memory</name>
@@ -2050,7 +2050,7 @@ Template tooling version used: 0.32</description>
       <trigger>
          <expression>{Template Module Linux memory by Zabbix agent:system.swap.size[,pfree].min(5m)}&lt;{$SWAP.PFREE.MIN.WARN} and {Template Module Linux memory by Zabbix agent:system.swap.size[,total].last()}&gt;0</expression>
          <name>High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)</name>
-         <opdata>Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Free: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>WARNING</priority>
          <description>This trigger is ignored, if there is no swap configured</description>
          <dependencies>
@@ -2067,7 +2067,7 @@ Template tooling version used: 0.32</description>
       <trigger>
          <expression>{Template Module Linux memory by Zabbix agent:vm.memory.size[available].min(5m)}&lt;{$MEMORY.AVAILABLE.MIN} and {Template Module Linux memory by Zabbix agent:vm.memory.size[total].last()}&gt;0</expression>
          <name>Lack of available memory ( &lt; {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})</name>
-         <opdata>Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}</opdata>
+         <opdata>Available: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}</opdata>
          <priority>AVERAGE</priority>
       </trigger>
       <trigger>

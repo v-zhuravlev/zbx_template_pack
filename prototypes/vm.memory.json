@@ -51,7 +51,7 @@
 			{
 				"_id": "trigger.memory.available.min",
 				"name": "Lack of available memory ( < {$MEMORY.AVAILABLE.MIN} of {ITEM.VALUE2})",
-				"opdata": "Available: {ITEM.VALUE1}, total: {ITEM.VALUE2}",
+				"opdata": "Available: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}",
 				"_documentation": "Second item is added for name enrichment and as a 'safe' check.",
 				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}<{$MEMORY.AVAILABLE.MIN} and {TEMPLATE_NAME:__vm.memory.total__.last()}>0",
 				"priority": "AVERAGE"
@@ -150,7 +150,7 @@
 		"units": "B",
 		"delay": "1m",
 		"history": "7d",
-		"description": "The total space size of swap volume/file in bytes."
+		"description": "The total space of swap volume/file in bytes."
 	},
 	{
 		"_id": "system.swap.free",
@@ -159,7 +159,7 @@
 		"units": "B",
 		"delay": "1m",
 		"history": "7d",
-		"description": "The free space size of swap volume/file in bytes.",
+		"description": "The free space of swap volume/file in bytes.",
 		"graphs": [
 			{
 				"name": "Swap usage",
@@ -183,12 +183,12 @@
 		"valueType": "FLOAT",
 		"update": "1m",
 		"history": "7d",
-		"description": "The free space size of swap volume/file in percent.",
+		"description": "The free space of swap volume/file in percent.",
 		"triggers": [
 			{
 				"expression": "{TEMPLATE_NAME:METRIC.min(5m)}<{$SWAP.PFREE.MIN.WARN} and {TEMPLATE_NAME:__system.swap.total__.last()}>0",
 				"name": "High swap space usage ( less than {$SWAP.PFREE.MIN.WARN}% free)",
-				"opdata": "Free: {ITEM.VALUE1}, total: {ITEM.VALUE2}",
+				"opdata": "Free: {ITEM.LASTVALUE1}, total: {ITEM.LASTVALUE2}",
 				"priority": "WARNING",
 				"description": "This trigger is ignored, if there is no swap configured",
 				"_depends_on": [
