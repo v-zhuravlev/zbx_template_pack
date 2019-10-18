@@ -41,7 +41,7 @@ Please report any issues with the template at https://support.zabbix.com
 
 ## Known Issues
 
-- Description: Doesn't support In/Out 64 bit counters even thoug1h IfxTable is present:
+- Description: Doesn't support In/Out 64 bit counters even though IfxTable is present:
 Currently, Windows gets it’s interface status from MIB-2. Since these 64bit SNMP counters (ifHCInOctets, ifHCOutOctets, etc.) are defined as an extension to IF-MIB, Microsoft has not implemented it.
 https://social.technet.microsoft.com/Forums/windowsserver/en-US/07b62ff0-94f6-40ca-a99d-d129c1b33d70/windows-2008-r2-snmp-64bit-counters-support?forum=winservergen
 
