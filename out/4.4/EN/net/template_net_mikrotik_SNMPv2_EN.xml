@@ -26,7 +26,7 @@ Known Issues:&#13;
   Version: RouterOS 6.38.5&#13;
   Device: Mikrotik 941-2nD, Mikrotik 951G-2HnD&#13;
 &#13;
-Template tooling version used: 0.32</description>
+Template tooling version used: 0.33</description>
          <templates>
             <template>
                <name>Template Module Generic SNMPv2</name>
@@ -316,6 +316,7 @@ The amount of the storage represented by this entry that is allocated, in units 
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
+                     <description>The system is running out of free memory.</description>
                   </trigger>
                </triggers>
             </item>
@@ -352,6 +353,7 @@ The average, over the last minute, of the percentage of time that this processor
                            <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                            <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
                            <priority>WARNING</priority>
+                           <description>CPU utilization is too high. The system might be slow to respond.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>

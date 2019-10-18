@@ -36,8 +36,8 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:system.cpu.util[snAgGblCpuUtil1MinAvg.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
-|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>-</p>|`{TEMPLATE_NAME:vm.memory.util[snAgGblDynMemUtil.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU utilization is too high. The system might be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.util[snAgGblCpuUtil1MinAvg.0].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|High memory utilization ( >{$MEMORY.UTIL.MAX}% for 5m)|<p>The system is running out of free memory.</p>|`{TEMPLATE_NAME:vm.memory.util[snAgGblDynMemUtil.0].min(5m)}>{$MEMORY.UTIL.MAX}`|AVERAGE||
 
 ## Feedback
 

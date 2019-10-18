@@ -21,7 +21,7 @@ ENTITY-SENSORS-MIB&#13;
 ENTITY-MIB&#13;
 STATISTICS-MIB&#13;
 &#13;
-Template tooling version used: 0.32</description>
+Template tooling version used: 0.33</description>
          <templates>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
@@ -82,6 +82,7 @@ Reference: http://h20564.www2.hpe.com/hpsc/doc/public/display?docId=emr_na-c0259
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
                      <priority>WARNING</priority>
+                     <description>CPU utilization is too high. The system might be slow to respond.</description>
                   </trigger>
                </triggers>
             </item>
@@ -370,6 +371,7 @@ The number of currently allocated bytes.</description>
                            <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                            <name>#{#SNMPVALUE}: High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                            <priority>AVERAGE</priority>
+                           <description>The system is running out of free memory.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>

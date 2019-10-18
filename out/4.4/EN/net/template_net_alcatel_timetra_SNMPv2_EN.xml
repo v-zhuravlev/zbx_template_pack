@@ -18,7 +18,7 @@ TIMETRA-CHASSIS-MIB&#13;
 TIMETRA-SYSTEM-MIB&#13;
 SNMPv2-MIB&#13;
 &#13;
-Template tooling version used: 0.32</description>
+Template tooling version used: 0.33</description>
          <templates>
             <template>
                <name>Template Module EtherLike-MIB SNMPv2</name>
@@ -78,6 +78,7 @@ The value of sgiCpuUsage indicates the current CPU utilization for the system.</
                      <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
                      <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
                      <priority>WARNING</priority>
+                     <description>CPU utilization is too high. The system might be slow to respond.</description>
                   </trigger>
                </triggers>
             </item>
@@ -226,6 +227,7 @@ The value of sgiKbMemoryUsed indicates the total pre-allocated pool memory, in k
                      <expression>{min(5m)}&gt;{$MEMORY.UTIL.MAX}</expression>
                      <name>High memory utilization ( &gt;{$MEMORY.UTIL.MAX}% for 5m)</name>
                      <priority>AVERAGE</priority>
+                     <description>The system is running out of free memory.</description>
                   </trigger>
                </triggers>
             </item>
