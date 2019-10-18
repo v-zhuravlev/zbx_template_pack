@@ -199,15 +199,15 @@ There are no template links in this template.
 |-----|----|-----------|----|---------------------|
 |Storage|{#DEVNAME}: Disk read rate|<p>Rate of read operations on the disk.</p>|DEPENDENT|vfs.dev.read.rate[DiskReadsPersec.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].DiskReadsPersec.first()`</p>|
 |Storage|{#DEVNAME}: Disk write rate|<p>Rate of write operations on the disk.</p>|DEPENDENT|vfs.dev.write.rate[DiskWritesPersec.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].DiskWritesPersec.first()`</p>|
-|Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>Current Disk Queue Length is the number of requests outstanding on the disk at the time the performance data is collected.</p>|DEPENDENT|vfs.dev.queue_size[CurrentDiskQueueLength.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].CurrentDiskQueueLength.first()`</p>|
-|Storage|{#DEVNAME}: Disk utilization|<p>This performance counter is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</p>|DEPENDENT|vfs.dev.util[PercentDiskTime.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].PercentDiskTime.first()`</p>|
+|Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>Current average disk queue, the number of requests outstanding on the disk at the time the performance data is collected.</p>|DEPENDENT|vfs.dev.queue_size[CurrentDiskQueueLength.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].CurrentDiskQueueLength.first()`</p>|
+|Storage|{#DEVNAME}: Disk utilization|<p>This item is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</p>|DEPENDENT|vfs.dev.util[PercentDiskTime.{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#DEVNAME}")].PercentDiskTime.first()`</p>|
 |Zabbix_raw_items|Physical disks WMI get|<p>Raw data of win32_perfformatteddata_perfdisk_physicaldisk.</p>|ZABBIX_ACTIVE|wmi.getall[root\cimv2,"select * from win32_perfformatteddata_perfdisk_physicaldisk"]|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|{#DEVNAME}: Disk is overloaded (util > {$VFS.DEV.UTIL.MAX.WARN}% for 15m)|<p>The disk is utilised too long.</p>|`{TEMPLATE_NAME:vfs.dev.util[PercentDiskTime.{#DEVNAME}].min(15m)}>{$VFS.DEV.UTIL.MAX.WARN}`|WARNING|<p>Manual close: YES</p>|
+|{#DEVNAME}: Disk is overloaded (util > {$VFS.DEV.UTIL.MAX.WARN}% for 15m)|<p>The disk appears to be under heavy load</p>|`{TEMPLATE_NAME:vfs.dev.util[PercentDiskTime.{#DEVNAME}].min(15m)}>{$VFS.DEV.UTIL.MAX.WARN}`|WARNING|<p>Manual close: YES</p>|
 
 ## Feedback
 
