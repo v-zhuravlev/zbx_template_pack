@@ -303,15 +303,15 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Bits received|<p>Incoming traffic statistics on network interface.</p>|ZABBIX_ACTIVE|net.if.in["{#IFNAME}"]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `8`</p>|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Bits sent|<p>Outgoing traffic statistics on network interface.</p>|ZABBIX_ACTIVE|net.if.out["{#IFNAME}"]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `8`</p>|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Inbound packets discarded|<p>Incoming traffic statistics of number of dropped packets on network interface.</p>|ZABBIX_ACTIVE|net.if.in["{#IFNAME}",dropped]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Outbound packets discarded|<p>Outgoing traffic statistics of number of dropped packets on network interface.</p>|ZABBIX_ACTIVE|net.if.out["{#IFNAME}",dropped]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Inbound packets with errors|<p>Incoming traffic statistics of number of errors on network interface.</p>|ZABBIX_ACTIVE|net.if.in["{#IFNAME}",errors]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors|<p>Outgoing traffic statistics of number of errors on network interface.</p>|ZABBIX_ACTIVE|net.if.out["{#IFNAME}",errors]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Speed|<p>The link speed on network interface.</p>|DEPENDENT|net.if.speed["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].Speed.first()`</p><p>⛔️ON_FAIL: `CUSTOM_VALUE -> 0`</p>|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Bits received|<p>Incoming traffic on the network interface.</p>|ZABBIX_ACTIVE|net.if.in["{#IFNAME}"]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `8`</p>|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Bits sent|<p>Outgoing traffic on the network interface.</p>|ZABBIX_ACTIVE|net.if.out["{#IFNAME}"]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `8`</p>|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Inbound packets discarded|<p>The number of incoming packets dropped on the network interface.</p>|ZABBIX_ACTIVE|net.if.in["{#IFNAME}",dropped]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Outbound packets discarded|<p>The number of outgoing packets dropped on the network interface.</p>|ZABBIX_ACTIVE|net.if.out["{#IFNAME}",dropped]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Inbound packets with errors|<p>The number of incoming packets with errors on the network interface.</p>|ZABBIX_ACTIVE|net.if.in["{#IFNAME}",errors]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors|<p>The number of outgoing packets with errors on the network interface.</p>|ZABBIX_ACTIVE|net.if.out["{#IFNAME}",errors]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Speed|<p>Estimated bandwidth of the network interface if any.</p>|DEPENDENT|net.if.speed["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].Speed.first()`</p><p>⛔️ON_FAIL: `CUSTOM_VALUE -> 0`</p>|
 |Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Interface type|<p>The type of the network interface.</p>|DEPENDENT|net.if.type["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].AdapterTypeId.first()`</p>|
-|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Operational status|<p>The status of the network interface.</p>|DEPENDENT|net.if.status["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()`</p>|
+|Network_interfaces|Interface {#IFNAME}({#IFALIAS}): Operational status|<p>The operational status of the network interface.</p>|DEPENDENT|net.if.status["{#IFNAME}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()`</p>|
 |Zabbix_raw_items|Network interfaces WMI get|<p>Raw data of win32_networkadapter.</p>|ZABBIX_ACTIVE|wmi.getall[root\cimv2,"select * from win32_networkadapter where PhysicalAdapter=True"]|
 
 ## Triggers

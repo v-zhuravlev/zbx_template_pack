@@ -737,33 +737,33 @@ templates:
           - _prototype: "net.if.in"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
-            _vendor_description: "Incoming traffic statistics on network interface."
+            _vendor_description: "Incoming traffic on the network interface."
             key: 'net.if.in["{#IFNAME}"]'
           - _prototype: "net.if.out"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}"]'
-            _vendor_description: "Outgoing traffic statistics on network interface."
+            _vendor_description: "Outgoing traffic on the network interface."
           - _prototype: "net.if.in.discards"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",dropped]'
-            _vendor_description: "Incoming traffic statistics of number of dropped packets on network interface."
+            _vendor_description: "The number of incoming packets dropped on the network interface."
           - _prototype: "net.if.out.discards"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",dropped]'
-            _vendor_description: "Outgoing traffic statistics of number of dropped packets on network interface."
+            _vendor_description: "The number of outgoing packets dropped on the network interface."
           - _prototype: "net.if.in.errors"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.in["{#IFNAME}",errors]'
-            _vendor_description: "Incoming traffic statistics of number of errors on network interface."
+            _vendor_description: "The number of incoming packets with errors on the network interface."
           - _prototype: "net.if.out.errors"
             type: "ZABBIX_PASSIVE"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             key: 'net.if.out["{#IFNAME}",errors]'
-            _vendor_description: "Outgoing traffic statistics of number of errors on network interface."
+            _vendor_description: "The number of outgoing packets with errors on the network interface."
           - _prototype: "net.if.speed"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -774,7 +774,7 @@ templates:
                 params: '$[?(@.Name == "{#IFNAME}")].Speed.first()'
                 error_handler: CUSTOM_VALUE
                 error_handler_params: "0"
-            _vendor_description: "The link speed on network interface."
+            _vendor_description: "Estimated bandwidth of the network interface if any."
           - _prototype: "net.if.type"
             _resource: "Interface {#IFNAME}({#IFALIAS})"
             type: DEPENDENT
@@ -794,7 +794,7 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$[?(@.Name == "{#IFNAME}")].NetConnectionStatus.first()'
-            _vendor_description: "The status of the network interface."
+            _vendor_description: "The operational status of the network interface."
     screens:
       - hsize: 1
         vsize: 1
