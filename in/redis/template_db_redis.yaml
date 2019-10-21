@@ -1,0 +1,1087 @@
+templates:
+  - name: Template DB Redis
+    _zbx_ver: '4.4'
+    _classes:
+      - DB
+    description: |-
+      Description
+
+    _documentation:
+      _tested_on:
+        - name: Redis
+          version: 5.0.6
+
+      _overview: |+
+        Overview
+
+      _setup: |
+        Setup
+
+      _zabbix_forum_url: forum url
+
+    items:
+      #################
+      ### Raw items ###
+      #################
+      - _prototype: redis.info
+        key: redis.info["{$REDIS.CONN.URI}"]
+
+      - _prototype: redis.config
+        key: redis.config["{$REDIS.CONN.URI}"]
+
+      - _prototype: redis.ping
+        key: redis.ping["{$REDIS.CONN.URI}"]
+
+      #######################
+      ### Dependent items ###
+      #######################
+      # CPU section
+      - _prototype: redis._float
+        name: CPU sys
+        key: redis.cpu.sys
+        master_item: redis.info
+        description: System CPU consumed by the Redis server
+        preprocessing:
+          - type: JSONPATH
+            params: '$.CPU.used_cpu_sys'
+
+      - _prototype: redis._float
+        name: CPU sys children
+        key: redis.cpu.sys_children
+        master_item: redis.info
+        description: System CPU consumed by the background processes
+        preprocessing:
+          - type: JSONPATH
+            params: '$.CPU.used_cpu_sys_children'
+
+      - _prototype: redis._float
+        name: CPU user
+        key: redis.cpu.user
+        master_item: redis.info
+        description: User CPU consumed by the Redis server
+        preprocessing:
+          - type: JSONPATH
+            params: '$.CPU.used_cpu_user'
+
+      - _prototype: redis._float
+        name: CPU user children
+        key: redis.cpu.user_children
+        master_item: redis.info
+        description: User CPU consumed by the background processes
+        preprocessing:
+          - type: JSONPATH
+            params: '$.CPU.used_cpu_user_children'
+
+      # Clients section
+      - _prototype: redis._unsigned
+        name: Blocked clients
+        key: redis.clients.blocked
+        master_item: redis.info
+        description: The number of connections waiting on a blocking call
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Clients.blocked_clients'
+
+      - _prototype: redis._unsigned
+        name: Connected clients
+        key: redis.clients.connected
+        master_item: redis.info
+        description: The number of connected clients
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Clients.connected_clients'
+
+      - _prototype: redis._unsigned
+        name: Max input buffer
+        key: redis.clients.max_input_buffer
+        master_item: redis.info
+        description: The biggest input buffer among current client connections
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Clients.client_recent_max_input_buffer'
+
+      - _prototype: redis._unsigned
+        name: Max output buffer
+        key: redis.clients.max_output_buffer
+        master_item: redis.info
+        description: The biggest output buffer among current client connections
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Clients.client_recent_max_output_buffer'
+
+      # Cluster section
+      - _prototype: redis._unsigned
+        name: Cluster enabled
+        key: redis.cluster.enabled
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Cluster.cluster_enabled'
+
+      # Memory section
+      - _prototype: redis._unsigned
+        name: Active defrag running
+        key: redis.memory.active_defrag_running
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.active_defrag_running'
+
+      - _prototype: redis._unsigned
+        name: Allocator active
+        key: redis.memory.allocator_active
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_active'
+
+      - _prototype: redis._unsigned
+        name: Allocator allocated
+        key: redis.memory.allocator_allocated
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_allocated'
+
+      - _prototype: redis._unsigned
+        name: Allocator fragmentation bytes
+        key: redis.memory.allocator_frag_bytes
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_frag_bytes'
+
+      - _prototype: redis._float
+        name: Allocator fragmentation ratio
+        key: redis.memory.allocator_frag_ratio
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_frag_ratio'
+
+      - _prototype: redis._unsigned
+        name: Allocator resident
+        key: redis.memory.allocator_resident
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_resident'
+
+      - _prototype: redis._unsigned
+        name: Allocator RSS bytes
+        key: redis.memory.allocator_rss_bytes
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_rss_bytes'
+
+      - _prototype: redis._float
+        name: Allocator RSS ratio
+        key: redis.memory.allocator_rss_ratio
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.allocator_rss_ratio'
+
+      - _prototype: redis._unsigned
+        name: Lazyfree pending objects
+        key: redis.memory.lazyfree_pending_objects
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.lazyfree_pending_objects'
+
+      - _prototype: redis._unsigned
+        name: Max memory
+        key: redis.memory.maxmemory
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.maxmemory'
+
+      - _prototype: redis._char
+        name: Max memory policy
+        key: redis.memory.maxmemory_policy
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.maxmemory_policy'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: Memory AOF buffer
+        key: redis.memory.mem_aof_buffer
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_aof_buffer'
+
+      - _prototype: redis._unsigned
+        name: Memory clients normal
+        key: redis.memory.mem_clients_normal
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_clients_normal'
+
+      - _prototype: redis._unsigned
+        name: Memory clients slaves
+        key: redis.memory.mem_clients_slaves
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_clients_slaves'
+
+      - _prototype: redis._unsigned
+        name: Memory fragmentation bytes
+        key: redis.memory.fragmentation_bytes
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_fragmentation_bytes'
+
+      - _prototype: redis._float
+        name: Memory fragmentation ratio
+        key: redis.memory.fragmentation_ratio
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_fragmentation_ratio'
+
+      - _prototype: redis._unsigned
+        name: Memory not counted for evict
+        key: redis.memory.not_counted_for_evict
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_not_counted_for_evict'
+
+      - _prototype: redis._unsigned
+        name: Memory replication backlog
+        key: redis.memory.replication_backlog
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.mem_replication_backlog'
+
+      - _prototype: redis._unsigned
+        name: Memory number of cached scripts
+        key: redis.memory.number_of_cached_scripts
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.number_of_cached_scripts'
+
+      - _prototype: redis._float
+        name: Memory RSS overhead bytes
+        key: redis.memory.rss_overhead_bytes
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.rss_overhead_bytes'
+
+      - _prototype: redis._float
+        name: Memory RSS overhead ratio
+        key: redis.memory.rss_overhead_ratio
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.rss_overhead_ratio'
+
+      - _prototype: redis._unsigned
+        name: Total system memory
+        key: redis.memory.total_system_memory
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.total_system_memory'
+
+      - _prototype: redis._unsigned
+        name: Memory used
+        key: redis.memory.used_memory
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory'
+
+      - _prototype: redis._unsigned
+        name: Memory used dataset
+        key: redis.memory.used_memory_dataset
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_dataset'
+
+      - _prototype: redis._float
+        name: Memory used dataset %
+        key: redis.memory.used_memory_dataset_perc
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_dataset_perc'
+          - type: REGEX
+            params: "(.+)%\n\\1"
+
+      - _prototype: redis._unsigned
+        name: Memory used Lua
+        key: redis.memory.used_memory_lua
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_lua'
+
+      - _prototype: redis._unsigned
+        name: Memory used overhead
+        key: redis.memory.used_memory_overhead
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_overhead'
+
+      - _prototype: redis._unsigned
+        name: Memory used peak
+        key: redis.memory.used_memory_peak
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_peak'
+
+      - _prototype: redis._float
+        name: Memory used peak %
+        key: redis.memory.used_memory_peak_perc
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_peak_perc'
+          - type: REGEX
+            params: "(.+)%\n\\1"
+
+      - _prototype: redis._unsigned
+        name: Memory used RSS
+        key: redis.memory.used_memory_rss
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_rss'
+
+      - _prototype: redis._unsigned
+        name: Memory used scripts
+        key: redis.memory.used_memory_scripts
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_scripts'
+
+      - _prototype: redis._unsigned
+        name: Memory used startup
+        key: redis.memory.used_memory_startup
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Memory.used_memory_startup'
+
+      # Persistence section
+
+      - _prototype: redis._float
+        name: AOF current rewrite time in seconds
+        key: redis.persistence.aof_current_rewrite_time_sec
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_current_rewrite_time_sec'
+
+      - _prototype: redis._unsigned
+        name: AOF enabled
+        key: redis.persistence.aof_enabled
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_enabled'
+
+      - _prototype: redis._char
+        name: AOF last bgrewrite status
+        key: redis.persistence.aof_last_bgrewrite_status
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_last_bgrewrite_status'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: AOF last cow size
+        key: redis.persistence.aof_last_cow_size
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_last_cow_size'
+
+      - _prototype: redis._float
+        name: AOF last rewrite time sec
+        key: redis.persistence.aof_last_rewrite_time_sec
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_last_rewrite_time_sec'
+
+      - _prototype: redis._char
+        name: AOF last write status
+        key: redis.persistence.aof_last_write_status
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_last_write_status'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: Loading
+        key: redis.persistence.aof_rewrite_in_progress
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_rewrite_in_progress'
+
+      - _prototype: redis._unsigned
+        name: AOF rewrite scheduled
+        key: redis.persistence.aof_rewrite_scheduled
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.aof_rewrite_scheduled'
+
+
+      - _prototype: redis._unsigned
+        name: Loading
+        key: redis.persistence.loading
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.loading'
+      
+      - _prototype: redis._unsigned
+        name: RDB bgsave in progress
+        key: redis.persistence.rdb_bgsave_in_progress
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_bgsave_in_progress'
+
+      - _prototype: redis._unsigned
+        name: RDB changes since last save
+        key: redis.persistence.rdb_changes_since_last_save
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_changes_since_last_save'
+
+      - _prototype: redis._float
+        name: RDB current bgsave time sec
+        key: redis.persistence.rdb_current_bgsave_time_sec
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_current_bgsave_time_sec'
+
+      - _prototype: redis._char
+        name: RDB last bgsave status
+        key: redis.persistence.rdb_last_bgsave_status
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_last_bgsave_status'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._float
+        name: RDB last bgsave time sec
+        key: redis.persistence.rdb_last_bgsave_time_sec
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_last_bgsave_time_sec'
+
+      - _prototype: redis._unsigned
+        name: RDB last cow size
+        key: redis.persistence.rdb_last_cow_size
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_last_cow_size'
+
+      - _prototype: redis._unsigned
+        name: RDB last save time
+        key: redis.persistence.rdb_last_save_time
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Persistence.rdb_last_save_time'
+
+      # Replication section
+
+      - _prototype: redis._unsigned
+        name: Connected slaves
+        key: redis.replication.connected_slaves
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.connected_slaves'
+
+      - _prototype: redis._unsigned
+        name: Master replication offset
+        key: redis.replication.master_repl_offset
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.master_repl_offset'
+
+      - _prototype: redis._char
+        name: Master replication id
+        key: redis.replication.master_replid
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.master_replid'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._char
+        name: Master replication id 2
+        key: redis.replication.master_replid2
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.master_replid2'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: Replication backlog active
+        key: redis.replication.repl_backlog_active
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.repl_backlog_active'
+
+      - _prototype: redis._unsigned
+        name: Replication backlog first byte offset
+        key: redis.replication.repl_backlog_first_byte_offset
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.repl_backlog_first_byte_offset'
+
+      - _prototype: redis._unsigned
+        name: Replication backlog history length
+        key: redis.replication.repl_backlog_histlen
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.repl_backlog_histlen'
+
+      - _prototype: redis._unsigned
+        name: Replication backlog size
+        key: redis.replication.repl_backlog_size
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.repl_backlog_size'
+
+      - _prototype: redis._char
+        name: Replication role
+        key: redis.replication.role
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.role'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._float
+        name: Replication second offset
+        key: redis.replication.second_repl_offset
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.second_repl_offset'
+
+      # Server section
+
+      - _prototype: redis._unsigned
+        name: Arch bits
+        key: redis.server.arch_bits
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.arch_bits'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._char
+        name: Config file
+        key: redis.server.config_file
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.config_file'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._char
+        name: Executable path
+        key: redis.server.executable
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.executable'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: Process id
+        key: redis.server.process_id
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.process_id'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._char
+        name: Redis mode
+        key: redis.server.redis_mode
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.redis_mode'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._char
+        name: Redis version
+        key: redis.server.redis_version
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.redis_version'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: TCP port
+        key: redis.server.tcp_port
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.tcp_port'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: redis._unsigned
+        name: Uptime in days
+        key: redis.server.uptime_in_days
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.uptime_in_days'
+      
+      - _prototype: redis._unsigned
+        name: Uptime in seconds
+        key: redis.server.uptime_in_seconds
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Server.uptime_in_seconds'
+
+      # Stats section
+
+      - _prototype: redis._unsigned
+        name: Active defrag hits
+        key: redis.stats.active_defrag_hits
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.active_defrag_hits'
+
+      - _prototype: redis._unsigned
+        name: Active defrag key hits
+        key: redis.stats.active_defrag_key_hits
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.active_defrag_key_hits'
+
+      - _prototype: redis._unsigned
+        name: Active defrag key misses
+        key: redis.stats.active_defrag_key_misses
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.active_defrag_key_misses'
+
+      - _prototype: redis._unsigned
+        name: Active defrag misses
+        key: redis.stats.active_defrag_misses
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.active_defrag_misses'
+
+      - _prototype: redis._unsigned
+        name: Evicted keys
+        key: redis.stats.evicted_keys
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.evicted_keys'
+
+      - _prototype: redis._unsigned
+        name: Expired keys
+        key: redis.stats.expired_keys
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.expired_keys'
+
+      - _prototype: redis._float
+        name: Expired stale %
+        key: redis.stats.expired_stale_perc
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.expired_stale_perc'
+
+      - _prototype: redis._unsigned
+        name: Expired time cap reached count
+        key: redis.stats.expired_time_cap_reached_count
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.expired_time_cap_reached_count'
+
+      - _prototype: redis._float
+        name: Expired time cap reached count
+        key: redis.stats.expired_time_cap_reached_count
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.expired_time_cap_reached_count'
+
+      - _prototype: redis._float
+        name: Instantaneous input bytes per second
+        key: redis.stats.instantaneous_input.rate
+        units: Bps
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.instantaneous_input_kbps'
+          - type: MULTIPLIER
+            params: 1024
+
+      - _prototype: redis._unsigned
+        name: Instantaneous operations per sec
+        key: redis.stats.instantaneous_ops.rate
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.instantaneous_ops_per_sec'
+
+      - _prototype: redis._float
+        name: Instantaneous output bytes per second
+        key: redis.stats.instantaneous_output.rate
+        units: Bps
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.instantaneous_output_kbps'
+          - type: MULTIPLIER
+            params: 1024
+
+      - _prototype: redis._unsigned
+        name: Keyspace hits
+        key: redis.stats.keyspace_hits
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.keyspace_hits'
+
+      - _prototype: redis._unsigned
+        name: Keyspace misses
+        key: redis.stats.keyspace_misses
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.keyspace_misses'
+
+      - _prototype: redis._unsigned
+        name: Latest fork usec
+        key: redis.stats.latest_fork_usec
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.latest_fork_usec'
+
+      - _prototype: redis._unsigned
+        name: Migrate cached sockets
+        key: redis.stats.migrate_cached_sockets
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.migrate_cached_sockets'
+
+      - _prototype: redis._unsigned
+        name: Pubsub channels
+        key: redis.stats.pubsub_channels
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.pubsub_channels'
+
+      - _prototype: redis._unsigned
+        name: Pubsub patterns
+        key: redis.stats.pubsub_patterns
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.pubsub_patterns'
+
+      - _prototype: redis._unsigned
+        name: Rejected connections
+        key: redis.stats.rejected_connections
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.rejected_connections'
+
+      - _prototype: redis._unsigned
+        name: Slave expires tracked keys
+        key: redis.stats.slave_expires_tracked_keys
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.slave_expires_tracked_keys'
+
+      - _prototype: redis._unsigned
+        name: Sync full
+        key: redis.stats.sync_full
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.sync_full'
+
+      - _prototype: redis._unsigned
+        name: Sync partial err
+        key: redis.stats.sync_partial_err
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.sync_partial_err'
+
+      - _prototype: redis._unsigned
+        name: Sync partial ok
+        key: redis.stats.sync_partial_ok
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.sync_partial_ok'
+
+      - _prototype: redis._unsigned
+        name: Total commands processed
+        key: redis.stats.total_commands_processed
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.total_commands_processed'
+
+      - _prototype: redis._unsigned
+        name: Total connections received
+        key: redis.stats.total_connections_received
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.total_connections_received'
+
+      - _prototype: redis._unsigned
+        name: Total net input bytes
+        key: redis.stats.total_net_input_bytes
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.total_net_input_bytes'
+
+      - _prototype: redis._unsigned
+        name: Total net output bytes
+        key: redis.stats.total_net_output_bytes
+        master_item: redis.info
+        description: ''
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Stats.total_net_output_bytes'
+
+
+    #################
+    ### Discovery ###
+    #################
+    discovery_rules:
+      - name: Keyspace discovery
+        description: |
+          Individual keyspace metrics
+
+        key: redis.keyspace.discovery
+        type: DEPENDENT
+        masterItem: redis.info
+
+        preprocessing:
+        # Replace with JSONPATH after fixing the structure in the plugin output
+        - type: JAVASCRIPT
+          params: 'return JSON.stringify(Object.keys(JSON.parse(value).Keyspace).map(function (v){return {"{#DB}": v}}));'
+
+        filter:
+          evalType: 'AND'
+          conditions:
+            - macro: '{#DB}'
+              value: '{$REDIS.LLD.FILTER.DB.MATCHES}'
+              operator: 'MATCHES_REGEX'
+              formulaid: 'A'
+
+            - macro: '{#DB}'
+              value: '{$REDIS.LLD.FILTER.DB.NOT_MATCHES}'
+              operator: 'NOT_MATCHES_REGEX'
+              formulaid: 'B'
+
+        items:
+          - _prototype: redis._unsigned
+            name: 'DB {#DB}: Average TTL'
+            key: redis.db.avg_ttl["{#DB}"]
+            master_item: redis.info
+            description: ''
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Keyspace["{#DB}"].avg_ttl'
+
+          - _prototype: redis._unsigned
+            name: 'DB {#DB}: Expires'
+            key: redis.db.expires["{#DB}"]
+            master_item: redis.info
+            description: ''
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Keyspace["{#DB}"].expires'
+
+          - _prototype: redis._unsigned
+            name: 'DB {#DB}: Keys'
+            key: redis.db.keys["{#DB}"]
+            master_item: redis.info
+            description: ''
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Keyspace["{#DB}"].keys'
+
+    macros:
+      - macro: '{$REDIS.CONN.URI}'
+        value: 'tcp://localhost:6379'
+        description: 'Connection string in the URI format (password is not used). This param overwrites a value configured in the "Server" option of the configuration file (if it''s set), otherwise, the plugin''s default value is used: "tcp://localhost:6379"'
+
+      - macro: '{$REDIS.LLD.FILTER.DB.MATCHES}'
+        value: '.*'
+        _description: 'Filter of discoverable databases'
+
+      - macro: '{$REDIS.LLD.FILTER.DB.NOT_MATCHES}'
+        value: 'CHANGE_IF_NEEDED'
+        _description: 'Filter to exclude discovered databases'
+
