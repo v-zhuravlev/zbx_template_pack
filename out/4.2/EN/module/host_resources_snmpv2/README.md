@@ -130,7 +130,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|CPU|CPU utilization|<p>MIB: HOST-RESOURCES-MIB</p><p>The average, over the last minute, of the percentage of time that processors was not idle.</p><p>Implementations may approximate this one minute smoothing period if necessary.</p>|SNMP|system.cpu.util<p>**Preprocessing**:</p><p>- JSONPATH: `$..['{#SNMPVALUE}'].avg()`</p>|
+|CPU|CPU utilization|<p>MIB: HOST-RESOURCES-MIB</p><p>The average, over the last minute, of the percentage of time that processors was not idle.</p><p>Implementations may approximate this one minute smoothing period if necessary.</p>|SNMP|system.cpu.util<p>**Preprocessing**:</p><p>- JSONPATH: `$..['{#CPU.UTIL}'].avg()`</p>|
 
 ## Triggers
 
