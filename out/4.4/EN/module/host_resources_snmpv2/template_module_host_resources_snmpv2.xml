@@ -25,63 +25,41 @@ Template tooling version used: 0.33</description>
                <name>CPU</name>
             </application>
          </applications>
-         <discovery_rules>
-            <discovery_rule>
-               <name>CPU discovery</name>
+         <items>
+            <item>
+               <name>CPU utilization</name>
                <type>SNMPV2</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]</snmp_oid>
-               <key>hrProcessorLoad.discovery</key>
-               <delay>1h</delay>
-               <description>HOST-RESOURCES-MIB::hrProcessorTable discovery</description>
-               <item_prototypes>
-                  <item_prototype>
-                     <name>#{#SNMPINDEX}: CPU utilization</name>
-                     <type>SNMPV2</type>
-                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <snmp_oid>1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}</snmp_oid>
-                     <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
-                     <history>7d</history>
-                     <value_type>FLOAT</value_type>
-                     <units>%</units>
-                     <description>MIB: HOST-RESOURCES-MIB&#13;
-The average, over the last minute, of the percentage of time that this processor was not idle.&#13;
+               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.2]</snmp_oid>
+               <key>system.cpu.util</key>
+               <history>7d</history>
+               <value_type>FLOAT</value_type>
+               <units>%</units>
+               <description>MIB: HOST-RESOURCES-MIB&#13;
+The average, over the last minute, of the percentage of time that processors was not idle.&#13;
 Implementations may approximate this one minute smoothing period if necessary.</description>
-                     <applications>
-                        <application>
-                           <name>CPU</name>
-                        </application>
-                     </applications>
-                     <trigger_prototypes>
-                        <trigger_prototype>
-                           <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
-                           <name>#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
-                           <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
-                           <priority>WARNING</priority>
-                           <description>CPU utilization is too high. The system might be slow to respond.</description>
-                        </trigger_prototype>
-                     </trigger_prototypes>
-                  </item_prototype>
-               </item_prototypes>
-               <graph_prototypes>
-                  <graph_prototype>
-                     <name>#{#SNMPINDEX}: CPU utilization</name>
-                     <ymin_type_1>FIXED</ymin_type_1>
-                     <ymax_type_1>FIXED</ymax_type_1>
-                     <graph_items>
-                        <graph_item>
-                           <drawtype>GRADIENT_LINE</drawtype>
-                           <color>1A7C11</color>
-                           <item>
-                              <host>Template Module HOST-RESOURCES-MIB CPU SNMPv2</host>
-                              <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
-                           </item>
-                        </graph_item>
-                     </graph_items>
-                  </graph_prototype>
-               </graph_prototypes>
-            </discovery_rule>
-         </discovery_rules>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JSONPATH</type>
+                     <params>$..['{#SNMPVALUE}'].avg()</params>
+                  </step>
+               </preprocessing>
+               <triggers>
+                  <trigger>
+                     <expression>{min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+                     <name>High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)</name>
+                     <opdata>Current utilization: {ITEM.LASTVALUE1}</opdata>
+                     <priority>WARNING</priority>
+                     <description>CPU utilization is too high. The system might be slow to respond.</description>
+                  </trigger>
+               </triggers>
+            </item>
+         </items>
          <macros>
             <macro>
                <macro>{$CPU.UTIL.CRIT}</macro>
@@ -289,17 +267,17 @@ Template tooling version used: 0.33</description>
                <vsize>3</vsize>
                <screen_items>
                   <screen_item>
-                     <resourcetype>20</resourcetype>
+                     <resourcetype>0</resourcetype>
                      <style>0</style>
                      <resource>
-                        <name>#{#SNMPINDEX}: CPU utilization</name>
+                        <name>CPU utilization</name>
                         <host>Template Module HOST-RESOURCES-MIB SNMPv2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
                      <x>0</x>
                      <y>0</y>
-                     <colspan>2</colspan>
+                     <colspan>1</colspan>
                      <rowspan>1</rowspan>
                      <elements>25</elements>
                      <valign>0</valign>
@@ -343,7 +321,7 @@ Template tooling version used: 0.33</description>
                      <height>100</height>
                      <x>0</x>
                      <y>2</y>
-                     <colspan>2</colspan>
+                     <colspan>1</colspan>
                      <rowspan>1</rowspan>
                      <elements>25</elements>
                      <valign>0</valign>
@@ -570,4 +548,21 @@ The amount of the storage represented by this entry that is allocated, in units 
          </macros>
       </template>
    </templates>
+   <graphs>
+      <graph>
+         <name>CPU utilization</name>
+         <ymin_type_1>FIXED</ymin_type_1>
+         <ymax_type_1>FIXED</ymax_type_1>
+         <graph_items>
+            <graph_item>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template Module HOST-RESOURCES-MIB CPU SNMPv2</host>
+                  <key>system.cpu.util</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+   </graphs>
 </zabbix_export>

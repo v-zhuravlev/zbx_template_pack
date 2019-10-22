@@ -164,21 +164,33 @@ templates:
       - SNMPv1
       - SNMPv2
     _zbx_ver: "4.0"
-    discovery_rules:
-      - name: CPU discovery
-        oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
-        key: hrProcessorLoad.discovery
-        description: HOST-RESOURCES-MIB::hrProcessorTable discovery
-        items:
-          - _prototype: system.cpu.util
-            oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
-            _snmpObject: hrProcessorLoad.{#SNMPINDEX}
-            _mib: HOST-RESOURCES-MIB
-            _resource: "#{#SNMPINDEX}"
-            _vendor_description: |
-              The average, over the last minute, of the percentage of time that this processor was not idle.
-              Implementations may approximate this one minute smoothing period if necessary.
+    items:
+      - _prototype: system.cpu.util
+        key: system.cpu.util
+        oid: "discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.2]"
+        _snmpObject: hrProcessorLoad
+        _mib: HOST-RESOURCES-MIB
+        _vendor_description: |
+          The average, over the last minute, of the percentage of time that processors was not idle.
+          Implementations may approximate this one minute smoothing period if necessary.
+        preprocessing:
+          - type: JSONPATH
+            params: $..['{#SNMPVALUE}'].avg()
 
+    # discovery_rules:
+    #   - name: CPU discovery
+    #     oid: discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]
+    #     key: hrProcessorLoad.discovery
+    #     description: HOST-RESOURCES-MIB::hrProcessorTable discovery
+    #     items:
+    #       - _prototype: system.cpu.util
+    #         oid: 1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}
+    #         _snmpObject: hrProcessorLoad.{#SNMPINDEX}
+    #         _mib: HOST-RESOURCES-MIB
+    #         _resource: "#{#SNMPINDEX}"
+    #         _vendor_description: |
+    #           The average, over the last minute, of the percentage of time that this processor was not idle.
+    #           Implementations may approximate this one minute smoothing period if necessary.
   - name: "Template Module HOST-RESOURCES-MIB"
     description: "HOST-RESOURCES-MIB: CPU, memory and storage(vfs.fs.file) linked together."
     _zbx_ver: "4.0"
@@ -194,12 +206,11 @@ templates:
         hsize: 2
         vsize: 3
         screen_items:
-          - resourcetype: GRAPH_PROTOTYPE
+          - resourcetype: GRAPH
             resource:
-              - name: "#{#SNMPINDEX}: CPU utilization"
+              - name: CPU utilization
             x: 0
             y: 0
-            colspan: 2
           - resourcetype: GRAPH_PROTOTYPE
             resource:
               - name: "{#MEMNAME}: Memory utilization"
@@ -210,4 +221,3 @@ templates:
               - name: "{#FSNAME}: Disk space usage"
             x: 0
             y: 2
-            colspan: 2
