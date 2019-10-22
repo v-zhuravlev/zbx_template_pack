@@ -124,7 +124,7 @@ try:
                      user=args.username,
                      password=args.password)
 except ZabbixAPIException as err:
-    print(err.data)
+    sys.exit(err.data)
 else:
     path = args.arg1[0]
     if os.path.isdir(path):
