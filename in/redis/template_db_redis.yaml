@@ -111,7 +111,7 @@ templates:
         name: Memory used
         key: redis.memory.used_memory
         master_item: redis.info
-        description: ''
+        description: 'Amount of memory allocated by Redis'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory'
@@ -120,7 +120,7 @@ templates:
         name: Memory used Lua
         key: redis.memory.used_memory_lua
         master_item: redis.info
-        description: ''
+        description: 'Amount of memory used by the Lua engine'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory_lua'
@@ -129,7 +129,7 @@ templates:
         name: 'Memory used peak'
         key: 'redis.memory.used_memory_peak'
         master_item: redis.info
-        description: ''
+        description: 'The peak amount of memory used by Redis'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory_peak'
@@ -138,7 +138,7 @@ templates:
         name: Memory used RSS
         key: redis.memory.used_memory_rss
         master_item: redis.info
-        description: ''
+        description: 'Amount of memory that Redis allocated as seen by the os'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory_rss'
@@ -177,8 +177,9 @@ templates:
       - _prototype: redis._float
         name: AOF last rewrite time sec
         key: redis.persistence.aof_last_rewrite_time_sec
+        units: s
         master_item: redis.info
-        description: ''
+        description: 'Duration of the last AOF rewrite'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_last_rewrite_time_sec'
@@ -198,7 +199,7 @@ templates:
         name: Loading
         key: redis.persistence.aof_rewrite_in_progress
         master_item: redis.info
-        description: ''
+        description: 'Flag indicating a AOF rewrite operation is on-going'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_rewrite_in_progress'
@@ -226,7 +227,7 @@ templates:
         name: RDB bgsave in progress
         key: redis.persistence.rdb_bgsave_in_progress
         master_item: redis.info
-        description: ''
+        description: 'One if a bgsave is in progress and zero otherwise'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_bgsave_in_progress'
@@ -235,7 +236,7 @@ templates:
         name: RDB changes since last save
         key: redis.persistence.rdb_changes_since_last_save
         master_item: redis.info
-        description: ''
+        description: 'The number of changes since the last background save'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_changes_since_last_save'
@@ -261,10 +262,11 @@ templates:
             params: 1d
 
       - _prototype: redis._float
-        name: RDB last bgsave time sec
+        name: RDB last bgsave time in seconds
         key: redis.persistence.rdb_last_bgsave_time_sec
+        units: s
         master_item: redis.info
-        description: ''
+        description: 'Duration of the last bg_save operation'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_last_bgsave_time_sec'
@@ -284,7 +286,7 @@ templates:
         name: Connected slaves
         key: redis.replication.connected_slaves
         master_item: redis.info
-        description: ''
+        description: 'The number of connected slaves'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.connected_slaves'
@@ -311,7 +313,7 @@ templates:
         name: Replication backlog history length
         key: redis.replication.repl_backlog_histlen
         master_item: redis.info
-        description: ''
+        description: 'The amount of data in the backlog sync buffer'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.repl_backlog_histlen'
@@ -428,7 +430,7 @@ templates:
         name: Evicted keys
         key: redis.stats.evicted_keys
         master_item: redis.info
-        description: ''
+        description: 'The total number of keys evicted due to the maxmemory limit'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.evicted_keys'
@@ -437,7 +439,7 @@ templates:
         name: Expired keys
         key: redis.stats.expired_keys
         master_item: redis.info
-        description: ''
+        description: 'The total number of keys expired from the db'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.expired_keys'
@@ -467,7 +469,7 @@ templates:
         name: Instantaneous operations per sec
         key: redis.stats.instantaneous_ops.rate
         master_item: redis.info
-        description: ''
+        description: 'The number of commands processed by the server per second'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.instantaneous_ops_per_sec'
@@ -488,7 +490,7 @@ templates:
         name: Keyspace hits
         key: redis.stats.keyspace_hits
         master_item: redis.info
-        description: ''
+        description: 'The total number of successful lookups in the main db'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.keyspace_hits'
@@ -497,7 +499,7 @@ templates:
         name: Keyspace misses
         key: redis.stats.keyspace_misses
         master_item: redis.info
-        description: ''
+        description: 'The total number of missed lookups in the main db'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.keyspace_misses'
@@ -505,11 +507,14 @@ templates:
       - _prototype: redis._unsigned
         name: Latest fork usec
         key: redis.stats.latest_fork_usec
+        units: s
         master_item: redis.info
-        description: ''
+        description: 'The duration of the latest fork'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.latest_fork_usec'
+          - type: MULTIPLIER
+            params: 0.00001
 
       - _prototype: redis._unsigned
         name: Migrate cached sockets
@@ -524,7 +529,7 @@ templates:
         name: Pubsub channels
         key: redis.stats.pubsub_channels
         master_item: redis.info
-        description: ''
+        description: 'The number of active pubsub channels'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.pubsub_channels'
@@ -533,7 +538,7 @@ templates:
         name: Pubsub patterns
         key: redis.stats.pubsub_patterns
         master_item: redis.info
-        description: ''
+        description: 'The number of active pubsub patterns'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.pubsub_patterns'
@@ -542,7 +547,7 @@ templates:
         name: Rejected connections
         key: redis.stats.rejected_connections
         master_item: redis.info
-        description: ''
+        description: 'The number of rejected connections'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.rejected_connections'
@@ -578,7 +583,7 @@ templates:
         name: Total commands processed
         key: redis.stats.total_commands_processed
         master_item: redis.info
-        description: ''
+        description: 'The number of commands processed by the server'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.total_commands_processed'
@@ -659,7 +664,7 @@ templates:
             name: 'DB {#DB}: Expires'
             key: redis.db.expires["{#DB}"]
             master_item: redis.info
-            description: ''
+            description: 'The number of keys with an expiration'
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].expires'
@@ -738,7 +743,7 @@ templates:
             name: Max output buffer
             key: redis.clients.client_longest_output_list
             master_item: redis.info
-            description: The biggest input buffer among current client connections
+            description: The longest output list among current client connections
             preprocessing:
               - type: JSONPATH
                 params: '$.Clients.client_longest_output_list'
@@ -747,7 +752,7 @@ templates:
             name: Max input buffer
             key: redis.clients.client_biggest_input_buf
             master_item: redis.info
-            description: The biggest output buffer among current client connections
+            description: The biggest input buffer among current client connections
             preprocessing:
               - type: JSONPATH
                 params: '$.Clients.client_biggest_input_buf'
@@ -796,7 +801,7 @@ templates:
             name: 'Memory used overhead{#SINGLETON}'
             key: 'redis.memory.used_memory_overhead[{#SINGLETON}]'
             master_item: redis.info
-            description: ''
+            description: 'Sum of all overheads allocated by Redis for managing its internal datastructures'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_overhead'
@@ -805,7 +810,7 @@ templates:
             name: 'Memory used startup{#SINGLETON}'
             key: 'redis.memory.used_memory_startup[{#SINGLETON}]'
             master_item: redis.info
-            description: ''
+            description: 'Amount of memory consumed by Redis at startup'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_startup'
@@ -843,7 +848,7 @@ templates:
             name: 'Max memory{#SINGLETON}'
             key: 'redis.memory.maxmemory[{#SINGLETON}]'
             master_item: redis.info
-            description: ''
+            description: 'Maximum amount of memory allocated to the Redisdb system'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.maxmemory'
@@ -984,7 +989,7 @@ templates:
             name: 'Master replication offset{#SINGLETON}'
             key: 'redis.replication.master_repl_offset[{#SINGLETON}]'
             master_item: redis.info
-            description: ''
+            description: 'The replication offset reported by the master'
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication.master_repl_offset'
@@ -993,7 +998,7 @@ templates:
             name: 'Replication second offset{#SINGLETON}'
             key: 'redis.replication.second_repl_offset[{#SINGLETON}]'
             master_item: redis.info
-            description: ''
+            description: 'The replication offset reported by the slave'
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication.second_repl_offset'
@@ -1148,7 +1153,7 @@ templates:
             name: 'Memory fragmentation ratio{#SINGLETON}'
             key: 'redis.memory.fragmentation_ratio[{#SINGLETON}]'
             master_item: redis.info
-            description: ''
+            description: 'Ratio between used_memory_rss and used_memory'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.mem_fragmentation_ratio'
@@ -1193,7 +1198,7 @@ templates:
             name: 'Memory AOF buffer{#SINGLETON}'
             key: 'redis.memory.mem_aof_buffer[{#SINGLETON}]'
             master_item: redis.info 
-            description: ''
+            description: 'Size of the AOF buffer'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.mem_aof_buffer'

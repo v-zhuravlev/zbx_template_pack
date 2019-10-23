@@ -221,6 +221,7 @@ Template tooling version used: 0.33</description>
                <key>redis.memory.used_memory</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>Amount of memory allocated by Redis</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -242,6 +243,7 @@ Template tooling version used: 0.33</description>
                <key>redis.memory.used_memory_lua</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>Amount of memory used by the Lua engine</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -263,6 +265,7 @@ Template tooling version used: 0.33</description>
                <key>redis.memory.used_memory_peak</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The peak amount of memory used by Redis</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -284,6 +287,7 @@ Template tooling version used: 0.33</description>
                <key>redis.memory.used_memory_rss</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>Amount of memory that Redis allocated as seen by the os</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -376,6 +380,8 @@ Template tooling version used: 0.33</description>
                <delay>0</delay>
                <history>7d</history>
                <value_type>FLOAT</value_type>
+               <units>s</units>
+               <description>Duration of the last AOF rewrite</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -424,6 +430,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.aof_rewrite_in_progress</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>Flag indicating a AOF rewrite operation is on-going</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -487,6 +494,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.rdb_bgsave_in_progress</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>One if a bgsave is in progress and zero otherwise</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -508,6 +516,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.rdb_changes_since_last_save</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of changes since the last background save</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -573,12 +582,14 @@ Template tooling version used: 0.33</description>
                </master_item>
             </item>
             <item>
-               <name>Redis: RDB last bgsave time sec</name>
+               <name>Redis: RDB last bgsave time in seconds</name>
                <type>DEPENDENT</type>
                <key>redis.persistence.rdb_last_bgsave_time_sec</key>
                <delay>0</delay>
                <history>7d</history>
                <value_type>FLOAT</value_type>
+               <units>s</units>
+               <description>Duration of the last bg_save operation</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -632,6 +643,7 @@ Template tooling version used: 0.33</description>
                <key>redis.replication.connected_slaves</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of connected slaves</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -695,6 +707,7 @@ Template tooling version used: 0.33</description>
                <key>redis.replication.repl_backlog_histlen</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The amount of data in the backlog sync buffer</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -962,6 +975,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.evicted_keys</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The total number of keys evicted due to the maxmemory limit</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -983,6 +997,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.expired_keys</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The total number of keys expired from the db</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1053,6 +1068,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.instantaneous_ops.rate</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of commands processed by the server per second</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1101,6 +1117,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.keyspace_hits</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The total number of successful lookups in the main db</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1122,6 +1139,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.keyspace_misses</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The total number of missed lookups in the main db</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1143,6 +1161,8 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.latest_fork_usec</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>s</units>
+               <description>The duration of the latest fork</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1152,6 +1172,10 @@ Template tooling version used: 0.33</description>
                   <step>
                      <type>JSONPATH</type>
                      <params>$.Stats.latest_fork_usec</params>
+                  </step>
+                  <step>
+                     <type>MULTIPLIER</type>
+                     <params>1.0E-5</params>
                   </step>
                </preprocessing>
                <master_item>
@@ -1185,6 +1209,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.pubsub_channels</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of active pubsub channels</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1206,6 +1231,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.pubsub_patterns</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of active pubsub patterns</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1227,6 +1253,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.rejected_connections</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of rejected connections</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1311,6 +1338,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.total_commands_processed</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>The number of commands processed by the server</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1532,6 +1560,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.db.expires["{#DB}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>The number of keys with an expiration</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1592,7 +1621,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.clients.client_biggest_input_buf</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>The biggest output buffer among current client connections</description>
+                     <description>The biggest input buffer among current client connections</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1614,7 +1643,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.clients.client_longest_output_list</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>The biggest input buffer among current client connections</description>
+                     <description>The longest output list among current client connections</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1727,6 +1756,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.memory.maxmemory[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Maximum amount of memory allocated to the Redisdb system</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1817,6 +1847,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.memory.used_memory_overhead[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Sum of all overheads allocated by Redis for managing its internal datastructures</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1865,6 +1896,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.memory.used_memory_startup[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Amount of memory consumed by Redis at startup</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1928,6 +1960,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.replication.master_repl_offset[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>The replication offset reported by the master</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2004,6 +2037,7 @@ Template tooling version used: 0.33</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <description>The replication offset reported by the slave</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2437,6 +2471,7 @@ Template tooling version used: 0.33</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <description>Ratio between used_memory_rss and used_memory</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2458,6 +2493,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.memory.mem_aof_buffer[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Size of the AOF buffer</description>
                      <applications>
                         <application>
                            <name>Redis</name>
