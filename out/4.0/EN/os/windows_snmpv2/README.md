@@ -1,5 +1,5 @@
 
-# Template OS Windows by SNMPv2
+# Template OS Windows SNMPv2
 
 ## Overview
 
