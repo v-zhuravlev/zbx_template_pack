@@ -1,0 +1,50 @@
+name: Checkout templator
+on: [push]
+
+jobs:
+  build:
+    name: Checkout templator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Checkout templator
+        working-directory: ..
+        run: |
+          git clone ${{ secrets.templator_url }} -q templator
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build with Maven
+        working-directory: ../templator
+        run: mvn -B package --file pom.xml
+      - name: Run templator
+        working-directory: ../templator
+        env:
+          ZABBIX_ENABLED: false
+#           SPRING_MAIN_BANNER_MODE: off
+          CAMEL_SPRINGBOOT_MAIN-RUN-CONTROLLER: true
+          CAMEL_SPRINGBOOT_DURATION-MAX-IDLE-SECONDS: 10  
+          FILTER: .*template.*
+          DIR_IN: ../zbx_template_pack/in
+          DIR_OUT: ../zbx_template_pack/out
+          DIR_PROTOTYPES: ../zbx_template_pack/prototypes
+        run: |
+          java -jar target/zabbix-template-generator-*.jar
+
+      - name: Git status
+        run: |
+          git status
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Add changes" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

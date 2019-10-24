@@ -1,0 +1,38 @@
+name: Import all templates into Zabbix
+on: [push]
+
+jobs:
+  build:
+    name: Import templates
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: [EN, RU]
+        zabbix_version: ["3.2", "3.4", "4.0", "4.2", "4.4"]
+    env:
+      LANG: ${{ matrix.lang }}
+      ZABBIX_VERSION: ${{ matrix.zabbix_version }}
+      DOCKER_TAG: ubuntu-${{ matrix.zabbix_version }}-latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Start Zabbix server
+        run: |
+          python -m pip install py-zabbix
+          pushd tests/docker && docker-compose up -d
+          popd
+          pushd bin
+          while ! python check-api.py; do sleep 5; done
+          popd
+      - name: Test
+        run: |
+          pushd bin
+          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f -name "*module*" -name "*.xml" | sort | xargs -n 1 ./import-templates.py
+          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f ! -name "*module*" -name "*.xml" | xargs -n 1 ./import-templates.py
