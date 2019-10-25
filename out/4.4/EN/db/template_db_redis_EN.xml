@@ -75,6 +75,52 @@ Template tooling version used: 0.33</description>
                </master_item>
             </item>
             <item>
+               <name>Redis: Max input buffer</name>
+               <type>DEPENDENT</type>
+               <key>redis.clients.max_input_buffer</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <description>The biggest input buffer among current client connections</description>
+               <applications>
+                  <application>
+                     <name>Redis</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>var clients = JSON.parse(value).Clients
+return clients.client_recent_max_input_buffer || clients.client_biggest_input_buf</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+            </item>
+            <item>
+               <name>Redis: Max output buffer</name>
+               <type>DEPENDENT</type>
+               <key>redis.clients.max_output_buffer</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <description>The biggest output buffer among current client connections</description>
+               <applications>
+                  <application>
+                     <name>Redis</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>var clients = JSON.parse(value).Clients
+return clients.client_recent_max_output_buffer || clients.client_longest_output_list</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+            </item>
+            <item>
                <name>Redis: Cluster enabled</name>
                <type>DEPENDENT</type>
                <key>redis.cluster.enabled</key>
@@ -265,7 +311,7 @@ Template tooling version used: 0.33</description>
                <key>redis.memory.used_memory_peak</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The peak amount of memory used by Redis</description>
+               <description>Peak amount of memory used by Redis</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -331,6 +377,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.aof_enabled</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>Flag indicating AOF logging is activated</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -425,7 +472,7 @@ Template tooling version used: 0.33</description>
                </master_item>
             </item>
             <item>
-               <name>Redis: Loading</name>
+               <name>Redis: AOF rewrite in progress</name>
                <type>DEPENDENT</type>
                <key>redis.persistence.aof_rewrite_in_progress</key>
                <delay>0</delay>
@@ -473,6 +520,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.loading</key>
                <delay>0</delay>
                <history>7d</history>
+               <description>Flag indicating if the load of a dump file is on-going</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -494,7 +542,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.rdb_bgsave_in_progress</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>One if a bgsave is in progress and zero otherwise</description>
+               <description>"1" if bgsave is in progress and "0" otherwise</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -516,7 +564,7 @@ Template tooling version used: 0.33</description>
                <key>redis.persistence.rdb_changes_since_last_save</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of changes since the last background save</description>
+               <description>Number of changes since the last background save</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -643,7 +691,7 @@ Template tooling version used: 0.33</description>
                <key>redis.replication.connected_slaves</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of connected slaves</description>
+               <description>Number of connected slaves</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -707,7 +755,7 @@ Template tooling version used: 0.33</description>
                <key>redis.replication.repl_backlog_histlen</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The amount of data in the backlog sync buffer</description>
+               <description>Amount of data in the backlog sync buffer</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -752,6 +800,7 @@ Template tooling version used: 0.33</description>
                <history>7d</history>
                <trends>0</trends>
                <value_type>CHAR</value_type>
+               <description>Value is "master" if the instance is replica of no one, or "slave" if the instance is a replica of some master instance. Note that a replica can be master of another replica (chained replication).</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -975,7 +1024,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.evicted_keys</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The total number of keys evicted due to the maxmemory limit</description>
+               <description>Total number of keys evicted due to the maxmemory limit</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -997,7 +1046,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.expired_keys</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The total number of keys expired from the db</description>
+               <description>Total number of keys expired from the db</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1068,7 +1117,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.instantaneous_ops.rate</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of commands processed by the server per second</description>
+               <description>Number of commands processed by the server per second</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1117,7 +1166,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.keyspace_hits</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The total number of successful lookups in the main db</description>
+               <description>Total number of successful lookups in the main db</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1139,7 +1188,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.keyspace_misses</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The total number of missed lookups in the main db</description>
+               <description>Total number of missed lookups in the main db</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1162,7 +1211,7 @@ Template tooling version used: 0.33</description>
                <delay>0</delay>
                <history>7d</history>
                <units>s</units>
-               <description>The duration of the latest fork</description>
+               <description>Duration of the latest fork</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1209,7 +1258,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.pubsub_channels</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of active pubsub channels</description>
+               <description>Number of active pubsub channels</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1231,7 +1280,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.pubsub_patterns</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of active pubsub patterns</description>
+               <description>Number of active pubsub patterns</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1253,7 +1302,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.rejected_connections</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of rejected connections</description>
+               <description>Number of rejected connections</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1338,7 +1387,7 @@ Template tooling version used: 0.33</description>
                <key>redis.stats.total_commands_processed</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>The number of commands processed by the server</description>
+               <description>Number of commands processed by the server</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -1560,7 +1609,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.db.expires["{#DB}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>The number of keys with an expiration</description>
+                     <description>Number of keys with an expiration</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1605,72 +1654,6 @@ Template tooling version used: 0.33</description>
                   <step>
                      <type>JAVASCRIPT</type>
                      <params>return JSON.stringify(Object.keys(JSON.parse(value).Keyspace).map(function (v){return {"{#DB}": v}}));</params>
-                  </step>
-               </preprocessing>
-            </discovery_rule>
-            <discovery_rule>
-               <name>Old metrics discovery</name>
-               <type>DEPENDENT</type>
-               <key>redis.metrics.old.discovery</key>
-               <delay>0</delay>
-               <description>Metrics for Redis version below 5</description>
-               <item_prototypes>
-                  <item_prototype>
-                     <name>Redis: Max input buffer</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.clients.client_biggest_input_buf</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <description>The biggest input buffer among current client connections</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Clients.client_biggest_input_buf</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Redis: Max output buffer</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.clients.client_longest_output_list</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <description>The longest output list among current client connections</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Clients.client_longest_output_list</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-               </item_prototypes>
-               <master_item>
-                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
-               </master_item>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.Server.redis_version</params>
-                  </step>
-                  <step>
-                     <type>JAVASCRIPT</type>
-                     <params>return JSON.stringify(parseInt(value.split('.')[0]) &lt; 5 ? [{'{#SINGLETON}': ''}] : []);</params>
                   </step>
                </preprocessing>
             </discovery_rule>
@@ -1960,7 +1943,7 @@ Template tooling version used: 0.33</description>
                      <key>redis.replication.master_repl_offset[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>The replication offset reported by the master</description>
+                     <description>Replication offset reported by the master</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2037,7 +2020,7 @@ Template tooling version used: 0.33</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
-                     <description>The offset up to which replication IDs are accepted</description>
+                     <description>Offset up to which replication IDs are accepted</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2250,50 +2233,6 @@ Template tooling version used: 0.33</description>
                <delay>0</delay>
                <description>Additional metrics for version 5+</description>
                <item_prototypes>
-                  <item_prototype>
-                     <name>Redis: Max input buffer{#SINGLETON}</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.clients.max_input_buffer[{#SINGLETON}]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <description>The biggest input buffer among current client connections</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Clients.client_recent_max_input_buffer</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Redis: Max output buffer{#SINGLETON}</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.clients.max_output_buffer[{#SINGLETON}]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <description>The biggest output buffer among current client connections</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Clients.client_recent_max_output_buffer</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
                   <item_prototype>
                      <name>Redis: Allocator active{#SINGLETON}</name>
                      <type>DEPENDENT</type>
@@ -2691,6 +2630,397 @@ Template tooling version used: 0.33</description>
                   <step>
                      <type>JAVASCRIPT</type>
                      <params>return JSON.stringify(value.split('.')[0] === '5' ? [{'{#SINGLETON}': ''}] : []);</params>
+                  </step>
+               </preprocessing>
+            </discovery_rule>
+            <discovery_rule>
+               <name>AOF metrics discovery</name>
+               <type>DEPENDENT</type>
+               <key>redis.persistence.aof.discovery</key>
+               <delay>0</delay>
+               <description>If AOF is activated, additional metrics will be added</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Redis: AOF base size{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_base_size[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>AOF file size on latest startup or rewrite</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_base_size</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: AOF buffer length{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_buffer_length[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>Size of the AOF buffer</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_buffer_length</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: AOF current size{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_current_size[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>AOF current file size</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_current_size</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: AOF delayed fsync{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_delayed_fsync[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Delayed fsync counter</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_delayed_fsync</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: AOF pending background I/O fsync{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_pending_bio_fsync[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Number of fsync pending jobs in background I/O queue</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_pending_bio_fsync</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: AOF pending rewrite{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_pending_rewrite[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Flag indicating an AOF rewrite operation will</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_pending_rewrite</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: AOF rewrite buffer length{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.persistence.aof_rewrite_buffer_length[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>Size of the AOF rewrite buffer</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Persistence.aof_rewrite_buffer_length</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+               </item_prototypes>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>return JSON.stringify(JSON.parse(value).Persistence.aof_enabled === '1' ? [{'{#SINGLETON}': ''}] : []);</params>
+                  </step>
+               </preprocessing>
+            </discovery_rule>
+            <discovery_rule>
+               <name>Slave metrics discovery</name>
+               <type>DEPENDENT</type>
+               <key>redis.replication.slave.discovery</key>
+               <delay>0</delay>
+               <description>If the instance is a replica, additional metrics are provided</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Redis: Master host{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.master_host[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <description>Host or IP address of the master</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.master_host</params>
+                        </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>1d</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Master last I/O seconds ago{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.master_last_io_seconds_ago[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <units>s</units>
+                     <description>Number of seconds since the last interaction with master</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.master_last_io_seconds_ago</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Master link status{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.master_link_status[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <description>Status of the link (up/down)</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.master_link_status</params>
+                        </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>1d</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Master port{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.master_port[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Master listening TCP port</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.master_port</params>
+                        </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>1d</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Master sync in progress{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.master_sync_in_progress[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Indicate the master is syncing to the replica</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.master_sync_in_progress</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Slave priority{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.slave_priority[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>The priority of the instance as a candidate for failover</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.slave_priority</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Slave priority{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.slave_read_only[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Flag indicating if the replica is read-only</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.slave_read_only</params>
+                        </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>1d</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: Slave replication offset{#SINGLETON}</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.slave_repl_offset[{#SINGLETON}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>The replication offset of the replica instance</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication.slave_repl_offset</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+               </item_prototypes>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>return JSON.stringify(JSON.parse(value).Replication.role === 'slave' ? [{'{#SINGLETON}': ''}] : []);</params>
                   </step>
                </preprocessing>
             </discovery_rule>

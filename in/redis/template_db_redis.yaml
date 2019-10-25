@@ -40,7 +40,6 @@ templates:
         name: CPU sys
         key: redis.cpu.sys
         units: s
-        master_item: redis.info
         description: System CPU consumed by the Redis server
         preprocessing:
           - type: JSONPATH
@@ -50,7 +49,6 @@ templates:
         name: CPU sys children
         key: redis.cpu.sys_children
         units: s
-        master_item: redis.info
         description: System CPU consumed by the background processes
         preprocessing:
           - type: JSONPATH
@@ -60,7 +58,6 @@ templates:
         name: CPU user
         key: redis.cpu.user
         units: s
-        master_item: redis.info
         description: User CPU consumed by the Redis server
         preprocessing:
           - type: JSONPATH
@@ -70,7 +67,6 @@ templates:
         name: CPU user children
         key: redis.cpu.user_children
         units: s
-        master_item: redis.info
         description: User CPU consumed by the background processes
         preprocessing:
           - type: JSONPATH
@@ -80,16 +76,34 @@ templates:
       - _prototype: redis._unsigned
         name: Blocked clients
         key: redis.clients.blocked
-        master_item: redis.info
         description: The number of connections waiting on a blocking call
         preprocessing:
           - type: JSONPATH
             params: '$.Clients.blocked_clients'
 
       - _prototype: redis._unsigned
+        name: 'Max input buffer'
+        key: 'redis.clients.max_input_buffer'
+        description: The biggest input buffer among current client connections
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              var clients = JSON.parse(value).Clients
+              return clients.client_recent_max_input_buffer || clients.client_biggest_input_buf
+
+      - _prototype: redis._unsigned
+        name: 'Max output buffer'
+        key: 'redis.clients.max_output_buffer'
+        description: The biggest output buffer among current client connections
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              var clients = JSON.parse(value).Clients
+              return clients.client_recent_max_output_buffer || clients.client_longest_output_list
+
+      - _prototype: redis._unsigned
         name: Connected clients
         key: redis.clients.connected
-        master_item: redis.info
         description: The number of connected clients
         preprocessing:
           - type: JSONPATH
@@ -99,7 +113,6 @@ templates:
       - _prototype: redis._unsigned
         name: Cluster enabled
         key: redis.cluster.enabled
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -110,7 +123,6 @@ templates:
       - _prototype: redis._unsigned
         name: Memory used
         key: redis.memory.used_memory
-        master_item: redis.info
         description: 'Amount of memory allocated by Redis'
         preprocessing:
           - type: JSONPATH
@@ -119,7 +131,6 @@ templates:
       - _prototype: redis._unsigned
         name: Memory used Lua
         key: redis.memory.used_memory_lua
-        master_item: redis.info
         description: 'Amount of memory used by the Lua engine'
         preprocessing:
           - type: JSONPATH
@@ -128,8 +139,7 @@ templates:
       - _prototype: redis._unsigned
         name: 'Memory used peak'
         key: 'redis.memory.used_memory_peak'
-        master_item: redis.info
-        description: 'The peak amount of memory used by Redis'
+        description: 'Peak amount of memory used by Redis'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory_peak'
@@ -137,7 +147,6 @@ templates:
       - _prototype: redis._unsigned
         name: Memory used RSS
         key: redis.memory.used_memory_rss
-        master_item: redis.info
         description: 'Amount of memory that Redis allocated as seen by the os'
         preprocessing:
           - type: JSONPATH
@@ -148,7 +157,6 @@ templates:
       - _prototype: redis._float
         name: AOF current rewrite time in seconds
         key: redis.persistence.aof_current_rewrite_time_sec
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -157,8 +165,7 @@ templates:
       - _prototype: redis._unsigned
         name: AOF enabled
         key: redis.persistence.aof_enabled
-        master_item: redis.info
-        description: ''
+        description: 'Flag indicating AOF logging is activated'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_enabled'
@@ -166,7 +173,6 @@ templates:
       - _prototype: redis._char
         name: AOF last bgrewrite status
         key: redis.persistence.aof_last_bgrewrite_status
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -178,7 +184,6 @@ templates:
         name: AOF last rewrite time sec
         key: redis.persistence.aof_last_rewrite_time_sec
         units: s
-        master_item: redis.info
         description: 'Duration of the last AOF rewrite'
         preprocessing:
           - type: JSONPATH
@@ -187,7 +192,6 @@ templates:
       - _prototype: redis._char
         name: AOF last write status
         key: redis.persistence.aof_last_write_status
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -196,9 +200,8 @@ templates:
             params: 1d
 
       - _prototype: redis._unsigned
-        name: Loading
+        name: AOF rewrite in progress
         key: redis.persistence.aof_rewrite_in_progress
-        master_item: redis.info
         description: 'Flag indicating a AOF rewrite operation is on-going'
         preprocessing:
           - type: JSONPATH
@@ -207,7 +210,6 @@ templates:
       - _prototype: redis._unsigned
         name: AOF rewrite scheduled
         key: redis.persistence.aof_rewrite_scheduled
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -217,8 +219,7 @@ templates:
       - _prototype: redis._unsigned
         name: Loading
         key: redis.persistence.loading
-        master_item: redis.info
-        description: ''
+        description: 'Flag indicating if the load of a dump file is on-going'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.loading'
@@ -226,8 +227,7 @@ templates:
       - _prototype: redis._unsigned
         name: RDB bgsave in progress
         key: redis.persistence.rdb_bgsave_in_progress
-        master_item: redis.info
-        description: 'One if a bgsave is in progress and zero otherwise'
+        description: '"1" if bgsave is in progress and "0" otherwise'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_bgsave_in_progress'
@@ -235,8 +235,7 @@ templates:
       - _prototype: redis._unsigned
         name: RDB changes since last save
         key: redis.persistence.rdb_changes_since_last_save
-        master_item: redis.info
-        description: 'The number of changes since the last background save'
+        description: 'Number of changes since the last background save'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_changes_since_last_save'
@@ -244,7 +243,6 @@ templates:
       - _prototype: redis._float
         name: RDB current bgsave time sec
         key: redis.persistence.rdb_current_bgsave_time_sec
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -253,7 +251,6 @@ templates:
       - _prototype: redis._char
         name: RDB last bgsave status
         key: redis.persistence.rdb_last_bgsave_status
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -265,7 +262,6 @@ templates:
         name: RDB last bgsave time in seconds
         key: redis.persistence.rdb_last_bgsave_time_sec
         units: s
-        master_item: redis.info
         description: 'Duration of the last bg_save operation'
         preprocessing:
           - type: JSONPATH
@@ -274,7 +270,6 @@ templates:
       - _prototype: redis._unsigned
         name: RDB last save time
         key: redis.persistence.rdb_last_save_time
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -285,8 +280,7 @@ templates:
       - _prototype: redis._unsigned
         name: Connected slaves
         key: redis.replication.connected_slaves
-        master_item: redis.info
-        description: 'The number of connected slaves'
+        description: 'Number of connected slaves'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.connected_slaves'
@@ -294,7 +288,6 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog active
         key: redis.replication.repl_backlog_active
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -303,7 +296,6 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog first byte offset
         key: redis.replication.repl_backlog_first_byte_offset
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -312,8 +304,7 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog history length
         key: redis.replication.repl_backlog_histlen
-        master_item: redis.info
-        description: 'The amount of data in the backlog sync buffer'
+        description: 'Amount of data in the backlog sync buffer'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.repl_backlog_histlen'
@@ -321,7 +312,6 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog size
         key: redis.replication.repl_backlog_size
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -330,8 +320,7 @@ templates:
       - _prototype: redis._char
         name: Replication role
         key: redis.replication.role
-        master_item: redis.info
-        description: ''
+        description: 'Value is "master" if the instance is replica of no one, or "slave" if the instance is a replica of some master instance. Note that a replica can be master of another replica (chained replication).'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.role'
@@ -343,7 +332,6 @@ templates:
       - _prototype: redis._unsigned
         name: Arch bits
         key: redis.server.arch_bits
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -354,7 +342,6 @@ templates:
       - _prototype: redis._char
         name: Config file
         key: redis.server.config_file
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -365,7 +352,6 @@ templates:
       - _prototype: redis._unsigned
         name: Process id
         key: redis.server.process_id
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -376,7 +362,6 @@ templates:
       - _prototype: redis._char
         name: Redis mode
         key: redis.server.redis_mode
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -387,7 +372,6 @@ templates:
       - _prototype: redis._char
         name: Redis version
         key: redis.server.redis_version
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -398,7 +382,6 @@ templates:
       - _prototype: redis._unsigned
         name: TCP port
         key: redis.server.tcp_port
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -409,7 +392,6 @@ templates:
       - _prototype: redis._unsigned
         name: Uptime in days
         key: redis.server.uptime_in_days
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -418,7 +400,6 @@ templates:
       - _prototype: redis._unsigned
         name: Uptime in seconds
         key: redis.server.uptime_in_seconds
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -429,8 +410,7 @@ templates:
       - _prototype: redis._unsigned
         name: Evicted keys
         key: redis.stats.evicted_keys
-        master_item: redis.info
-        description: 'The total number of keys evicted due to the maxmemory limit'
+        description: 'Total number of keys evicted due to the maxmemory limit'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.evicted_keys'
@@ -438,8 +418,7 @@ templates:
       - _prototype: redis._unsigned
         name: Expired keys
         key: redis.stats.expired_keys
-        master_item: redis.info
-        description: 'The total number of keys expired from the db'
+        description: 'Total number of keys expired from the db'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.expired_keys'
@@ -447,7 +426,6 @@ templates:
       - _prototype: redis._float
         name: Expired time cap reached count
         key: redis.stats.expired_time_cap_reached_count
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -457,7 +435,6 @@ templates:
         name: Instantaneous input bytes per second
         key: redis.stats.instantaneous_input.rate
         units: Bps
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -468,8 +445,7 @@ templates:
       - _prototype: redis._unsigned
         name: Instantaneous operations per sec
         key: redis.stats.instantaneous_ops.rate
-        master_item: redis.info
-        description: 'The number of commands processed by the server per second'
+        description: 'Number of commands processed by the server per second'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.instantaneous_ops_per_sec'
@@ -478,7 +454,6 @@ templates:
         name: Instantaneous output bytes per second
         key: redis.stats.instantaneous_output.rate
         units: Bps
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -489,8 +464,7 @@ templates:
       - _prototype: redis._unsigned
         name: Keyspace hits
         key: redis.stats.keyspace_hits
-        master_item: redis.info
-        description: 'The total number of successful lookups in the main db'
+        description: 'Total number of successful lookups in the main db'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.keyspace_hits'
@@ -498,8 +472,7 @@ templates:
       - _prototype: redis._unsigned
         name: Keyspace misses
         key: redis.stats.keyspace_misses
-        master_item: redis.info
-        description: 'The total number of missed lookups in the main db'
+        description: 'Total number of missed lookups in the main db'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.keyspace_misses'
@@ -508,8 +481,7 @@ templates:
         name: Latest fork usec
         key: redis.stats.latest_fork_usec
         units: s
-        master_item: redis.info
-        description: 'The duration of the latest fork'
+        description: 'Duration of the latest fork'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.latest_fork_usec'
@@ -519,7 +491,6 @@ templates:
       - _prototype: redis._unsigned
         name: Migrate cached sockets
         key: redis.stats.migrate_cached_sockets
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -528,8 +499,7 @@ templates:
       - _prototype: redis._unsigned
         name: Pubsub channels
         key: redis.stats.pubsub_channels
-        master_item: redis.info
-        description: 'The number of active pubsub channels'
+        description: 'Number of active pubsub channels'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.pubsub_channels'
@@ -537,8 +507,7 @@ templates:
       - _prototype: redis._unsigned
         name: Pubsub patterns
         key: redis.stats.pubsub_patterns
-        master_item: redis.info
-        description: 'The number of active pubsub patterns'
+        description: 'Number of active pubsub patterns'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.pubsub_patterns'
@@ -546,8 +515,7 @@ templates:
       - _prototype: redis._unsigned
         name: Rejected connections
         key: redis.stats.rejected_connections
-        master_item: redis.info
-        description: 'The number of rejected connections'
+        description: 'Number of rejected connections'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.rejected_connections'
@@ -555,7 +523,6 @@ templates:
       - _prototype: redis._unsigned
         name: Sync full
         key: redis.stats.sync_full
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -564,7 +531,6 @@ templates:
       - _prototype: redis._unsigned
         name: Sync partial err
         key: redis.stats.sync_partial_err
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -573,7 +539,6 @@ templates:
       - _prototype: redis._unsigned
         name: Sync partial ok
         key: redis.stats.sync_partial_ok
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -582,8 +547,7 @@ templates:
       - _prototype: redis._unsigned
         name: Total commands processed
         key: redis.stats.total_commands_processed
-        master_item: redis.info
-        description: 'The number of commands processed by the server'
+        description: 'Number of commands processed by the server'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.total_commands_processed'
@@ -591,7 +555,6 @@ templates:
       - _prototype: redis._unsigned
         name: Total connections received
         key: redis.stats.total_connections_received
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -600,7 +563,6 @@ templates:
       - _prototype: redis._unsigned
         name: Total net input bytes
         key: redis.stats.total_net_input_bytes
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -609,7 +571,6 @@ templates:
       - _prototype: redis._unsigned
         name: Total net output bytes
         key: redis.stats.total_net_output_bytes
-        master_item: redis.info
         description: ''
         preprocessing:
           - type: JSONPATH
@@ -654,7 +615,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'DB {#DB}: Average TTL'
             key: redis.db.avg_ttl["{#DB}"]
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -663,8 +623,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'DB {#DB}: Expires'
             key: redis.db.expires["{#DB}"]
-            master_item: redis.info
-            description: 'The number of keys with an expiration'
+            description: 'Number of keys with an expiration'
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].expires'
@@ -672,11 +631,174 @@ templates:
           - _prototype: redis._unsigned
             name: 'DB {#DB}: Keys'
             key: redis.db.keys["{#DB}"]
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].keys'
+
+      - name: 'AOF metrics discovery'
+        description: |
+          If AOF is activated, additional metrics will be added
+
+        key: redis.persistence.aof.discovery
+        type: DEPENDENT
+        masterItem: redis.info
+
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              return JSON.stringify(JSON.parse(value).Persistence.aof_enabled === '1' ? [{'{#SINGLETON}': ''}] : []);
+        
+        items:
+          - _prototype: redis._unsigned
+            name: 'AOF current size{#SINGLETON}'
+            key: 'redis.persistence.aof_current_size[{#SINGLETON}]'
+            units: B
+            description: 'AOF current file size'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_current_size'
+
+          - _prototype: redis._unsigned
+            name: 'AOF base size{#SINGLETON}'
+            key: 'redis.persistence.aof_base_size[{#SINGLETON}]'
+            units: B
+            description: 'AOF file size on latest startup or rewrite'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_base_size'
+
+          - _prototype: redis._unsigned
+            name: 'AOF pending rewrite{#SINGLETON}'
+            key: 'redis.persistence.aof_pending_rewrite[{#SINGLETON}]'
+            description: 'Flag indicating an AOF rewrite operation will'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_pending_rewrite'
+
+          - _prototype: redis._unsigned
+            name: 'AOF buffer length{#SINGLETON}'
+            key: 'redis.persistence.aof_buffer_length[{#SINGLETON}]'
+            units: B
+            description: 'Size of the AOF buffer'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_buffer_length'
+
+          - _prototype: redis._unsigned
+            name: 'AOF rewrite buffer length{#SINGLETON}'
+            key: 'redis.persistence.aof_rewrite_buffer_length[{#SINGLETON}]'
+            units: B
+            description: 'Size of the AOF rewrite buffer'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_rewrite_buffer_length'
+
+          - _prototype: redis._unsigned
+            name: 'AOF pending background I/O fsync{#SINGLETON}'
+            key: 'redis.persistence.aof_pending_bio_fsync[{#SINGLETON}]'
+            description: 'Number of fsync pending jobs in background I/O queue'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_pending_bio_fsync'
+
+          - _prototype: redis._unsigned
+            name: 'AOF delayed fsync{#SINGLETON}'
+            key: 'redis.persistence.aof_delayed_fsync[{#SINGLETON}]'
+            description: 'Delayed fsync counter'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Persistence.aof_delayed_fsync'
+
+        ### Slave metrics discovery ###
+        ###########################################
+      - name: 'Slave metrics discovery'
+        description: |
+          If the instance is a replica, additional metrics are provided
+
+        key: redis.replication.slave.discovery
+        type: DEPENDENT
+        masterItem: redis.info
+
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              return JSON.stringify(JSON.parse(value).Replication.role === 'slave' ? [{'{#SINGLETON}': ''}] : []);
+
+        items:
+          - _prototype: redis._char
+            name: 'Master host{#SINGLETON}'
+            key: redis.replication.master_host[{#SINGLETON}]
+            description: 'Host or IP address of the master'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.master_host'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: redis._unsigned
+            name: 'Master port{#SINGLETON}'
+            key: redis.replication.master_port[{#SINGLETON}]
+            description: 'Master listening TCP port'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.master_port'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: redis._char
+            name: 'Master link status{#SINGLETON}'
+            key: redis.replication.master_link_status[{#SINGLETON}]
+            description: 'Status of the link (up/down)'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.master_link_status'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: redis._unsigned
+            name: 'Master last I/O seconds ago{#SINGLETON}'
+            key: redis.replication.master_last_io_seconds_ago[{#SINGLETON}]
+            units: s
+            description: 'Number of seconds since the last interaction with master'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.master_last_io_seconds_ago'
+
+          - _prototype: redis._unsigned
+            name: 'Master sync in progress{#SINGLETON}'
+            key: redis.replication.master_sync_in_progress[{#SINGLETON}]
+            description: 'Indicate the master is syncing to the replica'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.master_sync_in_progress'
+
+          - _prototype: redis._unsigned
+            name: 'Slave replication offset{#SINGLETON}'
+            key: redis.replication.slave_repl_offset[{#SINGLETON}]
+            description: 'The replication offset of the replica instance'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.slave_repl_offset'
+
+          - _prototype: redis._unsigned
+            name: 'Slave priority{#SINGLETON}'
+            key: redis.replication.slave_priority[{#SINGLETON}]
+            description: 'The priority of the instance as a candidate for failover'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.slave_priority'
+
+          - _prototype: redis._unsigned
+            name: 'Slave priority{#SINGLETON}'
+            key: redis.replication.slave_read_only[{#SINGLETON}]
+            description: 'Flag indicating if the replica is read-only'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication.slave_read_only'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
 
         ### Process metrics discovery ###
         #################################
@@ -724,38 +846,36 @@ templates:
 
       ### Metrics for Redis version below 5 ###
       #########################################
-      - name: 'Old metrics discovery'
-        description: |
-          Metrics for Redis version below 5
+      # - name: 'Old metrics discovery'
+      #   description: |
+      #     Metrics for Redis version below 5
 
-        key: redis.metrics.old.discovery
-        type: DEPENDENT
-        masterItem: redis.info
-        preprocessing:
-          - type: JSONPATH
-            params: '$.Server.redis_version'
-          - type: JAVASCRIPT
-            params: |-
-              return JSON.stringify(parseInt(value.split('.')[0]) < 5 ? [{'{#SINGLETON}': ''}] : []);
+      #   key: redis.metrics.old.discovery
+      #   type: DEPENDENT
+      #   masterItem: redis.info
+      #   preprocessing:
+      #     - type: JSONPATH
+      #       params: '$.Server.redis_version'
+      #     - type: JAVASCRIPT
+      #       params: |-
+      #         return JSON.stringify(parseInt(value.split('.')[0]) < 5 ? [{'{#SINGLETON}': ''}] : []);
 
-        items:
-          - _prototype: redis._unsigned
-            name: Max output buffer
-            key: redis.clients.client_longest_output_list
-            master_item: redis.info
-            description: The longest output list among current client connections
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Clients.client_longest_output_list'
+      #   items:
+      #     - _prototype: redis._unsigned
+      #       name: Max output buffer
+      #       key: redis.clients.client_longest_output_list
+      #       description: The longest output list among current client connections
+      #       preprocessing:
+      #         - type: JSONPATH
+      #           params: '$.Clients.client_longest_output_list'
 
-          - _prototype: redis._unsigned
-            name: Max input buffer
-            key: redis.clients.client_biggest_input_buf
-            master_item: redis.info
-            description: The biggest input buffer among current client connections
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Clients.client_biggest_input_buf'
+      #     - _prototype: redis._unsigned
+      #       name: Max input buffer
+      #       key: redis.clients.client_biggest_input_buf
+      #       description: The biggest input buffer among current client connections
+      #       preprocessing:
+      #         - type: JSONPATH
+      #           params: '$.Clients.client_biggest_input_buf'
 
 
       ### Metrics for Redis version 4 and above ###
@@ -778,7 +898,6 @@ templates:
           - _prototype: redis._char
             name: 'Executable path{#SINGLETON}'
             key: 'redis.server.executable[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -789,7 +908,6 @@ templates:
           - _prototype: redis._float
             name: 'Memory used peak %{#SINGLETON}'
             key: 'redis.memory.used_memory_peak_perc[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -800,7 +918,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used overhead{#SINGLETON}'
             key: 'redis.memory.used_memory_overhead[{#SINGLETON}]'
-            master_item: redis.info
             description: 'Sum of all overheads allocated by Redis for managing its internal datastructures'
             preprocessing:
               - type: JSONPATH
@@ -809,7 +926,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used startup{#SINGLETON}'
             key: 'redis.memory.used_memory_startup[{#SINGLETON}]'
-            master_item: redis.info
             description: 'Amount of memory consumed by Redis at startup'
             preprocessing:
               - type: JSONPATH
@@ -818,7 +934,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used dataset{#SINGLETON}'
             key: 'redis.memory.used_memory_dataset[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -827,7 +942,6 @@ templates:
           - _prototype: redis._float
             name: 'Memory used dataset %{#SINGLETON}'
             key: 'redis.memory.used_memory_dataset_perc[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -838,7 +952,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Total system memory{#SINGLETON}'
             key: 'redis.memory.total_system_memory[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -847,7 +960,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Max memory{#SINGLETON}'
             key: 'redis.memory.maxmemory[{#SINGLETON}]'
-            master_item: redis.info
             description: 'Maximum amount of memory allocated to the Redisdb system'
             preprocessing:
               - type: JSONPATH
@@ -856,7 +968,6 @@ templates:
           - _prototype: redis._char
             name: 'Max memory policy{#SINGLETON}'
             key: 'redis.memory.maxmemory_policy[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -867,7 +978,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag running{#SINGLETON}'
             key: 'redis.memory.active_defrag_running[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -876,7 +986,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Lazyfree pending objects{#SINGLETON}'
             key: 'redis.memory.lazyfree_pending_objects[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -885,7 +994,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'RDB last cow size{#SINGLETON}'
             key: 'redis.persistence.rdb_last_cow_size[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -894,7 +1002,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'AOF last cow size{#SINGLETON}'
             key: 'redis.persistence.aof_last_cow_size[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -903,7 +1010,6 @@ templates:
           - _prototype: redis._float
             name: 'Expired stale %{#SINGLETON}'
             key: 'redis.stats.expired_stale_perc[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -912,7 +1018,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Expired time cap reached count{#SINGLETON}'
             key: 'redis.stats.expired_time_cap_reached_count[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -921,7 +1026,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Slave expires tracked keys{#SINGLETON}'
             key: 'redis.stats.slave_expires_tracked_keys[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -930,7 +1034,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag hits{#SINGLETON}'
             key: 'redis.stats.active_defrag_hits[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -939,7 +1042,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag misses{#SINGLETON}'
             key: 'redis.stats.active_defrag_misses[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -948,7 +1050,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag key hits{#SINGLETON}'
             key: 'redis.stats.active_defrag_key_hits[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -957,7 +1058,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag key misses{#SINGLETON}'
             key: 'redis.stats.active_defrag_key_misses[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -966,7 +1066,6 @@ templates:
           - _prototype: redis._char
             name: 'Master replication id{#SINGLETON}'
             key: 'redis.replication.master_replid[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -977,7 +1076,6 @@ templates:
           - _prototype: redis._char
             name: 'Master replication id 2{#SINGLETON}'
             key: 'redis.replication.master_replid2[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -988,8 +1086,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Master replication offset{#SINGLETON}'
             key: 'redis.replication.master_repl_offset[{#SINGLETON}]'
-            master_item: redis.info
-            description: 'The replication offset reported by the master'
+            description: 'Replication offset reported by the master'
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication.master_repl_offset'
@@ -997,8 +1094,7 @@ templates:
           - _prototype: redis._float
             name: 'Replication second offset{#SINGLETON}'
             key: 'redis.replication.second_repl_offset[{#SINGLETON}]'
-            master_item: redis.info
-            description: 'The offset up to which replication IDs are accepted'
+            description: 'Offset up to which replication IDs are accepted'
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication.second_repl_offset'
@@ -1021,30 +1117,10 @@ templates:
               return JSON.stringify(value.split('.')[0] === '5' ? [{'{#SINGLETON}': ''}] : []);
 
         items:
-          - _prototype: redis._unsigned
-            name: 'Max input buffer{#SINGLETON}'
-            key: 'redis.clients.max_input_buffer[{#SINGLETON}]'
-            master_item: redis.info
-            description: The biggest input buffer among current client connections
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Clients.client_recent_max_input_buffer'
-
-          - _prototype: redis._unsigned
-            name: 'Max output buffer{#SINGLETON}'
-            key: 'redis.clients.max_output_buffer[{#SINGLETON}]'
-            master_item: redis.info
-            description: The biggest output buffer among current client connections
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Clients.client_recent_max_output_buffer'
-
-          # *********************************
 
           - _prototype: redis._unsigned
             name: 'Allocator active{#SINGLETON}'
             key: 'redis.memory.allocator_active[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1053,7 +1129,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Allocator allocated{#SINGLETON}'
             key: 'redis.memory.allocator_allocated[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1062,7 +1137,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Allocator resident{#SINGLETON}'
             key: 'redis.memory.allocator_resident[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1071,7 +1145,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used scripts{#SINGLETON}'
             key: 'redis.memory.used_memory_scripts[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1080,7 +1153,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory number of cached scripts{#SINGLETON}'
             key: 'redis.memory.number_of_cached_scripts[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1089,7 +1161,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Allocator fragmentation bytes{#SINGLETON}'
             key: 'redis.memory.allocator_frag_bytes[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1098,7 +1169,6 @@ templates:
           - _prototype: redis._float
             name: 'Allocator fragmentation ratio{#SINGLETON}'
             key: 'redis.memory.allocator_frag_ratio[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1107,7 +1177,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Allocator RSS bytes{#SINGLETON}'
             key: 'redis.memory.allocator_rss_bytes[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1116,7 +1185,6 @@ templates:
           - _prototype: redis._float
             name: 'Allocator RSS ratio{#SINGLETON}'
             key: 'redis.memory.allocator_rss_ratio[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1125,7 +1193,6 @@ templates:
           - _prototype: redis._float
             name: 'Memory RSS overhead bytes{#SINGLETON}'
             key: 'redis.memory.rss_overhead_bytes[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1134,7 +1201,6 @@ templates:
           - _prototype: redis._float
             name: 'Memory RSS overhead ratio{#SINGLETON}'
             key: 'redis.memory.rss_overhead_ratio[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1143,7 +1209,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory fragmentation bytes{#SINGLETON}'
             key: 'redis.memory.fragmentation_bytes[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1152,7 +1217,6 @@ templates:
           - _prototype: redis._float
             name: 'Memory fragmentation ratio{#SINGLETON}'
             key: 'redis.memory.fragmentation_ratio[{#SINGLETON}]'
-            master_item: redis.info
             description: 'Ratio between used_memory_rss and used_memory'
             preprocessing:
               - type: JSONPATH
@@ -1161,7 +1225,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory not counted for evict{#SINGLETON}'
             key: 'redis.memory.not_counted_for_evict[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1170,7 +1233,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory replication backlog{#SINGLETON}'
             key: 'redis.memory.replication_backlog[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1179,7 +1241,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory clients normal{#SINGLETON}'
             key: 'redis.memory.mem_clients_normal[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1188,7 +1249,6 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory clients slaves{#SINGLETON}'
             key: 'redis.memory.mem_clients_slaves[{#SINGLETON}]'
-            master_item: redis.info
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1196,8 +1256,7 @@ templates:
 
           - _prototype: redis._unsigned
             name: 'Memory AOF buffer{#SINGLETON}'
-            key: 'redis.memory.mem_aof_buffer[{#SINGLETON}]'
-            master_item: redis.info 
+            key: 'redis.memory.mem_aof_buffer[{#SINGLETON}]' 
             description: 'Size of the AOF buffer'
             preprocessing:
               - type: JSONPATH
