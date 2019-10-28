@@ -1,0 +1,55 @@
+[
+    {
+        "_id": "mysql.get_status_variables",
+        "_zbx_ver": "3.4",
+        // "_resource": "Nginx",
+        "name": "Availability: Get status variables",
+        "delay": "1m",
+        "history": "1h",
+        "trends": "0",
+        "value_type": "TEXT",
+        "_group": "Zabbix_raw_items",
+        "description": "The item gets server global status information."
+    },
+    {
+        "_id": "mysql.ping",
+        "_zbx_ver": "3.4",
+        "name": "Availability: MySQL status",
+        "delay": "1m",
+        "history": "7d",
+        "trends": "365d",
+        "value_type": "UNSIGNED",
+        "_group": "MySQL",
+        "description": ""
+    },
+    {
+        "_id": "mysql.version",
+        "_zbx_ver": "3.4",
+        "name": "Info: MySQL version",
+        "delay": "15m",
+        "history": "7d",
+        "value_type": "CHAR",
+        "_group": "MySQL",
+        "description": ""
+    },
+    {
+        "_id": "mysql.aborted_clients.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Aborted clients per second",
+        "type": "DEPENDENT",
+        "key": "mysql.aborted_clients.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of connections that were aborted because the client died without closing the connection properly.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Aborted_clients']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    }
+]
