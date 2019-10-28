@@ -1,0 +1,30 @@
+---
+templates:
+  - name: Template App MySQL by agent
+    macros:
+      - macro: "{$MYSQL.ABORTED_CONN.MAX.WARN}"
+        _description: ""
+        value: "3"
+      - macro: "{$MYSQL.HOST}"
+        _description: ""
+        value: "localhost"
+      - macro: "{$MYSQL.PORT}"
+        _description: ""
+        value: "3306"
+      - macro: "{$MYSQL.REPL_LAG.MAX.WARN}"
+        _description: ""
+        value: "30m"
+      - macro: "{$MYSQL.SLOW_QUERIES.MAX.WARN}"
+        _description: ""
+        value: "3"
+    items:
+      - _prototype: mysql.get_status_variables
+        type: ZABBIX_PASSIVE
+        key: mysql.get_status_variables["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+      - _prototype: mysql.ping
+        type: ZABBIX_PASSIVE
+        key: mysql.ping["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+      - _prototype: mysql.version
+        type: ZABBIX_PASSIVE
+        Key: mysql.version["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+      - _prototype: mysql.aborted_clients.rate
