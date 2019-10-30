@@ -1,9 +1,13 @@
-name: Checkout templator
-on: [push]
+name: Generate XML templates
+on:
+  push:
+    paths:
+      - "DISABLEDin/**"
+      - "DISABLEDprototypes/**"
 
 jobs:
   build:
-    name: Checkout templator
+    name: Generate XML templates
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -25,9 +29,9 @@ jobs:
         working-directory: ../templator
         env:
           ZABBIX_ENABLED: false
-#           SPRING_MAIN_BANNER_MODE: off
+          #           SPRING_MAIN_BANNER_MODE: off
           CAMEL_SPRINGBOOT_MAIN-RUN-CONTROLLER: true
-          CAMEL_SPRINGBOOT_DURATION-MAX-IDLE-SECONDS: 10  
+          CAMEL_SPRINGBOOT_DURATION-MAX-IDLE-SECONDS: 10
           FILTER: .*template.*
           DIR_IN: ../zbx_template_pack/in
           DIR_OUT: ../zbx_template_pack/out
@@ -42,7 +46,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "Add changes" -a
+          git add out
+          git commit -m "Updated XML templates" -a
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
