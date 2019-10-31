@@ -143,6 +143,33 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                </master_item>
             </item>
             <item>
+               <name>Redis: Max clients</name>
+               <type>DEPENDENT</type>
+               <key>redis.config.maxclients</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <description>Max number of connected clients at the same time.&#13;
+Once the limit is reached Redis will close all the new connections sending an error "max number of clients reached".</description>
+               <applications>
+                  <application>
+                     <name>Redis</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JSONPATH</type>
+                     <params>$.maxclients</params>
+                  </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>30m</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>redis.config["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+            </item>
+            <item>
                <name>Redis: Get config</name>
                <key>redis.config["{$REDIS.CONN.URI}"]</key>
                <history>1h</history>
@@ -153,6 +180,16 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <name>Zabbix raw items</name>
                   </application>
                </applications>
+               <triggers>
+                  <trigger>
+                     <expression>{diff()}=1 and {strlen()}&gt;0</expression>
+                     <recovery_mode>NONE</recovery_mode>
+                     <name>Redis: Configuration has changed</name>
+                     <priority>INFO</priority>
+                     <description>Redis configuration has changed. Ack to close.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: CPU sys</name>
@@ -261,6 +298,21 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <name>Zabbix raw items</name>
                   </application>
                </applications>
+               <triggers>
+                  <trigger>
+                     <expression>{nodata(30m)}=1</expression>
+                     <name>Redis: Failed to fetch info data (or no data for 30m)</name>
+                     <priority>WARNING</priority>
+                     <description>Zabbix has not received data for items for the last 30 minutes</description>
+                     <manual_close>YES</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>Redis: Service is down</name>
+                           <expression>{Template DB Redis:redis.ping["{$REDIS.CONN.URI}"].last()}=0</expression>
+                        </dependency>
+                     </dependencies>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: Memory used</name>
@@ -268,7 +320,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.memory.used_memory</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>Amount of memory allocated by Redis</description>
+               <units>B</units>
+               <description>Total number of bytes allocated by Redis using its allocator</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -290,6 +343,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.memory.used_memory_lua</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>B</units>
                <description>Amount of memory used by the Lua engine</description>
                <applications>
                   <application>
@@ -312,7 +366,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.memory.used_memory_peak</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>Peak amount of memory used by Redis</description>
+               <units>B</units>
+               <description>Peak memory consumed by Redis (in bytes)</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -334,7 +389,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.memory.used_memory_rss</key>
                <delay>0</delay>
                <history>7d</history>
-               <description>Amount of memory that Redis allocated as seen by the os</description>
+               <units>B</units>
+               <description>Number of bytes that Redis allocated as seen by the operating system</description>
                <applications>
                   <application>
                      <name>Redis</name>
@@ -401,22 +457,23 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.persistence.aof_last_bgrewrite_status</key>
                <delay>0</delay>
                <history>7d</history>
-               <trends>0</trends>
-               <value_type>CHAR</value_type>
                <description>Status of the last AOF rewrite operation</description>
                <applications>
                   <application>
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgwrite status</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
                      <params>$.Persistence.aof_last_bgrewrite_status</params>
                   </step>
                   <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
+                     <type>BOOL_TO_DECIMAL</type>
+                     <params/>
                   </step>
                </preprocessing>
                <master_item>
@@ -453,27 +510,35 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.persistence.aof_last_write_status</key>
                <delay>0</delay>
                <history>7d</history>
-               <trends>0</trends>
-               <value_type>CHAR</value_type>
                <description>Status of the last write operation to the AOF</description>
                <applications>
                   <application>
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgwrite status</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
                      <params>$.Persistence.aof_last_write_status</params>
                   </step>
                   <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
+                     <type>BOOL_TO_DECIMAL</type>
+                     <params/>
                   </step>
                </preprocessing>
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}=0</expression>
+                     <name>Redis: Last AOF write operation failed</name>
+                     <priority>WARNING</priority>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: AOF rewrite in progress</name>
@@ -614,27 +679,35 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.persistence.rdb_last_bgsave_status</key>
                <delay>0</delay>
                <history>7d</history>
-               <trends>0</trends>
-               <value_type>CHAR</value_type>
                <description>Status of the last RDB save operation</description>
                <applications>
                   <application>
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgwrite status</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
                      <params>$.Persistence.rdb_last_bgsave_status</params>
                   </step>
                   <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
+                     <type>BOOL_TO_DECIMAL</type>
+                     <params/>
                   </step>
                </preprocessing>
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}=0</expression>
+                     <name>Redis: Last RDB save operation failed</name>
+                     <priority>WARNING</priority>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: RDB last bgsave time in seconds</name>
@@ -691,6 +764,20 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <name>Redis</name>
                   </application>
                </applications>
+               <preprocessing>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>10m</params>
+                  </step>
+               </preprocessing>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}=0</expression>
+                     <name>Redis: Service is down</name>
+                     <priority>AVERAGE</priority>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: Connected slaves</name>
@@ -708,6 +795,39 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                   <step>
                      <type>JSONPATH</type>
                      <params>$.Replication.connected_slaves</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{diff()}=1</expression>
+                     <recovery_mode>NONE</recovery_mode>
+                     <name>Redis: Slaves number has changed</name>
+                     <priority>INFO</priority>
+                     <description>Redis slaves number has changed. Ack to close.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
+               <name>Redis: Master replication offset</name>
+               <type>DEPENDENT</type>
+               <key>redis.replication.master_repl_offset</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <units>B</units>
+               <description>Replication offset reported by the master</description>
+               <applications>
+                  <application>
+                     <name>Redis</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JSONPATH</type>
+                     <params>$.Replication.master_repl_offset</params>
                   </step>
                </preprocessing>
                <master_item>
@@ -742,6 +862,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.replication.repl_backlog_first_byte_offset</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>B</units>
                <description>The master offset of the replication backlog buffer</description>
                <applications>
                   <application>
@@ -786,6 +907,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.replication.repl_backlog_size</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>B</units>
                <description>Total size in bytes of the replication backlog buffer</description>
                <applications>
                   <application>
@@ -829,60 +951,16 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
-            </item>
-            <item>
-               <name>Redis: Arch bits</name>
-               <type>DEPENDENT</type>
-               <key>redis.server.arch_bits</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <description>Architecture (32 or 64 bits)</description>
-               <applications>
-                  <application>
-                     <name>Redis</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.Server.arch_bits</params>
-                  </step>
-                  <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
-                  </step>
-               </preprocessing>
-               <master_item>
-                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Redis: Config file</name>
-               <type>DEPENDENT</type>
-               <key>redis.server.config_file</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <trends>0</trends>
-               <value_type>CHAR</value_type>
-               <description>The path to the config file</description>
-               <applications>
-                  <application>
-                     <name>Redis</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.Server.config_file</params>
-                  </step>
-                  <step>
-                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                     <params>1d</params>
-                  </step>
-               </preprocessing>
-               <master_item>
-                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
-               </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{diff()}=1 and {strlen()}&gt;0</expression>
+                     <recovery_mode>NONE</recovery_mode>
+                     <name>Redis: Replication role has changed (new role: {ITEM.VALUE})</name>
+                     <priority>WARNING</priority>
+                     <description>Redis replication role has changed. Ack to close.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: Process id</name>
@@ -965,6 +1043,16 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{diff()}=1 and {strlen()}&gt;0</expression>
+                     <recovery_mode>NONE</recovery_mode>
+                     <name>Redis: Version has changed (new version: {ITEM.VALUE})</name>
+                     <priority>INFO</priority>
+                     <description>Redis version has changed. Ack to close.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: TCP port</name>
@@ -993,33 +1081,12 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                </master_item>
             </item>
             <item>
-               <name>Redis: Uptime in days</name>
-               <type>DEPENDENT</type>
-               <key>redis.server.uptime_in_days</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <description>Same value expressed in days</description>
-               <applications>
-                  <application>
-                     <name>Redis</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.Server.uptime_in_days</params>
-                  </step>
-               </preprocessing>
-               <master_item>
-                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
-               </master_item>
-            </item>
-            <item>
                <name>Redis: Uptime in seconds</name>
                <type>DEPENDENT</type>
                <key>redis.server.uptime_in_seconds</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>s</units>
                <description>Number of seconds since Redis server start</description>
                <applications>
                   <application>
@@ -1035,9 +1102,18 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}&lt;10m</expression>
+                     <name>Redis: has been restarted (uptime &lt; 10m)</name>
+                     <priority>INFO</priority>
+                     <description>Uptime is less than 10 minutes</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
             </item>
             <item>
-               <name>Redis: Slowlog count</name>
+               <name>Redis: Slowlog entries per second</name>
                <key>redis.slowlog.count["{$REDIS.CONN.URI}"]</key>
                <history>7d</history>
                <applications>
@@ -1045,6 +1121,19 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <name>Redis</name>
                   </application>
                </applications>
+               <preprocessing>
+                  <step>
+                     <type>CHANGE_PER_SECOND</type>
+                     <params/>
+                  </step>
+               </preprocessing>
+               <triggers>
+                  <trigger>
+                     <expression>{min(5m)}&gt;{$REDIS.SLOWLOG.COUNT.MAX.WARN}</expression>
+                     <name>Redis: Too many entries in the slowlog (over {$REDIS.SLOWLOG.COUNT.MAX.WARN} per second in 5m)</name>
+                     <priority>INFO</priority>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: Evicted keys</name>
@@ -1348,6 +1437,13 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}&gt;0</expression>
+                     <name>Redis: Connections are rejected</name>
+                     <priority>HIGH</priority>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>Redis: Sync full</name>
@@ -1465,6 +1561,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.stats.total_net_input_bytes</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>B</units>
                <description>The total number of bytes read from the network</description>
                <applications>
                   <application>
@@ -1487,6 +1584,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <key>redis.stats.total_net_output_bytes</key>
                <delay>0</delay>
                <history>7d</history>
+               <units>B</units>
                <description>The total number of bytes written to the network</description>
                <applications>
                   <application>
@@ -1690,13 +1788,38 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      </master_item>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Redis: DB {#DB}: Keys</name>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template DB Redis</host>
+                              <key>redis.db.keys["{#DB}"]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template DB Redis</host>
+                              <key>redis.db.expires["{#DB}"]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>return JSON.stringify(Object.keys(JSON.parse(value).Keyspace).map(function (v){return {"{#DB}": v}}));</params>
+                     <params>return JSON.stringify(Object.keys(JSON.parse(value).Keyspace)
+  .map(function (v){return {"{#DB}": v}}));</params>
                   </step>
                </preprocessing>
             </discovery_rule>
@@ -1785,6 +1908,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.maxmemory[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <description>Maximum amount of memory allocated to the Redisdb system</description>
                      <applications>
                         <application>
@@ -1800,6 +1924,13 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <master_item>
                         <key>redis.info["{$REDIS.CONN.URI}"]</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100&gt;{$REDIS.MEMORY_USED.PRC.MAX.WARN}</expression>
+                           <name>Redis: Memory usage is too high (over {$REDIS.MEMORY_USED.PRC.MAX.WARN}% in 5m)</name>
+                           <priority>WARNING</priority>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>Redis: Total system memory{#SINGLETON}</name>
@@ -1807,6 +1938,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.total_system_memory[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <description>The total amount of memory that the Redis host has</description>
                      <applications>
                         <application>
@@ -1858,7 +1990,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.used_memory_dataset[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>The size in bytes of the dataset (used_memory_overhead subtracted from used_memory)</description>
+                     <units>B</units>
+                     <description>The size in bytes of the dataset</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1880,7 +2013,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.used_memory_overhead[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>Sum of all overheads allocated by Redis for managing its internal datastructures</description>
+                     <units>B</units>
+                     <description>The sum in bytes of all overheads that the server allocated for managing its internal data structures</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1931,7 +2065,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.used_memory_startup[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>Amount of memory consumed by Redis at startup</description>
+                     <units>B</units>
+                     <description>Initial amount of memory consumed by Redis at startup in bytes</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -1953,6 +2088,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.persistence.aof_last_cow_size[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <description>The size in bytes of copy-on-write allocations during the last AOF rewrite operation</description>
                      <applications>
                         <application>
@@ -1975,6 +2111,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.persistence.rdb_last_cow_size[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <description>The size in bytes of copy-on-write allocations during the last RDB save operation</description>
                      <applications>
                         <application>
@@ -1985,82 +2122,6 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                         <step>
                            <type>JSONPATH</type>
                            <params>$.Persistence.rdb_last_cow_size</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Redis: Master replication offset{#SINGLETON}</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.replication.master_repl_offset[{#SINGLETON}]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <description>Replication offset reported by the master</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Replication.master_repl_offset</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Redis: Master replication id{#SINGLETON}</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.replication.master_replid[{#SINGLETON}]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Replication.master_replid</params>
-                        </step>
-                        <step>
-                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                           <params>1d</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>Redis: Master replication id 2{#SINGLETON}</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.replication.master_replid2[{#SINGLETON}]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Replication.master_replid2</params>
-                        </step>
-                        <step>
-                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                           <params>1d</params>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -2124,6 +2185,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.stats.active_defrag_hits[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Number of value reallocations performed by active the defragmentation process</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2145,6 +2207,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.stats.active_defrag_key_hits[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Number of keys that were actively defragmented</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2166,6 +2229,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.stats.active_defrag_key_misses[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Number of keys that were skipped by the active defragmentation process</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2187,6 +2251,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.stats.active_defrag_misses[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <description>Number of aborted value reallocations started by the active defragmentation process</description>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2337,6 +2402,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.allocator_frag_bytes[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2401,6 +2467,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.allocator_rss_bytes[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2444,6 +2511,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.memory.fragmentation_bytes[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2481,6 +2549,13 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <master_item>
                         <key>redis.info["{$REDIS.CONN.URI}"]</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$REDIS.MEM.FRAG_RATIO.MAX.WARN}</expression>
+                           <name>Redis: Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 5m)</name>
+                           <priority>WARNING</priority>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>Redis: Memory AOF buffer{#SINGLETON}</name>
@@ -2616,6 +2691,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <units>B</units>
                      <applications>
                         <application>
                            <name>Redis</name>
@@ -2675,6 +2751,30 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      </master_item>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Redis: Memory fragmentation{#SINGLETON}</name>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>BOLD_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template DB Redis</host>
+                              <key>redis.memory.fragmentation_bytes[{#SINGLETON}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>BOLD_LINE</drawtype>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template DB Redis</host>
+                              <key>redis.memory.fragmentation_ratio[{#SINGLETON}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
@@ -2685,7 +2785,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                   </step>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>return JSON.stringify(value.split('.')[0] === '5' ? [{'{#SINGLETON}': ''}] : []);</params>
+                     <params>return JSON.stringify(parseInt(value.split('.')[0]) &gt;= 5 ? [{'{#SINGLETON}': ''}] : []);</params>
                   </step>
                </preprocessing>
             </discovery_rule>
@@ -2861,12 +2961,123 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>return JSON.stringify(JSON.parse(value).Persistence.aof_enabled === '1' ? [{'{#SINGLETON}': ''}] : []);</params>
+                     <params>return JSON.stringify(JSON.parse(value).Persistence.aof_enabled === '1'
+  ? [{'{#SINGLETON}': ''}]
+  : []);</params>
                   </step>
                </preprocessing>
             </discovery_rule>
             <discovery_rule>
-               <name>Replica metrics discovery</name>
+               <name>Replication metrics discovery</name>
+               <type>DEPENDENT</type>
+               <key>redis.replication.master.discovery</key>
+               <delay>0</delay>
+               <description>If the instance is the master and the slaves are connected, additional metrics are provided</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>Redis: {#SLAVE}: Replication lag in bytes</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.lag_bytes["{#SLAVE}"]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <units>B</units>
+                     <description>Replication lag in bytes</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JAVASCRIPT</type>
+                           <params>var repl = JSON.parse(value).Replication;
+return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: {#SLAVE}: IP address</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.slave_ip["{#SLAVE}"]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <description>Slave ip address</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication["{#SLAVE}"].ip</params>
+                        </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>1d</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>Redis: {#SLAVE}: Port</name>
+                     <type>DEPENDENT</type>
+                     <key>redis.replication.slave_port["{#SLAVE}"]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <description>Slave port number</description>
+                     <applications>
+                        <application>
+                           <name>Redis</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.Replication["{#SLAVE}"].port</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
+                     </master_item>
+                  </item_prototype>
+               </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Redis: {#SLAVE}: Replication lag bytes</name>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>BOLD_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template DB Redis</host>
+                              <key>redis.replication.lag_bytes["{#SLAVE}"]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>return JSON.stringify(Object.keys(JSON.parse(value).Replication)
+  .filter(function (v) {return v.match(/slave\d+/)})
+  .map(function (v){return {"{#SLAVE}": v}}));</params>
+                  </step>
+               </preprocessing>
+            </discovery_rule>
+            <discovery_rule>
+               <name>Slave metrics discovery</name>
                <type>DEPENDENT</type>
                <key>redis.replication.slave.discovery</key>
                <delay>0</delay>
@@ -2922,6 +3133,13 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <master_item>
                         <key>redis.info["{$REDIS.CONN.URI}"]</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$REDIS.REPL.LAG.MAX.WARN}</expression>
+                           <name>Redis: Replication lag with master is too high (over {$REDIS.REPL.LAG.MAX.WARN} in 5m)</name>
+                           <priority>WARNING</priority>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>Redis: Master link status{#SINGLETON}</name>
@@ -2943,8 +3161,8 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                            <params>$.Replication.master_link_status</params>
                         </step>
                         <step>
-                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                           <params>1d</params>
+                           <type>BOOL_TO_DECIMAL</type>
+                           <params/>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -3053,6 +3271,7 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <key>redis.replication.slave_repl_offset[{#SINGLETON}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <units>B</units>
                      <description>The replication offset of the replica instance</description>
                      <applications>
                         <application>
@@ -3070,18 +3289,40 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      </master_item>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>Redis: Replication lag time{#SINGLETON}</name>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>BOLD_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template DB Redis</host>
+                              <key>redis.replication.master_last_io_seconds_ago[{#SINGLETON}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>return JSON.stringify(JSON.parse(value).Replication.role === 'slave' ? [{'{#SINGLETON}': ''}] : []);</params>
+                     <params>return JSON.stringify(JSON.parse(value).Replication.role === 'slave'
+  ? [{'{#SINGLETON}': ''}]
+  : []);</params>
                   </step>
                </preprocessing>
             </discovery_rule>
          </discovery_rules>
          <macros>
+            <macro>
+               <macro>{$REDIS.CLIENTS.PRC.MAX.WARN}</macro>
+               <value>80</value>
+               <description>Maximum percentage of connected clients</description>
+            </macro>
             <macro>
                <macro>{$REDIS.CONN.URI}</macro>
                <value>tcp://localhost:6379</value>
@@ -3103,11 +3344,282 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                <description>Redis server process name for LLD</description>
             </macro>
             <macro>
+               <macro>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}</macro>
+               <value>1.5</value>
+               <description>Maximum memory fragmentation ratio</description>
+            </macro>
+            <macro>
+               <macro>{$REDIS.MEMORY_USED.PRC.MAX.WARN}</macro>
+               <value>90</value>
+               <description>Maximum percentage of memory used</description>
+            </macro>
+            <macro>
                <macro>{$REDIS.PROCESS_NAME}</macro>
                <value>redis-server</value>
                <description>Redis server process name</description>
             </macro>
+            <macro>
+               <macro>{$REDIS.REPL.LAG.MAX.WARN}</macro>
+               <value>30s</value>
+               <description>Maximum replication lag in seconds</description>
+            </macro>
+            <macro>
+               <macro>{$REDIS.SLOWLOG.COUNT.MAX.WARN}</macro>
+               <value>1</value>
+               <description>Maximum number of slowlog entries per second</description>
+            </macro>
          </macros>
       </template>
    </templates>
+   <triggers>
+      <trigger>
+         <expression>{Template DB Redis:redis.clients.connected.min(5m)}/{Template DB Redis:redis.config.maxclients.last()}*100&gt;{$REDIS.CLIENTS.PRC.MAX.WARN}</expression>
+         <name>Redis: Total number of connected clients is too high (over {$REDIS.CLIENTS.PRC.MAX.WARN}% in 5m)</name>
+         <priority>WARNING</priority>
+      </trigger>
+   </triggers>
+   <graphs>
+      <graph>
+         <name>Redis: Clients</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.clients.connected</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.clients.blocked</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Commands</name>
+         <graph_items>
+            <graph_item>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.instantaneous_ops.rate</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: CPU</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.cpu.sys</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.cpu.sys_children</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>2</sortorder>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>F63100</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.cpu.user</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>3</sortorder>
+               <color>A54F10</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.cpu.user_children</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Expired keys</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.expired_keys</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.evicted_keys</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Keyspace</name>
+         <graph_items>
+            <graph_item>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.keyspace_hits</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.keyspace_misses</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Memory</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.memory.used_memory</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.memory.used_memory_rss</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>2</sortorder>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>F63100</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.memory.used_memory_peak</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Network</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.instantaneous_input.rate</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.stats.instantaneous_output.rate</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Persistence</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.persistence.rdb_last_bgsave_time_sec</key>
+               </item>
+            </graph_item>
+            <graph_item>
+               <sortorder>1</sortorder>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>2774A4</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.persistence.aof_last_rewrite_time_sec</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Slaves</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>GRADIENT_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.replication.connected_slaves</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Uptime</name>
+         <graph_items>
+            <graph_item>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.server.uptime_in_seconds</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+   </graphs>
+   <value_maps>
+      <value_map>
+         <name>Service state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Down</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Up</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Redis bgwrite status</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Error</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Ok</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+   </value_maps>
 </zabbix_export>

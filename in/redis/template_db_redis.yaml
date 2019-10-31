@@ -25,12 +25,45 @@ templates:
       #################
       - _prototype: redis.info
         key: redis.info["{$REDIS.CONN.URI}"]
+        triggers:
+          - _id: trigger.redis.info
+            expression: '{TEMPLATE_NAME:METRIC.nodata(30m)}=1'
+            name: 'Failed to fetch info data (or no data for 30m)'
+            description: 'Zabbix has not received data for items for the last 30 minutes'
+            manual_close: 'YES'
+            priority: WARNING
+            _depends_on:
+              - trigger.status
 
       - _prototype: redis.config
         key: redis.config["{$REDIS.CONN.URI}"]
+        triggers:
+          - _prototype: trigger.version.changed
+            name: 'Configuration has changed'
+            description: '__RESOURCE__ configuration has changed. Ack to close.'
 
       - _prototype: redis.ping
         key: redis.ping["{$REDIS.CONN.URI}"]
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
+        triggers:
+          - _id: trigger.status
+            name: Service is down
+            expression: "{TEMPLATE_NAME:METRIC.last()}=0"
+            manual_close: "YES"
+            priority: AVERAGE
+
+      - _prototype: redis.slowlog.count
+        name: Slowlog entries per second
+        key: redis.slowlog.count["{$REDIS.CONN.URI}"]
+        preprocessing:
+          - type: CHANGE_PER_SECOND
+        triggers:
+          - _id: trigger.redis.slowlog.count
+            name: 'Too many entries in the slowlog (over {$REDIS.SLOWLOG.COUNT.MAX.WARN} per second in 5m)'
+            expression: '{TEMPLATE_NAME:METRIC.min(5m)}>{$REDIS.SLOWLOG.COUNT.MAX.WARN}'
+            priority: INFO
 
       #######################
       ### Dependent items ###
@@ -71,12 +104,22 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: '$.CPU.used_cpu_user_children'
+        graphs:
+          - _id: redis.cpu
+            name: CPU
+            graph_items:
+              - name: redis.cpu.sys
+                drawtype: GRADIENT_LINE
+              - name: redis.cpu.sys_children
+              - name: redis.cpu.user
+                drawtype: GRADIENT_LINE
+              - name: redis.cpu.user_children
 
       # Clients section
       - _prototype: redis._unsigned
-        name: Blocked clients
+        name: 'Blocked clients'
         key: redis.clients.blocked
-        description: The number of connections waiting on a blocking call
+        description: 'The number of connections waiting on a blocking call'
         preprocessing:
           - type: JSONPATH
             params: '$.Clients.blocked_clients'
@@ -108,12 +151,24 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: '$.Clients.connected_clients'
+        triggers:
+          - name: 'Total number of connected clients is too high (over {$REDIS.CLIENTS.PRC.MAX.WARN}% in 5m)'
+            expression: '{TEMPLATE_NAME:METRIC.min(5m)}/{TEMPLATE_NAME:__config.maxclients__.last()}*100>{$REDIS.CLIENTS.PRC.MAX.WARN}'
+            priority: WARNING
+        graphs:
+          - _id: redis.connected_clients
+            name: Clients
+            graph_items:
+              - name: redis.clients.connected
+                drawtype: GRADIENT_LINE
+              - name: redis.clients.blocked
+                drawtype: GRADIENT_LINE
 
       # Cluster section
       - _prototype: redis._unsigned
         name: Cluster enabled
         key: redis.cluster.enabled
-        description: ''
+        description: 'Indicate Redis cluster is enabled'
         preprocessing:
           - type: JSONPATH
             params: '$.Cluster.cluster_enabled'
@@ -123,14 +178,26 @@ templates:
       - _prototype: redis._unsigned
         name: Memory used
         key: redis.memory.used_memory
-        description: 'Amount of memory allocated by Redis'
+        units: B
+        description: 'Total number of bytes allocated by Redis using its allocator'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory'
+        graphs:
+          - _id: redis.memory
+            name: Memory
+            graph_items:
+              - name: redis.memory.used_memory
+                drawtype: GRADIENT_LINE
+              - name: redis.memory.used_memory_rss
+                drawtype: BOLD_LINE
+              - name: redis.memory.used_memory_peak
+                drawtype: BOLD_LINE
 
       - _prototype: redis._unsigned
         name: Memory used Lua
         key: redis.memory.used_memory_lua
+        units: B
         description: 'Amount of memory used by the Lua engine'
         preprocessing:
           - type: JSONPATH
@@ -139,7 +206,8 @@ templates:
       - _prototype: redis._unsigned
         name: 'Memory used peak'
         key: 'redis.memory.used_memory_peak'
-        description: 'Peak amount of memory used by Redis'
+        units: B
+        description: 'Peak memory consumed by Redis (in bytes)'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory_peak'
@@ -147,7 +215,8 @@ templates:
       - _prototype: redis._unsigned
         name: Memory used RSS
         key: redis.memory.used_memory_rss
-        description: 'Amount of memory that Redis allocated as seen by the os'
+        units: B
+        description: 'Number of bytes that Redis allocated as seen by the operating system'
         preprocessing:
           - type: JSONPATH
             params: '$.Memory.used_memory_rss'
@@ -157,7 +226,7 @@ templates:
       - _prototype: redis._float
         name: AOF current rewrite time in seconds
         key: redis.persistence.aof_current_rewrite_time_sec
-        description: ''
+        description: 'Duration of the on-going AOF rewrite operation if any'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_current_rewrite_time_sec'
@@ -170,15 +239,15 @@ templates:
           - type: JSONPATH
             params: '$.Persistence.aof_enabled'
 
-      - _prototype: redis._char
+      - _prototype: redis._unsigned
         name: AOF last bgrewrite status
         key: redis.persistence.aof_last_bgrewrite_status
-        description: ''
+        description: 'Status of the last AOF rewrite operation'
+        value_map: Redis bgwrite status
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_last_bgrewrite_status'
-          - type: DISCARD_UNCHANGED_HEARTBEAT
-            params: 1d
+          - type: BOOL_TO_DECIMAL
 
       - _prototype: redis._float
         name: AOF last rewrite time sec
@@ -189,15 +258,19 @@ templates:
           - type: JSONPATH
             params: '$.Persistence.aof_last_rewrite_time_sec'
 
-      - _prototype: redis._char
+      - _prototype: redis._unsigned
         name: AOF last write status
         key: redis.persistence.aof_last_write_status
-        description: ''
+        description: 'Status of the last write operation to the AOF'
+        value_map: Redis bgwrite status
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_last_write_status'
-          - type: DISCARD_UNCHANGED_HEARTBEAT
-            params: 1d
+          - type: BOOL_TO_DECIMAL
+        triggers:
+          - name: Last AOF write operation failed
+            expression: '{TEMPLATE_NAME:METRIC.last()}=0'
+            priority: WARNING
 
       - _prototype: redis._unsigned
         name: AOF rewrite in progress
@@ -210,7 +283,7 @@ templates:
       - _prototype: redis._unsigned
         name: AOF rewrite scheduled
         key: redis.persistence.aof_rewrite_scheduled
-        description: ''
+        description: 'Flag indicating an AOF rewrite operation will be scheduled once the on-going RDB save is complete'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_rewrite_scheduled'
@@ -243,20 +316,24 @@ templates:
       - _prototype: redis._float
         name: RDB current bgsave time sec
         key: redis.persistence.rdb_current_bgsave_time_sec
-        description: ''
+        description: 'Duration of the on-going RDB save operation if any'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_current_bgsave_time_sec'
 
-      - _prototype: redis._char
+      - _prototype: redis._unsigned
         name: RDB last bgsave status
         key: redis.persistence.rdb_last_bgsave_status
-        description: ''
+        description: 'Status of the last RDB save operation'
+        value_map: Redis bgwrite status
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_last_bgsave_status'
-          - type: DISCARD_UNCHANGED_HEARTBEAT
-            params: 1d
+          - type: BOOL_TO_DECIMAL
+        triggers:
+          - name: Last RDB save operation failed
+            expression: '{TEMPLATE_NAME:METRIC.last()}=0'
+            priority: WARNING
 
       - _prototype: redis._float
         name: RDB last bgsave time in seconds
@@ -266,11 +343,19 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_last_bgsave_time_sec'
+        graphs:
+          - _id: redis.persistence
+            name: Persistence
+            graph_items:
+              - name: redis.persistence.rdb_last_bgsave_time_sec
+                drawtype: BOLD_LINE
+              - name: redis.persistence.aof_last_rewrite_time_sec
+                drawtype: BOLD_LINE
 
       - _prototype: redis._unsigned
         name: RDB last save time
         key: redis.persistence.rdb_last_save_time
-        description: ''
+        description: 'Epoch-based timestamp of last successful RDB save'
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.rdb_last_save_time'
@@ -284,11 +369,26 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.connected_slaves'
+        triggers:
+          - _id: trigger.slaves_count.changed
+            name: 'Slaves number has changed'
+            expression: '{TEMPLATE_NAME:METRIC.diff()}=1'
+            description: '__RESOURCE__ slaves number has changed. Ack to close.'
+            recovery_mode: NONE
+            manual_close: 'YES'
+            priority: INFO
+        graphs:
+          - _id: redis.slaves
+            name: Slaves
+            graph_items:
+              - name: redis.replication.connected_slaves
+                drawtype: GRADIENT_LINE
+
 
       - _prototype: redis._unsigned
         name: Replication backlog active
         key: redis.replication.repl_backlog_active
-        description: ''
+        description: 'Flag indicating replication backlog is active'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.repl_backlog_active'
@@ -296,7 +396,8 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog first byte offset
         key: redis.replication.repl_backlog_first_byte_offset
-        description: ''
+        units: B
+        description: 'The master offset of the replication backlog buffer'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.repl_backlog_first_byte_offset'
@@ -312,7 +413,8 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog size
         key: redis.replication.repl_backlog_size
-        description: ''
+        units: B
+        description: 'Total size in bytes of the replication backlog buffer'
         preprocessing:
           - type: JSONPATH
             params: '$.Replication.repl_backlog_size'
@@ -326,33 +428,51 @@ templates:
             params: '$.Replication.role'
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
+        triggers:
+          - _id: trigger.redis.repl_role.changed
+            name: 'Replication role has changed (new role: {ITEM.VALUE})'
+            expression: '{TEMPLATE_NAME:METRIC.diff()}=1 and {TEMPLATE_NAME:METRIC.strlen()}>0'
+            description: '__RESOURCE__ replication role has changed. Ack to close.'
+            recovery_mode: NONE
+            manual_close: 'YES'
+            priority: WARNING
+
+
+      - _prototype: redis._unsigned
+        name: 'Master replication offset'
+        key: 'redis.replication.master_repl_offset'
+        units: B
+        description: 'Replication offset reported by the master'
+        preprocessing:
+          - type: JSONPATH
+            params: '$.Replication.master_repl_offset'
 
       # Server section
 
-      - _prototype: redis._unsigned
-        name: Arch bits
-        key: redis.server.arch_bits
-        description: ''
-        preprocessing:
-          - type: JSONPATH
-            params: '$.Server.arch_bits'
-          - type: DISCARD_UNCHANGED_HEARTBEAT
-            params: 1d
+      # - _prototype: redis._unsigned
+      #   name: Arch bits
+      #   key: redis.server.arch_bits
+      #   description: 'Architecture (32 or 64 bits)'
+      #   preprocessing:
+      #     - type: JSONPATH
+      #       params: '$.Server.arch_bits'
+      #     - type: DISCARD_UNCHANGED_HEARTBEAT
+      #       params: 1d
 
-      - _prototype: redis._char
-        name: Config file
-        key: redis.server.config_file
-        description: ''
-        preprocessing:
-          - type: JSONPATH
-            params: '$.Server.config_file'
-          - type: DISCARD_UNCHANGED_HEARTBEAT
-            params: 1d
+      # - _prototype: redis._char
+      #   name: Config file
+      #   key: redis.server.config_file
+      #   description: 'The path to the config file'
+      #   preprocessing:
+      #     - type: JSONPATH
+      #       params: '$.Server.config_file'
+      #     - type: DISCARD_UNCHANGED_HEARTBEAT
+      #       params: 1d
 
       - _prototype: redis._unsigned
         name: Process id
         key: redis.server.process_id
-        description: ''
+        description: 'PID of the server process'
         preprocessing:
           - type: JSONPATH
             params: '$.Server.process_id'
@@ -362,7 +482,7 @@ templates:
       - _prototype: redis._char
         name: Redis mode
         key: redis.server.redis_mode
-        description: ''
+        description: 'The server''s mode ("standalone", "sentinel" or "cluster")'
         preprocessing:
           - type: JSONPATH
             params: '$.Server.redis_mode'
@@ -372,45 +492,56 @@ templates:
       - _prototype: redis._char
         name: Redis version
         key: redis.server.redis_version
-        description: ''
+        description: 'Version of the Redis server'
         preprocessing:
           - type: JSONPATH
             params: '$.Server.redis_version'
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
+        triggers:
+          - _prototype: trigger.version.changed
 
       - _prototype: redis._unsigned
         name: TCP port
         key: redis.server.tcp_port
-        description: ''
+        description: 'TCP/IP listen port'
         preprocessing:
           - type: JSONPATH
             params: '$.Server.tcp_port'
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
 
-      - _prototype: redis._unsigned
-        name: Uptime in days
-        key: redis.server.uptime_in_days
-        description: ''
-        preprocessing:
-          - type: JSONPATH
-            params: '$.Server.uptime_in_days'
+      # - _prototype: redis._unsigned
+      #   name: Uptime in days
+      #   key: redis.server.uptime_in_days
+      #   description: 'Same value expressed in days'
+      #   preprocessing:
+      #     - type: JSONPATH
+      #       params: '$.Server.uptime_in_days'
       
       - _prototype: redis._unsigned
         name: Uptime in seconds
         key: redis.server.uptime_in_seconds
-        description: ''
+        units: s
+        description: 'Number of seconds since Redis server start'
         preprocessing:
           - type: JSONPATH
             params: '$.Server.uptime_in_seconds'
+        triggers:
+          - _prototype: trigger.uptime.restarted
+        graphs:
+          - _id: redis.uptime
+            name: Uptime
+            graph_items:
+              - name: redis.server.uptime_in_seconds
+                drawtype: SINGLE_LINE
 
       # Stats section
 
       - _prototype: redis._unsigned
         name: Evicted keys
         key: redis.stats.evicted_keys
-        description: 'Total number of keys evicted due to the maxmemory limit'
+        description: 'Number of evicted keys due to maxmemory limit'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.evicted_keys'
@@ -418,10 +549,18 @@ templates:
       - _prototype: redis._unsigned
         name: Expired keys
         key: redis.stats.expired_keys
-        description: 'Total number of keys expired from the db'
+        description: 'Total number of key expiration events'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.expired_keys'
+        graphs:
+          - _id: redis.keys
+            name: Expired keys
+            graph_items:
+              - name: redis.stats.expired_keys
+                drawtype: BOLD_LINE
+              - name: redis.stats.evicted_keys
+                drawtype: BOLD_LINE
 
       - _prototype: redis._float
         name: Expired time cap reached count
@@ -435,26 +574,41 @@ templates:
         name: Instantaneous input bytes per second
         key: redis.stats.instantaneous_input.rate
         units: Bps
-        description: ''
+        description: 'The network''s read rate per second in KB/sec'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.instantaneous_input_kbps'
           - type: MULTIPLIER
             params: 1024
+        graphs:
+          - _id: redis.network
+            name: Network
+            graph_items:
+              - name: redis.stats.instantaneous_input.rate
+                drawtype: GRADIENT_LINE
+              - name: redis.stats.instantaneous_output.rate
+                drawtype: GRADIENT_LINE
 
       - _prototype: redis._unsigned
         name: Instantaneous operations per sec
         key: redis.stats.instantaneous_ops.rate
-        description: 'Number of commands processed by the server per second'
+        description: 'Number of commands processed per second'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.instantaneous_ops_per_sec'
+        graphs:
+          - _id: redis.commands.rate
+            name: Commands
+            graph_items:
+              - name: redis.stats.instantaneous_ops.rate
+                drawtype: SINGLE_LINE
+
 
       - _prototype: redis._float
         name: Instantaneous output bytes per second
         key: redis.stats.instantaneous_output.rate
         units: Bps
-        description: ''
+        description: 'The network''s write rate per second in KB/sec'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.instantaneous_output_kbps'
@@ -464,15 +618,23 @@ templates:
       - _prototype: redis._unsigned
         name: Keyspace hits
         key: redis.stats.keyspace_hits
-        description: 'Total number of successful lookups in the main db'
+        description: 'Number of successful lookup of keys in the main dictionary'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.keyspace_hits'
+        graphs:
+          - _id: redis.keyspace
+            name: Keyspace
+            graph_items:
+              - name: redis.stats.keyspace_hits
+                drawtype: SINGLE_LINE
+              - name: redis.stats.keyspace_misses
+                drawtype: SINGLE_LINE
 
       - _prototype: redis._unsigned
         name: Keyspace misses
         key: redis.stats.keyspace_misses
-        description: 'Total number of missed lookups in the main db'
+        description: 'Number of failed lookup of keys in the main dictionary'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.keyspace_misses'
@@ -481,7 +643,7 @@ templates:
         name: Latest fork usec
         key: redis.stats.latest_fork_usec
         units: s
-        description: 'Duration of the latest fork'
+        description: 'Duration of the latest fork operation in microseconds'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.latest_fork_usec'
@@ -491,7 +653,7 @@ templates:
       - _prototype: redis._unsigned
         name: Migrate cached sockets
         key: redis.stats.migrate_cached_sockets
-        description: ''
+        description: 'The number of sockets open for MIGRATE purposes'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.migrate_cached_sockets'
@@ -499,7 +661,7 @@ templates:
       - _prototype: redis._unsigned
         name: Pubsub channels
         key: redis.stats.pubsub_channels
-        description: 'Number of active pubsub channels'
+        description: 'Global number of pub/sub channels with client subscriptions'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.pubsub_channels'
@@ -507,7 +669,7 @@ templates:
       - _prototype: redis._unsigned
         name: Pubsub patterns
         key: redis.stats.pubsub_patterns
-        description: 'Number of active pubsub patterns'
+        description: 'Global number of pub/sub pattern with client subscriptions'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.pubsub_patterns'
@@ -515,15 +677,19 @@ templates:
       - _prototype: redis._unsigned
         name: Rejected connections
         key: redis.stats.rejected_connections
-        description: 'Number of rejected connections'
+        description: 'Number of connections rejected because of maxclients limit'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.rejected_connections'
+        triggers:
+          - name: 'Connections are rejected'
+            expression: '{TEMPLATE_NAME:METRIC.last()}>0'
+            priority: HIGH
 
       - _prototype: redis._unsigned
         name: Sync full
         key: redis.stats.sync_full
-        description: ''
+        description: 'The number of full resyncs with replicas'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.sync_full'
@@ -531,7 +697,7 @@ templates:
       - _prototype: redis._unsigned
         name: Sync partial err
         key: redis.stats.sync_partial_err
-        description: ''
+        description: 'The number of denied partial resync requests'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.sync_partial_err'
@@ -539,7 +705,7 @@ templates:
       - _prototype: redis._unsigned
         name: Sync partial ok
         key: redis.stats.sync_partial_ok
-        description: ''
+        description: 'The number of accepted partial resync requests'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.sync_partial_ok'
@@ -547,7 +713,7 @@ templates:
       - _prototype: redis._unsigned
         name: Total commands processed
         key: redis.stats.total_commands_processed
-        description: 'Number of commands processed by the server'
+        description: 'Total number of commands processed by the server'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.total_commands_processed'
@@ -555,7 +721,7 @@ templates:
       - _prototype: redis._unsigned
         name: Total connections received
         key: redis.stats.total_connections_received
-        description: ''
+        description: 'Total number of connections accepted by the server'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.total_connections_received'
@@ -563,7 +729,8 @@ templates:
       - _prototype: redis._unsigned
         name: Total net input bytes
         key: redis.stats.total_net_input_bytes
-        description: ''
+        units: B
+        description: 'The total number of bytes read from the network'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.total_net_input_bytes'
@@ -571,10 +738,29 @@ templates:
       - _prototype: redis._unsigned
         name: Total net output bytes
         key: redis.stats.total_net_output_bytes
-        description: ''
+        units: B
+        description: 'The total number of bytes written to the network'
         preprocessing:
           - type: JSONPATH
             params: '$.Stats.total_net_output_bytes'
+
+      # Configuration parameters (from redis.config)
+      # Needed for trigger by number of connections
+
+      - _prototype: redis._unsigned
+        _id: config.maxclients
+        name: Max clients
+        key: redis.config.maxclients
+        master_item: redis.config
+        description: |
+          Max number of connected clients at the same time.
+          Once the limit is reached Redis will close all the new connections sending an error "max number of clients reached".
+        preprocessing:
+          - type: JSONPATH
+            params: '$.maxclients'
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            # Too strange? Ask me why :)
+            params: 30m
 
 
     #################
@@ -596,7 +782,9 @@ templates:
         preprocessing:
         # Replace with JSONPATH after fixing the structure in the plugin output
         - type: JAVASCRIPT
-          params: 'return JSON.stringify(Object.keys(JSON.parse(value).Keyspace).map(function (v){return {"{#DB}": v}}));'
+          params: |-
+            return JSON.stringify(Object.keys(JSON.parse(value).Keyspace)
+              .map(function (v){return {"{#DB}": v}}));
 
         filter:
           evalType: 'AND'
@@ -615,10 +803,13 @@ templates:
           - _prototype: redis._unsigned
             name: 'DB {#DB}: Average TTL'
             key: redis.db.avg_ttl["{#DB}"]
+            units: s
             description: ''
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].avg_ttl'
+              - type: MULTIPLIER
+                params: 0.001
 
           - _prototype: redis._unsigned
             name: 'DB {#DB}: Expires'
@@ -631,10 +822,18 @@ templates:
           - _prototype: redis._unsigned
             name: 'DB {#DB}: Keys'
             key: redis.db.keys["{#DB}"]
-            description: ''
+            description: 'Total number of keys'
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].keys'
+            graphs:
+              - _id: redis.keyspace
+                name: 'DB {#DB}: Keys'
+                graph_items:
+                  - name: 'redis.db.keys["{#DB}"]'
+                    drawtype: GRADIENT_LINE
+                  - name: 'redis.db.expires["{#DB}"]'
+                    drawtype: GRADIENT_LINE
 
       - name: 'AOF metrics discovery'
         description: |
@@ -647,7 +846,9 @@ templates:
         preprocessing:
           - type: JAVASCRIPT
             params: |-
-              return JSON.stringify(JSON.parse(value).Persistence.aof_enabled === '1' ? [{'{#SINGLETON}': ''}] : []);
+              return JSON.stringify(JSON.parse(value).Persistence.aof_enabled === '1'
+                ? [{'{#SINGLETON}': ''}]
+                : []);
         
         items:
           - _prototype: redis._unsigned
@@ -723,7 +924,9 @@ templates:
         preprocessing:
           - type: JAVASCRIPT
             params: |-
-              return JSON.stringify(JSON.parse(value).Replication.role === 'slave' ? [{'{#SINGLETON}': ''}] : []);
+              return JSON.stringify(JSON.parse(value).Replication.role === 'slave'
+                ? [{'{#SINGLETON}': ''}]
+                : []);
 
         items:
           - _prototype: redis._char
@@ -753,8 +956,7 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication.master_link_status'
-              - type: DISCARD_UNCHANGED_HEARTBEAT
-                params: 1d
+              - type: BOOL_TO_DECIMAL
 
           - _prototype: redis._unsigned
             name: 'Master last I/O seconds ago{#SINGLETON}'
@@ -764,6 +966,17 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication.master_last_io_seconds_ago'
+            triggers:
+              - _id: redis.replication_lag.sec
+                name: Replication lag with master is too high (over {$REDIS.REPL.LAG.MAX.WARN} in 5m)
+                expression: '{TEMPLATE_NAME:METRIC.min(5m)}>{$REDIS.REPL.LAG.MAX.WARN}'
+                priority: WARNING
+            graphs:
+              - _id: redis.replication.lag
+                name: 'Replication lag time{#SINGLETON}'
+                graph_items:
+                  - name: 'redis.replication.master_last_io_seconds_ago[{#SINGLETON}]'
+                    drawtype: BOLD_LINE
 
           - _prototype: redis._unsigned
             name: 'Master sync in progress{#SINGLETON}'
@@ -776,6 +989,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Slave replication offset{#SINGLETON}'
             key: redis.replication.slave_repl_offset[{#SINGLETON}]
+            units: B
             description: 'The replication offset of the replica instance'
             preprocessing:
               - type: JSONPATH
@@ -798,6 +1012,77 @@ templates:
                 params: '$.Replication.slave_read_only'
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1d
+
+        ### Replication metrics discovery ###
+        ###########################################
+      - name: 'Replication metrics discovery'
+        description: |
+          If the instance is the master and the slaves are connected, additional metrics are provided
+
+        key: redis.replication.master.discovery
+        type: DEPENDENT
+        masterItem: redis.info
+
+        preprocessing:
+          - type: JAVASCRIPT
+            params: |-
+              return JSON.stringify(Object.keys(JSON.parse(value).Replication)
+                .filter(function (v) {return v.match(/slave\d+/)})
+                .map(function (v){return {"{#SLAVE}": v}}));
+
+        items:
+          - _prototype: redis._unsigned
+            name: '{#SLAVE}: Replication lag in bytes'
+            key: redis.replication.lag_bytes["{#SLAVE}"]
+            units: B
+            description: 'Replication lag in bytes'
+            preprocessing:
+              - type: JAVASCRIPT
+                params: |-
+                  var repl = JSON.parse(value).Replication;
+                  return repl.master_repl_offset - repl["{#SLAVE}"].offset
+            graphs:
+              - _id: redis.replications.bytes
+                name: '{#SLAVE}: Replication lag bytes'
+                graph_items:
+                  - name: 'redis.replication.lag_bytes["{#SLAVE}"]'
+                    drawtype: BOLD_LINE
+
+          - _prototype: redis._char
+            name: '{#SLAVE}: IP address'
+            key: redis.replication.slave_ip["{#SLAVE}"]
+            description: 'Slave ip address'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication["{#SLAVE}"].ip'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+            # triggers:
+            #   - _id: trigger.redis.slave_ip.changed
+            #     name: '{#SLAVE}: IP address or port has been changed'
+            #     expression: '({TEMPLATE_NAME:METRIC.diff()}=1 or {TEMPLATE_NAME:__redis.slave_port__.diff()}=1) and {TEMPLATE_NAME:METRIC.strlen()}>0'
+            #     description: '__RESOURCE__ Slave IP address has changed. Ack to close.'
+            #     recovery_mode: NONE
+            #     manual_close: 'YES'
+            #     priority: INFO
+
+          - _prototype: redis._unsigned
+            _id: redis.slave_port
+            name: '{#SLAVE}: Port'
+            key: redis.replication.slave_port["{#SLAVE}"]
+            description: 'Slave port number'
+            preprocessing:
+              - type: JSONPATH
+                params: '$.Replication["{#SLAVE}"].port'
+            # triggers:
+            #   - _id: trigger.redis.slave_port.change
+            #     name: '{#SLAVE}: port has changed'
+            #     expression: '{TEMPLATE_NAME:METRIC.diff()}=1'
+            #     description: '__RESOURCE__ Slave port has changed. Ack to close.'
+            #     recovery_mode: NONE
+            #     manual_close: 'YES'
+            #     priority: INFO
+
 
 
         ### Process metrics discovery ###
@@ -898,7 +1183,7 @@ templates:
           - _prototype: redis._char
             name: 'Executable path{#SINGLETON}'
             key: 'redis.server.executable[{#SINGLETON}]'
-            description: ''
+            description: 'The path to the server''s executable'
             preprocessing:
               - type: JSONPATH
                 params: '$.Server.executable'
@@ -908,7 +1193,8 @@ templates:
           - _prototype: redis._float
             name: 'Memory used peak %{#SINGLETON}'
             key: 'redis.memory.used_memory_peak_perc[{#SINGLETON}]'
-            description: ''
+            units: '%'
+            description: 'The percentage of used_memory_peak out of used_memory'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_peak_perc'
@@ -918,7 +1204,8 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used overhead{#SINGLETON}'
             key: 'redis.memory.used_memory_overhead[{#SINGLETON}]'
-            description: 'Sum of all overheads allocated by Redis for managing its internal datastructures'
+            units: B
+            description: 'The sum in bytes of all overheads that the server allocated for managing its internal data structures'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_overhead'
@@ -926,7 +1213,8 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used startup{#SINGLETON}'
             key: 'redis.memory.used_memory_startup[{#SINGLETON}]'
-            description: 'Amount of memory consumed by Redis at startup'
+            units: B
+            description: 'Initial amount of memory consumed by Redis at startup in bytes'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_startup'
@@ -934,7 +1222,8 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory used dataset{#SINGLETON}'
             key: 'redis.memory.used_memory_dataset[{#SINGLETON}]'
-            description: ''
+            units: B
+            description: 'The size in bytes of the dataset'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_dataset'
@@ -942,7 +1231,8 @@ templates:
           - _prototype: redis._float
             name: 'Memory used dataset %{#SINGLETON}'
             key: 'redis.memory.used_memory_dataset_perc[{#SINGLETON}]'
-            description: ''
+            units: '%'
+            description: 'The percentage of used_memory_dataset out of the net memory usage (used_memory minus used_memory_startup)'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.used_memory_dataset_perc'
@@ -952,7 +1242,8 @@ templates:
           - _prototype: redis._unsigned
             name: 'Total system memory{#SINGLETON}'
             key: 'redis.memory.total_system_memory[{#SINGLETON}]'
-            description: ''
+            units: B
+            description: 'The total amount of memory that the Redis host has'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.total_system_memory'
@@ -960,15 +1251,23 @@ templates:
           - _prototype: redis._unsigned
             name: 'Max memory{#SINGLETON}'
             key: 'redis.memory.maxmemory[{#SINGLETON}]'
+            units: B
             description: 'Maximum amount of memory allocated to the Redisdb system'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.maxmemory'
+            triggers:
+              - name: 'Memory usage is too high (over {$REDIS.MEMORY_USED.PRC.MAX.WARN}% in 5m)'
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Временный костыль с абсолютной ссылкой на метрику в шаблоне. Разобрать с Виталием.
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                expression: '{TEMPLATE_NAME:METRIC.min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100>{$REDIS.MEMORY_USED.PRC.MAX.WARN}'
+                priority: WARNING
 
           - _prototype: redis._char
             name: 'Max memory policy{#SINGLETON}'
             key: 'redis.memory.maxmemory_policy[{#SINGLETON}]'
-            description: ''
+            description: 'The value of the maxmemory-policy configuration directive'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.maxmemory_policy'
@@ -978,7 +1277,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag running{#SINGLETON}'
             key: 'redis.memory.active_defrag_running[{#SINGLETON}]'
-            description: ''
+            description: 'Flag indicating if active defragmentation is active'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.active_defrag_running'
@@ -986,7 +1285,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Lazyfree pending objects{#SINGLETON}'
             key: 'redis.memory.lazyfree_pending_objects[{#SINGLETON}]'
-            description: ''
+            description: 'The number of objects waiting to be freed (as a result of calling UNLINK, or FLUSHDB and FLUSHALL with the ASYNC option)'
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.lazyfree_pending_objects'
@@ -994,7 +1293,8 @@ templates:
           - _prototype: redis._unsigned
             name: 'RDB last cow size{#SINGLETON}'
             key: 'redis.persistence.rdb_last_cow_size[{#SINGLETON}]'
-            description: ''
+            units: B
+            description: 'The size in bytes of copy-on-write allocations during the last RDB save operation'
             preprocessing:
               - type: JSONPATH
                 params: '$.Persistence.rdb_last_cow_size'
@@ -1002,7 +1302,8 @@ templates:
           - _prototype: redis._unsigned
             name: 'AOF last cow size{#SINGLETON}'
             key: 'redis.persistence.aof_last_cow_size[{#SINGLETON}]'
-            description: ''
+            units: B
+            description: 'The size in bytes of copy-on-write allocations during the last AOF rewrite operation'
             preprocessing:
               - type: JSONPATH
                 params: '$.Persistence.aof_last_cow_size'
@@ -1026,7 +1327,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Slave expires tracked keys{#SINGLETON}'
             key: 'redis.stats.slave_expires_tracked_keys[{#SINGLETON}]'
-            description: ''
+            description: 'The number of keys tracked for expiry purposes (applicable only to writable replicas)'
             preprocessing:
               - type: JSONPATH
                 params: '$.Stats.slave_expires_tracked_keys'
@@ -1034,7 +1335,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag hits{#SINGLETON}'
             key: 'redis.stats.active_defrag_hits[{#SINGLETON}]'
-            description: ''
+            description: 'Number of value reallocations performed by active the defragmentation process'
             preprocessing:
               - type: JSONPATH
                 params: '$.Stats.active_defrag_hits'
@@ -1042,7 +1343,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag misses{#SINGLETON}'
             key: 'redis.stats.active_defrag_misses[{#SINGLETON}]'
-            description: ''
+            description: 'Number of aborted value reallocations started by the active defragmentation process'
             preprocessing:
               - type: JSONPATH
                 params: '$.Stats.active_defrag_misses'
@@ -1050,7 +1351,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag key hits{#SINGLETON}'
             key: 'redis.stats.active_defrag_key_hits[{#SINGLETON}]'
-            description: ''
+            description: 'Number of keys that were actively defragmented'
             preprocessing:
               - type: JSONPATH
                 params: '$.Stats.active_defrag_key_hits'
@@ -1058,38 +1359,30 @@ templates:
           - _prototype: redis._unsigned
             name: 'Active defrag key misses{#SINGLETON}'
             key: 'redis.stats.active_defrag_key_misses[{#SINGLETON}]'
-            description: ''
+            description: 'Number of keys that were skipped by the active defragmentation process'
             preprocessing:
               - type: JSONPATH
                 params: '$.Stats.active_defrag_key_misses'
 
-          - _prototype: redis._char
-            name: 'Master replication id{#SINGLETON}'
-            key: 'redis.replication.master_replid[{#SINGLETON}]'
-            description: ''
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Replication.master_replid'
-              - type: DISCARD_UNCHANGED_HEARTBEAT
-                params: 1d
+          # - _prototype: redis._char
+          #   name: 'Master replication id{#SINGLETON}'
+          #   key: 'redis.replication.master_replid[{#SINGLETON}]'
+          #   description: ''
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: '$.Replication.master_replid'
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
 
-          - _prototype: redis._char
-            name: 'Master replication id 2{#SINGLETON}'
-            key: 'redis.replication.master_replid2[{#SINGLETON}]'
-            description: ''
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Replication.master_replid2'
-              - type: DISCARD_UNCHANGED_HEARTBEAT
-                params: 1d
-
-          - _prototype: redis._unsigned
-            name: 'Master replication offset{#SINGLETON}'
-            key: 'redis.replication.master_repl_offset[{#SINGLETON}]'
-            description: 'Replication offset reported by the master'
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Replication.master_repl_offset'
+          # - _prototype: redis._char
+          #   name: 'Master replication id 2{#SINGLETON}'
+          #   key: 'redis.replication.master_replid2[{#SINGLETON}]'
+          #   description: ''
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: '$.Replication.master_replid2'
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
 
           - _prototype: redis._float
             name: 'Replication second offset{#SINGLETON}'
@@ -1114,10 +1407,9 @@ templates:
             params: '$.Server.redis_version'
           - type: JAVASCRIPT
             params: |-
-              return JSON.stringify(value.split('.')[0] === '5' ? [{'{#SINGLETON}': ''}] : []);
+              return JSON.stringify(parseInt(value.split('.')[0]) >= 5 ? [{'{#SINGLETON}': ''}] : []);
 
         items:
-
           - _prototype: redis._unsigned
             name: 'Allocator active{#SINGLETON}'
             key: 'redis.memory.allocator_active[{#SINGLETON}]'
@@ -1161,6 +1453,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Allocator fragmentation bytes{#SINGLETON}'
             key: 'redis.memory.allocator_frag_bytes[{#SINGLETON}]'
+            units: B
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1177,6 +1470,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'Allocator RSS bytes{#SINGLETON}'
             key: 'redis.memory.allocator_rss_bytes[{#SINGLETON}]'
+            units: B
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1193,6 +1487,7 @@ templates:
           - _prototype: redis._float
             name: 'Memory RSS overhead bytes{#SINGLETON}'
             key: 'redis.memory.rss_overhead_bytes[{#SINGLETON}]'
+            units: B
             description: ''
             preprocessing:
               - type: JSONPATH
@@ -1209,10 +1504,19 @@ templates:
           - _prototype: redis._unsigned
             name: 'Memory fragmentation bytes{#SINGLETON}'
             key: 'redis.memory.fragmentation_bytes[{#SINGLETON}]'
+            units: B
             description: ''
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.mem_fragmentation_bytes'
+            graphs:
+              - _id: redis.memory_frag
+                name: Memory fragmentation{#SINGLETON}
+                graph_items:
+                  - name: 'redis.memory.fragmentation_bytes[{#SINGLETON}]'
+                    drawtype: BOLD_LINE
+                  - name: 'redis.memory.fragmentation_ratio[{#SINGLETON}]'
+                    drawtype: BOLD_LINE
 
           - _prototype: redis._float
             name: 'Memory fragmentation ratio{#SINGLETON}'
@@ -1221,6 +1525,10 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$.Memory.mem_fragmentation_ratio'
+            triggers:
+              - name: 'Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 5m)'
+                expression: '{TEMPLATE_NAME:METRIC.min(5m)}>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}'
+                priority: WARNING
 
           - _prototype: redis._unsigned
             name: 'Memory not counted for evict{#SINGLETON}'
@@ -1284,3 +1592,42 @@ templates:
         value: 'CHANGE_IF_NEEDED'
         _description: 'Filter to exclude discovered databases'
 
+      - macro: '{$REDIS.REPL.LAG.MAX.WARN}'
+        value: 30s
+        _description: Maximum replication lag in seconds
+
+      # - macro: '{$REDIS.REPL.LAG_BYTES.MAX.WARN}'
+      #   value: 30s
+      #   _description: Maximum replication lag in bytes
+
+      - macro: '{$REDIS.SLOWLOG.COUNT.MAX.WARN}'
+        value: 1
+        _description: Maximum number of slowlog entries per second
+
+      - macro: '{$REDIS.CLIENTS.PRC.MAX.WARN}'
+        value: 80
+        _description: Maximum percentage of connected clients
+
+      - macro: '{$REDIS.MEMORY_USED.PRC.MAX.WARN}'
+        value: 90
+        _description: Maximum percentage of memory used
+
+      - macro: '{$REDIS.MEM.FRAG_RATIO.MAX.WARN}'
+        value: 1.5
+        description: Maximum memory fragmentation ratio
+
+
+value_maps:
+  - name: Service state
+    mappings:
+      - value: "0"
+        newvalue: Down
+      - value: "1"
+        newvalue: Up
+
+  - name: Redis bgwrite status
+    mappings:
+      - value: "0"
+        newvalue: Error
+      - value: "1"
+        newvalue: Ok
