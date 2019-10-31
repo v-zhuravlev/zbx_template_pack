@@ -55,6 +55,7 @@ templates:
             priority: AVERAGE
 
       - _prototype: redis.slowlog.count
+        _id: redis.slowlog.count
         name: Slowlog entries per second
         key: redis.slowlog.count["{$REDIS.CONN.URI}"]
         preprocessing:
@@ -64,6 +65,12 @@ templates:
             name: 'Too many entries in the slowlog (over {$REDIS.SLOWLOG.COUNT.MAX.WARN} per second in 5m)'
             expression: '{TEMPLATE_NAME:METRIC.min(5m)}>{$REDIS.SLOWLOG.COUNT.MAX.WARN}'
             priority: INFO
+        graphs:
+          - _id: redis.slowlog
+            name: Slowlog
+            graph_items:
+              - name: redis.slowlog.count
+                drawtype: GRADIENT_LINE
 
       #######################
       ### Dependent items ###
