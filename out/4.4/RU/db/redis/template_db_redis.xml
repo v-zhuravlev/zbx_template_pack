@@ -11,9 +11,9 @@
       <template>
          <template>Template DB Redis</template>
          <name>Template DB Redis</name>
-         <description>Description&#13;
+         <description>Get Redis metrics from plugin for the New Zabbix Agent (zabbix-agent2).&#13;
 &#13;
-You can discuss this template or leave feedback on our forum forum url&#13;
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/389050-discussion-thread-for-official-zabbix-template-redis&#13;
 &#13;
 Template tooling version used: 0.33</description>
          <groups>
@@ -1829,7 +1829,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                <type>DEPENDENT</type>
                <key>redis.metrics.v4.discovery</key>
                <delay>0</delay>
-               <description>Additional metrics for version 4+</description>
+               <description>Additional metrics for versions 4+</description>
                <item_prototypes>
                   <item_prototype>
                      <name>Redis: Active defrag running{#SINGLETON}</name>
@@ -1927,8 +1927,8 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
-                           <expression>{min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100&gt;{$REDIS.MEMORY_USED.PRC.MAX.WARN}</expression>
-                           <name>Redis: Memory usage is too high (over {$REDIS.MEMORY_USED.PRC.MAX.WARN}% in 5m)</name>
+                           <expression>{min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100&gt;{$REDIS.MEM.PUSED.MAX.WARN}</expression>
+                           <name>Redis: Memory usage is too high (over {$REDIS.MEM.PUSED.MAX.WARN}% in 5m)</name>
                            <priority>WARNING</priority>
                         </trigger_prototype>
                      </trigger_prototypes>
@@ -2353,7 +2353,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                <type>DEPENDENT</type>
                <key>redis.metrics.v5.discovery</key>
                <delay>0</delay>
-               <description>Additional metrics for version 5+</description>
+               <description>Additional metrics for versions 5+</description>
                <item_prototypes>
                   <item_prototype>
                      <name>Redis: Allocator active{#SINGLETON}</name>
@@ -3350,7 +3350,7 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                <description>Maximum memory fragmentation ratio</description>
             </macro>
             <macro>
-               <macro>{$REDIS.MEMORY_USED.PRC.MAX.WARN}</macro>
+               <macro>{$REDIS.MEM.PUSED.MAX.WARN}</macro>
                <value>90</value>
                <description>Maximum percentage of memory used</description>
             </macro>

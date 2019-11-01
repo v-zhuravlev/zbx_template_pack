@@ -4,17 +4,22 @@
 ## Overview
 
 For Zabbix version: 4.4  
-Overview
+The template to monitor Redis server by Zabbix that work without any external scripts.
+Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+`Template Db Redis` — collects metrics by polling a New Zabbix Agent (zabbix-agent2).
 
 
 
 This template was tested on:
 
-- Redis, version 5.0.6
+- Redis, version 5.0.6, 4.0.14, 3.0.6
 
 ## Setup
 
-Setup
+Setup and configure a New Zabbix Agent compiled with the Redis monitoring plugin (ZBXNEXT-5428-4.3).
+
+Test availability: `zabbix_get -s redis-master -k redis.ping`
 
 
 ## Zabbix configuration
@@ -31,7 +36,7 @@ No specific Zabbix configuration is required.
 |{$REDIS.LLD.FILTER.DB.NOT_MATCHES}|<p>Filter to exclude discovered databases</p>|`CHANGE_IF_NEEDED`|
 |{$REDIS.LLD.PROCESS_NAME}|<p>Redis server process name for LLD</p>|`redis-server`|
 |{$REDIS.MEM.FRAG_RATIO.MAX.WARN}|<p>Maximum memory fragmentation ratio</p>|`1.5`|
-|{$REDIS.MEMORY_USED.PRC.MAX.WARN}|<p>Maximum percentage of memory used</p>|`90`|
+|{$REDIS.MEM.PUSED.MAX.WARN}|<p>Maximum percentage of memory used</p>|`90`|
 |{$REDIS.PROCESS_NAME}|<p>Redis server process name</p>|`redis-server`|
 |{$REDIS.REPL.LAG.MAX.WARN}|<p>Maximum replication lag in seconds</p>|`30s`|
 |{$REDIS.SLOWLOG.COUNT.MAX.WARN}|<p>Maximum number of slowlog entries per second</p>|`1`|
@@ -49,8 +54,8 @@ There are no template links in this template.
 |Slave metrics discovery|<p>If the instance is a replica, additional metrics are provided</p>|DEPENDENT|redis.replication.slave.discovery<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return JSON.stringify(JSON.parse(value).Replication.role === 'slave'   ? [{'{#SINGLETON}': ''}]   : []);`</p>|
 |Replication metrics discovery|<p>If the instance is the master and the slaves are connected, additional metrics are provided</p>|DEPENDENT|redis.replication.master.discovery<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return JSON.stringify(Object.keys(JSON.parse(value).Replication)   .filter(function (v) {return v.match(/slave\d+/)})   .map(function (v){return {"{#SLAVE}": v}}));`</p>|
 |Process metrics discovery|<p>Collect metrics by Zabbix agent if it exists</p>|ZABBIX_PASSIVE|proc.num["{$REDIS.LLD.PROCESS_NAME}"]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return JSON.stringify(value > 0 ? [{'{#SINGLETON}': ''}] : []);`</p>|
-|Version 4+ metrics discovery|<p>Additional metrics for version 4+</p>|DEPENDENT|redis.metrics.v4.discovery<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_version`</p><p>- JAVASCRIPT: `return JSON.stringify(parseInt(value.split('.')[0]) >= 4 ? [{'{#SINGLETON}': ''}] : []);`</p>|
-|Version 5+ metrics discovery|<p>Additional metrics for version 5+</p>|DEPENDENT|redis.metrics.v5.discovery<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_version`</p><p>- JAVASCRIPT: `return JSON.stringify(parseInt(value.split('.')[0]) >= 5 ? [{'{#SINGLETON}': ''}] : []);`</p>|
+|Version 4+ metrics discovery|<p>Additional metrics for versions 4+</p>|DEPENDENT|redis.metrics.v4.discovery<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_version`</p><p>- JAVASCRIPT: `return JSON.stringify(parseInt(value.split('.')[0]) >= 4 ? [{'{#SINGLETON}': ''}] : []);`</p>|
+|Version 5+ metrics discovery|<p>Additional metrics for versions 5+</p>|DEPENDENT|redis.metrics.v5.discovery<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_version`</p><p>- JAVASCRIPT: `return JSON.stringify(parseInt(value.split('.')[0]) >= 5 ? [{'{#SINGLETON}': ''}] : []);`</p>|
 
 ## Items collected
 
@@ -201,7 +206,7 @@ There are no template links in this template.
 |Redis: Connections are rejected|<p>-</p>|`{TEMPLATE_NAME:redis.stats.rejected_connections.last()}>0`|HIGH||
 |Redis: Replication lag with master is too high (over {$REDIS.REPL.LAG.MAX.WARN} in 5m)|<p>-</p>|`{TEMPLATE_NAME:redis.replication.master_last_io_seconds_ago[{#SINGLETON}].min(5m)}>{$REDIS.REPL.LAG.MAX.WARN}`|WARNING||
 |Redis: Process is not running|<p>-</p>|`{TEMPLATE_NAME:proc.num["{$REDIS.PROCESS_NAME}{#SINGLETON}"].last()}=0`|HIGH||
-|Redis: Memory usage is too high (over {$REDIS.MEMORY_USED.PRC.MAX.WARN}% in 5m)|<p>-</p>|`{TEMPLATE_NAME:redis.memory.maxmemory[{#SINGLETON}].min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100>{$REDIS.MEMORY_USED.PRC.MAX.WARN}`|WARNING||
+|Redis: Memory usage is too high (over {$REDIS.MEM.PUSED.MAX.WARN}% in 5m)|<p>-</p>|`{TEMPLATE_NAME:redis.memory.maxmemory[{#SINGLETON}].min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100>{$REDIS.MEM.PUSED.MAX.WARN}`|WARNING||
 |Redis: Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 5m)|<p>-</p>|`{TEMPLATE_NAME:redis.memory.fragmentation_ratio[{#SINGLETON}].min(5m)}>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}`|WARNING||
 |Redis: Failed to fetch info data (or no data for 30m)|<p>Zabbix has not received data for items for the last 30 minutes</p>|`{TEMPLATE_NAME:redis.info["{$REDIS.CONN.URI}"].nodata(30m)}=1`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- Redis: Service is down</p>|
 |Redis: Configuration has changed|<p>Redis configuration has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.config["{$REDIS.CONN.URI}"].diff()}=1 and {TEMPLATE_NAME:redis.config["{$REDIS.CONN.URI}"].strlen()}>0`|INFO|<p>Manual close: YES</p>|
@@ -211,5 +216,5 @@ There are no template links in this template.
 Please report any issues with the template at https://support.zabbix.com
 
 You can also provide feedback, discuss the template or ask for help with it at
-[ZABBIX forums](forum url).
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/389050-discussion-thread-for-official-zabbix-template-redis).
 

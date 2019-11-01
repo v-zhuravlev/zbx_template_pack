@@ -4,20 +4,26 @@ templates:
     _classes:
       - DB
     description: |-
-      Description
+      Get Redis metrics from plugin for the New Zabbix Agent (zabbix-agent2).
 
     _documentation:
       _tested_on:
         - name: Redis
-          version: 5.0.6
+          version: 5.0.6, 4.0.14, 3.0.6
 
       _overview: |+
-        Overview
+        The template to monitor Redis server by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+        `Template Db Redis` — collects metrics by polling a New Zabbix Agent (zabbix-agent2).
 
       _setup: |
-        Setup
+        Setup and configure a New Zabbix Agent compiled with the Redis monitoring plugin (ZBXNEXT-5428-4.3).
+        
+        Test availability: `zabbix_get -s redis-master -k redis.ping`
 
-      _zabbix_forum_url: forum url
+
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/389050-discussion-thread-for-official-zabbix-template-redis
 
     items:
       #################
@@ -1175,7 +1181,7 @@ templates:
       ###################################
       - name: 'Version 4+ metrics discovery'
         description: |
-          Additional metrics for version 4+
+          Additional metrics for versions 4+
 
         key: redis.metrics.v4.discovery
         type: DEPENDENT
@@ -1265,11 +1271,11 @@ templates:
               - type: JSONPATH
                 params: '$.Memory.maxmemory'
             triggers:
-              - name: 'Memory usage is too high (over {$REDIS.MEMORY_USED.PRC.MAX.WARN}% in 5m)'
+              - name: 'Memory usage is too high (over {$REDIS.MEM.PUSED.MAX.WARN}% in 5m)'
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Временный костыль с абсолютной ссылкой на метрику в шаблоне. Разобрать с Виталием.
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                expression: '{TEMPLATE_NAME:METRIC.min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100>{$REDIS.MEMORY_USED.PRC.MAX.WARN}'
+                expression: '{TEMPLATE_NAME:METRIC.min(5m)}/{Template DB Redis:redis.memory.used_memory.last()}*100>{$REDIS.MEM.PUSED.MAX.WARN}'
                 priority: WARNING
 
           - _prototype: redis._char
@@ -1405,7 +1411,7 @@ templates:
       ###################################
       - name: 'Version 5+ metrics discovery'
         description: |
-          Additional metrics for version 5+
+          Additional metrics for versions 5+
 
         key: redis.metrics.v5.discovery
         type: DEPENDENT
@@ -1616,7 +1622,7 @@ templates:
         value: 80
         _description: Maximum percentage of connected clients
 
-      - macro: '{$REDIS.MEMORY_USED.PRC.MAX.WARN}'
+      - macro: '{$REDIS.MEM.PUSED.MAX.WARN}'
         value: 90
         _description: Maximum percentage of memory used
 
