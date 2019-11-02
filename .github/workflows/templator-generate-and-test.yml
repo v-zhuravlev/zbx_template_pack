@@ -88,13 +88,15 @@ jobs:
           find ../out/${ZABBIX_VERSION}/${LANG}/ -type f ! -name "*module*" -name "*.xml" | xargs -n 1 ./import-templates.py
   commit:
     runs-on: ubuntu-latest
-    name: Commit
+    name: Commit on success
     needs: import-test
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
         with:
           fetch-depth: 1
+      - name: clean out dir
+        run: rm -rf out
       - uses: actions/download-artifact@master
         name: Download artifact (generated templates)
         with:
