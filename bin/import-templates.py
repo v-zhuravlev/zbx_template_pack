@@ -99,7 +99,7 @@ def import_dir_with_templates(dirname):
     import glob
 
     templates = []
-    for file in glob.glob(dirname + '/*' + args.filter_str + "*.xml"):
+    for file in glob.glob(dirname + '**/*' + args.filter_str + "*.xml", recursive=True):
         templates.append(file)
     if len(templates) == 0:
         sys.exit("No templates found in directory '{}' with filter: {}".format(
