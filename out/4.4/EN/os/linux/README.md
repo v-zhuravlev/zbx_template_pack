@@ -173,9 +173,11 @@ For Zabbix version: 4.4
 
 ## Setup
 
+Refer to the vendor documentation.
 
 ## Zabbix configuration
 
+No specific Zabbix configuration is required.
 
 ### Macros used
 
@@ -206,7 +208,7 @@ There are no template links in this template.
 |Storage|{#DEVNAME}: Disk write request avg waiting time (w_await)|<p>This formula contains two boolean expressions that evaluates to 1 or 0 in order to set calculated metric to zero and to avoid division by zero exception.</p>|CALCULATED|vfs.dev.write.await[{#DEVNAME}]<p>**Expression**:</p>`(last("vfs.dev.write.time.rate[{#DEVNAME}]")/(last("vfs.dev.write.rate[{#DEVNAME}]")+(last("vfs.dev.write.rate[{#DEVNAME}]")=0)))*1000*(last("vfs.dev.write.rate[{#DEVNAME}]") > 0)`|
 |Storage|{#DEVNAME}: Disk average queue size (avgqu-sz)|<p>Current average disk queue, the number of requests outstanding on the disk at the time the performance data is collected.</p>|DEPENDENT|vfs.dev.queue_size[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][13]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
 |Storage|{#DEVNAME}: Disk utilization|<p>This item is the percentage of elapsed time that the selected disk drive was busy servicing read or writes requests.</p>|DEPENDENT|vfs.dev.util[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][12]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.1`</p>|
-|Zabbix_raw_items|Get /proc/diskstats|<p>-</p>|ZABBIX_PASSIVE|vfs.file.contents[/proc/diskstats]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var parsed = value.split("\n").reduce(function(acc, x, i) {   parts = x.trim().split(/ +/)   acc["values"][parts[2]] = parts   acc["lld"].push({"{#DEVNAME}":parts[2]})   return acc; }, {"values":{}, "lld": []}); return JSON.stringify(parsed);`</p>|
+|Zabbix_raw_items|Get /proc/diskstats|<p>Get contents of /proc/diskstats for discovery and disk stats.</p>|ZABBIX_PASSIVE|vfs.file.contents[/proc/diskstats]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var parsed = value.split("\n").reduce(function(acc, x, i) {   parts = x.trim().split(/ +/)   acc["values"][parts[2]] = parts   acc["lld"].push({"{#DEVNAME}":parts[2]})   return acc; }, {"values":{}, "lld": []}); return JSON.stringify(parsed);`</p>|
 |Zabbix_raw_items|{#DEVNAME}: Disk read time (rate)|<p>Rate of total read time counter. Used in r_await calculation</p>|DEPENDENT|vfs.dev.read.time.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][6]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
 |Zabbix_raw_items|{#DEVNAME}: Disk write time (rate)|<p>Rate of total write time counter. Used in w_await calculation</p>|DEPENDENT|vfs.dev.write.time.rate[{#DEVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.values['{#DEVNAME}'][10]`</p><p>- CHANGE_PER_SECOND<p>- MULTIPLIER: `0.001`</p>|
 
@@ -219,6 +221,11 @@ There are no template links in this template.
 ## Feedback
 
 Please report any issues with the template at https://support.zabbix.com
+
+## Known Issues
+
+- Description: If having problems accessing /proc/diskstats on CloudLinux, please read this https://docs.cloudlinux.com/cloudlinux_os_kernel/#virtualized-proc-filesystem.
+  - Device: CloudLinux
 
 # Template Module Linux network interfaces by Zabbix agent
 
