@@ -1,10 +1,11 @@
-name: Generate and test
+name: Generate and test import
 on:
   push:
     paths:
+      - ".github/**"
       - "in/**"
       - "prototypes/**"
-
+      - "out/**"
 jobs:
   build:
     name: Generate XML templates
@@ -65,7 +66,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
         with:
-          fetch-depth: 1
+          fetch-depth: 10
       - uses: actions/download-artifact@master
         name: Download artifact (generated templates)
         with:
