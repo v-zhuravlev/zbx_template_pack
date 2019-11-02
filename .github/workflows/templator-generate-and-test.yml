@@ -82,8 +82,8 @@ jobs:
       - name: Test
         run: |
           pushd bin
-          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f -name "*module*" -name "*.xml" | sort | xargs -n 1 ./import-templates.py
-          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f ! -name "*module*" -name "*.xml" | xargs -n 1 ./import-templates.py
+          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f -name "*module*" -name "*.xml" | sort | xargs -n 1 ./import-templates.py --force
+          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f ! -name "*module*" -name "*.xml" | xargs -n 1 ./import-templates.py --force
   commit:
     runs-on: ubuntu-latest
     name: Commit on success
