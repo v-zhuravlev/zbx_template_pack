@@ -87,8 +87,8 @@ def import_configuration_from_file(zapi, filename, forced=False):
     try:
         zapi.do_request('configuration.import', params)
     except ZabbixAPIException as err:
-        print("FAILED")
         if ('already exists' in err.data or 'cannot be linked' in err.data) and forced:
+            print("WARN")
             print(err.data)
             print("Deleting {} and will try to import again because of --force...".format(filename))
             templates = get_template_names(filename)
@@ -98,6 +98,7 @@ def import_configuration_from_file(zapi, filename, forced=False):
             #Try to import again
             import_configuration_from_file(zapi, filename, forced=False)
         else:
+            print("FAILED")
             sys.exit(err.data)
     else:
         print("OK")
