@@ -801,7 +801,9 @@ The system is running out of free memory.</description>
       <template>
          <template>Template Module HOST-RESOURCES-MIB CPU SNMPv1</template>
          <name>Template Module HOST-RESOURCES-MIB CPU SNMPv1</name>
-         <description>MIBs used:&#13;
+         <description>Requires Zabbix server 4.0.14, 4.2.8, 4.4.0 or newer (JSONPath function avg() used with types autoconversion).&#13;
+&#13;
+MIBs used:&#13;
 HOST-RESOURCES-MIB&#13;
 &#13;
 Template tooling version used: 0.33</description>
@@ -815,17 +817,20 @@ Template tooling version used: 0.33</description>
                <name>CPU</name>
             </application>
          </applications>
-         <items/>
-         <discovery_rules>
-            <discovery_rule>
-               <name>CPU discovery</name>
+         <items>
+            <item>
+               <name>Загрузка процессора</name>
                <type>1</type>
                <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-               <snmp_oid>discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]</snmp_oid>
-               <key>hrProcessorLoad.discovery</key>
-               <delay>1h</delay>
+               <snmp_oid>discovery[{#CPU.UTIL},1.3.6.1.2.1.25.3.3.1.2]</snmp_oid>
+               <key>system.cpu.util</key>
+               <delay>1m</delay>
+               <history>7d</history>
+               <trends>365d</trends>
                <status>0</status>
+               <value_type>0</value_type>
                <allowed_hosts/>
+               <units>%</units>
                <snmpv3_contextname/>
                <snmpv3_securityname/>
                <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -841,131 +846,23 @@ Template tooling version used: 0.33</description>
                <publickey/>
                <privatekey/>
                <port/>
-               <filter>
-                  <evaltype>0</evaltype>
-                  <formula/>
-                  <conditions/>
-               </filter>
-               <lifetime>30d</lifetime>
-               <description>HOST-RESOURCES-MIB::hrProcessorTable discovery</description>
-               <item_prototypes>
-                  <item_prototype>
-                     <name>#{#SNMPINDEX}: Загрузка процессора</name>
-                     <type>1</type>
-                     <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-                     <snmp_oid>1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}</snmp_oid>
-                     <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
-                     <delay>1m</delay>
-                     <history>7d</history>
-                     <trends>365d</trends>
-                     <status>0</status>
-                     <value_type>0</value_type>
-                     <allowed_hosts/>
-                     <units>%</units>
-                     <snmpv3_contextname/>
-                     <snmpv3_securityname/>
-                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                     <snmpv3_authpassphrase/>
-                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                     <snmpv3_privpassphrase/>
-                     <params/>
-                     <ipmi_sensor/>
-                     <authtype>0</authtype>
-                     <username/>
-                     <password/>
-                     <publickey/>
-                     <privatekey/>
-                     <port/>
-                     <description>MIB: HOST-RESOURCES-MIB&#13;
-The average, over the last minute, of the percentage of time that this processor was not idle.&#13;
+               <description>MIB: HOST-RESOURCES-MIB&#13;
+The average, over the last minute, of the percentage of time that processors was not idle.&#13;
 Implementations may approximate this one minute smoothing period if necessary.</description>
-                     <inventory_link>0</inventory_link>
-                     <applications>
-                        <application>
-                           <name>CPU</name>
-                        </application>
-                     </applications>
-                     <valuemap/>
-                     <logtimefmt/>
-                     <preprocessing/>
-                     <jmx_endpoint/>
-                     <application_prototypes/>
-                     <timeout>3s</timeout>
-                     <url/>
-                     <query_fields/>
-                     <posts/>
-                     <status_codes>200</status_codes>
-                     <follow_redirects>1</follow_redirects>
-                     <post_type>0</post_type>
-                     <http_proxy/>
-                     <headers/>
-                     <retrieve_mode>0</retrieve_mode>
-                     <request_method>0</request_method>
-                     <output_format>0</output_format>
-                     <allow_traps>0</allow_traps>
-                     <ssl_cert_file/>
-                     <ssl_key_file/>
-                     <ssl_key_password/>
-                     <verify_peer>0</verify_peer>
-                     <verify_host>0</verify_host>
-                     <master_item/>
-                  </item_prototype>
-               </item_prototypes>
-               <trigger_prototypes>
-                  <trigger_prototype>
-                     <expression>{Template Module HOST-RESOURCES-MIB CPU SNMPv1:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
-                     <recovery_mode>0</recovery_mode>
-                     <recovery_expression/>
-                     <name>#{#SNMPINDEX}: Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
-                     <correlation_mode>0</correlation_mode>
-                     <correlation_tag/>
-                     <url/>
-                     <status>0</status>
-                     <priority>2</priority>
-                     <description>Current utilization: {ITEM.LASTVALUE1}&#13;
-CPU utilization is too high. The system might be slow to respond.</description>
-                     <type>0</type>
-                     <manual_close>0</manual_close>
-                     <dependencies/>
-                     <tags/>
-                  </trigger_prototype>
-               </trigger_prototypes>
-               <graph_prototypes>
-                  <graph_prototype>
-                     <name>#{#SNMPINDEX}: CPU utilization</name>
-                     <width>900</width>
-                     <height>200</height>
-                     <yaxismin>0</yaxismin>
-                     <yaxismax>100</yaxismax>
-                     <show_work_period>1</show_work_period>
-                     <show_triggers>1</show_triggers>
-                     <type>0</type>
-                     <show_legend>1</show_legend>
-                     <show_3d>0</show_3d>
-                     <percent_left>0.0000</percent_left>
-                     <percent_right>0.0000</percent_right>
-                     <ymin_type_1>1</ymin_type_1>
-                     <ymax_type_1>1</ymax_type_1>
-                     <ymin_item_1>0</ymin_item_1>
-                     <ymax_item_1>0</ymax_item_1>
-                     <graph_items>
-                        <graph_item>
-                           <sortorder>0</sortorder>
-                           <drawtype>5</drawtype>
-                           <color>1A7C11</color>
-                           <yaxisside>0</yaxisside>
-                           <calc_fnc>2</calc_fnc>
-                           <type>0</type>
-                           <item>
-                              <host>Template Module HOST-RESOURCES-MIB CPU SNMPv1</host>
-                              <key>system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]</key>
-                           </item>
-                        </graph_item>
-                     </graph_items>
-                  </graph_prototype>
-               </graph_prototypes>
-               <host_prototypes/>
+               <inventory_link>0</inventory_link>
+               <applications>
+                  <application>
+                     <name>CPU</name>
+                  </application>
+               </applications>
+               <valuemap/>
+               <logtimefmt/>
+               <preprocessing>
+                  <step>
+                     <type>12</type>
+                     <params>$..['{#CPU.UTIL}'].avg()</params>
+                  </step>
+               </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
                <url/>
@@ -978,14 +875,17 @@ CPU utilization is too high. The system might be slow to respond.</description>
                <headers/>
                <retrieve_mode>0</retrieve_mode>
                <request_method>0</request_method>
+               <output_format>0</output_format>
                <allow_traps>0</allow_traps>
                <ssl_cert_file/>
                <ssl_key_file/>
                <ssl_key_password/>
                <verify_peer>0</verify_peer>
                <verify_host>0</verify_host>
-            </discovery_rule>
-         </discovery_rules>
+               <master_item/>
+            </item>
+         </items>
+         <discovery_rules/>
          <httptests/>
          <macros>
             <macro>
@@ -1030,12 +930,12 @@ Template tooling version used: 0.33</description>
                <vsize>3</vsize>
                <screen_items>
                   <screen_item>
-                     <resourcetype>20</resourcetype>
+                     <resourcetype>0</resourcetype>
                      <width>750</width>
                      <height>100</height>
                      <x>0</x>
                      <y>0</y>
-                     <colspan>2</colspan>
+                     <colspan>1</colspan>
                      <rowspan>1</rowspan>
                      <elements>25</elements>
                      <valign>0</valign>
@@ -1045,7 +945,7 @@ Template tooling version used: 0.33</description>
                      <dynamic>0</dynamic>
                      <sort_triggers>0</sort_triggers>
                      <resource>
-                        <name>#{#SNMPINDEX}: CPU utilization</name>
+                        <name>CPU utilization</name>
                         <host>Template Module HOST-RESOURCES-MIB SNMPv1</host>
                      </resource>
                      <max_columns>3</max_columns>
@@ -1079,7 +979,7 @@ Template tooling version used: 0.33</description>
                      <height>100</height>
                      <x>0</x>
                      <y>2</y>
-                     <colspan>2</colspan>
+                     <colspan>1</colspan>
                      <rowspan>1</rowspan>
                      <elements>25</elements>
                      <valign>0</valign>
@@ -1100,7 +1000,58 @@ Template tooling version used: 0.33</description>
          </screens>
       </template>
    </templates>
-   <graphs/>
-   <triggers/>
+   <graphs>
+      <graph>
+         <name>CPU utilization</name>
+         <width>900</width>
+         <height>200</height>
+         <yaxismin>0</yaxismin>
+         <yaxismax>100</yaxismax>
+         <show_work_period>1</show_work_period>
+         <show_triggers>1</show_triggers>
+         <type>0</type>
+         <show_legend>1</show_legend>
+         <show_3d>0</show_3d>
+         <percent_left>0.0000</percent_left>
+         <percent_right>0.0000</percent_right>
+         <ymin_type_1>1</ymin_type_1>
+         <ymax_type_1>1</ymax_type_1>
+         <ymin_item_1>0</ymin_item_1>
+         <ymax_item_1>0</ymax_item_1>
+         <graph_items>
+            <graph_item>
+               <sortorder>0</sortorder>
+               <drawtype>5</drawtype>
+               <color>1A7C11</color>
+               <yaxisside>0</yaxisside>
+               <calc_fnc>2</calc_fnc>
+               <type>0</type>
+               <item>
+                  <host>Template Module HOST-RESOURCES-MIB CPU SNMPv1</host>
+                  <key>system.cpu.util</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+   </graphs>
+   <triggers>
+      <trigger>
+         <expression>{Template Module HOST-RESOURCES-MIB CPU SNMPv1:system.cpu.util.min(5m)}&gt;{$CPU.UTIL.CRIT}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>Высокая загрузка процессора ( &gt; {$CPU.UTIL.CRIT}% за 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Current utilization: {ITEM.LASTVALUE1}&#13;
+CPU utilization is too high. The system might be slow to respond.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+   </triggers>
    <value_maps/>
 </zabbix_export>
