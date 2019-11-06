@@ -40,7 +40,8 @@ jobs:
           java -jar target/zabbix-template-generator-*.jar | tee templator.txt
       - name: Check for errors
         working-directory: ../templator
-        run: ! grep -c ERROR templator.txt
+        run: |
+          ! grep -c ERROR templator.txt
       - name: Prepare archive
         run: tar cvfz templates-out.tar.gz out
       - name: Upload templates(artifact)
