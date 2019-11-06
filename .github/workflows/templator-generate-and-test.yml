@@ -37,7 +37,12 @@ jobs:
           DIR_OUT: ../zbx_template_pack/out
           DIR_PROTOTYPES: ../zbx_template_pack/prototypes
         run: |
-          java -jar target/zabbix-template-generator-*.jar
+          java -jar target/zabbix-template-generator-*.jar | tee templator.txt
+      - name: Check for errors
+        #There should be no [ERROR] in templator output
+        working-directory: ../templator
+        run: |
+          ! grep ERROR templator.txt
       - name: Prepare archive
         run: tar cvfz templates-out.tar.gz out
       - name: Upload templates(artifact)

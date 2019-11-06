@@ -278,6 +278,9 @@ For Zabbix version: 4.2
 
 |Name|Description|Default|
 |----|-----------|-------|
+|{$IF.ERRORS.WARN}|<p>-</p>|`2`|
+|{$IF.UTIL.MAX}|<p>-</p>|`90`|
+|{$IFCONTROL}|<p>-</p>|`1`|
 |{$NET.IF.IFALIAS.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`.*`|
 |{$NET.IF.IFALIAS.NOT_MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`CHANGE_THIS`|
 |{$NET.IF.IFDESCR.MATCHES}|<p>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</p>|`.*`|
