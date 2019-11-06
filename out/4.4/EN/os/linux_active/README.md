@@ -246,7 +246,6 @@ No specific Zabbix configuration is required.
 |Name|Description|Default|
 |----|-----------|-------|
 |{$IF.ERRORS.WARN}|<p>-</p>|`2`|
-|{$IF.UTIL.MAX}|<p>-</p>|`90`|
 |{$IFCONTROL}|<p>-</p>|`1`|
 |{$NET.IF.IFNAME.MATCHES}|<p>-</p>|`^.*$`|
 |{$NET.IF.IFNAME.NOT_MATCHES}|<p>Filter out loopbacks, nulls, docker veth links and docker0 bridge by default</p>|`(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})`|
