@@ -61,7 +61,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Redis|Redis: Get ping||ZABBIX_PASSIVE|redis.ping["{$REDIS.CONN.URI}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
+|Redis|Redis: Ping||ZABBIX_PASSIVE|redis.ping["{$REDIS.CONN.URI}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
 |Redis|Redis: Slowlog entries per second||ZABBIX_PASSIVE|redis.slowlog.count["{$REDIS.CONN.URI}"]<p>**Preprocessing**:</p><p>- CHANGE_PER_SECOND|
 |Redis|Redis: CPU sys|<p>System CPU consumed by the Redis server</p>|DEPENDENT|redis.cpu.sys<p>**Preprocessing**:</p><p>- JSONPATH: `$.CPU.used_cpu_sys`</p>|
 |Redis|Redis: CPU sys children|<p>System CPU consumed by the background processes</p>|DEPENDENT|redis.cpu.sys_children<p>**Preprocessing**:</p><p>- JSONPATH: `$.CPU.used_cpu_sys_children`</p>|
@@ -76,19 +76,19 @@ There are no template links in this template.
 |Redis|Redis: Memory used Lua|<p>Amount of memory used by the Lua engine</p>|DEPENDENT|redis.memory.used_memory_lua<p>**Preprocessing**:</p><p>- JSONPATH: `$.Memory.used_memory_lua`</p>|
 |Redis|Redis: Memory used peak|<p>Peak memory consumed by Redis (in bytes)</p>|DEPENDENT|redis.memory.used_memory_peak<p>**Preprocessing**:</p><p>- JSONPATH: `$.Memory.used_memory_peak`</p>|
 |Redis|Redis: Memory used RSS|<p>Number of bytes that Redis allocated as seen by the operating system</p>|DEPENDENT|redis.memory.used_memory_rss<p>**Preprocessing**:</p><p>- JSONPATH: `$.Memory.used_memory_rss`</p>|
-|Redis|Redis: AOF current rewrite time in seconds|<p>Duration of the on-going AOF rewrite operation if any</p>|DEPENDENT|redis.persistence.aof_current_rewrite_time_sec<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_current_rewrite_time_sec`</p>|
+|Redis|Redis: AOF current rewrite time sec|<p>Duration of the on-going AOF rewrite operation if any</p>|DEPENDENT|redis.persistence.aof_current_rewrite_time_sec<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_current_rewrite_time_sec`</p>|
 |Redis|Redis: AOF enabled|<p>Flag indicating AOF logging is activated</p>|DEPENDENT|redis.persistence.aof_enabled<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_enabled`</p>|
 |Redis|Redis: AOF last bgrewrite status|<p>Status of the last AOF rewrite operation</p>|DEPENDENT|redis.persistence.aof_last_bgrewrite_status<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_last_bgrewrite_status`</p><p>- BOOL_TO_DECIMAL|
 |Redis|Redis: AOF last rewrite time sec|<p>Duration of the last AOF rewrite</p>|DEPENDENT|redis.persistence.aof_last_rewrite_time_sec<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_last_rewrite_time_sec`</p>|
 |Redis|Redis: AOF last write status|<p>Status of the last write operation to the AOF</p>|DEPENDENT|redis.persistence.aof_last_write_status<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_last_write_status`</p><p>- BOOL_TO_DECIMAL|
 |Redis|Redis: AOF rewrite in progress|<p>Flag indicating a AOF rewrite operation is on-going</p>|DEPENDENT|redis.persistence.aof_rewrite_in_progress<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_rewrite_in_progress`</p>|
 |Redis|Redis: AOF rewrite scheduled|<p>Flag indicating an AOF rewrite operation will be scheduled once the on-going RDB save is complete</p>|DEPENDENT|redis.persistence.aof_rewrite_scheduled<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_rewrite_scheduled`</p>|
-|Redis|Redis: Loading|<p>Flag indicating if the load of a dump file is on-going</p>|DEPENDENT|redis.persistence.loading<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.loading`</p>|
+|Redis|Redis: Dump loading|<p>Flag indicating if the load of a dump file is on-going</p>|DEPENDENT|redis.persistence.loading<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.loading`</p>|
 |Redis|Redis: RDB bgsave in progress|<p>"1" if bgsave is in progress and "0" otherwise</p>|DEPENDENT|redis.persistence.rdb_bgsave_in_progress<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_bgsave_in_progress`</p>|
 |Redis|Redis: RDB changes since last save|<p>Number of changes since the last background save</p>|DEPENDENT|redis.persistence.rdb_changes_since_last_save<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_changes_since_last_save`</p>|
 |Redis|Redis: RDB current bgsave time sec|<p>Duration of the on-going RDB save operation if any</p>|DEPENDENT|redis.persistence.rdb_current_bgsave_time_sec<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_current_bgsave_time_sec`</p>|
 |Redis|Redis: RDB last bgsave status|<p>Status of the last RDB save operation</p>|DEPENDENT|redis.persistence.rdb_last_bgsave_status<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_last_bgsave_status`</p><p>- BOOL_TO_DECIMAL|
-|Redis|Redis: RDB last bgsave time in seconds|<p>Duration of the last bg_save operation</p>|DEPENDENT|redis.persistence.rdb_last_bgsave_time_sec<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_last_bgsave_time_sec`</p>|
+|Redis|Redis: RDB last bgsave time sec|<p>Duration of the last bg_save operation</p>|DEPENDENT|redis.persistence.rdb_last_bgsave_time_sec<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_last_bgsave_time_sec`</p>|
 |Redis|Redis: RDB last save time|<p>Epoch-based timestamp of last successful RDB save</p>|DEPENDENT|redis.persistence.rdb_last_save_time<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.rdb_last_save_time`</p>|
 |Redis|Redis: Connected slaves|<p>Number of connected slaves</p>|DEPENDENT|redis.replication.connected_slaves<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.connected_slaves`</p>|
 |Redis|Redis: Replication backlog active|<p>Flag indicating replication backlog is active</p>|DEPENDENT|redis.replication.repl_backlog_active<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.repl_backlog_active`</p>|
@@ -101,10 +101,9 @@ There are no template links in this template.
 |Redis|Redis: Redis mode|<p>The server's mode ("standalone", "sentinel" or "cluster")</p>|DEPENDENT|redis.server.redis_mode<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_mode`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Redis|Redis: Redis version|<p>Version of the Redis server</p>|DEPENDENT|redis.server.redis_version<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_version`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Redis|Redis: TCP port|<p>TCP/IP listen port</p>|DEPENDENT|redis.server.tcp_port<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.tcp_port`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Redis|Redis: Uptime in seconds|<p>Number of seconds since Redis server start</p>|DEPENDENT|redis.server.uptime_in_seconds<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.uptime_in_seconds`</p>|
+|Redis|Redis: Uptime|<p>Number of seconds since Redis server start</p>|DEPENDENT|redis.server.uptime<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.uptime`</p>|
 |Redis|Redis: Evicted keys|<p>Number of evicted keys due to maxmemory limit</p>|DEPENDENT|redis.stats.evicted_keys<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.evicted_keys`</p>|
 |Redis|Redis: Expired keys|<p>Total number of key expiration events</p>|DEPENDENT|redis.stats.expired_keys<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.expired_keys`</p>|
-|Redis|Redis: Expired time cap reached count||DEPENDENT|redis.stats.expired_time_cap_reached_count<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.expired_time_cap_reached_count`</p>|
 |Redis|Redis: Instantaneous input bytes per second|<p>The network's read rate per second in KB/sec</p>|DEPENDENT|redis.stats.instantaneous_input.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.instantaneous_input_kbps`</p><p>- MULTIPLIER: `1024`</p>|
 |Redis|Redis: Instantaneous operations per sec|<p>Number of commands processed per second</p>|DEPENDENT|redis.stats.instantaneous_ops.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.instantaneous_ops_per_sec`</p>|
 |Redis|Redis: Instantaneous output bytes per second|<p>The network's write rate per second in KB/sec</p>|DEPENDENT|redis.stats.instantaneous_output.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.instantaneous_output_kbps`</p><p>- MULTIPLIER: `1024`</p>|
@@ -123,9 +122,9 @@ There are no template links in this template.
 |Redis|Redis: Total net input bytes|<p>The total number of bytes read from the network</p>|DEPENDENT|redis.stats.total_net_input_bytes<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.total_net_input_bytes`</p>|
 |Redis|Redis: Total net output bytes|<p>The total number of bytes written to the network</p>|DEPENDENT|redis.stats.total_net_output_bytes<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.total_net_output_bytes`</p>|
 |Redis|Redis: Max clients|<p>Max number of connected clients at the same time.</p><p>Once the limit is reached Redis will close all the new connections sending an error "max number of clients reached".</p>|DEPENDENT|redis.config.maxclients<p>**Preprocessing**:</p><p>- JSONPATH: `$.maxclients`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `30m`</p>|
-|Redis|Redis: DB {#DB}: Average TTL||DEPENDENT|redis.db.avg_ttl["{#DB}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Keyspace["{#DB}"].avg_ttl`</p><p>- MULTIPLIER: `0.001`</p>|
-|Redis|Redis: DB {#DB}: Expires|<p>Number of keys with an expiration</p>|DEPENDENT|redis.db.expires["{#DB}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Keyspace["{#DB}"].expires`</p>|
-|Redis|Redis: DB {#DB}: Keys|<p>Total number of keys</p>|DEPENDENT|redis.db.keys["{#DB}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Keyspace["{#DB}"].keys`</p>|
+|Redis|DB {#DB}: Average TTL|<p>Average TTL</p>|DEPENDENT|redis.db.avg_ttl["{#DB}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Keyspace["{#DB}"].avg_ttl`</p><p>- MULTIPLIER: `0.001`</p>|
+|Redis|DB {#DB}: Expires|<p>Number of keys with an expiration</p>|DEPENDENT|redis.db.expires["{#DB}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Keyspace["{#DB}"].expires`</p>|
+|Redis|DB {#DB}: Keys|<p>Total number of keys</p>|DEPENDENT|redis.db.keys["{#DB}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Keyspace["{#DB}"].keys`</p>|
 |Redis|Redis: AOF current size{#SINGLETON}|<p>AOF current file size</p>|DEPENDENT|redis.persistence.aof_current_size[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_current_size`</p>|
 |Redis|Redis: AOF base size{#SINGLETON}|<p>AOF file size on latest startup or rewrite</p>|DEPENDENT|redis.persistence.aof_base_size[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_base_size`</p>|
 |Redis|Redis: AOF pending rewrite{#SINGLETON}|<p>Flag indicating an AOF rewrite operation will</p>|DEPENDENT|redis.persistence.aof_pending_rewrite[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Persistence.aof_pending_rewrite`</p>|
@@ -141,9 +140,9 @@ There are no template links in this template.
 |Redis|Redis: Slave replication offset{#SINGLETON}|<p>The replication offset of the replica instance</p>|DEPENDENT|redis.replication.slave_repl_offset[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.slave_repl_offset`</p>|
 |Redis|Redis: Slave priority{#SINGLETON}|<p>The priority of the instance as a candidate for failover</p>|DEPENDENT|redis.replication.slave_priority[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.slave_priority`</p>|
 |Redis|Redis: Slave priority{#SINGLETON}|<p>Flag indicating if the replica is read-only</p>|DEPENDENT|redis.replication.slave_read_only[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.slave_read_only`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Redis|Redis: {#SLAVE}: Replication lag in bytes|<p>Replication lag in bytes</p>|DEPENDENT|redis.replication.lag_bytes["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var repl = JSON.parse(value).Replication; return repl.master_repl_offset - repl["{#SLAVE}"].offset`</p>|
-|Redis|Redis: {#SLAVE}: IP address|<p>Slave ip address</p>|DEPENDENT|redis.replication.slave_ip["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].ip`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Redis|Redis: {#SLAVE}: Port|<p>Slave port number</p>|DEPENDENT|redis.replication.slave_port["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].port`</p>|
+|Redis|{#SLAVE}: Replication lag in bytes|<p>Replication lag in bytes</p>|DEPENDENT|redis.replication.lag_bytes["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var repl = JSON.parse(value).Replication; return repl.master_repl_offset - repl["{#SLAVE}"].offset`</p>|
+|Redis|{#SLAVE}: IP address|<p>Slave ip address</p>|DEPENDENT|redis.replication.slave_ip["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].ip`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Redis|{#SLAVE}: Port|<p>Slave port number</p>|DEPENDENT|redis.replication.slave_port["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].port`</p>|
 |Redis|Redis: Number of processes running|<p>-</p>|ZABBIX_PASSIVE|proc.num["{$REDIS.PROCESS_NAME}{#SINGLETON}"]|
 |Redis|Redis: Memory usage (rss)|<p>Resident set size memory used by process in bytes.</p>|ZABBIX_PASSIVE|proc.mem["{$REDIS.PROCESS_NAME}{#SINGLETON}",,,,rss]|
 |Redis|Redis: Memory usage (vsize)|<p>Virtual memory size used by process in bytes.</p>|ZABBIX_PASSIVE|proc.mem["{$REDIS.PROCESS_NAME}{#SINGLETON}",,,,vsize]|
@@ -202,7 +201,7 @@ There are no template links in this template.
 |Redis: Slaves number has changed|<p>Redis slaves number has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.replication.connected_slaves.diff()}=1`|INFO|<p>Manual close: YES</p>|
 |Redis: Replication role has changed (new role: {ITEM.VALUE})|<p>Redis replication role has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.replication.role.diff()}=1 and {TEMPLATE_NAME:redis.replication.role.strlen()}>0`|WARNING|<p>Manual close: YES</p>|
 |Redis: Version has changed (new version: {ITEM.VALUE})|<p>Redis version has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.server.redis_version.diff()}=1 and {TEMPLATE_NAME:redis.server.redis_version.strlen()}>0`|INFO|<p>Manual close: YES</p>|
-|Redis: только что перезагружен|<p>Аптайм менее 10 минут</p>|`{TEMPLATE_NAME:redis.server.uptime_in_seconds.last()}<10m`|INFO|<p>Manual close: YES</p>|
+|Redis: только что перезагружен|<p>Аптайм менее 10 минут</p>|`{TEMPLATE_NAME:redis.server.uptime.last()}<10m`|INFO|<p>Manual close: YES</p>|
 |Redis: Connections are rejected|<p>-</p>|`{TEMPLATE_NAME:redis.stats.rejected_connections.last()}>0`|HIGH||
 |Redis: Replication lag with master is too high (over {$REDIS.REPL.LAG.MAX.WARN} in 5m)|<p>-</p>|`{TEMPLATE_NAME:redis.replication.master_last_io_seconds_ago[{#SINGLETON}].min(5m)}>{$REDIS.REPL.LAG.MAX.WARN}`|WARNING||
 |Redis: Process is not running|<p>-</p>|`{TEMPLATE_NAME:proc.num["{$REDIS.PROCESS_NAME}{#SINGLETON}"].last()}=0`|HIGH||

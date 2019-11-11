@@ -407,7 +407,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                </master_item>
             </item>
             <item>
-               <name>Redis: AOF current rewrite time in seconds</name>
+               <name>Redis: AOF current rewrite time sec</name>
                <type>DEPENDENT</type>
                <key>redis.persistence.aof_current_rewrite_time_sec</key>
                <delay>0</delay>
@@ -420,6 +420,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgsave time</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -442,6 +445,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis flag</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -495,6 +501,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgsave time</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -586,7 +595,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                </master_item>
             </item>
             <item>
-               <name>Redis: Loading</name>
+               <name>Redis: Dump loading</name>
                <type>DEPENDENT</type>
                <key>redis.persistence.loading</key>
                <delay>0</delay>
@@ -597,6 +606,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis flag</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -658,12 +670,16 @@ Once the limit is reached Redis will close all the new connections sending an er
                <delay>0</delay>
                <history>7d</history>
                <value_type>FLOAT</value_type>
+               <units>s</units>
                <description>Duration of the on-going RDB save operation if any</description>
                <applications>
                   <application>
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgsave time</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -711,7 +727,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                </triggers>
             </item>
             <item>
-               <name>Redis: RDB last bgsave time in seconds</name>
+               <name>Redis: RDB last bgsave time sec</name>
                <type>DEPENDENT</type>
                <key>redis.persistence.rdb_last_bgsave_time_sec</key>
                <delay>0</delay>
@@ -724,6 +740,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis bgsave time</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -757,7 +776,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                </master_item>
             </item>
             <item>
-               <name>Redis: Get ping</name>
+               <name>Redis: Ping</name>
                <key>redis.ping["{$REDIS.CONN.URI}"]</key>
                <history>7h</history>
                <applications>
@@ -765,6 +784,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Service state</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -825,6 +847,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis repl offset</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -847,6 +872,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis flag</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -1082,9 +1110,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                </master_item>
             </item>
             <item>
-               <name>Redis: Uptime in seconds</name>
+               <name>Redis: Uptime</name>
                <type>DEPENDENT</type>
-               <key>redis.server.uptime_in_seconds</key>
+               <key>redis.server.uptime</key>
                <delay>0</delay>
                <history>7d</history>
                <units>s</units>
@@ -1097,7 +1125,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$.Server.uptime_in_seconds</params>
+                     <params>$.Server.uptime</params>
                   </step>
                </preprocessing>
                <master_item>
@@ -1174,28 +1202,6 @@ Once the limit is reached Redis will close all the new connections sending an er
                   <step>
                      <type>JSONPATH</type>
                      <params>$.Stats.expired_keys</params>
-                  </step>
-               </preprocessing>
-               <master_item>
-                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
-               </master_item>
-            </item>
-            <item>
-               <name>Redis: Expired time cap reached count</name>
-               <type>DEPENDENT</type>
-               <key>redis.stats.expired_time_cap_reached_count</key>
-               <delay>0</delay>
-               <history>7d</history>
-               <value_type>FLOAT</value_type>
-               <applications>
-                  <application>
-                     <name>Redis</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JSONPATH</type>
-                     <params>$.Stats.expired_time_cap_reached_count</params>
                   </step>
                </preprocessing>
                <master_item>
@@ -1719,17 +1725,18 @@ Once the limit is reached Redis will close all the new connections sending an er
                <description>Individual keyspace metrics</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Redis: DB {#DB}: Average TTL</name>
+                     <name>DB {#DB}: Average TTL</name>
                      <type>DEPENDENT</type>
                      <key>redis.db.avg_ttl["{#DB}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>s</units>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
+                     <description>Average TTL</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Redis: DB {#DB}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -1745,17 +1752,17 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: DB {#DB}: Expires</name>
+                     <name>DB {#DB}: Expires</name>
                      <type>DEPENDENT</type>
                      <key>redis.db.expires["{#DB}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of keys with an expiration</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Redis: DB {#DB}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -1767,17 +1774,17 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: DB {#DB}: Keys</name>
+                     <name>DB {#DB}: Keys</name>
                      <type>DEPENDENT</type>
                      <key>redis.db.keys["{#DB}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Total number of keys</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Redis: DB {#DB}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -1791,7 +1798,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                </item_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>Redis: DB {#DB}: Keys</name>
+                     <name>DB {#DB}: DB {#DB}: Keys</name>
                      <graph_items>
                         <graph_item>
                            <drawtype>GRADIENT_LINE</drawtype>
@@ -2136,12 +2143,16 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <delay>0</delay>
                      <history>7d</history>
                      <value_type>FLOAT</value_type>
+                     <units>B</units>
                      <description>Offset up to which replication IDs are accepted</description>
                      <applications>
                         <application>
                            <name>Redis</name>
                         </application>
                      </applications>
+                     <valuemap>
+                        <name>Redis repl offset</name>
+                     </valuemap>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -2922,6 +2933,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                            <name>Redis</name>
                         </application>
                      </applications>
+                     <valuemap>
+                        <name>Redis flag</name>
+                     </valuemap>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -2976,18 +2990,18 @@ Once the limit is reached Redis will close all the new connections sending an er
                <description>If the instance is the master and the slaves are connected, additional metrics are provided</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>Redis: {#SLAVE}: Replication lag in bytes</name>
+                     <name>{#SLAVE}: Replication lag in bytes</name>
                      <type>DEPENDENT</type>
                      <key>redis.replication.lag_bytes["{#SLAVE}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>B</units>
                      <description>Replication lag in bytes</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Redis: {#SLAVE}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JAVASCRIPT</type>
@@ -3000,7 +3014,7 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: {#SLAVE}: IP address</name>
+                     <name>{#SLAVE}: IP address</name>
                      <type>DEPENDENT</type>
                      <key>redis.replication.slave_ip["{#SLAVE}"]</key>
                      <delay>0</delay>
@@ -3008,11 +3022,11 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                      <trends>0</trends>
                      <value_type>CHAR</value_type>
                      <description>Slave ip address</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Redis: {#SLAVE}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -3028,17 +3042,17 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: {#SLAVE}: Port</name>
+                     <name>{#SLAVE}: Port</name>
                      <type>DEPENDENT</type>
                      <key>redis.replication.slave_port["{#SLAVE}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Slave port number</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>Redis: {#SLAVE}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -3052,7 +3066,7 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                </item_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>Redis: {#SLAVE}: Replication lag bytes</name>
+                     <name>{#SLAVE}: {#SLAVE}: Replication lag bytes</name>
                      <graph_items>
                         <graph_item>
                            <drawtype>BOLD_LINE</drawtype>
@@ -3602,7 +3616,7 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                <color>1A7C11</color>
                <item>
                   <host>Template DB Redis</host>
-                  <key>redis.server.uptime_in_seconds</key>
+                  <key>redis.server.uptime</key>
                </item>
             </graph_item>
          </graph_items>
@@ -3632,6 +3646,37 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
             <mapping>
                <value>1</value>
                <newvalue>Ok</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Redis flag</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>No</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Yes</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Redis repl offset</name>
+         <mappings>
+            <mapping>
+               <value>-1 B</value>
+               <newvalue>Undefined</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Redis bgsave time</name>
+         <mappings>
+            <mapping>
+               <value>- 1s</value>
+               <newvalue>Inactive</newvalue>
             </mapping>
          </mappings>
       </value_map>

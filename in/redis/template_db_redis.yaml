@@ -50,6 +50,7 @@ templates:
 
       - _prototype: redis.ping
         key: redis.ping["{$REDIS.CONN.URI}"]
+        value_map: Service state
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: "10m"
@@ -237,10 +238,11 @@ templates:
       # Persistence section
 
       - _prototype: redis._float
-        name: AOF current rewrite time in seconds
+        name: AOF current rewrite time sec
         key: redis.persistence.aof_current_rewrite_time_sec
         description: 'Duration of the on-going AOF rewrite operation if any'
         units: s
+        value_map: Redis bgsave time
         preprocessing:
           - type: JSONPATH
             params: '$.Persistence.aof_current_rewrite_time_sec'
@@ -248,6 +250,7 @@ templates:
       - _prototype: redis._unsigned
         name: AOF enabled
         key: redis.persistence.aof_enabled
+        value_map: Redis flag
         description: 'Flag indicating AOF logging is activated'
         preprocessing:
           - type: JSONPATH
@@ -267,6 +270,7 @@ templates:
         name: AOF last rewrite time sec
         key: redis.persistence.aof_last_rewrite_time_sec
         units: s
+        value_map: Redis bgsave time
         description: 'Duration of the last AOF rewrite'
         preprocessing:
           - type: JSONPATH
@@ -304,8 +308,9 @@ templates:
 
 
       - _prototype: redis._unsigned
-        name: Loading
+        name: Dump loading
         key: redis.persistence.loading
+        value_map: Redis flag
         description: 'Flag indicating if the load of a dump file is on-going'
         preprocessing:
           - type: JSONPATH
@@ -330,6 +335,8 @@ templates:
       - _prototype: redis._float
         name: RDB current bgsave time sec
         key: redis.persistence.rdb_current_bgsave_time_sec
+        units: s
+        value_map: Redis bgsave time
         description: 'Duration of the on-going RDB save operation if any'
         preprocessing:
           - type: JSONPATH
@@ -350,9 +357,10 @@ templates:
             priority: WARNING
 
       - _prototype: redis._float
-        name: RDB last bgsave time in seconds
+        name: RDB last bgsave time sec
         key: redis.persistence.rdb_last_bgsave_time_sec
         units: s
+        value_map: Redis bgsave time
         description: 'Duration of the last bg_save operation'
         preprocessing:
           - type: JSONPATH
@@ -402,6 +410,7 @@ templates:
       - _prototype: redis._unsigned
         name: Replication backlog active
         key: redis.replication.repl_backlog_active
+        value_map: Redis flag
         description: 'Flag indicating replication backlog is active'
         preprocessing:
           - type: JSONPATH
@@ -456,6 +465,7 @@ templates:
         name: 'Master replication offset'
         key: 'redis.replication.master_repl_offset'
         units: B
+        value_map: Redis repl offset
         description: 'Replication offset reported by the master'
         preprocessing:
           - type: JSONPATH
@@ -534,20 +544,20 @@ templates:
       #       params: '$.Server.uptime_in_days'
       
       - _prototype: redis._unsigned
-        name: Uptime in seconds
-        key: redis.server.uptime_in_seconds
+        name: Uptime
+        key: redis.server.uptime
         units: s
         description: 'Number of seconds since Redis server start'
         preprocessing:
           - type: JSONPATH
-            params: '$.Server.uptime_in_seconds'
+            params: '$.Server.uptime'
         triggers:
           - _prototype: trigger.uptime.restarted
         graphs:
           - _id: redis.uptime
             name: Uptime
             graph_items:
-              - name: redis.server.uptime_in_seconds
+              - name: redis.server.uptime
                 drawtype: SINGLE_LINE
 
       # Stats section
@@ -575,14 +585,6 @@ templates:
                 drawtype: BOLD_LINE
               - name: redis.stats.evicted_keys
                 drawtype: BOLD_LINE
-
-      - _prototype: redis._float
-        name: Expired time cap reached count
-        key: redis.stats.expired_time_cap_reached_count
-        description: ''
-        preprocessing:
-          - type: JSONPATH
-            params: '$.Stats.expired_time_cap_reached_count'
 
       - _prototype: redis._float
         name: Instantaneous input bytes per second
@@ -815,10 +817,12 @@ templates:
 
         items:
           - _prototype: redis._unsigned
-            name: 'DB {#DB}: Average TTL'
+            _resource: 'DB {#DB}'
+            name: 'Average TTL'
             key: redis.db.avg_ttl["{#DB}"]
             units: s
-            description: ''
+            description: 'Average TTL'
+            application_prototype: 'Redis: DB {#DB}'
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].avg_ttl'
@@ -826,17 +830,21 @@ templates:
                 params: 0.001
 
           - _prototype: redis._unsigned
-            name: 'DB {#DB}: Expires'
+            _resource: 'DB {#DB}'
+            name: 'Expires'
             key: redis.db.expires["{#DB}"]
             description: 'Number of keys with an expiration'
+            application_prototype: 'Redis: DB {#DB}'
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].expires'
 
           - _prototype: redis._unsigned
-            name: 'DB {#DB}: Keys'
+            _resource: 'DB {#DB}'
+            name: 'Keys'
             key: redis.db.keys["{#DB}"]
             description: 'Total number of keys'
+            application_prototype: 'Redis: DB {#DB}'
             preprocessing:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].keys'
@@ -886,6 +894,7 @@ templates:
           - _prototype: redis._unsigned
             name: 'AOF pending rewrite{#SINGLETON}'
             key: 'redis.persistence.aof_pending_rewrite[{#SINGLETON}]'
+            value_map: Redis flag
             description: 'Flag indicating an AOF rewrite operation will'
             preprocessing:
               - type: JSONPATH
@@ -1046,10 +1055,12 @@ templates:
 
         items:
           - _prototype: redis._unsigned
-            name: '{#SLAVE}: Replication lag in bytes'
+            _resource: '{#SLAVE}'
+            name: 'Replication lag in bytes'
             key: redis.replication.lag_bytes["{#SLAVE}"]
             units: B
             description: 'Replication lag in bytes'
+            application_prototype: 'Redis: {#SLAVE}'
             preprocessing:
               - type: JAVASCRIPT
                 params: |-
@@ -1063,9 +1074,11 @@ templates:
                     drawtype: BOLD_LINE
 
           - _prototype: redis._char
-            name: '{#SLAVE}: IP address'
+            _resource: '{#SLAVE}'
+            name: 'IP address'
             key: redis.replication.slave_ip["{#SLAVE}"]
             description: 'Slave ip address'
+            application_prototype: 'Redis: {#SLAVE}'
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication["{#SLAVE}"].ip'
@@ -1082,9 +1095,11 @@ templates:
 
           - _prototype: redis._unsigned
             _id: redis.slave_port
-            name: '{#SLAVE}: Port'
+            _resource: '{#SLAVE}'
+            name: 'Port'
             key: redis.replication.slave_port["{#SLAVE}"]
             description: 'Slave port number'
+            application_prototype: 'Redis: {#SLAVE}'
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication["{#SLAVE}"].port'
@@ -1401,6 +1416,8 @@ templates:
           - _prototype: redis._float
             name: 'Replication second offset{#SINGLETON}'
             key: 'redis.replication.second_repl_offset[{#SINGLETON}]'
+            units: B
+            value_map: Redis repl offset
             description: 'Offset up to which replication IDs are accepted'
             preprocessing:
               - type: JSONPATH
@@ -1645,3 +1662,20 @@ value_maps:
         newvalue: Error
       - value: "1"
         newvalue: Ok
+
+  - name: Redis flag
+    mappings:
+      - value: "0"
+        newvalue: No
+      - value: "1"
+        newvalue: Yes
+
+  - name: Redis repl offset
+    mappings:
+      - value: "-1 B"
+        newvalue: Undefined
+
+  - name: Redis bgsave time
+    mappings:
+      - value: "- 1s"
+        newvalue: Inactive
