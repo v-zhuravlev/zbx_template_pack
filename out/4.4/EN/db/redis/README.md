@@ -101,7 +101,7 @@ There are no template links in this template.
 |Redis|Redis: Redis mode|<p>The server's mode ("standalone", "sentinel" or "cluster")</p>|DEPENDENT|redis.server.redis_mode<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_mode`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Redis|Redis: Redis version|<p>Version of the Redis server</p>|DEPENDENT|redis.server.redis_version<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.redis_version`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Redis|Redis: TCP port|<p>TCP/IP listen port</p>|DEPENDENT|redis.server.tcp_port<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.tcp_port`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
-|Redis|Redis: Uptime|<p>Number of seconds since Redis server start</p>|DEPENDENT|redis.server.uptime<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.uptime`</p>|
+|Redis|Redis: Uptime|<p>Number of seconds since Redis server start</p>|DEPENDENT|redis.server.uptime<p>**Preprocessing**:</p><p>- JSONPATH: `$.Server.uptime_in_seconds`</p>|
 |Redis|Redis: Evicted keys|<p>Number of evicted keys due to maxmemory limit</p>|DEPENDENT|redis.stats.evicted_keys<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.evicted_keys`</p>|
 |Redis|Redis: Expired keys|<p>Total number of key expiration events</p>|DEPENDENT|redis.stats.expired_keys<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.expired_keys`</p>|
 |Redis|Redis: Instantaneous input bytes per second|<p>The network's read rate per second in KB/sec</p>|DEPENDENT|redis.stats.instantaneous_input.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$.Stats.instantaneous_input_kbps`</p><p>- MULTIPLIER: `1024`</p>|
