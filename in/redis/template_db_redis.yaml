@@ -168,6 +168,11 @@ templates:
           - name: "Total number of connected clients is too high (over {$REDIS.CLIENTS.PRC.MAX.WARN}% in 5m)"
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}/{TEMPLATE_NAME:__config.maxclients__.last()}*100>{$REDIS.CLIENTS.PRC.MAX.WARN}"
             priority: WARNING
+            description: |-
+              When the number of clients reaches the value of the "maxclients" parameter, new connections will be rejected.
+
+              https://redis.io/topics/clients#maximum-number-of-clients
+
         graphs:
           - _id: redis.connected_clients
             name: Clients
@@ -181,6 +186,7 @@ templates:
       - _prototype: redis._unsigned
         name: Cluster enabled
         key: redis.cluster.enabled
+        value_map: Redis flag
         description: "Indicate Redis cluster is enabled"
         preprocessing:
           - type: JSONPATH
@@ -233,6 +239,32 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: "$.Memory.used_memory_rss"
+
+      - _prototype: redis._float
+        name: "Memory fragmentation ratio"
+        key: "redis.memory.fragmentation_ratio"
+        description: |-
+          This ratio is an indication of memory mapping efficiency:
+            — Value over 1.0 indicate that memory fragmentation is very likely. Consider restarting the Redis server so the operating system can recover fragmented memory, especially with a ratio over 1.5.
+            — Value under 1.0 indicate that Redis likely has insufficient memory available. Consider optimizing memory usage or adding more RAM.
+
+          Note: If your peak memory usage is much higher than your current memory usage, the memory fragmentation ratio may be unreliable.
+          
+          https://redis.io/topics/memory-optimization
+
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Memory.mem_fragmentation_ratio"
+        triggers:
+          - name: "Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 15m)"
+            expression: "{TEMPLATE_NAME:METRIC.min(15m)}>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}"
+            priority: WARNING
+        graphs:
+          - _id: redis.memory_frag
+            name: Memory fragmentation
+            graph_items:
+              - name: "redis.memory.fragmentation_ratio"
+                drawtype: BOLD_LINE
 
       # Persistence section
 
@@ -288,6 +320,8 @@ templates:
           - name: Last AOF write operation failed
             expression: "{TEMPLATE_NAME:METRIC.last()}=0"
             priority: WARNING
+            description: |-
+              Detailed information about persistence: https://redis.io/topics/persistence
 
       - _prototype: redis._unsigned
         name: AOF rewrite in progress
@@ -353,6 +387,8 @@ templates:
           - name: Last RDB save operation failed
             expression: "{TEMPLATE_NAME:METRIC.last()}=0"
             priority: WARNING
+            description: |-
+              Detailed information about persistence: https://redis.io/topics/persistence
 
       - _prototype: redis._float
         name: RDB last bgsave time sec
@@ -688,6 +724,10 @@ templates:
           - name: "Connections are rejected"
             expression: "{TEMPLATE_NAME:METRIC.last()}>0"
             priority: HIGH
+            description: |-
+              The number of connections has reached the value of "maxclients".
+
+              https://redis.io/topics/clients 
 
       - _prototype: redis._unsigned
         name: Sync full
@@ -834,8 +874,8 @@ templates:
               - type: JSONPATH
                 params: '$.Keyspace["{#DB}"].keys'
             graphs:
-              - _id: redis.keyspace
-                name: "DB {#DB}: Keys"
+              - _id: redis.db.keyspace
+                name: "Keys"
                 graph_items:
                   - name: 'redis.db.keys["{#DB}"]'
                     drawtype: GRADIENT_LINE
@@ -1053,7 +1093,7 @@ templates:
                   return repl.master_repl_offset - repl["{#SLAVE}"].offset
             graphs:
               - _id: redis.replications.bytes
-                name: "{#SLAVE}: Replication lag bytes"
+                name: "Replication lag bytes"
                 graph_items:
                   - name: 'redis.replication.lag_bytes["{#SLAVE}"]'
                     drawtype: BOLD_LINE
@@ -1302,7 +1342,7 @@ templates:
                 params: "$.Memory.lazyfree_pending_objects"
 
           - _prototype: redis._unsigned
-            name: "RDB last cow size{#SINGLETON}"
+            name: "RDB last CoW size{#SINGLETON}"
             key: "redis.persistence.rdb_last_cow_size[{#SINGLETON}]"
             units: B
             description: "The size in bytes of copy-on-write allocations during the last RDB save operation"
@@ -1311,7 +1351,7 @@ templates:
                 params: "$.Persistence.rdb_last_cow_size"
 
           - _prototype: redis._unsigned
-            name: "AOF last cow size{#SINGLETON}"
+            name: "AOF last CoW size{#SINGLETON}"
             key: "redis.persistence.aof_last_cow_size[{#SINGLETON}]"
             units: B
             description: "The size in bytes of copy-on-write allocations during the last AOF rewrite operation"
@@ -1521,26 +1561,6 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: "$.Memory.mem_fragmentation_bytes"
-            graphs:
-              - _id: redis.memory_frag
-                name: Memory fragmentation{#SINGLETON}
-                graph_items:
-                  - name: "redis.memory.fragmentation_bytes[{#SINGLETON}]"
-                    drawtype: BOLD_LINE
-                  - name: "redis.memory.fragmentation_ratio[{#SINGLETON}]"
-                    drawtype: BOLD_LINE
-
-          - _prototype: redis._float
-            name: "Memory fragmentation ratio{#SINGLETON}"
-            key: "redis.memory.fragmentation_ratio[{#SINGLETON}]"
-            description: "Ratio between used_memory_rss and used_memory"
-            preprocessing:
-              - type: JSONPATH
-                params: "$.Memory.mem_fragmentation_ratio"
-            triggers:
-              - name: "Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 5m)"
-                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}"
-                priority: WARNING
 
           - _prototype: redis._unsigned
             name: "Memory not counted for evict{#SINGLETON}"
@@ -1626,6 +1646,56 @@ templates:
       - macro: "{$REDIS.MEM.FRAG_RATIO.MAX.WARN}"
         value: 1.5
         description: Maximum memory fragmentation ratio
+
+    screens:
+      - name: Redis overview
+        hsize: 2
+        vsize: 5
+        screen_items:
+          - _graph_id: redis.connected_clients
+            x: 0
+            y: 0
+          - _graph_id: redis.keyspace
+            x: 1
+            y: 0
+          - _graph_id: redis.commands.rate
+            x: 0
+            y: 1
+          - _graph_id: redis.keys
+            x: 1
+            y: 1
+          - _graph_id: redis.persistence
+            x: 0
+            y: 2
+          - _graph_id: redis.slaves
+            x: 1
+            y: 2
+          - _graph_id: redis.slowlog
+            x: 0
+            y: 3
+          - _graph_id: redis.uptime
+            x: 1
+            y: 3
+          - _graph_id: redis.replication.lag
+            x: 0
+            y: 4
+
+      - name: Redis performance
+        hsize: 2
+        vsize: 2
+        screen_items:
+          - _graph_id: redis.cpu
+            x: 0
+            y: 0
+          - _graph_id: redis.network
+            x: 1
+            y: 0
+          - _graph_id: redis.memory
+            x: 0
+            y: 1
+          - _graph_id: redis.memory_frag
+            x: 1
+            y: 1
 
 value_maps:
   - name: Service state

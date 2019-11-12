@@ -132,6 +132,9 @@ return clients.client_recent_max_output_buffer || clients.client_longest_output_
                      <name>Redis</name>
                   </application>
                </applications>
+               <valuemap>
+                  <name>Redis flag</name>
+               </valuemap>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
@@ -311,6 +314,42 @@ Once the limit is reached Redis will close all the new connections sending an er
                            <expression>{Template DB Redis:redis.ping["{$REDIS.CONN.URI}"].last()}=0</expression>
                         </dependency>
                      </dependencies>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
+               <name>Redis: Memory fragmentation ratio</name>
+               <type>DEPENDENT</type>
+               <key>redis.memory.fragmentation_ratio</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <value_type>FLOAT</value_type>
+               <description>This ratio is an indication of memory mapping efficiency:&#13;
+  — Value over 1.0 indicate that memory fragmentation is very likely. Consider restarting the Redis server so the operating system can recover fragmented memory, especially with a ratio over 1.5.&#13;
+  — Value under 1.0 indicate that Redis likely has insufficient memory available. Consider optimizing memory usage or adding more RAM.&#13;
+&#13;
+Note: If your peak memory usage is much higher than your current memory usage, the memory fragmentation ratio may be unreliable.&#13;
+&#13;
+https://redis.io/topics/memory-optimization</description>
+               <applications>
+                  <application>
+                     <name>Redis</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JSONPATH</type>
+                     <params>$.Memory.mem_fragmentation_ratio</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>redis.info["{$REDIS.CONN.URI}"]</key>
+               </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{min(15m)}&gt;{$REDIS.MEM.FRAG_RATIO.MAX.WARN}</expression>
+                     <name>Redis: Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 15m)</name>
+                     <priority>WARNING</priority>
                   </trigger>
                </triggers>
             </item>
@@ -547,6 +586,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <expression>{last()}=0</expression>
                      <name>Redis: Last AOF write operation failed</name>
                      <priority>WARNING</priority>
+                     <description>Detailed information about persistence: https://redis.io/topics/persistence</description>
                   </trigger>
                </triggers>
             </item>
@@ -723,6 +763,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <expression>{last()}=0</expression>
                      <name>Redis: Last RDB save operation failed</name>
                      <priority>WARNING</priority>
+                     <description>Detailed information about persistence: https://redis.io/topics/persistence</description>
                   </trigger>
                </triggers>
             </item>
@@ -1449,6 +1490,9 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <expression>{last()}&gt;0</expression>
                      <name>Redis: Connections are rejected</name>
                      <priority>HIGH</priority>
+                     <description>The number of connections has reached the value of "maxclients".&#13;
+&#13;
+https://redis.io/topics/clients</description>
                   </trigger>
                </triggers>
             </item>
@@ -1798,7 +1842,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                </item_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>DB {#DB}: DB {#DB}: Keys</name>
+                     <name>DB {#DB}: Keys</name>
                      <graph_items>
                         <graph_item>
                            <drawtype>GRADIENT_LINE</drawtype>
@@ -2091,7 +2135,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: AOF last cow size{#SINGLETON}</name>
+                     <name>Redis: AOF last CoW size{#SINGLETON}</name>
                      <type>DEPENDENT</type>
                      <key>redis.persistence.aof_last_cow_size[{#SINGLETON}]</key>
                      <delay>0</delay>
@@ -2114,7 +2158,7 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: RDB last cow size{#SINGLETON}</name>
+                     <name>Redis: RDB last CoW size{#SINGLETON}</name>
                      <type>DEPENDENT</type>
                      <key>redis.persistence.rdb_last_cow_size[{#SINGLETON}]</key>
                      <delay>0</delay>
@@ -2540,36 +2584,6 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>Redis: Memory fragmentation ratio{#SINGLETON}</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.memory.fragmentation_ratio[{#SINGLETON}]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <value_type>FLOAT</value_type>
-                     <description>Ratio between used_memory_rss and used_memory</description>
-                     <applications>
-                        <application>
-                           <name>Redis</name>
-                        </application>
-                     </applications>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Memory.mem_fragmentation_ratio</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                     <trigger_prototypes>
-                        <trigger_prototype>
-                           <expression>{min(5m)}&gt;{$REDIS.MEM.FRAG_RATIO.MAX.WARN}</expression>
-                           <name>Redis: Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 5m)</name>
-                           <priority>WARNING</priority>
-                        </trigger_prototype>
-                     </trigger_prototypes>
-                  </item_prototype>
-                  <item_prototype>
                      <name>Redis: Memory AOF buffer{#SINGLETON}</name>
                      <type>DEPENDENT</type>
                      <key>redis.memory.mem_aof_buffer[{#SINGLETON}]</key>
@@ -2763,30 +2777,6 @@ Once the limit is reached Redis will close all the new connections sending an er
                      </master_item>
                   </item_prototype>
                </item_prototypes>
-               <graph_prototypes>
-                  <graph_prototype>
-                     <name>Redis: Memory fragmentation{#SINGLETON}</name>
-                     <graph_items>
-                        <graph_item>
-                           <drawtype>BOLD_LINE</drawtype>
-                           <color>1A7C11</color>
-                           <item>
-                              <host>Template DB Redis</host>
-                              <key>redis.memory.fragmentation_bytes[{#SINGLETON}]</key>
-                           </item>
-                        </graph_item>
-                        <graph_item>
-                           <sortorder>1</sortorder>
-                           <drawtype>BOLD_LINE</drawtype>
-                           <color>2774A4</color>
-                           <item>
-                              <host>Template DB Redis</host>
-                              <key>redis.memory.fragmentation_ratio[{#SINGLETON}]</key>
-                           </item>
-                        </graph_item>
-                     </graph_items>
-                  </graph_prototype>
-               </graph_prototypes>
                <master_item>
                   <key>redis.info["{$REDIS.CONN.URI}"]</key>
                </master_item>
@@ -3066,7 +3056,7 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                </item_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>{#SLAVE}: {#SLAVE}: Replication lag bytes</name>
+                     <name>{#SLAVE}: Replication lag bytes</name>
                      <graph_items>
                         <graph_item>
                            <drawtype>BOLD_LINE</drawtype>
@@ -3384,6 +3374,308 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                <description>Maximum number of slowlog entries per second</description>
             </macro>
          </macros>
+         <screens>
+            <screen>
+               <name>Redis overview</name>
+               <hsize>2</hsize>
+               <vsize>5</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Clients</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Keyspace</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Commands</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Expired keys</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Persistence</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>2</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Slaves</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>2</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Slowlog</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>3</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Uptime</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>3</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>20</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Replication lag time{#SINGLETON}</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>4</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+               </screen_items>
+            </screen>
+            <screen>
+               <name>Redis performance</name>
+               <hsize>2</hsize>
+               <vsize>2</vsize>
+               <screen_items>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: CPU</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Network</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>0</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Memory</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>0</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+                  <screen_item>
+                     <resourcetype>0</resourcetype>
+                     <style>0</style>
+                     <resource>
+                        <name>Redis: Memory fragmentation</name>
+                        <host>Template DB Redis</host>
+                     </resource>
+                     <width>750</width>
+                     <height>100</height>
+                     <x>1</x>
+                     <y>1</y>
+                     <colspan>1</colspan>
+                     <rowspan>1</rowspan>
+                     <elements>25</elements>
+                     <valign>0</valign>
+                     <halign>0</halign>
+                     <dynamic>0</dynamic>
+                     <sort_triggers>0</sort_triggers>
+                     <url/>
+                     <application/>
+                     <max_columns>3</max_columns>
+                  </screen_item>
+               </screen_items>
+            </screen>
+         </screens>
       </template>
    </templates>
    <triggers>
@@ -3391,6 +3683,9 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
          <expression>{Template DB Redis:redis.clients.connected.min(5m)}/{Template DB Redis:redis.config.maxclients.last()}*100&gt;{$REDIS.CLIENTS.PRC.MAX.WARN}</expression>
          <name>Redis: Total number of connected clients is too high (over {$REDIS.CLIENTS.PRC.MAX.WARN}% in 5m)</name>
          <priority>WARNING</priority>
+         <description>When the number of clients reaches the value of the "maxclients" parameter, new connections will be rejected.&#13;
+&#13;
+https://redis.io/topics/clients#maximum-number-of-clients</description>
       </trigger>
    </triggers>
    <graphs>
@@ -3535,6 +3830,19 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                <item>
                   <host>Template DB Redis</host>
                   <key>redis.memory.used_memory_peak</key>
+               </item>
+            </graph_item>
+         </graph_items>
+      </graph>
+      <graph>
+         <name>Redis: Memory fragmentation</name>
+         <graph_items>
+            <graph_item>
+               <drawtype>BOLD_LINE</drawtype>
+               <color>1A7C11</color>
+               <item>
+                  <host>Template DB Redis</host>
+                  <key>redis.memory.fragmentation_ratio</key>
                </item>
             </graph_item>
          </graph_items>
