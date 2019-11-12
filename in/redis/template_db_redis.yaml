@@ -1107,6 +1107,8 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication["{#SLAVE}"].ip'
+                error_handler: CUSTOM_ERROR
+                error_handler_params: Slave {#SLAVE} is no longer available.
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1d
 
@@ -1128,6 +1130,8 @@ templates:
             preprocessing:
               - type: JSONPATH
                 params: '$.Replication["{#SLAVE}"].port'
+                error_handler: CUSTOM_ERROR
+                error_handler_params: Slave {#SLAVE} is no longer available.
             # triggers:
             #   - _id: trigger.redis.slave_port.change
             #     name: '{#SLAVE}: port has changed'
