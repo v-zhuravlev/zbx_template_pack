@@ -142,7 +142,7 @@ There are no template links in this template.
 |Redis|Redis: Slave priority{#SINGLETON}|<p>The priority of the instance as a candidate for failover</p>|DEPENDENT|redis.replication.slave_priority[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.slave_priority`</p>|
 |Redis|Redis: Slave priority{#SINGLETON}|<p>Flag indicating if the replica is read-only</p>|DEPENDENT|redis.replication.slave_read_only[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication.slave_read_only`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Redis|{#SLAVE}: Replication lag in bytes|<p>Replication lag in bytes</p>|DEPENDENT|redis.replication.lag_bytes["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `var repl = JSON.parse(value).Replication; return repl.master_repl_offset - repl["{#SLAVE}"].offset`</p>|
-|Redis|{#SLAVE}: IP address|<p>Slave ip address</p>|DEPENDENT|redis.replication.slave_ip["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].ip`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Redis|{#SLAVE}: IP address|<p>Slave IP address</p>|DEPENDENT|redis.replication.slave_ip["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].ip`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |Redis|{#SLAVE}: Port|<p>Slave port number</p>|DEPENDENT|redis.replication.slave_port["{#SLAVE}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Replication["{#SLAVE}"].port`</p>|
 |Redis|Redis: Number of processes running|<p>-</p>|ZABBIX_PASSIVE|proc.num["{$REDIS.PROCESS_NAME}{#SINGLETON}"]|
 |Redis|Redis: Memory usage (rss)|<p>Resident set size memory used by process in bytes.</p>|ZABBIX_PASSIVE|proc.mem["{$REDIS.PROCESS_NAME}{#SINGLETON}",,,,rss]|
@@ -199,7 +199,7 @@ There are no template links in this template.
 |Redis: Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 15m)|<p>-</p>|`{TEMPLATE_NAME:redis.memory.fragmentation_ratio.min(15m)}>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}`|WARNING||
 |Redis: Last AOF write operation failed|<p>Detailed information about persistence: https://redis.io/topics/persistence</p>|`{TEMPLATE_NAME:redis.persistence.aof_last_write_status.last()}=0`|WARNING||
 |Redis: Last RDB save operation failed|<p>Detailed information about persistence: https://redis.io/topics/persistence</p>|`{TEMPLATE_NAME:redis.persistence.rdb_last_bgsave_status.last()}=0`|WARNING||
-|Redis: Slaves number has changed|<p>Redis slaves number has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.replication.connected_slaves.diff()}=1`|INFO|<p>Manual close: YES</p>|
+|Redis: Number of slaves has changed|<p>Redis number of slaves has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.replication.connected_slaves.diff()}=1`|INFO|<p>Manual close: YES</p>|
 |Redis: Replication role has changed (new role: {ITEM.VALUE})|<p>Redis replication role has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.replication.role.diff()}=1 and {TEMPLATE_NAME:redis.replication.role.strlen()}>0`|WARNING|<p>Manual close: YES</p>|
 |Redis: Version has changed (new version: {ITEM.VALUE})|<p>Redis version has changed. Ack to close.</p>|`{TEMPLATE_NAME:redis.server.redis_version.diff()}=1 and {TEMPLATE_NAME:redis.server.redis_version.strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |Redis: только что перезагружен|<p>Аптайм менее 10 минут</p>|`{TEMPLATE_NAME:redis.server.uptime.last()}<10m`|INFO|<p>Manual close: YES</p>|
