@@ -175,6 +175,7 @@ Once the limit is reached Redis will close all the new connections sending an er
             <item>
                <name>Redis: Get config</name>
                <key>redis.config["{$REDIS.CONN.URI}"]</key>
+               <delay>1h</delay>
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
@@ -350,6 +351,13 @@ https://redis.io/topics/memory-optimization</description>
                      <expression>{min(15m)}&gt;{$REDIS.MEM.FRAG_RATIO.MAX.WARN}</expression>
                      <name>Redis: Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 15m)</name>
                      <priority>WARNING</priority>
+                     <description>This ratio is an indication of memory mapping efficiency:&#13;
+  — Value over 1.0 indicate that memory fragmentation is very likely. Consider restarting the Redis server so the operating system can recover fragmented memory, especially with a ratio over 1.5.&#13;
+  — Value under 1.0 indicate that Redis likely has insufficient memory available. Consider optimizing memory usage or adding more RAM.&#13;
+&#13;
+Note: If your peak memory usage is much higher than your current memory usage, the memory fragmentation ratio may be unreliable.&#13;
+&#13;
+https://redis.io/topics/memory-optimization</description>
                   </trigger>
                </triggers>
             </item>
@@ -2980,77 +2988,32 @@ https://redis.io/topics/clients</description>
                <description>If the instance is the master and the slaves are connected, additional metrics are provided</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>{#SLAVE}: Replication lag in bytes</name>
+                     <name>Redis slave {#SLAVE_IP}:{#SLAVE_PORT}: Replication lag in bytes</name>
                      <type>DEPENDENT</type>
-                     <key>redis.replication.lag_bytes["{#SLAVE}"]</key>
+                     <key>redis.replication.lag_bytes["{#SLAVE_IP}:{#SLAVE_PORT}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>B</units>
                      <description>Replication lag in bytes</description>
                      <application_prototypes>
                         <application_prototype>
-                           <name>Redis: {#SLAVE}</name>
+                           <name>Redis: Slave {#SLAVE_IP}:{#SLAVE_PORT}</name>
                         </application_prototype>
                      </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JAVASCRIPT</type>
                            <params>var repl = JSON.parse(value).Replication;
-return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>{#SLAVE}: IP address</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.replication.slave_ip["{#SLAVE}"]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
-                     <description>Slave IP address</description>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Redis: {#SLAVE}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Replication["{#SLAVE}"].ip</params>
-                           <error_handler>CUSTOM_ERROR</error_handler>
-                           <error_handler_params>Slave {#SLAVE} is no longer available.</error_handler_params>
-                        </step>
-                        <step>
-                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                           <params>1d</params>
-                        </step>
-                     </preprocessing>
-                     <master_item>
-                        <key>redis.info["{$REDIS.CONN.URI}"]</key>
-                     </master_item>
-                  </item_prototype>
-                  <item_prototype>
-                     <name>{#SLAVE}: Port</name>
-                     <type>DEPENDENT</type>
-                     <key>redis.replication.slave_port["{#SLAVE}"]</key>
-                     <delay>0</delay>
-                     <history>7d</history>
-                     <description>Slave port number</description>
-                     <application_prototypes>
-                        <application_prototype>
-                           <name>Redis: {#SLAVE}</name>
-                        </application_prototype>
-                     </application_prototypes>
-                     <preprocessing>
-                        <step>
-                           <type>JSONPATH</type>
-                           <params>$.Replication["{#SLAVE}"].port</params>
-                           <error_handler>CUSTOM_ERROR</error_handler>
-                           <error_handler_params>Slave {#SLAVE} is no longer available.</error_handler_params>
+var res = Object.keys(repl)
+    .filter(function (v) {return v.match(/slave\d+/)})
+    .filter(function (v) {return (repl[v].ip === "{#SLAVE_IP}" &amp;&amp; repl[v].port === "{#SLAVE_PORT}")})
+    .map(function (v) {return repl[v].offset})[0];
+
+if (res === undefined) {
+    throw 'Slave {#SLAVE_IP}:{#SLAVE_PORT} is no longer available.';
+}
+
+return res;</params>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -3060,14 +3023,14 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                </item_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>{#SLAVE}: Replication lag bytes</name>
+                     <name>Redis slave {#SLAVE_IP}:{#SLAVE_PORT}: Replication lag bytes</name>
                      <graph_items>
                         <graph_item>
                            <drawtype>BOLD_LINE</drawtype>
                            <color>1A7C11</color>
                            <item>
                               <host>Template DB Redis</host>
-                              <key>redis.replication.lag_bytes["{#SLAVE}"]</key>
+                              <key>redis.replication.lag_bytes["{#SLAVE_IP}:{#SLAVE_PORT}"]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -3079,9 +3042,12 @@ return repl.master_repl_offset - repl["{#SLAVE}"].offset</params>
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>return JSON.stringify(Object.keys(JSON.parse(value).Replication)
+                     <params>var repl = JSON.parse(value).Replication;
+return JSON.stringify(Object.keys(repl)
   .filter(function (v) {return v.match(/slave\d+/)})
-  .map(function (v){return {"{#SLAVE}": v}}));</params>
+  .map(function (v){
+    return {"{#SLAVE_IP}": repl[v].ip, "{#SLAVE_PORT}": repl[v].port}
+  }));</params>
                   </step>
                </preprocessing>
             </discovery_rule>

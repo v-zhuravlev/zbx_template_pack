@@ -259,6 +259,15 @@ templates:
           - name: "Memory fragmentation ratio is too high (over {$REDIS.MEM.FRAG_RATIO.MAX.WARN} in 15m)"
             expression: "{TEMPLATE_NAME:METRIC.min(15m)}>{$REDIS.MEM.FRAG_RATIO.MAX.WARN}"
             priority: WARNING
+            description: |-
+              This ratio is an indication of memory mapping efficiency:
+                — Value over 1.0 indicate that memory fragmentation is very likely. Consider restarting the Redis server so the operating system can recover fragmented memory, especially with a ratio over 1.5.
+                — Value under 1.0 indicate that Redis likely has insufficient memory available. Consider optimizing memory usage or adding more RAM.
+
+              Note: If your peak memory usage is much higher than your current memory usage, the memory fragmentation ratio may be unreliable.
+
+              https://redis.io/topics/memory-optimization
+
         graphs:
           - _id: redis.memory_frag
             name: Memory fragmentation
@@ -1074,43 +1083,55 @@ templates:
         preprocessing:
           - type: JAVASCRIPT
             params: |-
-              return JSON.stringify(Object.keys(JSON.parse(value).Replication)
+              var repl = JSON.parse(value).Replication;
+              return JSON.stringify(Object.keys(repl)
                 .filter(function (v) {return v.match(/slave\d+/)})
-                .map(function (v){return {"{#SLAVE}": v}}));
+                .map(function (v){
+                  return {"{#SLAVE_IP}": repl[v].ip, "{#SLAVE_PORT}": repl[v].port}
+                }));
 
         items:
           - _prototype: redis._unsigned
-            _resource: "{#SLAVE}"
+            _resource: "Redis slave {#SLAVE_IP}:{#SLAVE_PORT}"
             name: "Replication lag in bytes"
-            key: redis.replication.lag_bytes["{#SLAVE}"]
+            key: redis.replication.lag_bytes["{#SLAVE_IP}:{#SLAVE_PORT}"]
             units: B
             description: "Replication lag in bytes"
-            application_prototype: "Redis: {#SLAVE}"
+            application_prototype: "Redis: Slave {#SLAVE_IP}:{#SLAVE_PORT}"
             preprocessing:
               - type: JAVASCRIPT
                 params: |-
                   var repl = JSON.parse(value).Replication;
-                  return repl.master_repl_offset - repl["{#SLAVE}"].offset
+                  var res = Object.keys(repl)
+                      .filter(function (v) {return v.match(/slave\d+/)})
+                      .filter(function (v) {return (repl[v].ip === "{#SLAVE_IP}" && repl[v].port === "{#SLAVE_PORT}")})
+                      .map(function (v) {return repl[v].offset})[0];
+
+                  if (res === undefined) {
+                      throw 'Slave {#SLAVE_IP}:{#SLAVE_PORT} is no longer available.';
+                  }
+
+                  return res;
             graphs:
               - _id: redis.replications.bytes
                 name: "Replication lag bytes"
                 graph_items:
-                  - name: 'redis.replication.lag_bytes["{#SLAVE}"]'
+                  - name: 'redis.replication.lag_bytes["{#SLAVE_IP}:{#SLAVE_PORT}"]'
                     drawtype: BOLD_LINE
 
-          - _prototype: redis._char
-            _resource: "{#SLAVE}"
-            name: "IP address"
-            key: redis.replication.slave_ip["{#SLAVE}"]
-            description: "Slave IP address"
-            application_prototype: "Redis: {#SLAVE}"
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Replication["{#SLAVE}"].ip'
-                error_handler: CUSTOM_ERROR
-                error_handler_params: Slave {#SLAVE} is no longer available.
-              - type: DISCARD_UNCHANGED_HEARTBEAT
-                params: 1d
+          # - _prototype: redis._char
+          #   _resource: "{#SLAVE}"
+          #   name: "IP address"
+          #   key: redis.replication.slave_ip["{#SLAVE}"]
+          #   description: "Slave IP address"
+          #   application_prototype: "Redis: {#SLAVE}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: '$.Replication["{#SLAVE}"].ip'
+          #       error_handler: CUSTOM_ERROR
+          #       error_handler_params: Slave {#SLAVE} is no longer available.
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
 
             # triggers:
             #   - _id: trigger.redis.slave_ip.changed
@@ -1120,18 +1141,18 @@ templates:
             #     recovery_mode: NONE
             #     manual_close: 'YES'
             #     priority: INFO
-          - _prototype: redis._unsigned
-            _id: redis.slave_port
-            _resource: "{#SLAVE}"
-            name: "Port"
-            key: redis.replication.slave_port["{#SLAVE}"]
-            description: "Slave port number"
-            application_prototype: "Redis: {#SLAVE}"
-            preprocessing:
-              - type: JSONPATH
-                params: '$.Replication["{#SLAVE}"].port'
-                error_handler: CUSTOM_ERROR
-                error_handler_params: Slave {#SLAVE} is no longer available.
+          # - _prototype: redis._unsigned
+          #   _id: redis.slave_port
+          #   _resource: "{#SLAVE}"
+          #   name: "Port"
+          #   key: redis.replication.slave_port["{#SLAVE}"]
+          #   description: "Slave port number"
+          #   application_prototype: "Redis: {#SLAVE}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: '$.Replication["{#SLAVE}"].port'
+          #       error_handler: CUSTOM_ERROR
+          #       error_handler_params: Slave {#SLAVE} is no longer available.
             # triggers:
             #   - _id: trigger.redis.slave_port.change
             #     name: '{#SLAVE}: port has changed'
