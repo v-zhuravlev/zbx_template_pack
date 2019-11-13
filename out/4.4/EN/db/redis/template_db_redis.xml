@@ -175,7 +175,6 @@ Once the limit is reached Redis will close all the new connections sending an er
             <item>
                <name>Redis: Get config</name>
                <key>redis.config["{$REDIS.CONN.URI}"]</key>
-               <delay>1h</delay>
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
@@ -184,6 +183,12 @@ Once the limit is reached Redis will close all the new connections sending an er
                      <name>Zabbix raw items</name>
                   </application>
                </applications>
+               <preprocessing>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1h</params>
+                  </step>
+               </preprocessing>
                <triggers>
                   <trigger>
                      <expression>{diff()}=1 and {strlen()}&gt;0</expression>

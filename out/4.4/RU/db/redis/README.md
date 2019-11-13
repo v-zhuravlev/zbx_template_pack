@@ -185,7 +185,7 @@ There are no template links in this template.
 |Redis|Redis: Memory clients slaves{#SINGLETON}||DEPENDENT|redis.memory.mem_clients_slaves[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Memory.mem_clients_slaves`</p>|
 |Redis|Redis: Memory AOF buffer{#SINGLETON}|<p>Size of the AOF buffer</p>|DEPENDENT|redis.memory.mem_aof_buffer[{#SINGLETON}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.Memory.mem_aof_buffer`</p>|
 |Zabbix_raw_items|Redis: Get info||ZABBIX_PASSIVE|redis.info["{$REDIS.CONN.URI}"]|
-|Zabbix_raw_items|Redis: Get config||ZABBIX_PASSIVE|redis.config["{$REDIS.CONN.URI}"]|
+|Zabbix_raw_items|Redis: Get config||ZABBIX_PASSIVE|redis.config["{$REDIS.CONN.URI}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 
 ## Triggers
 

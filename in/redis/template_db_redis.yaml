@@ -46,6 +46,9 @@ templates:
           - _prototype: trigger.version.changed
             name: "Configuration has changed"
             description: "__RESOURCE__ configuration has changed. Ack to close."
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "1h"
 
       - _prototype: redis.ping
         key: redis.ping["{$REDIS.CONN.URI}"]
