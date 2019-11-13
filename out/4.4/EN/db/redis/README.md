@@ -7,7 +7,7 @@ For Zabbix version: 4.4
 The template to monitor Redis server by Zabbix that work without any external scripts.
 Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-`Template Db Redis` — collects metrics by polling a New Zabbix Agent (zabbix-agent2).
+`Template Db Redis` — collects metrics by polling zabbix-agent2.
 
 
 
@@ -17,7 +17,7 @@ This template was tested on:
 
 ## Setup
 
-Setup and configure a New Zabbix Agent compiled with the Redis monitoring plugin (ZBXNEXT-5428-4.3).
+Setup and configure zabbix-agent2 compiled with the Redis monitoring plugin (ZBXNEXT-5428-4.3).
 
 Test availability: `zabbix_get -s redis-master -k redis.ping`
 
