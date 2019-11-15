@@ -33,6 +33,23 @@
         "description": ""
     },
     {
+        "_id": "mysql.uptime",
+        "_zbx_ver": "3.4",
+        "name": "Info: Uptime",
+        "type": "DEPENDENT",
+        "key": "mysql.uptime",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of seconds that the server has been up.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Uptime']/field[@name='Value']"
+            }
+        ]
+    },
+    {
         "_id": "mysql.aborted_clients.rate",
         "_zbx_ver": "3.4",
         "name": "Connections: Aborted clients per second",
@@ -51,5 +68,313 @@
                 "type": "CHANGE_PER_SECOND"
             }
         ]
+    },
+    {
+        "_id": "mysql.aborted_connects.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Aborted connections per second",
+        "type": "DEPENDENT",
+        "key": "mysql.aborted_connects.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of failed attempts to connect to the MySQL server.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Aborted_clients']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connection_errors_accept.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connection errors accept per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connection_errors_accept.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "Number of errors that occurred during calls to accept() on the listening port.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connection_errors_accept']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connection_errors_internal.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connection errors internal per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connection_errors_internal.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "Number of refused connections due to internal server errors, for example out of memory errors, or failed thread starts.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connection_errors_internal']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connection_errors_max_connections.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connection errors max connections per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connection_errors_max_connections.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "Number of refused connections due to the max_connections limit being reached.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connection_errors_max_connections']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connection_errors_peer_address.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connection errors peer address per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connection_errors_peer_address.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "Number of errors while searching for the connecting client IP address.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connection_errors_peer_address']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connection_errors_select.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connection errors select per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connection_errors_select.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "Number of errors during calls to select() or poll() on the listening port. The client would not necessarily have been rejected in these cases.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connection_errors_select']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connection_errors_tcpwrap.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connection errors tcpwrap per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connection_errors_tcpwrap.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "Number of connections the libwrap library refused.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connection_errors_tcpwrap']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.connections.rate",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Connections per second",
+        "type": "DEPENDENT",
+        "key": "mysql.connections.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of connection attempts (successful or not) to the MySQL server.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Connections']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.max_used_connections",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Max used connections",
+        "type": "DEPENDENT",
+        "key": "mysql.max_used_connections",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The maximum number of connections that have been in use simultaneously since the server started.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Max_used_connections']/field[@name='Value']/text()"
+            }
+        ]
     }
+    {
+        "_id": "mysql.threads_cached",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Threads cached",
+        "type": "DEPENDENT",
+        "key": "mysql.threads_cached",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of threads in the thread cache.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Threads_cached']/field[@name='Value']/text()"
+            }
+        ]
+    }
+    {
+        "_id": "mysql.threads_connected",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Threads connected",
+        "type": "DEPENDENT",
+        "key": "mysql.threads_connected",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of currently open connections.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Threads_connected']/field[@name='Value']/text()"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.threads_created",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Threads created",
+        "type": "DEPENDENT",
+        "key": "mysql.threads_created",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of threads created to handle connections. If Threads_created is big, you may want to increase the thread_cache_size value. The cache miss rate can be calculated as Threads_created/Connections.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Threads_created']/field[@name='Value']/text()"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.threads_running",
+        "_zbx_ver": "3.4",
+        "name": "Connections: Threads running",
+        "type": "DEPENDENT",
+        "key": "mysql.threads_running",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The number of threads that are not sleeping.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Threads_running']/field[@name='Value']/text()"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.bytes_received.rate",
+        "_zbx_ver": "3.4",
+        "name": "Throughput: Bytes received",
+        "type": "DEPENDENT",
+        "key": "mysql.bytes_received.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+		"units": "Bps",
+        "_group": "MySQL",
+        "description": "The number of bytes received from all clients.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Bytes_received']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.bytes_sent.rate",
+        "_zbx_ver": "3.4",
+        "name": "Throughput: Bytes sent",
+        "type": "DEPENDENT",
+        "key": "mysql.bytes_sent.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+		"units": "Bps",
+        "_group": "MySQL",
+        "description": "The number of bytes sent to all clients.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Bytes_sent']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "mysql.com_delete.rate",
+        "_zbx_ver": "3.4",
+        "name": "Throughput: Command Delete per second",
+        "type": "DEPENDENT",
+        "key": "mysql.com_delete.rate",
+        "master_item": "mysql.get_status_variables",
+        "value_type": "FLOAT",
+        "_group": "MySQL",
+        "description": "The Com_delete counter variable indicates the number of times the delete statement has been executed.",
+        "preprocessing": [
+            {
+                "type": "XMLPATH",
+                "params": "/resultset/row[field/text()='Com_delete']/field[@name='Value']/text()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+
 ]
