@@ -3,19 +3,19 @@ templates:
   - name: Template App MySQL by agent
     macros:
       - macro: "{$MYSQL.ABORTED_CONN.MAX.WARN}"
-        _description: ""
+        _description: The number of failed attempts to connect to the MySQL server for trigger expression.
         value: "3"
       - macro: "{$MYSQL.HOST}"
-        _description: ""
+        _description: Hostname or IP of MySQL host or container.
         value: "localhost"
       - macro: "{$MYSQL.PORT}"
-        _description: ""
+        _description: MySQL service port.
         value: "3306"
       - macro: "{$MYSQL.REPL_LAG.MAX.WARN}"
-        _description: ""
+        _description: The lag of slave from master for trigger expression.
         value: "30m"
       - macro: "{$MYSQL.SLOW_QUERIES.MAX.WARN}"
-        _description: ""
+        _description: The number of slow queries for trigger expression.
         value: "3"
     items:
       - _prototype: mysql.get_status_variables
@@ -28,3 +28,35 @@ templates:
         type: ZABBIX_PASSIVE
         Key: mysql.version["{$MYSQL.HOST}","{$MYSQL.PORT}"]
       - _prototype: mysql.aborted_clients.rate
+      - _prototype: mysql.aborted_connects.rate
+      - _prototype: mysql.connection_errors_accept.rate
+      - _prototype: mysql.connection_errors_internal.rate
+      - _prototype: mysql.connection_errors_max_connections.rate
+      - _prototype: mysql.connection_errors_peer_address.rate
+      - _prototype: mysql.connection_errors_select.rate
+      - _prototype: mysql.connection_errors_tcpwrap.rate
+      - _prototype: mysql.connections.rate
+      - _prototype: mysql.max_used_connections
+      - _prototype: mysql.threads_cached
+      - _prototype: mysql.threads_connected
+      - _prototype: mysql.threads_created
+      - _prototype: mysql.threads_running
+      - _prototype: mysql.created_tmp_files
+      - _prototype: mysql.created_tmp_disk_tables
+      - _prototype: mysql.created_tmp_tables
+      - _prototype: mysql.innodb_buffer_pool_pages_free
+      - _prototype: mysql.innodb_buffer_pool_pages_total
+      - _prototype: mysql.innodb_buffer_pool_read_requests
+      - _prototype: mysql.innodb_buffer_pool_reads
+      - _prototype: mysql.innodb_row_lock_time
+      - _prototype: mysql.innodb_row_lock_time_max
+      - _prototype: mysql.innodb_row_lock_waits
+      - _prototype: mysql.slow_queries.rate
+      - _prototype: mysql.bytes_received.rate
+      - _prototype: mysql.bytes_sent.rate
+      - _prototype: mysql.com_delete.rate
+      - _prototype: mysql.com_insert.rate
+      - _prototype: mysql.com_select.rate
+      - _prototype: mysql.com_update.rate
+      - _prototype: mysql.queries.rate
+      - _prototype: mysql.questions.rate
