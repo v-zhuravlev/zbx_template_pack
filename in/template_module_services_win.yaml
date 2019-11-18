@@ -1,0 +1,73 @@
+# {#SERVICE.STATE}
+---
+templates:
+  - name: Template Module Windows services by Zabbix agent
+    description: Template Services OS Windows
+    _zbx_ver: "4.4"
+    _classes:
+      # - MODULE
+      - ZABBIX_ACTIVE
+    _documentation:
+      overview: Special version of services template that is required for Windows OS.
+      _issues:
+        - description: ""
+    macros:
+      - macro: "{$SERVICE.NAME.MATCHES}"
+        value: ^.*$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+      - macro: "{$SERVICE.NAME.NOT_MATCHES}"
+        value: Fax
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+      - macro: "{$SERVICE.STARTUPNAME.MATCHES}"
+        value: ^automatic$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+      - macro: "{$SERVICE.STARTUPNAME.NOT_MATCHES}"
+        value: ^manual|automatic delayed|disabled$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+    discovery_rules:
+      - name: Windows service discovery
+        key: service.discovery
+        type: "ZABBIX_PASSIVE"
+        delay: 1h
+        description: |
+          Discovering Windows services.
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#SERVICE.NAME}"
+              value: "{$SERVICE.NAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: A
+            - macro: "{#SERVICE.NAME}"
+              value: "{$SERVICE.NAME.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: B
+            - macro: "{#SERVICE.STARTUPNAME}"
+              value: "{$SERVICE.STARTUPNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: C
+            - macro: "{#SERVICE.STARTUPNAME}"
+              value: "{$SERVICE.STARTUPNAME.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: D
+        items:
+          - _id: service.state
+            _group: Temperature
+            _resource: Service
+            type: "ZABBIX_PASSIVE"
+            name: "State of service:{#SERVICE.NAME}"
+            key: service.info["{#SERVICE.NAME}"]
+            value_type: UNSIGNED
+            delay: 1m
+            history: 7d
+            trends: 365d
+            description: "Information about a service."
+# 0 - running,
+# 1 - paused,
+# 2 - start pending,
+# 3 - pause pending,
+# 4 - continue pending,
+# 5 - stop pending,
+# 6 - stopped,
+# 7 - unknown,
+# 255 - no such service
