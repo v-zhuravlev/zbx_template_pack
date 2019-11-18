@@ -1,11 +1,10 @@
-# {#SERVICE.STATE}
 ---
 templates:
   - name: Template Module Windows services by Zabbix agent
     description: Template Services OS Windows
     _zbx_ver: "4.4"
     _classes:
-      # - MODULE
+      - MODULE
       - ZABBIX_ACTIVE
     _documentation:
       overview: Special version of services template that is required for Windows OS.
@@ -16,21 +15,21 @@ templates:
         value: ^.*$
         _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
       - macro: "{$SERVICE.NAME.NOT_MATCHES}"
-        value: Fax
+        value: ^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v2.0.50727_32|clr_optimization_v4.0.30319_32|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel(R) TPM Provisioning Service$
         _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
       - macro: "{$SERVICE.STARTUPNAME.MATCHES}"
-        value: ^automatic$
+        value: ^automatic|automatic delayed$
         _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
       - macro: "{$SERVICE.STARTUPNAME.NOT_MATCHES}"
-        value: ^manual|automatic delayed|disabled$
+        value: ^manual|disabled$
         _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
     discovery_rules:
-      - name: Windows service discovery
+      - name: Windows services discovery
         key: service.discovery
         type: "ZABBIX_PASSIVE"
         delay: 1h
         description: |
-          Discovering Windows services.
+          Discovery of Windows services of different types as defined in template's macros.
         filter:
           evaltype: AND
           conditions:
@@ -52,22 +51,42 @@ templates:
               formulaid: D
         items:
           - _id: service.state
-            _group: Temperature
-            _resource: Service
+            _group: Services
+            # _resource: ""
             type: "ZABBIX_PASSIVE"
-            name: "State of service:{#SERVICE.NAME}"
-            key: service.info["{#SERVICE.NAME}"]
+            name: State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})
+            key: service.info["{#SERVICE.NAME}",state]
             value_type: UNSIGNED
             delay: 1m
             history: 7d
             trends: 365d
-            description: "Information about a service."
-# 0 - running,
-# 1 - paused,
-# 2 - start pending,
-# 3 - pause pending,
-# 4 - continue pending,
-# 5 - stop pending,
-# 6 - stopped,
-# 7 - unknown,
-# 255 - no such service
+            value_map: Windows service state
+            description: "Information about a state of a service."
+            triggers:
+              - _id: trigger.service.average
+                name: Service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})
+                priority: AVERAGE
+                expression: "{TEMPLATE_NAME:METRIC.min(#3)}<>0"
+                description: |
+                  The service has a state other than "Running" for the last three times.
+value_maps:
+  - name: Windows service state
+    mappings:
+      - value: "0"
+        newvalue: Running
+      - value: "1"
+        newvalue: Paused
+      - value: "2"
+        newvalue: Start pending
+      - value: "3"
+        newvalue: Pause pending
+      - value: "4"
+        newvalue: Continue pending
+      - value: "5"
+        newvalue: Stop pending
+      - value: "6"
+        newvalue: Stopped
+      - value: "7"
+        newvalue: Unknown
+      - value: "255"
+        newvalue: No such service
