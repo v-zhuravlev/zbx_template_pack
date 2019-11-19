@@ -8,8 +8,8 @@ templates:
       - ZABBIX_ACTIVE
     _documentation:
       overview: Special version of services template that is required for Windows OS.
-      _issues:
-        - description: ""
+      # _issues:
+      #   - description: ""
     macros:
       - macro: "{$SERVICE.NAME.MATCHES}"
         value: ^.*$
@@ -52,9 +52,9 @@ templates:
         items:
           - _id: service.state
             _group: Services
-            # _resource: ""
+            _resource: "Service"
             type: "ZABBIX_PASSIVE"
-            name: State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})
+            name: State of "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})
             key: service.info["{#SERVICE.NAME}",state]
             value_type: UNSIGNED
             delay: 1m
@@ -64,7 +64,7 @@ templates:
             description: "Information about a state of a service."
             triggers:
               - _id: trigger.service.average
-                name: Service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})
+                name: '"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})'
                 priority: AVERAGE
                 expression: "{TEMPLATE_NAME:METRIC.min(#3)}<>0"
                 description: |
