@@ -330,6 +330,56 @@ There are no template links in this template.
 
 Please report any issues with the template at https://support.zabbix.com
 
+# Template Module Windows services by Zabbix agent active
+
+## Overview
+
+For Zabbix version: 4.2  
+Special version of services template that is required for Windows OS.
+
+## Setup
+
+Refer to the vendor documentation.
+
+## Zabbix configuration
+
+No specific Zabbix configuration is required.
+
+### Macros used
+
+|Name|Description|Default|
+|----|-----------|-------|
+|{$SERVICE.NAME.MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^.*$`|
+|{$SERVICE.NAME.NOT_MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v2.0.50727_32|clr_optimization_v4.0.30319_32|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel(R) TPM Provisioning Service$`|
+|{$SERVICE.STARTUPNAME.MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^automatic|automatic delayed$`|
+|{$SERVICE.STARTUPNAME.NOT_MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^manual|disabled$`|
+
+## Template links
+
+There are no template links in this template.
+
+## Discovery rules
+
+|Name|Description|Type|Key and additional info|
+|----|-----------|----|----|
+|Windows services discovery|<p>Discovery of Windows services of different types as defined in template's macros.</p>|ZABBIX_ACTIVE|service.discovery<p>**Filter**:</p>AND <p>- A: {#SERVICE.NAME} MATCHES_REGEX `{$SERVICE.NAME.MATCHES}`</p><p>- B: {#SERVICE.NAME} NOT_MATCHES_REGEX `{$SERVICE.NAME.NOT_MATCHES}`</p><p>- C: {#SERVICE.STARTUPNAME} MATCHES_REGEX `{$SERVICE.STARTUPNAME.MATCHES}`</p><p>- D: {#SERVICE.STARTUPNAME} NOT_MATCHES_REGEX `{$SERVICE.STARTUPNAME.NOT_MATCHES}`</p>|
+
+## Items collected
+
+|Group|Name|Description|Type|Key and additional info|
+|-----|----|-----------|----|---------------------|
+|Services|Service: State of "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})|<p>Information about a state of a service.</p>|ZABBIX_ACTIVE|service.info["{#SERVICE.NAME}",state]|
+
+## Triggers
+
+|Name|Description|Expression|Severity|Dependencies and additional info|
+|----|-----------|----|----|----|
+|Service: "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})|<p>The service has a state other than "Running" for the last three times.</p>|`{TEMPLATE_NAME:service.info["{#SERVICE.NAME}",state].min(#3)}<>0`|AVERAGE||
+
+## Feedback
+
+Please report any issues with the template at https://support.zabbix.com
+
 # Template OS Windows by Zabbix agent active
 
 ## Overview
@@ -363,6 +413,7 @@ No specific Zabbix configuration is required.
 |Template Module Windows memory by Zabbix agent active|
 |Template Module Windows network by Zabbix agent active|
 |Template Module Windows physical disks by Zabbix agent active|
+|Template Module Windows services by Zabbix agent active|
 |Template Module Zabbix agent|
 
 ## Discovery rules
