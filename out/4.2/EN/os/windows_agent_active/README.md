@@ -368,7 +368,7 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Services|Service: State of "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})|<p>Information about a state of a service.</p>|ZABBIX_ACTIVE|service.info["{#SERVICE.NAME}",state]|
+|Services|Service: State of "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})|<p>-</p>|ZABBIX_ACTIVE|service.info["{#SERVICE.NAME}",state]|
 
 ## Triggers
 
