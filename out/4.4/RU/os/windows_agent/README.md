@@ -350,7 +350,7 @@ No specific Zabbix configuration is required.
 |Name|Description|Default|
 |----|-----------|-------|
 |{$SERVICE.NAME.MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^.*$`|
-|{$SERVICE.NAME.NOT_MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v2.0.50727_32|clr_optimization_v4.0.30319_32|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel(R) TPM Provisioning Service$`|
+|{$SERVICE.NAME.NOT_MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v.+|clr_optimization_v.+|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel\(R\) TPM Provisioning Service|dbupdate|DoSvc$`|
 |{$SERVICE.STARTUPNAME.MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^automatic|automatic delayed$`|
 |{$SERVICE.STARTUPNAME.NOT_MATCHES}|<p>This macro is used in Service discovery. Can be overridden on the host or linked template level.</p>|`^manual|disabled$`|
 
