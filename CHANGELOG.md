@@ -17,7 +17,7 @@
 * **hp_hh3c**: fixed value mapping for HH3C [#22](https://github.com/v-zhuravlev/zbx_template_pack/pull/22) thanks to @jritmanis
 * **cisco**: changed poll time of CPU metrics to 5m by default [#34](https://github.com/v-zhuravlev/zbx_template_pack/pull/34)
 * **windows_agent**: added missing user macros
-* **ALL**: removed mode=recovery from trigger prototypes, version triggers now close after some timeout [#30](https://github.com/v-zhuravlev/zbx_template_pack/pull/30)
+* **ALL**: removed mode=none from trigger prototypes, version triggers now close after some timeout [#30](https://github.com/v-zhuravlev/zbx_template_pack/pull/30)
 * **ALL**: set all screens graphs width to 750px
 
 
