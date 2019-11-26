@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-### Bug Fixes and updates
+### Bug fixes and updates
 
 * **linux,linux_prom**: renamed value mapping 'Ethernet 10Mbs' to 'Ethernet' [#32](https://github.com/v-zhuravlev/zbx_template_pack/pull/32)
 * **linux,linux_prom,linux_snmp**: added ploop md hcp zram to LLD filter for vfs.dev(block devices) [b490e217922d0d619d93cb83cf64e51d60a41cf2](https://github.com/v-zhuravlev/zbx_template_pack/commit/b490e217922d0d619d93cb83cf64e51d60a41cf2)
