@@ -802,6 +802,70 @@ templates:
         screen_items:
           - _graph_id: net.if.stats
 
+  - name: Template Module Windows services by Zabbix agent
+    description: Template Services OS Windows
+    _zbx_ver: "4.2"
+    _classes:
+      - ZABBIX_ACTIVE
+    _documentation:
+      overview: Special version of services template that is required for Windows OS.
+      # _issues:
+      #   - description: ""
+    macros:
+      - macro: "{$SERVICE.NAME.MATCHES}"
+        value: ^.*$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+      - macro: "{$SERVICE.NAME.NOT_MATCHES}"
+        value: ^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v.+|clr_optimization_v.+|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel\(R\) TPM Provisioning Service|dbupdate|DoSvc$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+      - macro: "{$SERVICE.STARTUPNAME.MATCHES}"
+        value: ^automatic|automatic delayed$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+      - macro: "{$SERVICE.STARTUPNAME.NOT_MATCHES}"
+        value: ^manual|disabled$
+        _description: "This macro is used in Service discovery. Can be overridden on the host or linked template level."
+    discovery_rules:
+      - name: Windows services discovery
+        key: service.discovery
+        type: "ZABBIX_PASSIVE"
+        delay: 1h
+        description: |
+          Discovery of Windows services of different types as defined in template's macros.
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#SERVICE.NAME}"
+              value: "{$SERVICE.NAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: A
+            - macro: "{#SERVICE.NAME}"
+              value: "{$SERVICE.NAME.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: B
+            - macro: "{#SERVICE.STARTUPNAME}"
+              value: "{$SERVICE.STARTUPNAME.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: C
+            - macro: "{#SERVICE.STARTUPNAME}"
+              value: "{$SERVICE.STARTUPNAME.NOT_MATCHES}"
+              operator: NOT_MATCHES_REGEX
+              formulaid: D
+        items:
+          - _id: service.state
+            _group: Services
+            type: ZABBIX_PASSIVE
+            _resource: "\"{#SERVICE.NAME}\" ({#SERVICE.DISPLAYNAME})"
+            name: State of service __RESOURCE__
+            key: service.info["{#SERVICE.NAME}",state]
+            value_map: Windows service state
+            triggers:
+              - _id: trigger.service.average
+                name: '__RESOURCE__ is not running (startup type {#SERVICE.STARTUPNAME})'
+                priority: AVERAGE
+                expression: "{TEMPLATE_NAME:METRIC.min(#3)}<>0"
+                description: |
+                  The service has a state other than "Running" for the last three times.
+
   - name: Template OS Windows by Zabbix agent
     _zbx_ver: "4.2"
     _classes:
@@ -828,6 +892,7 @@ templates:
       - Template Module Windows memory by Zabbix agent
       - Template Module Windows network by Zabbix agent
       - Template Module Windows physical disks by Zabbix agent
+      - Template Module Windows services by Zabbix agent
     screens:
       - name: "System performance"
         hsize: 2
@@ -988,3 +1053,23 @@ value_maps:
         newvalue: Invalid Address
       - value: "12"
         newvalue: Credentials Required
+  - name: Windows service state
+    mappings:
+      - value: "0"
+        newvalue: Running
+      - value: "1"
+        newvalue: Paused
+      - value: "2"
+        newvalue: Start pending
+      - value: "3"
+        newvalue: Pause pending
+      - value: "4"
+        newvalue: Continue pending
+      - value: "5"
+        newvalue: Stop pending
+      - value: "6"
+        newvalue: Stopped
+      - value: "7"
+        newvalue: Unknown
+      - value: "255"
+        newvalue: No such service
