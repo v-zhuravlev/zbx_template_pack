@@ -11,7 +11,7 @@
 
 ### Bug fixes and updates
 
-* **linux,linux_prom**: renamed value mapping 'Ethernet 10Mbs' to 'Ethernet' [#32](https://github.com/v-zhuravlev/zbx_template_pack/pull/32)
+* **linux,linux_prom**: renamed value mapping "Ethernet 10Mbps" to "Ethernet" [#32](https://github.com/v-zhuravlev/zbx_template_pack/pull/32)
 * **linux,linux_prom,linux_snmp**: added ploop md hcp zram to LLD filter for vfs.dev(block devices) [b490e217922d0d619d93cb83cf64e51d60a41cf2](https://github.com/v-zhuravlev/zbx_template_pack/commit/b490e217922d0d619d93cb83cf64e51d60a41cf2)
 * **hp_hpn**: removed not used macros [67268650f87ad682543a1a2b04228e041e3d53f0](https://github.com/v-zhuravlev/zbx_template_pack/commit/67268650f87ad682543a1a2b04228e041e3d53f0)
 * **hp_hh3c**: fixed value mapping for HH3C [#22](https://github.com/v-zhuravlev/zbx_template_pack/pull/22) thanks to @jritmanis
