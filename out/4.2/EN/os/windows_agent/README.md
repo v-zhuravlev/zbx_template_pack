@@ -368,13 +368,13 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|Services|Service: State of "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})|<p>-</p>|ZABBIX_PASSIVE|service.info["{#SERVICE.NAME}",state]|
+|Services|State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})|<p>-</p>|ZABBIX_PASSIVE|service.info["{#SERVICE.NAME}",state]|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|Service: "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})|<p>The service has a state other than "Running" for the last three times.</p>|`{TEMPLATE_NAME:service.info["{#SERVICE.NAME}",state].min(#3)}<>0`|AVERAGE||
+|"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})|<p>The service has a state other than "Running" for the last three times.</p>|`{TEMPLATE_NAME:service.info["{#SERVICE.NAME}",state].min(#3)}<>0`|AVERAGE||
 
 ## Feedback
 
