@@ -51,7 +51,7 @@
 		"description": "The average time for read requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.",
 		"triggers": [
 			{
-				"name": "Disk read/write request responses are too high (read > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} ms for 15m or write > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"} ms for 15m)",
+				"name": "__RESOURCE__: Disk read/write request responses are too high (read > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} ms for 15m or write > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"} ms for 15m)",
 				"_id": "trigger.vfs.dev.await",
 				"expression": "{TEMPLATE_NAME:METRIC.min(15m)} > {$VFS.DEV.READ.AWAIT.WARN:\"__RESOURCE__\"} or {TEMPLATE_NAME:__vfs.dev.write.await__.min(15m)} > {$VFS.DEV.WRITE.AWAIT.WARN:\"__RESOURCE__\"}",
 				"description": "This trigger might indicate disk __RESOURCE__ saturation.",
