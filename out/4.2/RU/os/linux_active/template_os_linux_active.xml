@@ -1394,7 +1394,7 @@ return (100 - value)</params>
 (({Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1415,7 +1415,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
 (({Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1430,7 +1430,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                           <name>{#FSNAME}: {#FSNAME}: Мало свободного места (использовано &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                            <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
@@ -1442,7 +1442,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Мало inodes на диске! (&lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Мало inodes на диске! (&lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1460,7 +1460,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Мало inodes на диске! (&lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Мало inodes на диске! (&lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1473,7 +1473,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <manual_close>0</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Мало inodes на диске! (&lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
+                           <name>{#FSNAME}: {#FSNAME}: Мало inodes на диске! (&lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                            <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                            <recovery_expression/>
                         </dependency>
@@ -2730,7 +2730,7 @@ return JSON.stringify(parsed);</params>
                      <expression>{Template Module Linux block devices by Zabbix agent active:vfs.dev.read.await[{#DEVNAME}].min(15m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template Module Linux block devices by Zabbix agent active:vfs.dev.write.await[{#DEVNAME}].min(15m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#DEVNAME}: Disk read/write request responses are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 15m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 15m)</name>
+                     <name>{#DEVNAME}: {#DEVNAME}: Disk read/write request responses are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 15m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 15m)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>

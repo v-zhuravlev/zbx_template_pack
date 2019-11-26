@@ -297,7 +297,7 @@ return JSON.stringify(parsed);</params>
                <trigger_prototypes>
                   <trigger_prototype>
                      <expression>{Template Module Linux block devices by Zabbix agent active:vfs.dev.read.await[{#DEVNAME}].min(15m)} &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} or {Template Module Linux block devices by Zabbix agent active:vfs.dev.write.await[{#DEVNAME}].min(15m)} &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"}</expression>
-                     <name>{#DEVNAME}: Disk read/write request responses are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 15m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 15m)</name>
+                     <name>{#DEVNAME}: {#DEVNAME}: Disk read/write request responses are too high (read &gt; {$VFS.DEV.READ.AWAIT.WARN:"{#DEVNAME}"} ms for 15m or write &gt; {$VFS.DEV.WRITE.AWAIT.WARN:"{#DEVNAME}"} ms for 15m)</name>
                      <priority>WARNING</priority>
                      <description>This trigger might indicate disk {#DEVNAME} saturation.</description>
                      <manual_close>YES</manual_close>
@@ -770,7 +770,7 @@ and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg15]
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
-                           <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
+                           <name>{#FSNAME}: {#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                            <opdata>Free inodes: {ITEM.LASTVALUE1}</opdata>
                            <priority>AVERAGE</priority>
                            <description>It may become impossible to write to disk if there are no index nodes left.&#13;
@@ -778,14 +778,14 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                         </trigger_prototype>
                         <trigger_prototype>
                            <expression>{min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}</expression>
-                           <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
+                           <name>{#FSNAME}: {#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.WARN:"{#FSNAME}"}%)</name>
                            <opdata>Free inodes: {ITEM.LASTVALUE1}</opdata>
                            <priority>WARNING</priority>
                            <description>It may become impossible to write to disk if there are no index nodes left.&#13;
 As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even though free space is available.</description>
                            <dependencies>
                               <dependency>
-                                 <name>{#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
+                                 <name>{#FSNAME}: {#FSNAME}: Running out of free inodes (free &lt; {$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}%)</name>
                                  <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.inode[{#FSNAME},pfree].min(5m)}&lt;{$VFS.FS.INODE.PFREE.MIN.CRIT:"{#FSNAME}"}</expression>
                               </dependency>
                            </dependencies>
@@ -837,7 +837,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                   <trigger_prototype>
                      <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
-                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <opdata>Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})</opdata>
                      <priority>AVERAGE</priority>
                      <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}.&#13;
@@ -849,7 +849,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                   <trigger_prototype>
                      <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"} and&#13;
 (({Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
-                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <opdata>Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})</opdata>
                      <priority>WARNING</priority>
                      <description>Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}.&#13;
@@ -859,7 +859,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                      <manual_close>YES</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                           <name>{#FSNAME}: {#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                            <expression>{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Linux filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                         </dependency>

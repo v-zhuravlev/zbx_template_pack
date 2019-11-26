@@ -1450,7 +1450,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
 (({Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1471,7 +1471,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
 (({Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;10G or {Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>{#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
+                     <name>{#FSNAME}: {#FSNAME}: Disk space is low (used &gt; {$VFS.FS.PUSED.MAX.WARN:"{#FSNAME}"}%)</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
@@ -1486,7 +1486,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
                      <manual_close>1</manual_close>
                      <dependencies>
                         <dependency>
-                           <name>{#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
+                           <name>{#FSNAME}: {#FSNAME}: Disk space is critically low (used &gt; {$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"}%)</name>
                            <expression>{Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].last()}&gt;{$VFS.FS.PUSED.MAX.CRIT:"{#FSNAME}"} and&#13;
 (({Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},total].last()}-{Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},used].last()})&lt;5G or {Template Module Windows filesystems by Zabbix agent active:vfs.fs.size[{#FSNAME},pused].timeleft(1h,,100)}&lt;1d)</expression>
                            <recovery_expression/>
@@ -3863,7 +3863,7 @@ Template tooling version used: 0.33</description>
                <description>Discovery of Windows services of different types as defined in template's macros.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})</name>
+                     <name>"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}): State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})</name>
                      <type>7</type>
                      <snmp_community/>
                      <snmp_oid/>
@@ -3930,7 +3930,7 @@ Template tooling version used: 0.33</description>
                      <expression>{Template Module Windows services by Zabbix agent active:service.info["{#SERVICE.NAME}",state].min(#3)}&lt;&gt;0</expression>
                      <recovery_mode>0</recovery_mode>
                      <recovery_expression/>
-                     <name>"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})</name>
+                     <name>"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}): "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})</name>
                      <correlation_mode>0</correlation_mode>
                      <correlation_tag/>
                      <url/>
