@@ -2,8 +2,8 @@
     {
         "_id": "mysql.get_status_variables",
         "_zbx_ver": "3.4",
-        // "_resource": "Nginx",
-        "name": "Availability: Get status variables",
+        "_resource": "MySQL",
+        "name": "Get status variables",
         "delay": "1m",
         "history": "1h",
         "trends": "0",
@@ -13,7 +13,7 @@
         "triggers": [
             {
                 "_id": "trigger.get_status_variables",
-                "name": "MySQL: Failed to get items (no data for 30m)",
+                "name": "Failed to get items (no data for 30m)",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.nodata(30m)}=1",
                 "description": "Zabbix has not received data for items for the last 30 minutes.",
@@ -26,7 +26,8 @@
     {
         "_id": "mysql.ping",
         "_zbx_ver": "3.4",
-        "name": "Availability: MySQL status",
+        "_resource": "MySQL",
+        "name": "Status",
         "delay": "1m",
         "history": "7d",
         "trends": "365d",
@@ -47,7 +48,7 @@
         "triggers": [
             {
                 "_id": "trigger.ping",
-                "name": "MySQL: Service is down",
+                "name": "Service is down",
                 "priority": "HIGH",
                 "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
                 "description": ""
@@ -57,7 +58,8 @@
     {
         "_id": "mysql.version",
         "_zbx_ver": "3.4",
-        "name": "Info: MySQL version",
+        "_resource": "MySQL",
+        "name": "Version",
         "delay": "15m",
         "history": "7d",
         "value_type": "CHAR",
@@ -76,7 +78,7 @@
         "triggers": [
             {
                 "_id": "trigger.version",
-                "name": "MySQL: Version has changed (new version value received: {ITEM.VALUE})",
+                "name": "Version has changed (new version value received: {ITEM.VALUE})",
                 "priority": "INFO",
                 "expression": "{TEMPLATE_NAME:METRIC.diff()}=1 and {TEMPLATE_NAME:METRIC.strlen()}>0",
                 "description": "MySQL version has changed. Ack to close.",
@@ -87,7 +89,8 @@
     {
         "_id": "mysql.uptime",
         "_zbx_ver": "3.4",
-        "name": "Info: Uptime",
+        "_resource": "MySQL",
+        "name": "Uptime",
         "type": "DEPENDENT",
         "key": "mysql.uptime",
         "master_item": "mysql.get_status_variables",
@@ -103,7 +106,7 @@
         "triggers": [
             {
                 "_id": "trigger.uptime",
-                "name": "MySQL: Service has been restarted (uptime < 10m)",
+                "name": "Service has been restarted (uptime < 10m)",
                 "priority": "INFO",
                 "expression": "{TEMPLATE_NAME:METRIC.last()}<10m",
                 "description": "MySQL uptime is less than 10 minutes."
@@ -113,7 +116,8 @@
     {
         "_id": "mysql.aborted_clients.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Aborted clients per second",
+        "_resource": "MySQL",
+        "name": "Aborted clients per second",
         "type": "DEPENDENT",
         "key": "mysql.aborted_clients.rate",
         "master_item": "mysql.get_status_variables",
@@ -131,7 +135,7 @@
         ],
         "graphs": [
             {
-                "name": "MySQL connections",
+                "name": "Connections",
                 "graphtype": "NORMAL",
                 "graph_items": [
                     {
@@ -157,7 +161,8 @@
     {
         "_id": "mysql.aborted_connects.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Aborted connections per second",
+        "_resource": "MySQL",
+        "name": "Aborted connections per second",
         "type": "DEPENDENT",
         "key": "mysql.aborted_connects.rate",
         "master_item": "mysql.get_status_variables",
@@ -176,7 +181,7 @@
         "triggers": [
             {
                 "_id": "trigger.aborted_connects",
-                "name": "MySQL: Server has aborted connections (over {$MYSQL.ABORTED_CONN.MAX.WARN} for 5m)",
+                "name": "Server has aborted connections (over {$MYSQL.ABORTED_CONN.MAX.WARN} for 5m)",
                 "priority": "AVERAGE",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$MYSQL.ABORTED_CONN.MAX.WARN}",
                 "description": "The number of failed attempts to connect to the MySQL server is more than {$MYSQL.ABORTED_CONN.MAX.WARN} in the last 5 minutes.",
@@ -189,7 +194,8 @@
     {
         "_id": "mysql.connection_errors_accept.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connection errors accept per second",
+        "_resource": "MySQL",
+        "name": "Connection errors accept per second",
         "type": "DEPENDENT",
         "key": "mysql.connection_errors_accept.rate",
         "master_item": "mysql.get_status_variables",
@@ -209,7 +215,8 @@
     {
         "_id": "mysql.connection_errors_internal.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connection errors internal per second",
+        "_resource": "MySQL",
+        "name": "Connection errors internal per second",
         "type": "DEPENDENT",
         "key": "mysql.connection_errors_internal.rate",
         "master_item": "mysql.get_status_variables",
@@ -229,7 +236,8 @@
     {
         "_id": "mysql.connection_errors_max_connections.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connection errors max connections per second",
+        "_resource": "MySQL",
+        "name": "Connection errors max connections per second",
         "type": "DEPENDENT",
         "key": "mysql.connection_errors_max_connections.rate",
         "master_item": "mysql.get_status_variables",
@@ -248,7 +256,7 @@
         "triggers": [
             {
                 "_id": "trigger.connection_errors_max_connections",
-                "name": "MySQL: Refused connections (max_connections limit reached)",
+                "name": "Refused connections (max_connections limit reached)",
                 "priority": "AVERAGE",
                 "expression": "{TEMPLATE_NAME:METRIC.last()}>0",
                 "description": "Number of refused connections due to the max_connections limit being reached."
@@ -258,7 +266,8 @@
     {
         "_id": "mysql.connection_errors_peer_address.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connection errors peer address per second",
+        "_resource": "MySQL",
+        "name": "Connection errors peer address per second",
         "type": "DEPENDENT",
         "key": "mysql.connection_errors_peer_address.rate",
         "master_item": "mysql.get_status_variables",
@@ -278,7 +287,8 @@
     {
         "_id": "mysql.connection_errors_select.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connection errors select per second",
+        "_resource": "MySQL",
+        "name": "Connection errors select per second",
         "type": "DEPENDENT",
         "key": "mysql.connection_errors_select.rate",
         "master_item": "mysql.get_status_variables",
@@ -298,7 +308,8 @@
     {
         "_id": "mysql.connection_errors_tcpwrap.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connection errors tcpwrap per second",
+        "_resource": "MySQL",
+        "name": "Connection errors tcpwrap per second",
         "type": "DEPENDENT",
         "key": "mysql.connection_errors_tcpwrap.rate",
         "master_item": "mysql.get_status_variables",
@@ -318,7 +329,8 @@
     {
         "_id": "mysql.connections.rate",
         "_zbx_ver": "3.4",
-        "name": "Connections: Connections per second",
+        "_resource": "MySQL",
+        "name": "Connections per second",
         "type": "DEPENDENT",
         "key": "mysql.connections.rate",
         "master_item": "mysql.get_status_variables",
@@ -338,7 +350,8 @@
     {
         "_id": "mysql.max_used_connections",
         "_zbx_ver": "3.4",
-        "name": "Connections: Max used connections",
+        "_resource": "MySQL",
+        "name": "Max used connections",
         "type": "DEPENDENT",
         "key": "mysql.max_used_connections",
         "master_item": "mysql.get_status_variables",
@@ -355,7 +368,8 @@
     {
         "_id": "mysql.threads_cached",
         "_zbx_ver": "3.4",
-        "name": "Connections: Threads cached",
+        "_resource": "MySQL",
+        "name": "Threads cached",
         "type": "DEPENDENT",
         "key": "mysql.threads_cached",
         "master_item": "mysql.get_status_variables",
@@ -370,7 +384,7 @@
         ],
         "graphs": [
             {
-                "name": "MySQL threads",
+                "name": "Threads",
                 "graphtype": "NORMAL",
                 "graph_items": [
                     {
@@ -396,7 +410,8 @@
     {
         "_id": "mysql.threads_connected",
         "_zbx_ver": "3.4",
-        "name": "Connections: Threads connected",
+        "_resource": "MySQL",
+        "name": "Threads connected",
         "type": "DEPENDENT",
         "key": "mysql.threads_connected",
         "master_item": "mysql.get_status_variables",
@@ -413,7 +428,8 @@
     {
         "_id": "mysql.threads_created",
         "_zbx_ver": "3.4",
-        "name": "Connections: Threads created",
+        "_resource": "MySQL",
+        "name": "Threads created",
         "type": "DEPENDENT",
         "key": "mysql.threads_created",
         "master_item": "mysql.get_status_variables",
@@ -430,7 +446,8 @@
     {
         "_id": "mysql.threads_running",
         "_zbx_ver": "3.4",
-        "name": "Connections: Threads running",
+        "_resource": "MySQL",
+        "name": "Threads running",
         "type": "DEPENDENT",
         "key": "mysql.threads_running",
         "master_item": "mysql.get_status_variables",
@@ -447,7 +464,8 @@
     {
         "_id": "mysql.bytes_received.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Bytes received",
+        "_resource": "MySQL",
+        "name": "Bytes received",
         "type": "DEPENDENT",
         "key": "mysql.bytes_received.rate",
         "master_item": "mysql.get_status_variables",
@@ -466,7 +484,7 @@
         ],
         "graphs": [
             {
-                "name": "MySQL bandwidth",
+                "name": "Bandwidth",
                 "graphtype": "NORMAL",
                 "graph_items": [
                     {
@@ -484,7 +502,8 @@
     {
         "_id": "mysql.bytes_sent.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Bytes sent",
+        "_resource": "MySQL",
+        "name": "Bytes sent",
         "type": "DEPENDENT",
         "key": "mysql.bytes_sent.rate",
         "master_item": "mysql.get_status_variables",
@@ -505,7 +524,8 @@
     {
         "_id": "mysql.com_delete.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Command Delete per second",
+        "_resource": "MySQL",
+        "name": "Command Delete per second",
         "type": "DEPENDENT",
         "key": "mysql.com_delete.rate",
         "master_item": "mysql.get_status_variables",
@@ -523,7 +543,7 @@
         ],
         "graphs": [
             {
-                "name": "MySQL operations",
+                "name": "Operations",
                 "graphtype": "NORMAL",
                 "graph_items": [
                     {
@@ -549,7 +569,8 @@
     {
         "_id": "mysql.com_insert.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Command Insert per second",
+        "_resource": "MySQL",
+        "name": "Command Insert per second",
         "type": "DEPENDENT",
         "key": "mysql.com_insert.rate",
         "master_item": "mysql.get_status_variables",
@@ -569,7 +590,8 @@
     {
         "_id": "mysql.com_select.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Command Select per second",
+        "_resource": "MySQL",
+        "name": "Command Select per second",
         "type": "DEPENDENT",
         "key": "mysql.com_select.rate",
         "master_item": "mysql.get_status_variables",
@@ -589,7 +611,8 @@
     {
         "_id": "mysql.com_update.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Command Update per second",
+        "_resource": "MySQL",
+        "name": "Command Update per second",
         "type": "DEPENDENT",
         "key": "mysql.com_update.rate",
         "master_item": "mysql.get_status_variables",
@@ -609,7 +632,8 @@
     {
         "_id": "mysql.queries.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Queries per second",
+        "_resource": "MySQL",
+        "name": "Queries per second",
         "type": "DEPENDENT",
         "key": "mysql.queries.rate",
         "master_item": "mysql.get_status_variables",
@@ -627,7 +651,7 @@
         ],
         "graphs": [
             {
-                "name": "MySQL queries",
+                "name": "Queries",
                 "graphtype": "NORMAL",
                 "graph_items": [
                     {
@@ -649,7 +673,8 @@
     {
         "_id": "mysql.questions.rate",
         "_zbx_ver": "3.4",
-        "name": "Throughput: Questions per second",
+        "_resource": "MySQL",
+        "name": "Questions per second",
         "type": "DEPENDENT",
         "key": "mysql.questions.rate",
         "master_item": "mysql.get_status_variables",
@@ -669,7 +694,8 @@
     {
         "_id": "mysql.buffer_pool_efficiency",
         "_zbx_ver": "3.4",
-        "name": "Performance: Buffer pool efficiency",
+        "_resource": "MySQL",
+        "name": "Buffer pool efficiency",
         "type": "CALCULATED",
         "key": "mysql.buffer_pool_efficiency",
         "expression_formula": "last(mysql.innodb_buffer_pool_reads) / \n( last(mysql.innodb_buffer_pool_read_requests) + \n( last(mysql.innodb_buffer_pool_read_requests) = 0 ) ) * 100 * \n( last(mysql.innodb_buffer_pool_read_requests) > 0 )",
@@ -681,7 +707,8 @@
     {
         "_id": "mysql.buffer_pool_utilization",
         "_zbx_ver": "3.4",
-        "name": "Performance: Buffer pool utilization",
+        "_resource": "MySQL",
+        "name": "Buffer pool utilization",
         "type": "CALCULATED",
         "key": "mysql.buffer_pool_utilization",
         "expression_formula": "( last(mysql.innodb_buffer_pool_pages_total) - \nlast(mysql.innodb_buffer_pool_pages_free) ) / \n( last(mysql.innodb_buffer_pool_pages_total) + \n( last(mysql.innodb_buffer_pool_pages_total) = 0 ) ) * 100 * \n( last(mysql.innodb_buffer_pool_pages_total) > 0 )",
@@ -693,7 +720,8 @@
     {
         "_id": "mysql.created_tmp_files",
         "_zbx_ver": "3.4",
-        "name": "Performance: Created tmp files on disk",
+        "_resource": "MySQL",
+        "name": "Created tmp files on disk",
         "type": "DEPENDENT",
         "key": "mysql.created_tmp_files",
         "master_item": "mysql.get_status_variables",
@@ -710,7 +738,8 @@
     {
         "_id": "mysql.created_tmp_disk_tables",
         "_zbx_ver": "3.4",
-        "name": "Performance: Created tmp tables on disk",
+        "_resource": "MySQL",
+        "name": "Created tmp tables on disk",
         "type": "DEPENDENT",
         "key": "mysql.created_tmp_disk_tables",
         "master_item": "mysql.get_status_variables",
@@ -727,7 +756,8 @@
     {
         "_id": "mysql.created_tmp_tables",
         "_zbx_ver": "3.4",
-        "name": "Performance: Created tmp tables on memory",
+        "_resource": "MySQL",
+        "name": "Created tmp tables on memory",
         "type": "DEPENDENT",
         "key": "mysql.created_tmp_tables",
         "master_item": "mysql.get_status_variables",
@@ -744,7 +774,8 @@
     {
         "_id": "mysql.innodb_buffer_pool_pages_free",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB buffer pool pages free",
+        "_resource": "MySQL",
+        "name": "InnoDB buffer pool pages free",
         "type": "DEPENDENT",
         "key": "mysql.innodb_buffer_pool_pages_free",
         "master_item": "mysql.get_status_variables",
@@ -759,7 +790,7 @@
         ],
         "graphs": [
             {
-                "name": "MySQL InnoDB buffer pool",
+                "name": "InnoDB buffer pool",
                 "graphtype": "NORMAL",
                 "graph_items": [
                     {
@@ -785,7 +816,8 @@
     {
         "_id": "mysql.innodb_buffer_pool_pages_total",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB buffer pool pages total",
+        "_resource": "MySQL",
+        "name": "InnoDB buffer pool pages total",
         "type": "DEPENDENT",
         "key": "mysql.innodb_buffer_pool_pages_total",
         "master_item": "mysql.get_status_variables",
@@ -802,7 +834,8 @@
     {
         "_id": "mysql.innodb_buffer_pool_read_requests",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB buffer pool read requests",
+        "_resource": "MySQL",
+        "name": "InnoDB buffer pool read requests",
         "type": "DEPENDENT",
         "key": "mysql.innodb_buffer_pool_read_requests",
         "master_item": "mysql.get_status_variables",
@@ -819,7 +852,8 @@
     {
         "_id": "mysql.innodb_buffer_pool_read_requests.rate",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB buffer pool read requests per second",
+        "_resource": "MySQL",
+        "name": "InnoDB buffer pool read requests per second",
         "type": "DEPENDENT",
         "key": "mysql.innodb_buffer_pool_read_requests.rate",
         "master_item": "mysql.get_status_variables",
@@ -839,7 +873,8 @@
     {
         "_id": "mysql.innodb_buffer_pool_reads",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB buffer pool reads",
+        "_resource": "MySQL",
+        "name": "InnoDB buffer pool reads",
         "type": "DEPENDENT",
         "key": "mysql.innodb_buffer_pool_reads",
         "master_item": "mysql.get_status_variables",
@@ -856,7 +891,8 @@
     {
         "_id": "mysql.innodb_buffer_pool_reads.rate",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB buffer pool reads per second",
+        "_resource": "MySQL",
+        "name": "InnoDB buffer pool reads per second",
         "type": "DEPENDENT",
         "key": "mysql.innodb_buffer_pool_reads.rate",
         "master_item": "mysql.get_status_variables",
@@ -876,7 +912,8 @@
     {
         "_id": "mysql.innodb_row_lock_time",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB row lock time",
+        "_resource": "MySQL",
+        "name": "InnoDB row lock time",
         "type": "DEPENDENT",
         "key": "mysql.innodb_row_lock_time",
         "master_item": "mysql.get_status_variables",
@@ -902,7 +939,8 @@
     {
         "_id": "mysql.innodb_row_lock_time_max",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB row lock time max",
+        "_resource": "MySQL",
+        "name": "InnoDB row lock time max",
         "type": "DEPENDENT",
         "key": "mysql.innodb_row_lock_time_max",
         "master_item": "mysql.get_status_variables",
@@ -928,7 +966,8 @@
     {
         "_id": "mysql.innodb_row_lock_waits",
         "_zbx_ver": "3.4",
-        "name": "Performance: InnoDB row lock waits",
+        "_resource": "MySQL",
+        "name": "InnoDB row lock waits",
         "type": "DEPENDENT",
         "key": "mysql.innodb_row_lock_waits",
         "master_item": "mysql.get_status_variables",
@@ -945,7 +984,8 @@
     {
         "_id": "mysql.slow_queries.rate",
         "_zbx_ver": "3.4",
-        "name": "Performance: Slow queries per second",
+        "_resource": "MySQL",
+        "name": "Slow queries per second",
         "type": "DEPENDENT",
         "key": "mysql.slow_queries.rate",
         "master_item": "mysql.get_status_variables",
@@ -964,7 +1004,7 @@
         "triggers": [
             {
                 "_id": "trigger.slow_queries",
-                "name": "MySQL: Server has slow queries (over {$MYSQL.SLOW_QUERIES.MAX.WARN} for 5m)",
+                "name": "Server has slow queries (over {$MYSQL.SLOW_QUERIES.MAX.WARN} for 5m)",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$MYSQL.SLOW_QUERIES.MAX.WARN}",
                 "description": "The number of slow queries is more than {$MYSQL.SLOW_QUERIES.MAX.WARN} in the last 5 minutes."
