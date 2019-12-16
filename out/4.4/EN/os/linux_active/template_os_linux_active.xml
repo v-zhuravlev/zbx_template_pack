@@ -11,7 +11,12 @@
       <template>
          <template>Template Module Linux block devices by Zabbix agent active</template>
          <name>Template Module Linux block devices by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Known Issues:&#13;
+&#13;
+  Description: If having problems accessing /proc/diskstats on CloudLinux, please read this https://docs.cloudlinux.com/cloudlinux_os_kernel/#virtualized-proc-filesystem.&#13;
+  Device: CloudLinux&#13;
+&#13;
+Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -33,6 +38,7 @@
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
+               <description>Get contents of /proc/diskstats for discovery and disk stats.</description>
                <applications>
                   <application>
                      <name>Zabbix raw items</name>
@@ -404,7 +410,7 @@ return JSON.stringify(parsed);</params>
       <template>
          <template>Template Module Linux CPU by Zabbix agent active</template>
          <name>Template Module Linux CPU by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -703,7 +709,7 @@ and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg15]
       <template>
          <template>Template Module Linux filesystems by Zabbix agent active</template>
          <name>Template Module Linux filesystems by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -933,7 +939,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <template>
          <template>Template Module Linux generic by Zabbix agent active</template>
          <name>Template Module Linux generic by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1077,7 +1083,6 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
                <triggers>
                   <trigger>
                      <expression>{diff()}=1 and {strlen()}&gt;0</expression>
-                     <recovery_mode>NONE</recovery_mode>
                      <name>System name has changed (new name: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
                      <description>System name has changed. Ack to close.</description>
@@ -1299,7 +1304,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
       <template>
          <template>Template Module Linux memory by Zabbix agent active</template>
          <name>Template Module Linux memory by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1436,7 +1441,7 @@ As symptoms, 'No space left on device' or 'Disk is full' errors may be seen even
 &#13;
   Description: High interface utilization trigger is removed since currently it is not possible to retrieve interface speed to determine the max bandwidth.&#13;
 &#13;
-Template tooling version used: 0.33</description>
+Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1791,10 +1796,6 @@ and {Template Module Linux network interfaces by Zabbix agent active:net.if.out[
                <value>2</value>
             </macro>
             <macro>
-               <macro>{$IF.UTIL.MAX}</macro>
-               <value>90</value>
-            </macro>
-            <macro>
                <macro>{$IFCONTROL}</macro>
                <value>1</value>
             </macro>
@@ -1851,7 +1852,7 @@ Known Issues:&#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387225-discussion-thread-for-official-zabbix-template-for-linux&#13;
 &#13;
-Template tooling version used: 0.33</description>
+Template tooling version used: 0.34</description>
          <templates>
             <template>
                <name>Template Module Linux block devices by Zabbix agent active</name>
@@ -2408,7 +2409,7 @@ and {Template Module Linux CPU by Zabbix agent active:system.cpu.load[all,avg15]
             </mapping>
             <mapping>
                <value>1</value>
-               <newvalue>Ethernet 10Mbps</newvalue>
+               <newvalue>Ethernet</newvalue>
             </mapping>
             <mapping>
                <value>2</value>

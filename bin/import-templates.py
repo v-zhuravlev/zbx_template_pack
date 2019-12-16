@@ -3,13 +3,16 @@ import argparse
 import json
 import os
 import sys
+import xml.etree.ElementTree as ET
 from zabbix.api import ZabbixAPI
 from pyzabbix.api import ZabbixAPIException
 import zabbix_cli
 
 
-def import_configuration_from_file(zapi, filename):
+def import_configuration_from_file(zapi, filename, forced=False):
     """This imports configuration into ZabbixAPI from file"""
+    
+    print("Importing {}...".format(filename), end = '')
     with open(filename, 'r') as file:
         contents = file.read()
     params_raw = """
@@ -84,14 +87,32 @@ def import_configuration_from_file(zapi, filename):
     try:
         zapi.do_request('configuration.import', params)
     except ZabbixAPIException as err:
-        sys.exit(err.data)
+        if ('already exists' in err.data or 'cannot be linked' in err.data) and forced:
+            print("WARN")
+            print(err.data)
+            print("Deleting {} and will try to import again because of --force...".format(filename))
+            templates = get_template_names(filename)
+            zapi.do_request('template.delete',
+                [t['templateid'] for t  in zapi.template.get(filter={'host':templates},output=['id'])]
+            )
+            #Try to import again
+            import_configuration_from_file(zapi, filename, forced=False)
+        else:
+            print("FAILED")
+            sys.exit(err.data)
+    else:
+        print("OK")
 
+def get_template_names(filename):
+    """This returns all template names from template XML file"""
+    tree = ET.parse(filename)
+    templates = tree.getroot().findall("./templates/template/name")
+    return [ t.text for t in templates]
 
 def import_single_template(filename):
     """This imports single template"""
 
-    print("Importing {}...".format(filename))
-    import_configuration_from_file(zapi, filename)
+    import_configuration_from_file(zapi, filename, args.force)
 
 
 def import_dir_with_templates(dirname):
@@ -99,7 +120,7 @@ def import_dir_with_templates(dirname):
     import glob
 
     templates = []
-    for file in glob.glob(dirname + '/*' + args.filter_str + "*.xml"):
+    for file in glob.glob(dirname + '**/*' + args.filter_str + "*.xml", recursive=True):
         templates.append(file)
     if len(templates) == 0:
         sys.exit("No templates found in directory '{}' with filter: {}".format(
@@ -114,6 +135,9 @@ parser = argparse.ArgumentParser(parents=[template_parser], add_help=False)
 parser.add_argument('--filter', '-f', dest='filter_str',
                     help="imports only files in directory that contain chars in the filenames.",
                     required=False, type=str, default='')
+parser.add_argument('--force', dest='force',
+                    help="if template update is failed then existing template will be deleted and new template will be created with the same name.",
+                    required=False, action='store_true')
 parser.add_argument(dest='arg1', nargs=1,
                     help='provide file or directory name', metavar='path')
 args = parser.parse_args()

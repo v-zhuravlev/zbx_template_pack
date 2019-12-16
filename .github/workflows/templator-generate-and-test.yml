@@ -1,0 +1,124 @@
+name: Generate and test
+on:
+  push:
+    paths:
+      - ".github/**"
+      - "in/**"
+      - "prototypes/**"
+      - "out/**"
+jobs:
+  build:
+    name: Generate XML templates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 10
+      - name: Checkout templator
+        working-directory: ..
+        run: |
+          git clone ${{ secrets.templator_url }} -q templator
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build with Maven
+        working-directory: ../templator
+        run: mvn -B package --file pom.xml
+      - name: Run templator
+        working-directory: ../templator
+        env:
+          ZABBIX_ENABLED: false
+          CAMEL_SPRINGBOOT_MAIN-RUN-CONTROLLER: true
+          CAMEL_SPRINGBOOT_DURATION-MAX-IDLE-SECONDS: 10
+          FILTER: .*template.*
+          DIR_IN: ../zbx_template_pack/in
+          DIR_OUT: ../zbx_template_pack/out
+          DIR_PROTOTYPES: ../zbx_template_pack/prototypes
+        run: |
+          java -jar target/zabbix-template-generator-*.jar | tee templator.txt
+      - name: Check for errors
+        #There should be no [ERROR] in templator output
+        working-directory: ../templator
+        run: |
+          ! grep ERROR templator.txt
+      - name: Prepare archive
+        run: tar cvfz templates-out.tar.gz out
+      - name: Upload templates(artifact)
+        uses: actions/upload-artifact@master
+        with:
+          name: templates-out
+          path: templates-out.tar.gz
+  import-test:
+    name: Import templates
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: [EN, RU]
+        zabbix_version: ["3.2", "3.4", "4.0", "4.2", "4.4"]
+    env:
+      LANG: ${{ matrix.lang }}
+      ZABBIX_VERSION: ${{ matrix.zabbix_version }}
+      DOCKER_TAG: ubuntu-${{ matrix.zabbix_version }}-latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 10
+      - uses: actions/download-artifact@master
+        name: Download artifact (generated templates)
+        with:
+          name: templates-out
+      - run: tar zxvpf templates-out/templates-out.tar.gz
+      - name: Start Zabbix server
+        run: |
+          python -m pip install py-zabbix
+          pushd tests/docker && docker-compose up -d
+          popd
+          pushd bin
+          while ! python check-api.py; do sleep 5; done
+          popd
+      - name: Test
+        run: |
+          pushd bin
+          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f -name "*module*" -name "*.xml" | sort | xargs -n 1 ./import-templates.py --force
+          find ../out/${ZABBIX_VERSION}/${LANG}/ -type f ! -name "*module*" -name "*.xml" | xargs -n 1 ./import-templates.py --force
+  commit:
+    runs-on: ubuntu-latest
+    name: Commit on success
+    needs: import-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 10
+      - name: Clean out dir
+        run: rm -rf out
+      - uses: actions/download-artifact@master
+        name: Download artifact (generated templates)
+        with:
+          name: templates-out
+      - run: |
+          tar zxvpf templates-out/templates-out.tar.gz
+          rm -rf templates-out
+      - name: Git status
+        run: |
+          git status
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add out
+          git diff --quiet && git diff --staged --quiet || git commit -m "Updated XML templates" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

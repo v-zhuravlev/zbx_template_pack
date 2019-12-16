@@ -11,7 +11,7 @@
       <template>
          <template>Template Module Windows CPU by Zabbix agent active</template>
          <name>Template Module Windows CPU by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -222,7 +222,7 @@ and are waiting to be executed.</description>
       <template>
          <template>Template Module Windows filesystems by Zabbix agent active</template>
          <name>Template Module Windows filesystems by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -430,7 +430,7 @@ and are waiting to be executed.</description>
       <template>
          <template>Template Module Windows generic by Zabbix agent active</template>
          <name>Template Module Windows generic by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -496,7 +496,6 @@ and are waiting to be executed.</description>
                <triggers>
                   <trigger>
                      <expression>{diff()}=1 and {strlen()}&gt;0</expression>
-                     <recovery_mode>NONE</recovery_mode>
                      <name>System name has changed (new name: {ITEM.VALUE})</name>
                      <priority>INFO</priority>
                      <description>System name has changed. Ack to close.</description>
@@ -604,7 +603,7 @@ and are waiting to be executed.</description>
       <template>
          <template>Template Module Windows memory by Zabbix agent active</template>
          <name>Template Module Windows memory by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -836,7 +835,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
       <template>
          <template>Template Module Windows network by Zabbix agent active</template>
          <name>Template Module Windows network by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1305,6 +1304,18 @@ return JSON.stringify({"data": output})</params>
          </discovery_rules>
          <macros>
             <macro>
+               <macro>{$IF.ERRORS.WARN}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$IF.UTIL.MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
+            </macro>
+            <macro>
                <macro>{$NET.IF.IFALIAS.MATCHES}</macro>
                <value>.*</value>
                <description>This macro is used in Network interface discovery. Can be overridden on the host or linked template level.</description>
@@ -1390,7 +1401,7 @@ return JSON.stringify({"data": output})</params>
       <template>
          <template>Template Module Windows physical disks by Zabbix agent active</template>
          <name>Template Module Windows physical disks by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1634,6 +1645,105 @@ return JSON.stringify({"data": output})</params>
          </macros>
       </template>
       <template>
+         <template>Template Module Windows services by Zabbix agent active</template>
+         <name>Template Module Windows services by Zabbix agent active</name>
+         <description>Template Services OS Windows&#13;
+&#13;
+Template tooling version used: 0.34</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Services</name>
+            </application>
+         </applications>
+         <discovery_rules>
+            <discovery_rule>
+               <name>Windows services discovery</name>
+               <type>ZABBIX_ACTIVE</type>
+               <key>service.discovery</key>
+               <delay>1h</delay>
+               <filter>
+                  <evaltype>AND</evaltype>
+                  <conditions>
+                     <condition>
+                        <macro>{#SERVICE.NAME}</macro>
+                        <value>{$SERVICE.NAME.MATCHES}</value>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SERVICE.NAME}</macro>
+                        <value>{$SERVICE.NAME.NOT_MATCHES}</value>
+                        <operator>NOT_MATCHES_REGEX</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SERVICE.STARTUPNAME}</macro>
+                        <value>{$SERVICE.STARTUPNAME.MATCHES}</value>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SERVICE.STARTUPNAME}</macro>
+                        <value>{$SERVICE.STARTUPNAME.NOT_MATCHES}</value>
+                        <operator>NOT_MATCHES_REGEX</operator>
+                        <formulaid>D</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <description>Discovery of Windows services of different types as defined in template's macros.</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})</name>
+                     <type>ZABBIX_ACTIVE</type>
+                     <key>service.info["{#SERVICE.NAME}",state]</key>
+                     <history>7d</history>
+                     <applications>
+                        <application>
+                           <name>Services</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>Windows service state</name>
+                     </valuemap>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(#3)}&lt;&gt;0</expression>
+                           <name>"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})</name>
+                           <priority>AVERAGE</priority>
+                           <description>The service has a state other than "Running" for the last three times.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
+                  </item_prototype>
+               </item_prototypes>
+            </discovery_rule>
+         </discovery_rules>
+         <macros>
+            <macro>
+               <macro>{$SERVICE.NAME.MATCHES}</macro>
+               <value>^.*$</value>
+               <description>This macro is used in Service discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$SERVICE.NAME.NOT_MATCHES}</macro>
+               <value>^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v.+|clr_optimization_v.+|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel\(R\) TPM Provisioning Service|dbupdate|DoSvc$</value>
+               <description>This macro is used in Service discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$SERVICE.STARTUPNAME.MATCHES}</macro>
+               <value>^automatic|automatic delayed$</value>
+               <description>This macro is used in Service discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+            <macro>
+               <macro>{$SERVICE.STARTUPNAME.NOT_MATCHES}</macro>
+               <value>^manual|disabled$</value>
+               <description>This macro is used in Service discovery. Can be overridden on the host or linked template level.</description>
+            </macro>
+         </macros>
+      </template>
+      <template>
          <template>Template OS Windows by Zabbix agent active</template>
          <name>Template OS Windows by Zabbix agent active</name>
          <description>Official Windows template. Requires agent of Zabbix 4.4 and newer.&#13;
@@ -1641,7 +1751,7 @@ return JSON.stringify({"data": output})</params>
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows&#13;
 &#13;
-Template tooling version used: 0.33</description>
+Template tooling version used: 0.34</description>
          <templates>
             <template>
                <name>Template Module Windows CPU by Zabbix agent active</name>
@@ -1660,6 +1770,9 @@ Template tooling version used: 0.33</description>
             </template>
             <template>
                <name>Template Module Windows physical disks by Zabbix agent active</name>
+            </template>
+            <template>
+               <name>Template Module Windows services by Zabbix agent active</name>
             </template>
             <template>
                <name>Template Module Zabbix agent active</name>
@@ -2172,6 +2285,47 @@ Template tooling version used: 0.33</description>
             <mapping>
                <value>12</value>
                <newvalue>Credentials Required</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Windows service state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Running</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Paused</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Start pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Pause pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Continue pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Stop pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>Stopped</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>255</value>
+               <newvalue>No such service</newvalue>
             </mapping>
          </mappings>
       </value_map>

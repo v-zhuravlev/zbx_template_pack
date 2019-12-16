@@ -29,9 +29,7 @@ No specific Zabbix configuration is required.
 |{$PSU_CRIT_STATUS:"bad"}|<p>-</p>|`2`|
 |{$PSU_WARN_STATUS:"warning"}|<p>-</p>|`3`|
 |{$TEMP_CRIT_LOW}|<p>-</p>|`5`|
-|{$TEMP_CRIT_STATUS}|<p>-</p>|`2`|
 |{$TEMP_CRIT}|<p>-</p>|`60`|
-|{$TEMP_WARN_STATUS}|<p>-</p>|`3`|
 |{$TEMP_WARN}|<p>-</p>|`50`|
 
 ## Template links

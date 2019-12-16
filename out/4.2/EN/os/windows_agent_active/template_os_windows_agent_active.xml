@@ -11,7 +11,7 @@
       <template>
          <template>Template Module Windows CPU by Zabbix agent active</template>
          <name>Template Module Windows CPU by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -480,7 +480,7 @@ and are waiting to be executed.</description>
       <template>
          <template>Template Module Windows memory by Zabbix agent active</template>
          <name>Template Module Windows memory by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1181,7 +1181,7 @@ A typical Event ID 2019 is recorded in the system event log.</description>
       <template>
          <template>Template Module Windows filesystems by Zabbix agent active</template>
          <name>Template Module Windows filesystems by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -1607,7 +1607,7 @@ Two conditions should match: First, space utilization should be above {$VFS.FS.P
       <template>
          <template>Template Module Windows physical disks by Zabbix agent active</template>
          <name>Template Module Windows physical disks by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -2183,7 +2183,7 @@ return JSON.stringify({"data": output})</params>
       <template>
          <template>Template Module Windows generic by Zabbix agent active</template>
          <name>Template Module Windows generic by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -2651,7 +2651,7 @@ return JSON.stringify({"data": output})</params>
       <template>
          <template>Template Module Windows network by Zabbix agent active</template>
          <name>Template Module Windows network by Zabbix agent active</name>
-         <description>Template tooling version used: 0.33</description>
+         <description>Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Modules</name>
@@ -3701,6 +3701,18 @@ return JSON.stringify({"data": output})</params>
          <httptests/>
          <macros>
             <macro>
+               <macro>{$IF.ERRORS.WARN}</macro>
+               <value>2</value>
+            </macro>
+            <macro>
+               <macro>{$IF.UTIL.MAX}</macro>
+               <value>90</value>
+            </macro>
+            <macro>
+               <macro>{$IFCONTROL}</macro>
+               <value>1</value>
+            </macro>
+            <macro>
                <macro>{$NET.IF.IFALIAS.MATCHES}</macro>
                <value>.*</value>
             </macro>
@@ -3776,6 +3788,211 @@ return JSON.stringify({"data": output})</params>
          <tags/>
       </template>
       <template>
+         <template>Template Module Windows services by Zabbix agent active</template>
+         <name>Template Module Windows services by Zabbix agent active</name>
+         <description>Template Services OS Windows&#13;
+&#13;
+Template tooling version used: 0.34</description>
+         <groups>
+            <group>
+               <name>Templates/Modules</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>Services</name>
+            </application>
+         </applications>
+         <items/>
+         <discovery_rules>
+            <discovery_rule>
+               <name>Windows services discovery</name>
+               <type>7</type>
+               <snmp_community/>
+               <snmp_oid/>
+               <key>service.discovery</key>
+               <delay>1h</delay>
+               <status>0</status>
+               <allowed_hosts/>
+               <snmpv3_contextname/>
+               <snmpv3_securityname/>
+               <snmpv3_securitylevel>0</snmpv3_securitylevel>
+               <snmpv3_authprotocol>0</snmpv3_authprotocol>
+               <snmpv3_authpassphrase/>
+               <snmpv3_privprotocol>0</snmpv3_privprotocol>
+               <snmpv3_privpassphrase/>
+               <params/>
+               <ipmi_sensor/>
+               <authtype>0</authtype>
+               <username/>
+               <password/>
+               <publickey/>
+               <privatekey/>
+               <port/>
+               <filter>
+                  <evaltype>1</evaltype>
+                  <formula/>
+                  <conditions>
+                     <condition>
+                        <macro>{#SERVICE.NAME}</macro>
+                        <value>{$SERVICE.NAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SERVICE.NAME}</macro>
+                        <value>{$SERVICE.NAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>B</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SERVICE.STARTUPNAME}</macro>
+                        <value>{$SERVICE.STARTUPNAME.MATCHES}</value>
+                        <operator>8</operator>
+                        <formulaid>C</formulaid>
+                     </condition>
+                     <condition>
+                        <macro>{#SERVICE.STARTUPNAME}</macro>
+                        <value>{$SERVICE.STARTUPNAME.NOT_MATCHES}</value>
+                        <operator>9</operator>
+                        <formulaid>D</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <lifetime>30d</lifetime>
+               <description>Discovery of Windows services of different types as defined in template's macros.</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>State of service "{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME})</name>
+                     <type>7</type>
+                     <snmp_community/>
+                     <snmp_oid/>
+                     <key>service.info["{#SERVICE.NAME}",state]</key>
+                     <delay>1m</delay>
+                     <history>7d</history>
+                     <trends>365d</trends>
+                     <status>0</status>
+                     <value_type>3</value_type>
+                     <allowed_hosts/>
+                     <units/>
+                     <snmpv3_contextname/>
+                     <snmpv3_securityname/>
+                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                     <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                     <snmpv3_authpassphrase/>
+                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                     <snmpv3_privpassphrase/>
+                     <params/>
+                     <ipmi_sensor/>
+                     <authtype>0</authtype>
+                     <username/>
+                     <password/>
+                     <publickey/>
+                     <privatekey/>
+                     <port/>
+                     <description/>
+                     <inventory_link>0</inventory_link>
+                     <applications>
+                        <application>
+                           <name>Services</name>
+                        </application>
+                     </applications>
+                     <valuemap>
+                        <name>Windows service state</name>
+                     </valuemap>
+                     <logtimefmt/>
+                     <preprocessing/>
+                     <jmx_endpoint/>
+                     <application_prototypes/>
+                     <timeout>3s</timeout>
+                     <url/>
+                     <query_fields/>
+                     <posts/>
+                     <status_codes>200</status_codes>
+                     <follow_redirects>1</follow_redirects>
+                     <post_type>0</post_type>
+                     <http_proxy/>
+                     <headers/>
+                     <retrieve_mode>0</retrieve_mode>
+                     <request_method>0</request_method>
+                     <output_format>0</output_format>
+                     <allow_traps>0</allow_traps>
+                     <ssl_cert_file/>
+                     <ssl_key_file/>
+                     <ssl_key_password/>
+                     <verify_peer>0</verify_peer>
+                     <verify_host>0</verify_host>
+                     <master_item/>
+                  </item_prototype>
+               </item_prototypes>
+               <trigger_prototypes>
+                  <trigger_prototype>
+                     <expression>{Template Module Windows services by Zabbix agent active:service.info["{#SERVICE.NAME}",state].min(#3)}&lt;&gt;0</expression>
+                     <recovery_mode>0</recovery_mode>
+                     <recovery_expression/>
+                     <name>"{#SERVICE.NAME}" ({#SERVICE.DISPLAYNAME}) is not running (startup type {#SERVICE.STARTUPNAME})</name>
+                     <correlation_mode>0</correlation_mode>
+                     <correlation_tag/>
+                     <url/>
+                     <status>0</status>
+                     <priority>3</priority>
+                     <description>Last value: {ITEM.LASTVALUE1}&#13;
+The service has a state other than "Running" for the last three times.</description>
+                     <type>0</type>
+                     <manual_close>0</manual_close>
+                     <dependencies/>
+                     <tags/>
+                  </trigger_prototype>
+               </trigger_prototypes>
+               <graph_prototypes/>
+               <host_prototypes/>
+               <jmx_endpoint/>
+               <timeout>3s</timeout>
+               <url/>
+               <query_fields/>
+               <posts/>
+               <status_codes>200</status_codes>
+               <follow_redirects>1</follow_redirects>
+               <post_type>0</post_type>
+               <http_proxy/>
+               <headers/>
+               <retrieve_mode>0</retrieve_mode>
+               <request_method>0</request_method>
+               <allow_traps>0</allow_traps>
+               <ssl_cert_file/>
+               <ssl_key_file/>
+               <ssl_key_password/>
+               <verify_peer>0</verify_peer>
+               <verify_host>0</verify_host>
+               <lld_macro_paths/>
+               <preprocessing/>
+               <master_item/>
+            </discovery_rule>
+         </discovery_rules>
+         <httptests/>
+         <macros>
+            <macro>
+               <macro>{$SERVICE.NAME.MATCHES}</macro>
+               <value>^.*$</value>
+            </macro>
+            <macro>
+               <macro>{$SERVICE.NAME.NOT_MATCHES}</macro>
+               <value>^RemoteRegistry|MMCSS|gupdate|SysmonLog|clr_optimization_v.+|clr_optimization_v.+|sppsvc|gpsvc|Pml Driver HPZ12|Net Driver HPZ12|MapsBroker|IntelAudioService|Intel\(R\) TPM Provisioning Service|dbupdate|DoSvc$</value>
+            </macro>
+            <macro>
+               <macro>{$SERVICE.STARTUPNAME.MATCHES}</macro>
+               <value>^automatic|automatic delayed$</value>
+            </macro>
+            <macro>
+               <macro>{$SERVICE.STARTUPNAME.NOT_MATCHES}</macro>
+               <value>^manual|disabled$</value>
+            </macro>
+         </macros>
+         <templates/>
+         <screens/>
+         <tags/>
+      </template>
+      <template>
          <template>Template OS Windows by Zabbix agent active</template>
          <name>Template OS Windows by Zabbix agent active</name>
          <description>Official Windows template. Requires agent of Zabbix 4.4 and newer.&#13;
@@ -3783,7 +4000,7 @@ return JSON.stringify({"data": output})</params>
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/387224-discussion-thread-for-official-zabbix-template-for-windows&#13;
 &#13;
-Template tooling version used: 0.33</description>
+Template tooling version used: 0.34</description>
          <groups>
             <group>
                <name>Templates/Operating systems</name>
@@ -3812,6 +4029,9 @@ Template tooling version used: 0.33</description>
             </template>
             <template>
                <name>Template Module Windows physical disks by Zabbix agent active</name>
+            </template>
+            <template>
+               <name>Template Module Windows services by Zabbix agent active</name>
             </template>
             <template>
                <name>Template Module Zabbix agent active</name>
@@ -4422,7 +4642,7 @@ The host system time is different from the Zabbix server time.</description>
       </trigger>
       <trigger>
          <expression>{Template Module Windows generic by Zabbix agent active:system.hostname.diff()}=1 and {Template Module Windows generic by Zabbix agent active:system.hostname.strlen()}&gt;0</expression>
-         <recovery_mode>2</recovery_mode>
+         <recovery_mode>0</recovery_mode>
          <recovery_expression/>
          <name>System name has changed (new name: {ITEM.VALUE})</name>
          <correlation_mode>0</correlation_mode>
@@ -4643,6 +4863,47 @@ System name has changed. Ack to close.</description>
             <mapping>
                <value>12</value>
                <newvalue>Credentials Required</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+      <value_map>
+         <name>Windows service state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Running</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Paused</newvalue>
+            </mapping>
+            <mapping>
+               <value>2</value>
+               <newvalue>Start pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>3</value>
+               <newvalue>Pause pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>4</value>
+               <newvalue>Continue pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>5</value>
+               <newvalue>Stop pending</newvalue>
+            </mapping>
+            <mapping>
+               <value>6</value>
+               <newvalue>Stopped</newvalue>
+            </mapping>
+            <mapping>
+               <value>7</value>
+               <newvalue>Unknown</newvalue>
+            </mapping>
+            <mapping>
+               <value>255</value>
+               <newvalue>No such service</newvalue>
             </mapping>
          </mappings>
       </value_map>

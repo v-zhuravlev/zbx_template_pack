@@ -125,21 +125,18 @@ There are no template links in this template.
 
 ## Discovery rules
 
-|Name|Description|Type|Key and additional info|
-|----|-----------|----|----|
-|CPU discovery|<p>HOST-RESOURCES-MIB::hrProcessorTable discovery</p>|SNMP|hrProcessorLoad.discovery|
 
 ## Items collected
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|CPU|#{#SNMPINDEX}: CPU utilization|<p>MIB: HOST-RESOURCES-MIB</p><p>The average, over the last minute, of the percentage of time that this processor was not idle.</p><p>Implementations may approximate this one minute smoothing period if necessary.</p>|SNMP|system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]|
+|CPU|CPU utilization|<p>MIB: HOST-RESOURCES-MIB</p><p>The average, over the last minute, of the percentage of time that processors was not idle.</p><p>Implementations may approximate this one minute smoothing period if necessary.</p>|SNMP|system.cpu.util<p>**Preprocessing**:</p><p>- JSONPATH: `$..['{#CPU.UTIL}'].avg()`</p>|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU utilization is too high. The system might be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.util[hrProcessorLoad.{#SNMPINDEX}].min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
+|High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)|<p>CPU utilization is too high. The system might be slow to respond.</p>|`{TEMPLATE_NAME:system.cpu.util.min(5m)}>{$CPU.UTIL.CRIT}`|WARNING||
 
 ## Feedback
 
