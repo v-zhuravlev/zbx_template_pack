@@ -1,0 +1,140 @@
+---
+value_maps:
+  - name: Service state
+    mappings:
+      - value: "0"
+        newvalue: Down
+      - value: "1"
+        newvalue: Up
+
+templates:
+  - name: Template App HAProxy by HTTP
+    _zbx_ver: "4.4"
+    _classes:
+      - APP
+    description: |
+      Get metrics from status page using HTTP agent
+      https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.
+    _documentation:
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
+      _tested_on:
+        - name: HAProxy
+          version: "1.8"
+        - name: Zabbix
+          version: "4.4"
+      _overview: |
+        The template to monitor HAProxy by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+        `Template App HAProxy by HTTP` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/) with HTTP agent remotely:
+
+        Note that this solution supports https and redirects.
+      _setup: |
+        Setup [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/).
+        Test availability of http_stub_status module with `nginx -V 2>&1 | grep -o with-http_stub_status_module`.
+
+        Example configuration of HAProxy:        
+        ```text
+        frontend stats
+            bind *:8404
+            stats enable
+            stats uri /stats
+            stats refresh 10s
+            stats admin if LOCALHOST        }
+        ```
+
+        If you use another location, don't forget to change {$HAPROXY.STATS.PATH} macro.
+    items:
+      - _prototype: haproxy.get
+        type: HTTP_AGENT
+        history: 1h
+        url: "{$HAPROXY.STATS.PATH}"
+        # url: "{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}"
+        status_codes: 200
+        follow_redirects: "YES"
+        retrieve_mode: BOTH
+      - _id: haproxy.ping
+        name: Service status
+        type: SIMPLE
+        key: net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]
+        value_type: UNSIGNED
+        delay: 1m
+        value_map: Service state
+        history: 7d
+        _group: "HAProxy"
+        _resource: HAProxy
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
+        triggers:
+          - _id: trigger.status
+            name: Service is down
+            expression: "{TEMPLATE_NAME:METRIC.last()}=0"
+            manual_close: "YES"
+            priority: AVERAGE
+            _depends_on:
+              - trigger.proc.not_running
+      - _id: haproxy.perf
+        name: Service response time
+        type: SIMPLE
+        key: net.tcp.service.perf[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]
+        value_type: FLOAT
+        delay: 1m
+        history: 7d
+        units: s
+        _group: "HAProxy"
+        _resource: HAProxy
+        triggers:
+          - _id: trigger.perf.low
+            name: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN}s for 5m)
+            expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.RESPONSE_TIME.MAX.WARN}"
+            manual_close: "YES"
+            priority: WARNING
+            _depends_on:
+              - trigger.proc.not_running
+              - trigger.status
+      # - _prototype: haproxy.version
+    discovery_rules:
+      - name:
+          oid:
+          key:
+          items:
+            - _prototype:
+              name:
+              description:
+              application_prototype: __RESOURCE__
+              update: 5m
+              history: 7d
+              trends: 365d
+              oid:
+              _snmpObject:
+              _mib:
+              _vendor_description:
+              _zbx_ver: 3.0
+    macros:
+      - macro: "{$HAPROXY.STATS.PATH}"
+        _description: "The path of HAProxy stats page."
+        value: "http://haproxy:9000/stats;csv"
+      - macro: "{$HAPROXY.STATS.PORT}"
+        _description: "The port of the HAProxy stats host or container."
+        value: "9000"
+      - macro: "{$HAPROXY.RESPONSE_TIME.MAX.WARN}"
+        _description: "The HAProxy stats page maximum response time in seconds for trigger expression."
+        value: "10"
+      # - macro: "{$HAPROXY.DROP_RATE.MAX.WARN}"
+      #   _description: "The critical rate of the dropped connections for trigger expression."
+      #   value: "1"
+    # screens:
+    #   - name: "HAProxy performance"
+    #     hsize: 2
+    #     vsize: 2
+    #     screen_items:
+    #       - _graph_id: haproxy.connections
+    #         x: 0
+    #         y: 0
+    #       - _graph_id: haproxy.requests
+    #         x: 1
+    #         y: 0
+    #       - _graph_id: haproxy.connections.rate
+    #         x: 0
+    #         y: 1
