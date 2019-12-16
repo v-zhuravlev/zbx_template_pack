@@ -1,9 +1,42 @@
 ---
 templates:
-  - name: Template App MySQL by agent
+  - name: Template DB MySQL by Zabbix agent
     _zbx_ver: "4.2"
     _classes:
       - DB
+    _documentation:
+      _tested_on:
+        - name: MySQL
+          version: 5.7, 8.0
+        - name: Percona
+          version: "8.0"
+        - name: MariaDB
+          version: "10.4"
+        - name: Zabbix
+          version: 4.2.1
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql
+      _overview: |-
+        The template is developed for monitoring DBMS MySQL and its forks.
+      # This template was tested with Zabbix 4.2.1 and MySQL 5.7, 8.0, Percona 8.0, MariaDB 10.4 on Linux and Windows.
+      _setup: |-
+        1. Install Zabbix agent and MySQL client. If necessary, add the path to the `mysql` and `mysqladmin` utilities to the global environment variable PATH.
+        2. Copy `template_db_mysql.conf` into folder with Zabbix agent configuration (`/etc/zabbix/zabbix_agentd.d/` by default). Don't forget to restart zabbix-agent.
+        3. Create MySQL user for monitoring (`<password>` at your discretion):
+
+        ```text
+        CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '<password>';
+        GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';
+        ```
+
+        For more information please read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html
+
+        4. Create `.my.cnf` in home directory of Zabbix agent for Linux (`/var/lib/zabbix` by default ) or `my.cnf` in c:\ for Windows. The file must have three strings:
+
+        ```text
+        [client]
+        user=zbx_monitor
+        password=<password>
+        ```
     description: |
       Requirements for template operation:
       1.Install Zabbix agent and MySQL client.
