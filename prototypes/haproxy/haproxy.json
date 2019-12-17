@@ -10,8 +10,492 @@
         "description": "HAProxy Statistics Report in CSV format",
         "preprocessing": [
             {
+                "type": "JAVASCRIPT",
+                "params": "return value.slice(2,-1)"
+            },
+            {
                 "type": "CSV_TO_JSON",
-                "params": "1"
+                "params": "\n\n1"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.status",
+        "name": "{#PXNAME} {#SVNAME} status",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.status.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.rtime",
+        "name": "{#PXNAME} {#SVNAME} rtime",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.rtime.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].rtime.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.econ",
+        "name": "{#PXNAME} {#SVNAME} econ",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.econ.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].econ.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.dresp",
+        "name": "{#PXNAME} {#SVNAME} dresp",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.dresp.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dresp.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.eresp",
+        "name": "{#PXNAME} {#SVNAME} eresp",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.eresp.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].eresp.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.qcur",
+        "name": "{#PXNAME} {#SVNAME} qcur",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.qcur.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].qcur.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.qtime",
+        "name": "{#PXNAME} {#SVNAME} qtime",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.qtime.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].qtime.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.wredis",
+        "name": "{#PXNAME} {#SVNAME} wredis",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.wredis.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wredis.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.backend.wretr",
+        "name": "{#PXNAME} {#SVNAME} wretr",
+        "type": "DEPENDENT",
+        "key": "haproxy.backend.wretr.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wretr.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.status",
+        "name": "{#PXNAME} {#SVNAME} status",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.status.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.req_rate",
+        "name": "{#PXNAME} {#SVNAME} req_rate",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.req_rate.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].req_rate.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.rate",
+        "name": "{#PXNAME} {#SVNAME} rate",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.rate.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].rate.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.ereq",
+        "name": "{#PXNAME} {#SVNAME} ereq",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.ereq.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].ereq.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.dreq",
+        "name": "{#PXNAME} {#SVNAME} dreq",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.dreq.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dreq.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.hrsp_1xx",
+        "name": "{#PXNAME} {#SVNAME} hrsp_1xx",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_1xx.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.hrsp_2xx",
+        "name": "{#PXNAME} {#SVNAME} hrsp_2xx",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_2xx.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.hrsp_3xx",
+        "name": "{#PXNAME} {#SVNAME} hrsp_3xx",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_3xx.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.hrsp_4xx",
+        "name": "{#PXNAME} {#SVNAME} hrsp_4xx",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.hrsp_4xx.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_4xx.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.hrsp_5xx",
+        "name": "{#PXNAME} {#SVNAME} hrsp_5xx",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.hrsp_5xx.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.bin",
+        "name": "{#PXNAME} {#SVNAME} bin",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.bin.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].bin.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.bout",
+        "name": "{#PXNAME} {#SVNAME} bout",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.bout.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].bout.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.status",
+        "name": "{#PXNAME} {#SVNAME} status",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.status.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.rtime",
+        "name": "{#PXNAME} {#SVNAME} rtime",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.rtime.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].rtime.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.econ",
+        "name": "{#PXNAME} {#SVNAME} econ",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.econ.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].econ.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.dresp",
+        "name": "{#PXNAME} {#SVNAME} dresp",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.dresp.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dresp.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.eresp",
+        "name": "{#PXNAME} {#SVNAME} eresp",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.eresp.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].eresp.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.qcur",
+        "name": "{#PXNAME} {#SVNAME} qcur",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.qcur.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].qcur.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.qtime",
+        "name": "{#PXNAME} {#SVNAME} qtime",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.qtime.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].qtime.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.wredis",
+        "name": "{#PXNAME} {#SVNAME} wredis",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.wredis.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wredis.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.wretr",
+        "name": "{#PXNAME} {#SVNAME} wretr",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.wretr.[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "CHAR",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wretr.first()"
             }
         ]
     }

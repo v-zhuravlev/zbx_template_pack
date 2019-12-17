@@ -52,7 +52,7 @@ templates:
         # url: "{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}"
         status_codes: 200
         follow_redirects: "YES"
-        retrieve_mode: BOTH
+        retrieve_mode: BODY
       - _id: haproxy.ping
         name: Service status
         type: SIMPLE
@@ -82,7 +82,7 @@ templates:
         delay: 1m
         history: 7d
         units: s
-        _group: "HAProxy"
+        _group: HAProxy
         _resource: HAProxy
         triggers:
           - _id: trigger.perf.low
@@ -95,22 +95,95 @@ templates:
               - trigger.status
       # - _prototype: haproxy.version
     discovery_rules:
-      - name:
-          oid:
-          key:
-          items:
-            - _prototype:
-              name:
-              description:
-              application_prototype: __RESOURCE__
-              update: 5m
-              history: 7d
-              trends: 365d
-              oid:
-              _snmpObject:
-              _mib:
-              _vendor_description:
-              _zbx_ver: 3.0
+      - name: BACKEND discovery
+        description: |-
+          Discovery backends
+        key: haproxy.backend.discovery
+        type: DEPENDENT
+        masterItem: haproxy.get
+        lld_macro_paths:
+          - lld_macro: "{#PXNAME}"
+            path: $.pxname
+          - lld_macro: "{#SVNAME}"
+            path: $.svname
+        filter:
+          evalType: AND
+          conditions:
+            - macro: "{#SVNAME}"
+              value: BACKEND
+              operator: MATCHES_REGEX
+              formulaid: A
+        items:
+          - _prototype: haproxy.backend.status
+          - _prototype: haproxy.backend.rtime
+          - _prototype: haproxy.backend.econ
+          - _prototype: haproxy.backend.dresp
+          - _prototype: haproxy.backend.eresp
+          - _prototype: haproxy.backend.qcur
+          - _prototype: haproxy.backend.qtime
+          - _prototype: haproxy.backend.wredis
+          - _prototype: haproxy.backend.wretr
+      - name: FRONTEND discovery
+        description: |-
+          Discovery frontends
+        key: haproxy.frontend.discovery
+        type: DEPENDENT
+        masterItem: haproxy.get
+        lld_macro_paths:
+          - lld_macro: "{#PXNAME}"
+            path: $.pxname
+          - lld_macro: "{#SVNAME}"
+            path: $.svname
+        filter:
+          evalType: AND
+          conditions:
+            - macro: "{#SVNAME}"
+              value: FRONTEND
+              operator: MATCHES_REGEX
+              formulaid: A
+        items:
+          - _prototype: haproxy.frontend.status
+          - _prototype: haproxy.frontend.req_rate
+          - _prototype: haproxy.frontend.rate
+          # - _prototype: haproxy.frontend.session utilization (computed)
+          - _prototype: haproxy.frontend.ereq
+          - _prototype: haproxy.frontend.dreq
+          - _prototype: haproxy.frontend.hrsp_1xx
+          - _prototype: haproxy.frontend.hrsp_2xx
+          - _prototype: haproxy.frontend.hrsp_3xx
+          - _prototype: haproxy.frontend.hrsp_4xx
+          - _prototype: haproxy.frontend.hrsp_5xx
+          - _prototype: haproxy.frontend.bin
+          - _prototype: haproxy.frontend.bout
+      - name: Servers discovery
+        description: |-
+          Discovery Servers
+        key: haproxy.server.discovery
+        type: DEPENDENT
+        masterItem: haproxy.get
+        lld_macro_paths:
+          - lld_macro: "{#PXNAME}"
+            path: $.pxname
+          - lld_macro: "{#SVNAME}"
+            path: $.svname
+        filter:
+          evalType: AND
+          conditions:
+            - macro: "{#SVNAME}"
+              value: FRONTEND|BACKEND
+              operator: NOT_MATCHES_REGEX
+              formulaid: A
+        items:
+          - _prototype: haproxy.server.status
+          - _prototype: haproxy.server.rtime
+          - _prototype: haproxy.server.econ
+          - _prototype: haproxy.server.dresp
+          - _prototype: haproxy.server.eresp
+          - _prototype: haproxy.server.qcur
+          - _prototype: haproxy.server.qtime
+          - _prototype: haproxy.server.wredis
+          - _prototype: haproxy.server.wretr
+
     macros:
       - macro: "{$HAPROXY.STATS.PATH}"
         _description: "The path of HAProxy stats page."
