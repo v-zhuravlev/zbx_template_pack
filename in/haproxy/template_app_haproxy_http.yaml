@@ -47,7 +47,6 @@ templates:
     items:
       - _prototype: haproxy.get
         type: HTTP_AGENT
-        history: 1h
         url: "{$HAPROXY.STATS.PATH}"
         # url: "{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}"
         status_codes: 200
@@ -56,7 +55,8 @@ templates:
       - _id: haproxy.ping
         name: Service status
         type: SIMPLE
-        key: net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]
+        key: net.tcp.service[http,"haproxy","{$HAPROXY.STATS.PORT}"]
+        # key: net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -72,12 +72,12 @@ templates:
             expression: "{TEMPLATE_NAME:METRIC.last()}=0"
             manual_close: "YES"
             priority: AVERAGE
-            _depends_on:
-              - trigger.proc.not_running
+            # _depends_on:
+            #   - trigger.proc.not_running
       - _id: haproxy.perf
         name: Service response time
         type: SIMPLE
-        key: net.tcp.service.perf[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]
+        key: net.tcp.service.perf[http,"haproxy","{$HAPROXY.STATS.PORT}"]
         value_type: FLOAT
         delay: 1m
         history: 7d
@@ -91,7 +91,7 @@ templates:
             manual_close: "YES"
             priority: WARNING
             _depends_on:
-              - trigger.proc.not_running
+              # - trigger.proc.not_running
               - trigger.status
       # - _prototype: haproxy.version
     discovery_rules:
@@ -194,9 +194,27 @@ templates:
       - macro: "{$HAPROXY.RESPONSE_TIME.MAX.WARN}"
         _description: "The HAProxy stats page maximum response time in seconds for trigger expression."
         value: "10"
-      # - macro: "{$HAPROXY.DROP_RATE.MAX.WARN}"
-      #   _description: "The critical rate of the dropped connections for trigger expression."
-      #   value: "1"
+      - macro: "{$HAPROXY.FRONT_DREQ.MAX.WARN}"
+        _description: "The HAProxy maximum denied requests for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.FRONT_EREQ.MAX.WARN}"
+        _description: "The HAProxy maximum number of request errors for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.BACK_QCUR.MAX.WARN}"
+        _description: "Maximum number of requests on BACKEND unassigned in queue for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.SERVER_QCUR.MAX.WARN}"
+        _description: "Maximum number of requests on server unassigned in queue for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.SERVER_RTIME.MAX.WARN}"
+        _description: "Maximum of average server response time for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.SERVER_QTIME.MAX.WARN}"
+        _description: "Maximum of average time spent in queue on server for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.SERVER_ERESP.MAX.WARN}"
+        _description: "Maximum of responses with error on server for trigger expression."
+        value: "10"
     # screens:
     #   - name: "HAProxy performance"
     #     hsize: 2
