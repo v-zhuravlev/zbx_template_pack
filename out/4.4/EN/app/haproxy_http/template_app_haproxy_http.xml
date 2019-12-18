@@ -62,7 +62,7 @@ Template tooling version used: 0.34</description>
             <item>
                <name>HAProxy: Service response time</name>
                <type>SIMPLE</type>
-               <key>net.tcp.service.perf[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]</key>
+               <key>net.tcp.service.perf[http,"haproxy","{$HAPROXY.STATS.PORT}"]</key>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>s</units>
@@ -80,7 +80,7 @@ Template tooling version used: 0.34</description>
                      <dependencies>
                         <dependency>
                            <name>HAProxy: Service is down</name>
-                           <expression>{Template App HAProxy by HTTP:net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"].last()}=0</expression>
+                           <expression>{Template App HAProxy by HTTP:net.tcp.service[http,"haproxy","{$HAPROXY.STATS.PORT}"].last()}=0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -89,7 +89,7 @@ Template tooling version used: 0.34</description>
             <item>
                <name>HAProxy: Service status</name>
                <type>SIMPLE</type>
-               <key>net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]</key>
+               <key>net.tcp.service[http,"haproxy","{$HAPROXY.STATS.PORT}"]</key>
                <history>7d</history>
                <applications>
                   <application>
@@ -139,8 +139,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.dresp.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Responses denied due to security concerns (ACL-restricted)</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -162,8 +161,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.econ.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of requests that encountered an error attempting to connect to a backend server</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -185,8 +183,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.eresp.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of requests whose responses yielded an error</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -208,8 +205,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.qcur.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Current number of requests unassigned in queue</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -224,6 +220,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.BACK_QCUR.MAX.WARN}</expression>
+                           <name>HAProxy: Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} qtime</name>
@@ -231,8 +235,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.qtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Average time spent in queue (in ms) for the last 1,024 requests</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -254,8 +257,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.rtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Average backend response time (in ms) for the last 1,024 requests</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -300,8 +302,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.wredis.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of times a request was redispatched to a different backend</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -323,8 +324,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.wretr.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of times a connection was retried</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -378,8 +378,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.bin.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of bytes received by the frontend</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -401,8 +400,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.bout.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of bytes sent by the frontend</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -424,8 +422,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.dreq.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Requests denied due to security concerns (ACL-restricted)</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -440,6 +437,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.FRONT_DREQ.MAX.WARN}</expression>
+                           <name>HAProxy: Number of requests denied more than {$HAPROXY.FRONT_DREQ.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Number of requests denied due to security concerns (ACL-restricted) more than {$HAPROXY.FRONT_DREQ.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} ereq</name>
@@ -447,8 +452,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.ereq.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of request errors</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -463,6 +467,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.FRONT_EREQ.MAX.WARN}</expression>
+                           <name>HAProxy: Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} hrsp_1xx</name>
@@ -470,8 +482,6 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -493,8 +503,6 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -516,8 +524,6 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -539,8 +545,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_4xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of HTTP client errors</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -562,8 +567,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_5xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of HTTP server errors</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -585,8 +589,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.rate.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of sessions created per second</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -608,8 +611,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.req_rate.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>HTTP requests per second</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -687,8 +689,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.dresp.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Responses denied due to security concerns (ACL-restricted)</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -710,8 +711,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.econ.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of requests that encountered an error attempting to connect to a backend server</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -733,8 +733,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.eresp.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of requests whose responses yielded an error</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -749,6 +748,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.SERVER_ERESP.MAX.WARN}</expression>
+                           <name>HAProxy: Number of responses with error on {#PXNAME}:{#SVNAME} more than {$HAPROXY.SERVER_ERESP.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Number of requests on server, whose responses yielded an error, more than {$HAPROXY.SERVER_ERESP.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} qcur</name>
@@ -756,8 +763,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.qcur.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Current number of requests unassigned in queue</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -772,6 +778,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.SERVER_QCUR.MAX.WARN}</expression>
+                           <name>HAProxy: Current number of requests on {#PXNAME}:{#SVNAME} unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} qtime</name>
@@ -779,8 +793,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.qtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Average time spent in queue (in ms) for the last 1,024 requests</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -795,6 +808,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.SERVER_QTIME.MAX.WARN}</expression>
+                           <name>HAProxy: Average time spent in queue on {#PXNAME}:{#SVNAME} more than {$HAPROXY.SERVER_QTIME.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_QTIME.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} rtime</name>
@@ -802,8 +823,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.rtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Average server response time (in ms) for the last 1,024 requests</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -818,6 +838,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.SERVER_RTIME.MAX.WARN}</expression>
+                           <name>HAProxy: Average server response time on {#PXNAME}:{#SVNAME} more than {$HAPROXY.SERVER_RTIME.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Average server response time (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_RTIME.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} status</name>
@@ -848,8 +876,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.wredis.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of times a request was redispatched to a different backend</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -871,8 +898,7 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.wretr.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
+                     <description>Number of times a connection was retried</description>
                      <applications>
                         <application>
                            <name>HAProxy</name>
@@ -906,9 +932,44 @@ Template tooling version used: 0.34</description>
          </discovery_rules>
          <macros>
             <macro>
+               <macro>{$HAPROXY.BACK_QCUR.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum number of requests on BACKEND unassigned in queue for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.FRONT_DREQ.MAX.WARN}</macro>
+               <value>10</value>
+               <description>The HAProxy maximum denied requests for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.FRONT_EREQ.MAX.WARN}</macro>
+               <value>10</value>
+               <description>The HAProxy maximum number of request errors for trigger expression.</description>
+            </macro>
+            <macro>
                <macro>{$HAPROXY.RESPONSE_TIME.MAX.WARN}</macro>
                <value>10</value>
                <description>The HAProxy stats page maximum response time in seconds for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.SERVER_ERESP.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum of responses with error on server for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.SERVER_QCUR.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum number of requests on server unassigned in queue for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.SERVER_QTIME.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum of average time spent in queue on server for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.SERVER_RTIME.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum of average server response time for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.STATS.PATH}</macro>
