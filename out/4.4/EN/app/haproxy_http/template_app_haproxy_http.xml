@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+   <version>4.4</version>
+   <date>2015-12-30T14:41:30Z</date>
+   <groups>
+      <group>
+         <name>Templates/Applications</name>
+      </group>
+   </groups>
+   <templates>
+      <template>
+         <template>Template App HAProxy by HTTP</template>
+         <name>Template App HAProxy by HTTP</name>
+         <description>Get metrics from status page using HTTP agent&#13;
+https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.&#13;
+&#13;
+&#13;
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
+&#13;
+Template tooling version used: 0.34</description>
+         <groups>
+            <group>
+               <name>Templates/Applications</name>
+            </group>
+         </groups>
+         <applications>
+            <application>
+               <name>HAProxy</name>
+            </application>
+            <application>
+               <name>Zabbix raw items</name>
+            </application>
+         </applications>
+         <items>
+            <item>
+               <name>HAProxy: Get stats</name>
+               <type>HTTP_AGENT</type>
+               <key>haproxy.get</key>
+               <history>1h</history>
+               <trends>0</trends>
+               <value_type>TEXT</value_type>
+               <description>HAProxy Statistics Report in CSV format</description>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>return value.slice(2,-1)</params>
+                  </step>
+                  <step>
+                     <type>CSV_TO_JSON</type>
+                     <params>
+
+1</params>
+                  </step>
+               </preprocessing>
+               <url>{$HAPROXY.STATS.PATH}</url>
+            </item>
+            <item>
+               <name>HAProxy: Service response time</name>
+               <type>SIMPLE</type>
+               <key>net.tcp.service.perf[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]</key>
+               <history>7d</history>
+               <value_type>FLOAT</value_type>
+               <units>s</units>
+               <applications>
+                  <application>
+                     <name>HAProxy</name>
+                  </application>
+               </applications>
+               <triggers>
+                  <trigger>
+                     <expression>{min(5m)}&gt;{$HAPROXY.RESPONSE_TIME.MAX.WARN}</expression>
+                     <name>HAProxy: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
+                     <priority>WARNING</priority>
+                     <manual_close>YES</manual_close>
+                     <dependencies>
+                        <dependency>
+                           <name>HAProxy: Service is down</name>
+                           <expression>{Template App HAProxy by HTTP:net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"].last()}=0</expression>
+                        </dependency>
+                     </dependencies>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
+               <name>HAProxy: Service status</name>
+               <type>SIMPLE</type>
+               <key>net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]</key>
+               <history>7d</history>
+               <applications>
+                  <application>
+                     <name>HAProxy</name>
+                  </application>
+               </applications>
+               <valuemap>
+                  <name>Service state</name>
+               </valuemap>
+               <preprocessing>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>10m</params>
+                  </step>
+               </preprocessing>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}=0</expression>
+                     <name>HAProxy: Service is down</name>
+                     <priority>AVERAGE</priority>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
+            </item>
+         </items>
+         <discovery_rules>
+            <discovery_rule>
+               <name>BACKEND discovery</name>
+               <type>DEPENDENT</type>
+               <key>haproxy.backend.discovery</key>
+               <delay>0</delay>
+               <filter>
+                  <evaltype>AND</evaltype>
+                  <conditions>
+                     <condition>
+                        <macro>{#SVNAME}</macro>
+                        <value>BACKEND</value>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <description>Discovery backends</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} dresp</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.dresp.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].dresp.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} econ</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.econ.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].econ.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} eresp</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.eresp.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].eresp.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} qcur</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.qcur.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].qcur.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} qtime</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.qtime.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].qtime.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} rtime</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.rtime.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].rtime.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} status</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.status.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].status.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} wredis</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.wredis.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].wredis.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} wretr</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.backend.wretr.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].wretr.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+               </item_prototypes>
+               <master_item>
+                  <key>haproxy.get</key>
+               </master_item>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#PXNAME}</lld_macro>
+                     <path>$.pxname</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SVNAME}</lld_macro>
+                     <path>$.svname</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
+            </discovery_rule>
+            <discovery_rule>
+               <name>FRONTEND discovery</name>
+               <type>DEPENDENT</type>
+               <key>haproxy.frontend.discovery</key>
+               <delay>0</delay>
+               <filter>
+                  <evaltype>AND</evaltype>
+                  <conditions>
+                     <condition>
+                        <macro>{#SVNAME}</macro>
+                        <value>FRONTEND</value>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <description>Discovery frontends</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} bin</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.bin.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].bin.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} bout</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.bout.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].bout.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} dreq</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.dreq.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].dreq.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} ereq</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.ereq.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].ereq.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} hrsp_1xx</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].hrsp_1xx.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} hrsp_2xx</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].hrsp_2xx.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} hrsp_3xx</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].hrsp_3xx.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} hrsp_4xx</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.hrsp_4xx.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].hrsp_4xx.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} hrsp_5xx</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.hrsp_5xx.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].hrsp_5xx.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} rate</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.rate.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].rate.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} req_rate</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.req_rate.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].req_rate.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} status</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.frontend.status.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].status.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+               </item_prototypes>
+               <master_item>
+                  <key>haproxy.get</key>
+               </master_item>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#PXNAME}</lld_macro>
+                     <path>$.pxname</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SVNAME}</lld_macro>
+                     <path>$.svname</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
+            </discovery_rule>
+            <discovery_rule>
+               <name>Servers discovery</name>
+               <type>DEPENDENT</type>
+               <key>haproxy.server.discovery</key>
+               <delay>0</delay>
+               <filter>
+                  <evaltype>AND</evaltype>
+                  <conditions>
+                     <condition>
+                        <macro>{#SVNAME}</macro>
+                        <value>FRONTEND|BACKEND</value>
+                        <operator>NOT_MATCHES_REGEX</operator>
+                        <formulaid>A</formulaid>
+                     </condition>
+                  </conditions>
+               </filter>
+               <description>Discovery Servers</description>
+               <item_prototypes>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} dresp</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.dresp.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].dresp.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} econ</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.econ.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].econ.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} eresp</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.eresp.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].eresp.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} qcur</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.qcur.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].qcur.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} qtime</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.qtime.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].qtime.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} rtime</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.rtime.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].rtime.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} status</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.status.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].status.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} wredis</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.wredis.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].wredis.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+                  <item_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} wretr</name>
+                     <type>DEPENDENT</type>
+                     <key>haproxy.server.wretr.[{#PXNAME}:{#SVNAME}]</key>
+                     <delay>0</delay>
+                     <history>7d</history>
+                     <trends>0</trends>
+                     <value_type>CHAR</value_type>
+                     <applications>
+                        <application>
+                           <name>HAProxy</name>
+                        </application>
+                     </applications>
+                     <preprocessing>
+                        <step>
+                           <type>JSONPATH</type>
+                           <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].wretr.first()</params>
+                        </step>
+                     </preprocessing>
+                     <master_item>
+                        <key>haproxy.get</key>
+                     </master_item>
+                  </item_prototype>
+               </item_prototypes>
+               <master_item>
+                  <key>haproxy.get</key>
+               </master_item>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#PXNAME}</lld_macro>
+                     <path>$.pxname</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SVNAME}</lld_macro>
+                     <path>$.svname</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
+            </discovery_rule>
+         </discovery_rules>
+         <macros>
+            <macro>
+               <macro>{$HAPROXY.RESPONSE_TIME.MAX.WARN}</macro>
+               <value>10</value>
+               <description>The HAProxy stats page maximum response time in seconds for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.STATS.PATH}</macro>
+               <value>http://haproxy:9000/stats;csv</value>
+               <description>The path of HAProxy stats page.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.STATS.PORT}</macro>
+               <value>9000</value>
+               <description>The port of the HAProxy stats host or container.</description>
+            </macro>
+         </macros>
+      </template>
+   </templates>
+   <value_maps>
+      <value_map>
+         <name>Service state</name>
+         <mappings>
+            <mapping>
+               <value>0</value>
+               <newvalue>Down</newvalue>
+            </mapping>
+            <mapping>
+               <value>1</value>
+               <newvalue>Up</newvalue>
+            </mapping>
+         </mappings>
+      </value_map>
+   </value_maps>
+</zabbix_export>
