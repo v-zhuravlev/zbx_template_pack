@@ -140,11 +140,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Responses denied due to security concerns (ACL-restricted)</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -162,11 +162,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of requests that encountered an error attempting to connect to a backend server</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -184,11 +184,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of requests whose responses yielded an error</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -198,6 +198,14 @@ Template tooling version used: 0.34</description>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.BACK_ERESP.MAX.WARN}</expression>
+                           <name>HAProxy backend {#PXNAME}: Number of responses with error more than {$HAPROXY.BACK_ERESP.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Number of requests on backend, whose responses yielded an error, more than {$HAPROXY.BACK_ERESP.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} qcur</name>
@@ -206,11 +214,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Current number of requests unassigned in queue</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -223,9 +231,9 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.BACK_QCUR.MAX.WARN}</expression>
-                           <name>HAProxy: Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}</name>
+                           <name>HAProxy backend {#PXNAME}: Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}</name>
                            <priority>WARNING</priority>
-                           <description>Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}.</description>
+                           <description>Current number of requests on backend unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}.</description>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
@@ -235,21 +243,34 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.qtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <value_type>FLOAT</value_type>
                      <description>Average time spent in queue (in ms) for the last 1,024 requests</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].qtime.first()</params>
                         </step>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>0.001</params>
+                        </step>
                      </preprocessing>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.BACK_QTIME.MAX.WARN}</expression>
+                           <name>HAProxy backend {#PXNAME}: Average time spent in queue more than {$HAPROXY.BACK_QTIME.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.BACK_QTIME.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} rtime</name>
@@ -257,21 +278,34 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.rtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <value_type>FLOAT</value_type>
                      <description>Average backend response time (in ms) for the last 1,024 requests</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].rtime.first()</params>
                         </step>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>0.001</params>
+                        </step>
                      </preprocessing>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.BACK_RTIME.MAX.WARN}</expression>
+                           <name>HAProxy backend {#PXNAME}: Average response time more than {$HAPROXY.BACK_RTIME.MAX.WARN}</name>
+                           <priority>WARNING</priority>
+                           <description>Average backend response time (in ms) for the last 1,024 requests more than {$HAPROXY.BACK_RTIME.MAX.WARN}.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} status</name>
@@ -279,22 +313,35 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.backend.status.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <valuemap>
+                        <name>Service state</name>
+                     </valuemap>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].status.first()</params>
                         </step>
+                        <step>
+                           <type>BOOL_TO_DECIMAL</type>
+                           <params/>
+                        </step>
                      </preprocessing>
                      <master_item>
                         <key>haproxy.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{max(#5)}=0</expression>
+                           <name>HAProxy backend {#PXNAME}: Server is DOWN</name>
+                           <priority>AVERAGE</priority>
+                           <description>Backend is not available.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
                      <name>HAProxy: {#PXNAME} {#SVNAME} wredis</name>
@@ -303,11 +350,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of times a request was redispatched to a different backend</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -325,11 +372,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of times a connection was retried</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy backend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -373,21 +420,30 @@ Template tooling version used: 0.34</description>
                <description>Discovery frontends</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>HAProxy: {#PXNAME} {#SVNAME} bin</name>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} incoming bits per second</name>
                      <type>DEPENDENT</type>
                      <key>haproxy.frontend.bin.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>Number of bytes received by the frontend</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <value_type>FLOAT</value_type>
+                     <description>Number of bits received by the frontend</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].bin.first()</params>
+                        </step>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>8</params>
+                        </step>
+                        <step>
+                           <type>CHANGE_PER_SECOND</type>
+                           <params/>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -395,21 +451,29 @@ Template tooling version used: 0.34</description>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
-                     <name>HAProxy: {#PXNAME} {#SVNAME} bout</name>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} outgoing bits per second</name>
                      <type>DEPENDENT</type>
                      <key>haproxy.frontend.bout.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <description>Number of bytes sent by the frontend</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <description>Number of bits sent by the frontend</description>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].bout.first()</params>
+                        </step>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>8</params>
+                        </step>
+                        <step>
+                           <type>CHANGE_PER_SECOND</type>
+                           <params/>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -423,11 +487,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Requests denied due to security concerns (ACL-restricted)</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -440,7 +504,7 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.FRONT_DREQ.MAX.WARN}</expression>
-                           <name>HAProxy: Number of requests denied more than {$HAPROXY.FRONT_DREQ.MAX.WARN}</name>
+                           <name>HAProxy frontend {#PXNAME}: Number of requests denied more than {$HAPROXY.FRONT_DREQ.MAX.WARN}</name>
                            <priority>WARNING</priority>
                            <description>Number of requests denied due to security concerns (ACL-restricted) more than {$HAPROXY.FRONT_DREQ.MAX.WARN}.</description>
                         </trigger_prototype>
@@ -453,11 +517,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of request errors</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -470,7 +534,7 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.FRONT_EREQ.MAX.WARN}</expression>
-                           <name>HAProxy: Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}</name>
+                           <name>HAProxy frontend {#PXNAME}: Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}</name>
                            <priority>WARNING</priority>
                            <description>Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}.</description>
                         </trigger_prototype>
@@ -482,11 +546,11 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -503,11 +567,11 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -524,11 +588,11 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -546,11 +610,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of HTTP client errors</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -568,11 +632,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of HTTP server errors</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -590,11 +654,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of sessions created per second</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -612,11 +676,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>HTTP requests per second</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -633,17 +697,22 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.frontend.status.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy frontend {#PXNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <valuemap>
+                        <name>Service state</name>
+                     </valuemap>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].status.first()</params>
+                        </step>
+                        <step>
+                           <type>BOOL_TO_DECIMAL</type>
+                           <params/>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -651,6 +720,74 @@ Template tooling version used: 0.34</description>
                      </master_item>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} In/Out traffic</name>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.bin.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.bout.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+                  <graph_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} Number of response codes</name>
+                     <graph_items>
+                        <graph_item>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>2</sortorder>
+                           <color>F63100</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>3</sortorder>
+                           <color>A54F10</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.hrsp_4xx.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>4</sortorder>
+                           <color>FC6EA3</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.hrsp_5xx.[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>haproxy.get</key>
                </master_item>
@@ -690,11 +827,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Responses denied due to security concerns (ACL-restricted)</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -712,11 +849,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of requests that encountered an error attempting to connect to a backend server</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -734,11 +871,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of requests whose responses yielded an error</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -751,7 +888,7 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.SERVER_ERESP.MAX.WARN}</expression>
-                           <name>HAProxy: Number of responses with error on {#PXNAME}:{#SVNAME} more than {$HAPROXY.SERVER_ERESP.MAX.WARN}</name>
+                           <name>HAProxy {#PXNAME} {#SVNAME}: Number of responses with error more than {$HAPROXY.SERVER_ERESP.MAX.WARN}</name>
                            <priority>WARNING</priority>
                            <description>Number of requests on server, whose responses yielded an error, more than {$HAPROXY.SERVER_ERESP.MAX.WARN}.</description>
                         </trigger_prototype>
@@ -764,11 +901,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Current number of requests unassigned in queue</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -781,7 +918,7 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.SERVER_QCUR.MAX.WARN}</expression>
-                           <name>HAProxy: Current number of requests on {#PXNAME}:{#SVNAME} unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}</name>
+                           <name>HAProxy {#PXNAME} {#SVNAME}: Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}</name>
                            <priority>WARNING</priority>
                            <description>Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}.</description>
                         </trigger_prototype>
@@ -793,16 +930,21 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.qtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <value_type>FLOAT</value_type>
                      <description>Average time spent in queue (in ms) for the last 1,024 requests</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].qtime.first()</params>
+                        </step>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>0.001</params>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -811,7 +953,7 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.SERVER_QTIME.MAX.WARN}</expression>
-                           <name>HAProxy: Average time spent in queue on {#PXNAME}:{#SVNAME} more than {$HAPROXY.SERVER_QTIME.MAX.WARN}</name>
+                           <name>HAProxy {#PXNAME} {#SVNAME}: Average time spent in queue more than {$HAPROXY.SERVER_QTIME.MAX.WARN}</name>
                            <priority>WARNING</priority>
                            <description>Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_QTIME.MAX.WARN}.</description>
                         </trigger_prototype>
@@ -823,16 +965,21 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.rtime.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
+                     <value_type>FLOAT</value_type>
                      <description>Average server response time (in ms) for the last 1,024 requests</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].rtime.first()</params>
+                        </step>
+                        <step>
+                           <type>MULTIPLIER</type>
+                           <params>0.001</params>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -841,7 +988,7 @@ Template tooling version used: 0.34</description>
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.SERVER_RTIME.MAX.WARN}</expression>
-                           <name>HAProxy: Average server response time on {#PXNAME}:{#SVNAME} more than {$HAPROXY.SERVER_RTIME.MAX.WARN}</name>
+                           <name>HAProxy {#PXNAME} {#SVNAME}: Average response time more than {$HAPROXY.SERVER_RTIME.MAX.WARN}</name>
                            <priority>WARNING</priority>
                            <description>Average server response time (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_RTIME.MAX.WARN}.</description>
                         </trigger_prototype>
@@ -853,17 +1000,22 @@ Template tooling version used: 0.34</description>
                      <key>haproxy.server.status.[{#PXNAME}:{#SVNAME}]</key>
                      <delay>0</delay>
                      <history>7d</history>
-                     <trends>0</trends>
-                     <value_type>CHAR</value_type>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
+                     <valuemap>
+                        <name>Service state</name>
+                     </valuemap>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
                            <params>$.[?(@.pxname == '{#PXNAME}' &amp;&amp; @.svname == '{#SVNAME}')].status.first()</params>
+                        </step>
+                        <step>
+                           <type>BOOL_TO_DECIMAL</type>
+                           <params/>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -877,11 +1029,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of times a request was redispatched to a different backend</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -899,11 +1051,11 @@ Template tooling version used: 0.34</description>
                      <delay>0</delay>
                      <history>7d</history>
                      <description>Number of times a connection was retried</description>
-                     <applications>
-                        <application>
-                           <name>HAProxy</name>
-                        </application>
-                     </applications>
+                     <application_prototypes>
+                        <application_prototype>
+                           <name>HAProxy {#PXNAME} {#SVNAME}</name>
+                        </application_prototype>
+                     </application_prototypes>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
@@ -932,9 +1084,24 @@ Template tooling version used: 0.34</description>
          </discovery_rules>
          <macros>
             <macro>
+               <macro>{$HAPROXY.BACK_ERESP.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum of responses with error on BACKEND for trigger expression.</description>
+            </macro>
+            <macro>
                <macro>{$HAPROXY.BACK_QCUR.MAX.WARN}</macro>
                <value>10</value>
                <description>Maximum number of requests on BACKEND unassigned in queue for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.BACK_QTIME.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum of average time spent in queue on BACKEND for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.BACK_RTIME.MAX.WARN}</macro>
+               <value>10</value>
+               <description>Maximum of average BACKEND response time for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.FRONT_DREQ.MAX.WARN}</macro>
