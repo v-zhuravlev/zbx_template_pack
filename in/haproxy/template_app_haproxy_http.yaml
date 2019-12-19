@@ -153,8 +153,8 @@ templates:
           - _prototype: haproxy.frontend.hrsp_3xx
           - _prototype: haproxy.frontend.hrsp_4xx
           - _prototype: haproxy.frontend.hrsp_5xx
-          - _prototype: haproxy.frontend.bin
-          - _prototype: haproxy.frontend.bout
+          - _prototype: haproxy.frontend.bin.rate
+          - _prototype: haproxy.frontend.bout.rate
       - name: Servers discovery
         description: |-
           Discovery Servers
@@ -202,6 +202,15 @@ templates:
         value: "10"
       - macro: "{$HAPROXY.BACK_QCUR.MAX.WARN}"
         _description: "Maximum number of requests on BACKEND unassigned in queue for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.BACK_RTIME.MAX.WARN}"
+        _description: "Maximum of average BACKEND response time for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.BACK_QTIME.MAX.WARN}"
+        _description: "Maximum of average time spent in queue on BACKEND for trigger expression."
+        value: "10"
+      - macro: "{$HAPROXY.BACK_ERESP.MAX.WARN}"
+        _description: "Maximum of responses with error on BACKEND for trigger expression."
         value: "10"
       - macro: "{$HAPROXY.SERVER_QCUR.MAX.WARN}"
         _description: "Maximum number of requests on server unassigned in queue for trigger expression."
