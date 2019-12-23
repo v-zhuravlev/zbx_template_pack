@@ -31,23 +31,22 @@ templates:
         Note that this solution supports https and redirects.
       _setup: |
         Setup [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/).
-        Test availability of http_stub_status module with `nginx -V 2>&1 | grep -o with-http_stub_status_module`.
 
         Example configuration of HAProxy:        
         ```text
         frontend stats
-            bind *:8404
+            bind *:9000
             stats enable
             stats uri /stats
             stats refresh 10s
-            stats admin if LOCALHOST        }
+            stats admin if LOCALHOST
         ```
 
         If you use another location, don't forget to change {$HAPROXY.STATS.PATH} macro.
     items:
       - _prototype: haproxy.get
         type: HTTP_AGENT
-        url: "{$HAPROXY.STATS.PATH}"
+        url: "{$HAPROXY.STATS.SCHEME}://{$HAPROXY.STATS.HOST}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"
         # url: "{$NGINX.STUB_STATUS.SCHEME}://{HOST.CONN}:{$NGINX.STUB_STATUS.PORT}/{$NGINX.STUB_STATUS.PATH}"
         status_codes: 200
         follow_redirects: "YES"
@@ -55,8 +54,7 @@ templates:
       - _id: haproxy.ping
         name: Service status
         type: SIMPLE
-        key: net.tcp.service[http,"haproxy","{$HAPROXY.STATS.PORT}"]
-        # key: net.tcp.service[http,"{HOST.CONN}","{$HAPROXY.STATS.PORT}"]
+        key: net.tcp.service["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]
         value_type: UNSIGNED
         delay: 1m
         value_map: Service state
@@ -77,7 +75,7 @@ templates:
       - _id: haproxy.perf
         name: Service response time
         type: SIMPLE
-        key: net.tcp.service.perf[http,"haproxy","{$HAPROXY.STATS.PORT}"]
+        key: net.tcp.service.perf["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]
         value_type: FLOAT
         delay: 1m
         history: 7d
@@ -116,13 +114,13 @@ templates:
         items:
           - _prototype: haproxy.backend.status
           - _prototype: haproxy.backend.rtime
-          - _prototype: haproxy.backend.econ
-          - _prototype: haproxy.backend.dresp
-          - _prototype: haproxy.backend.eresp
+          - _prototype: haproxy.backend.econ.rate
+          - _prototype: haproxy.backend.dresp.rate
+          - _prototype: haproxy.backend.eresp.rate
           - _prototype: haproxy.backend.qcur
           - _prototype: haproxy.backend.qtime
-          - _prototype: haproxy.backend.wredis
-          - _prototype: haproxy.backend.wretr
+          - _prototype: haproxy.backend.wredis.rate
+          - _prototype: haproxy.backend.wretr.rate
       - name: FRONTEND discovery
         description: |-
           Discovery frontends
@@ -142,17 +140,19 @@ templates:
               operator: MATCHES_REGEX
               formulaid: A
         items:
-          - _prototype: haproxy.frontend.status
+          # - _prototype: haproxy.frontend.status
           - _prototype: haproxy.frontend.req_rate
           - _prototype: haproxy.frontend.rate
-          # - _prototype: haproxy.frontend.session utilization (computed)
-          - _prototype: haproxy.frontend.ereq
-          - _prototype: haproxy.frontend.dreq
-          - _prototype: haproxy.frontend.hrsp_1xx
-          - _prototype: haproxy.frontend.hrsp_2xx
-          - _prototype: haproxy.frontend.hrsp_3xx
-          - _prototype: haproxy.frontend.hrsp_4xx
-          - _prototype: haproxy.frontend.hrsp_5xx
+          - _prototype: haproxy.frontend.scur
+          - _prototype: haproxy.frontend.slim
+          - _prototype: haproxy.frontend.sutil
+          - _prototype: haproxy.frontend.ereq.rate
+          - _prototype: haproxy.frontend.dreq.rate
+          - _prototype: haproxy.frontend.hrsp_1xx.rate
+          - _prototype: haproxy.frontend.hrsp_2xx.rate
+          - _prototype: haproxy.frontend.hrsp_3xx.rate
+          - _prototype: haproxy.frontend.hrsp_4xx.rate
+          - _prototype: haproxy.frontend.hrsp_5xx.rate
           - _prototype: haproxy.frontend.bin.rate
           - _prototype: haproxy.frontend.bout.rate
       - name: Servers discovery
@@ -176,21 +176,29 @@ templates:
         items:
           - _prototype: haproxy.server.status
           - _prototype: haproxy.server.rtime
-          - _prototype: haproxy.server.econ
-          - _prototype: haproxy.server.dresp
-          - _prototype: haproxy.server.eresp
+          - _prototype: haproxy.server.econ.rate
+          - _prototype: haproxy.server.dresp.rate
+          - _prototype: haproxy.server.eresp.rate
           - _prototype: haproxy.server.qcur
           - _prototype: haproxy.server.qtime
-          - _prototype: haproxy.server.wredis
-          - _prototype: haproxy.server.wretr
+          - _prototype: haproxy.server.wredis.rate
+          - _prototype: haproxy.server.wretr.rate
+          - _prototype: haproxy.server.hrsp_4xx.rate
+          - _prototype: haproxy.server.hrsp_5xx.rate
 
     macros:
-      - macro: "{$HAPROXY.STATS.PATH}"
-        _description: "The path of HAProxy stats page."
-        value: "http://haproxy:9000/stats;csv"
+      - macro: "{$HAPROXY.STATS.SCHEME}"
+        _description: "The scheme of HAProxy stats page(http/https)."
+        value: "http"
+      - macro: "{$HAPROXY.STATS.HOST}"
+        _description: "The host of HAProxy stats page."
+        value: "haproxy"
       - macro: "{$HAPROXY.STATS.PORT}"
         _description: "The port of the HAProxy stats host or container."
         value: "9000"
+      - macro: "{$HAPROXY.STATS.PATH}"
+        _description: "The path of HAProxy stats page."
+        value: "stats"
       - macro: "{$HAPROXY.RESPONSE_TIME.MAX.WARN}"
         _description: "The HAProxy stats page maximum response time in seconds for trigger expression."
         value: "10"
