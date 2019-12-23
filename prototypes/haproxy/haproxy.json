@@ -22,9 +22,9 @@
     },
     {
         "_id": "haproxy.backend.status",
-        "name": "{#PXNAME} {#SVNAME} status",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Status",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.status.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.status[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "value_map": "Service state",
@@ -52,11 +52,12 @@
     },
     {
         "_id": "haproxy.backend.rtime",
-        "name": "{#PXNAME} {#SVNAME} rtime",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Responses time",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.rtime.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.rtime[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "FLOAT",
+        "units": "s",
         "_group": "HAProxy",
         "_resource": "HAProxy",
         "description": "Average backend response time (in ms) for the last 1,024 requests",
@@ -74,7 +75,7 @@
         "triggers": [
             {
                 "_id": "trigger.backend.rtime",
-                "name": "__RESOURCE__ backend {#PXNAME}: Average response time more than {$HAPROXY.BACK_RTIME.MAX.WARN}",
+                "name": "__RESOURCE__ backend {#PXNAME}: Average response time more than {$HAPROXY.BACK_RTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_RTIME.MAX.WARN}",
                 "description": "Average backend response time (in ms) for the last 1,024 requests more than {$HAPROXY.BACK_RTIME.MAX.WARN}."
@@ -82,46 +83,52 @@
         ]
     },
     {
-        "_id": "haproxy.backend.econ",
-        "name": "{#PXNAME} {#SVNAME} econ",
+        "_id": "haproxy.backend.econ.rate",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Errors connection per second",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.econ.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.econ.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of requests that encountered an error attempting to connect to a backend server",
+        "description": "Number of requests that encountered an error attempting to connect to a backend server.",
         "application_prototype": "__RESOURCE__ backend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].econ.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.backend.dresp",
-        "name": "{#PXNAME} {#SVNAME} dresp",
+        "_id": "haproxy.backend.dresp.rate",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Responses denied per second",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.dresp.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.dresp.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Responses denied due to security concerns (ACL-restricted)",
+        "description": "Responses denied due to security concerns (ACL-restricted).",
         "application_prototype": "__RESOURCE__ backend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dresp.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.backend.eresp",
-        "name": "{#PXNAME} {#SVNAME} eresp",
+        "_id": "haproxy.backend.eresp.rate",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Response errors per second",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.eresp.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.eresp.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
@@ -132,12 +139,15 @@
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].eresp.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ],
         "triggers": [
             {
                 "_id": "trigger.backend.eresp",
-                "name": "__RESOURCE__ backend {#PXNAME}: Number of responses with error more than {$HAPROXY.BACK_ERESP.MAX.WARN}",
+                "name": "__RESOURCE__ backend {#PXNAME}: Number of responses with error more than {$HAPROXY.BACK_ERESP.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_ERESP.MAX.WARN}",
                 "description": "Number of requests on backend, whose responses yielded an error, more than {$HAPROXY.BACK_ERESP.MAX.WARN}."
@@ -146,14 +156,14 @@
     },
     {
         "_id": "haproxy.backend.qcur",
-        "name": "{#PXNAME} {#SVNAME} qcur",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Unassigned requests",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.qcur.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.qcur[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Current number of requests unassigned in queue",
+        "description": "Current number of requests unassigned in queue.",
         "application_prototype": "__RESOURCE__ backend {#PXNAME}",
         "preprocessing": [
             {
@@ -164,7 +174,7 @@
         "triggers": [
             {
                 "_id": "trigger.backend.qcur",
-                "name": "__RESOURCE__ backend {#PXNAME}: Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}",
+                "name": "__RESOURCE__ backend {#PXNAME}: Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_QCUR.MAX.WARN}",
                 "description": "Current number of requests on backend unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}."
@@ -173,11 +183,12 @@
     },
     {
         "_id": "haproxy.backend.qtime",
-        "name": "{#PXNAME} {#SVNAME} qtime",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Time in queue",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.qtime.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.qtime[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "FLOAT",
+        "units": "s",
         "_group": "HAProxy",
         "_resource": "HAProxy",
         "description": "Average time spent in queue (in ms) for the last 1,024 requests",
@@ -195,7 +206,7 @@
         "triggers": [
             {
                 "_id": "trigger.backend.qtime",
-                "name": "__RESOURCE__ backend {#PXNAME}: Average time spent in queue more than {$HAPROXY.BACK_QTIME.MAX.WARN}",
+                "name": "__RESOURCE__ backend {#PXNAME}: Average time spent in queue more than {$HAPROXY.BACK_QTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_QTIME.MAX.WARN}",
                 "description": "Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.BACK_QTIME.MAX.WARN}."
@@ -203,67 +214,73 @@
         ]
     },
     {
-        "_id": "haproxy.backend.wredis",
-        "name": "{#PXNAME} {#SVNAME} wredis",
+        "_id": "haproxy.backend.wredis.rate",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Redispatched requests per second",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.wredis.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.wredis.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of times a request was redispatched to a different backend",
+        "description": "Number of times a request was redispatched to a different backend.",
         "application_prototype": "__RESOURCE__ backend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wredis.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.backend.wretr",
-        "name": "{#PXNAME} {#SVNAME} wretr",
+        "_id": "haproxy.backend.wretr.rate",
+        "name": "__RESOURCE__ Backend {#PXNAME}: Retried connections per second",
         "type": "DEPENDENT",
-        "key": "haproxy.backend.wretr.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.backend.wretr.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of times a connection was retried",
+        "description": "Number of times a connection was retried.",
         "application_prototype": "__RESOURCE__ backend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wretr.first()"
-            }
-        ]
-    },
-    {
-        "_id": "haproxy.frontend.status",
-        "name": "{#PXNAME} {#SVNAME} status",
-        "type": "DEPENDENT",
-        "key": "haproxy.frontend.status.[{#PXNAME}:{#SVNAME}]",
-        "master_item": "haproxy.get",
-        "value_type": "UNSIGNED",
-        "value_map": "Service state",
-        "_group": "HAProxy",
-        "_resource": "HAProxy",
-        "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
-        "preprocessing": [
-            {
-                "type": "JSONPATH",
-                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()"
             },
             {
-                "type": "BOOL_TO_DECIMAL"
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
+    // {
+    //     "_id": "haproxy.frontend.status",
+    //     "name": "__RESOURCE__ Frontend {#PXNAME}: Status",
+    //     "type": "DEPENDENT",
+    //     "key": "haproxy.frontend.status[{#PXNAME}:{#SVNAME}]",
+    //     "master_item": "haproxy.get",
+    //     "value_type": "UNSIGNED",
+    //     "value_map": "Service state",
+    //     "_group": "HAProxy",
+    //     "_resource": "HAProxy",
+    //     "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
+    //     "preprocessing": [
+    //         {
+    //             "type": "JSONPATH",
+    //             "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()"
+    //         },
+    //         {
+    //             "type": "BOOL_TO_DECIMAL"
+    //         }
+    //     ]
+    // },
     {
         "_id": "haproxy.frontend.req_rate",
-        "name": "{#PXNAME} {#SVNAME} req_rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Requests rate",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.req_rate.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.req_rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
@@ -279,9 +296,9 @@
     },
     {
         "_id": "haproxy.frontend.rate",
-        "name": "{#PXNAME} {#SVNAME} rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Sessions rate",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.rate.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
@@ -296,26 +313,83 @@
         ]
     },
     {
-        "_id": "haproxy.frontend.ereq",
-        "name": "{#PXNAME} {#SVNAME} ereq",
+        "_id": "haproxy.frontend.scur",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Established sessions",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.ereq.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.scur[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of request errors",
+        "description": "The current number of established sessions.",
+        "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].scur.first()"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.slim",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Session limits",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.slim[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "UNSIGNED",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "description": "The most simultaneous sessions that are allowed, as defined by the maxconn setting in the frontend.",
+        "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].slim.first()"
+            },
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1h"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.frontend.sutil",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Session utilization",
+        "type": "CALCULATED",
+        "key": "haproxy.frontend.sutil[{#PXNAME}:{#SVNAME}]",
+        "expression_formula": "last(haproxy.frontend.scur[{#PXNAME}:{#SVNAME}]) / last(haproxy.frontend.slim[{#PXNAME}:{#SVNAME}]) * 100",
+        "value_type": "FLOAT",
+        "units": "%",
+        "update": "1m",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "description": "Percentage of sessions used (scur / slim * 100).",
+        "application_prototype": "__RESOURCE__ frontend {#PXNAME}"
+    },
+    {
+        "_id": "haproxy.frontend.ereq.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Request errors per second",
+        "type": "DEPENDENT",
+        "key": "haproxy.frontend.ereq.rate[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "UNSIGNED",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "description": "Number of request errors per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].ereq.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ],
         "triggers": [
             {
                 "_id": "trigger.frontend.ereq",
-                "name": "__RESOURCE__ frontend {#PXNAME}: Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}",
+                "name": "__RESOURCE__ frontend {#PXNAME}: Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_EREQ.MAX.WARN}",
                 "description": "Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}."
@@ -323,26 +397,29 @@
         ]
     },
     {
-        "_id": "haproxy.frontend.dreq",
-        "name": "{#PXNAME} {#SVNAME} dreq",
+        "_id": "haproxy.frontend.dreq.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Denied requests per second",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.dreq.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.dreq.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Requests denied due to security concerns (ACL-restricted)",
+        "description": "Requests denied due to security concerns (ACL-restricted) per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dreq.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ],
         "triggers": [
             {
                 "_id": "trigger.frontend.dreq",
-                "name": "__RESOURCE__ frontend {#PXNAME}: Number of requests denied more than {$HAPROXY.FRONT_DREQ.MAX.WARN}",
+                "name": "__RESOURCE__ frontend {#PXNAME}: Number of requests denied more than {$HAPROXY.FRONT_DREQ.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_DREQ.MAX.WARN}",
                 "description": "Number of requests denied due to security concerns (ACL-restricted) more than {$HAPROXY.FRONT_DREQ.MAX.WARN}."
@@ -350,19 +427,23 @@
         ]
     },
     {
-        "_id": "haproxy.frontend.hrsp_1xx",
-        "name": "{#PXNAME} {#SVNAME} hrsp_1xx",
+        "_id": "haproxy.frontend.hrsp_1xx.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Number of responses with codes 1xx per second",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.hrsp_1xx.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
+        "description": "Number of informational HTTP responses per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_1xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ],
         "graphs": [
@@ -371,23 +452,23 @@
                 "name": "{#PXNAME} {#SVNAME} Number of response codes",
                 "graph_items": [
                     {
-                        "name": "haproxy.frontend.hrsp_1xx.[{#PXNAME}:{#SVNAME}]",
+                        "name": "haproxy.frontend.hrsp_1xx.rate[{#PXNAME}:{#SVNAME}]",
                         "drawtype": "SINGLE_LINE"
                     },
                     {
-                        "name": "haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]",
+                        "name": "haproxy.frontend.hrsp_2xx.rate[{#PXNAME}:{#SVNAME}]",
                         "drawtype": "SINGLE_LINE"
                     },
                     {
-                        "name": "haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]",
+                        "name": "haproxy.frontend.hrsp_3xx.rate[{#PXNAME}:{#SVNAME}]",
                         "drawtype": "SINGLE_LINE"
                     },
                     {
-                        "name": "haproxy.frontend.hrsp_4xx.[{#PXNAME}:{#SVNAME}]",
+                        "name": "haproxy.frontend.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]",
                         "drawtype": "SINGLE_LINE"
                     },
                     {
-                        "name": "haproxy.frontend.hrsp_5xx.[{#PXNAME}:{#SVNAME}]",
+                        "name": "haproxy.frontend.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]",
                         "drawtype": "SINGLE_LINE"
                     }
                 ]
@@ -395,82 +476,97 @@
         ]
     },
     {
-        "_id": "haproxy.frontend.hrsp_2xx",
-        "name": "{#PXNAME} {#SVNAME} hrsp_2xx",
+        "_id": "haproxy.frontend.hrsp_2xx.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Number of responses with codes 2xx per second",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.hrsp_2xx.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.hrsp_2xx.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
+        "description": "Number of successful HTTP responses per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_2xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.frontend.hrsp_3xx",
-        "name": "{#PXNAME} {#SVNAME} hrsp_3xx",
+        "_id": "haproxy.frontend.hrsp_3xx.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Number of responses with codes 3xx per second",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.hrsp_3xx.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.hrsp_3xx.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
+        "description": "Number of HTTP redirections per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_3xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.frontend.hrsp_4xx",
-        "name": "{#PXNAME} {#SVNAME} hrsp_4xx",
+        "_id": "haproxy.frontend.hrsp_4xx.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Number of responses with codes 4xx per second",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.hrsp_4xx.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of HTTP client errors",
+        "description": "Number of HTTP client errors per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_4xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.frontend.hrsp_5xx",
-        "name": "{#PXNAME} {#SVNAME} hrsp_5xx",
+        "_id": "haproxy.frontend.hrsp_5xx.rate",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Number of responses with codes 5xx per second",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.hrsp_5xx.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of HTTP server errors",
+        "description": "Number of HTTP server errors per second.",
         "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
         "_id": "haproxy.frontend.bin.rate",
-        "name": "{#PXNAME} {#SVNAME} incoming bits per second",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Incoming traffic",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.bin.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.bin[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "FLOAT",
+        "units": "bps",
         "_group": "HAProxy",
         "_resource": "HAProxy",
         "description": "Number of bits received by the frontend",
@@ -491,7 +587,7 @@
         "graphs": [
             {
                 "graphtype": "NORMAL",
-                "name": "{#PXNAME} {#SVNAME} In/Out traffic",
+                "name": "Frontend {#PXNAME} In/Out traffic",
                 "graph_items": [
                     {
                         "name": "haproxy.frontend.bin.rate",
@@ -507,11 +603,12 @@
     },
     {
         "_id": "haproxy.frontend.bout.rate",
-        "name": "{#PXNAME} {#SVNAME} outgoing bits per second",
+        "name": "__RESOURCE__ Frontend {#PXNAME}: Outgoing traffic",
         "type": "DEPENDENT",
-        "key": "haproxy.frontend.bout.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.frontend.bout[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
+        "units": "bps",
         "_group": "HAProxy",
         "_resource": "HAProxy",
         "description": "Number of bits sent by the frontend",
@@ -532,9 +629,9 @@
     },
     {
         "_id": "haproxy.server.status",
-        "name": "{#PXNAME} {#SVNAME} status",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Status",
         "type": "DEPENDENT",
-        "key": "haproxy.server.status.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.status[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "value_map": "Service state",
@@ -549,18 +646,28 @@
             {
                 "type": "BOOL_TO_DECIMAL"
             }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.backend.status",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Server is DOWN",
+                "priority": "WARNING",
+                "expression": "{TEMPLATE_NAME:METRIC.max(#5)}=0",
+                "description": "Server is not available."
+            }
         ]
     },
     {
         "_id": "haproxy.server.rtime",
-        "name": "{#PXNAME} {#SVNAME} rtime",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Responses time",
         "type": "DEPENDENT",
-        "key": "haproxy.server.rtime.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.rtime[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "FLOAT",
+        "units": "s",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Average server response time (in ms) for the last 1,024 requests",
+        "description": "Average server response time (in ms) for the last 1,024 requests.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
@@ -575,7 +682,7 @@
         "triggers": [
             {
                 "_id": "trigger.server.rtime",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average response time more than {$HAPROXY.SERVER_RTIME.MAX.WARN}",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average response time more than {$HAPROXY.SERVER_RTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_RTIME.MAX.WARN}",
                 "description": "Average server response time (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_RTIME.MAX.WARN}."
@@ -583,62 +690,71 @@
         ]
     },
     {
-        "_id": "haproxy.server.econ",
-        "name": "{#PXNAME} {#SVNAME} econ",
+        "_id": "haproxy.server.econ.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Errors connection per second",
         "type": "DEPENDENT",
-        "key": "haproxy.server.econ.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.econ.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of requests that encountered an error attempting to connect to a backend server",
+        "description": "Number of requests that encountered an error attempting to connect to a backend server.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].econ.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.server.dresp",
-        "name": "{#PXNAME} {#SVNAME} dresp",
+        "_id": "haproxy.server.dresp.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Responses denied per second",
         "type": "DEPENDENT",
-        "key": "haproxy.server.dresp.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.dresp.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Responses denied due to security concerns (ACL-restricted)",
+        "description": "Responses denied due to security concerns (ACL-restricted).",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dresp.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.server.eresp",
-        "name": "{#PXNAME} {#SVNAME} eresp",
+        "_id": "haproxy.server.eresp.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Response errors per second",
         "type": "DEPENDENT",
-        "key": "haproxy.server.eresp.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.eresp.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of requests whose responses yielded an error",
+        "description": "Number of requests whose responses yielded an error.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].eresp.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ],
         "triggers": [
             {
                 "_id": "trigger.server.eresp",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Number of responses with error more than {$HAPROXY.SERVER_ERESP.MAX.WARN}",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Number of responses with error more than {$HAPROXY.SERVER_ERESP.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_ERESP.MAX.WARN}",
                 "description": "Number of requests on server, whose responses yielded an error, more than {$HAPROXY.SERVER_ERESP.MAX.WARN}."
@@ -647,14 +763,14 @@
     },
     {
         "_id": "haproxy.server.qcur",
-        "name": "{#PXNAME} {#SVNAME} qcur",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Unassigned requests",
         "type": "DEPENDENT",
-        "key": "haproxy.server.qcur.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.qcur[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Current number of requests unassigned in queue",
+        "description": "Current number of requests unassigned in queue.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
@@ -665,7 +781,7 @@
         "triggers": [
             {
                 "_id": "trigger.server.qcur",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_QCUR.MAX.WARN}",
                 "description": "Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}."
@@ -674,14 +790,15 @@
     },
     {
         "_id": "haproxy.server.qtime",
-        "name": "{#PXNAME} {#SVNAME} qtime",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Time in queue",
         "type": "DEPENDENT",
-        "key": "haproxy.server.qtime.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.qtime[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "FLOAT",
+        "units": "s",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Average time spent in queue (in ms) for the last 1,024 requests",
+        "description": "Average time spent in queue (in ms) for the last 1,024 requests.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
@@ -696,7 +813,7 @@
         "triggers": [
             {
                 "_id": "trigger.server.qtime",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average time spent in queue more than {$HAPROXY.SERVER_QTIME.MAX.WARN}",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average time spent in queue more than {$HAPROXY.SERVER_QTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_QTIME.MAX.WARN}",
                 "description": "Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_QTIME.MAX.WARN}."
@@ -704,38 +821,86 @@
         ]
     },
     {
-        "_id": "haproxy.server.wredis",
-        "name": "{#PXNAME} {#SVNAME} wredis",
+        "_id": "haproxy.server.wredis.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Redispatched requests per second",
         "type": "DEPENDENT",
-        "key": "haproxy.server.wredis.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.wredis.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of times a request was redispatched to a different backend",
+        "description": "Number of times a request was redispatched to a different backend.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wredis.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     },
     {
-        "_id": "haproxy.server.wretr",
-        "name": "{#PXNAME} {#SVNAME} wretr",
+        "_id": "haproxy.server.wretr.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Retried connections per second",
         "type": "DEPENDENT",
-        "key": "haproxy.server.wretr.[{#PXNAME}:{#SVNAME}]",
+        "key": "haproxy.server.wretr.rate[{#PXNAME}:{#SVNAME}]",
         "master_item": "haproxy.get",
         "value_type": "UNSIGNED",
         "_group": "HAProxy",
         "_resource": "HAProxy",
-        "description": "Number of times a connection was retried",
+        "description": "Number of times a connection was retried.",
         "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
         "preprocessing": [
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wretr.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.hrsp_4xx.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Number of responses with codes 4xx per second",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "UNSIGNED",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "description": "Number of HTTP client errors per second.",
+        "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_4xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.server.hrsp_5xx.rate",
+        "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Number of responses with codes 5xx per second",
+        "type": "DEPENDENT",
+        "key": "haproxy.server.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]",
+        "master_item": "haproxy.get",
+        "value_type": "UNSIGNED",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "description": "Number of HTTP server errors per second.",
+        "application_prototype": "__RESOURCE__ {#PXNAME} {#SVNAME}",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()"
+            },
+            {
+                "type": "CHANGE_PER_SECOND"
             }
         ]
     }
