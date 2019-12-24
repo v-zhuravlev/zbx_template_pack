@@ -21,6 +21,65 @@
         ]
     },
     {
+        "_id": "haproxy.get_html",
+        "name": "Get stats page",
+        "key": "haproxy.get_html",
+        "value_type": "TEXT",
+        "update": "1m",
+        "history": "1h",
+        "_group": "Zabbix_raw_items",
+        "_resource": "HAProxy",
+        "description": "HAProxy Statistics Report HTML"
+    },
+    {
+        "_id": "haproxy.version",
+        "name": "Version",
+        "type": "DEPENDENT",
+        "key": "haproxy.version",
+        "master_item": "haproxy.get_html",
+        "value_type": "CHAR",
+        "history": "90d",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "REGEX",
+                "params": "HAProxy version (\\d+\\.\\d+\\.\\d+),\r\n\\1"
+            },
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "1d"
+            }
+        ],
+        "triggers": [
+            {
+                "_prototype": "trigger.version.changed"
+            }
+        ]
+    },
+    {
+        "_id": "haproxy.uptime",
+        "name": "Uptime",
+        "type": "DEPENDENT",
+        "key": "haproxy.uptime",
+        "master_item": "haproxy.get_html",
+        "value_type": "FLOAT",
+        "units": "s",
+        "_group": "HAProxy",
+        "_resource": "HAProxy",
+        "preprocessing": [
+            {
+                "type": "REGEX",
+                "params": "uptime = <\/b>(.*)<br>\r\n\\1"
+            }
+        ],
+        "triggers": [
+            {
+                "_prototype": "trigger.uptime.restarted"
+            }
+        ]
+    },
+    {
         "_id": "haproxy.backend.status",
         "name": "__RESOURCE__ Backend {#PXNAME}: Status",
         "type": "DEPENDENT",
@@ -38,6 +97,10 @@
             },
             {
                 "type": "BOOL_TO_DECIMAL"
+            },
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "10m"
             }
         ],
         "triggers": [
@@ -645,6 +708,10 @@
             },
             {
                 "type": "BOOL_TO_DECIMAL"
+            },
+            {
+                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                "params": "10m"
             }
         ],
         "triggers": [
