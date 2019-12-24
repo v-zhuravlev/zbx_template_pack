@@ -24,14 +24,14 @@ Setup [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-st
 Example configuration of HAProxy:        
 ```text
 frontend stats
-    bind *:9000
+    bind *:8404
     stats enable
     stats uri /stats
     stats refresh 10s
     stats admin if LOCALHOST
 ```
 
-If you use another location, don't forget to change {$HAPROXY.STATS.PATH} macro.
+If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.HOST},{$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
 
 
 ## Zabbix configuration
@@ -44,18 +44,18 @@ No specific Zabbix configuration is required.
 |----|-----------|-------|
 |{$HAPROXY.BACK_ERESP.MAX.WARN}|<p>Maximum of responses with error on BACKEND for trigger expression.</p>|`10`|
 |{$HAPROXY.BACK_QCUR.MAX.WARN}|<p>Maximum number of requests on BACKEND unassigned in queue for trigger expression.</p>|`10`|
-|{$HAPROXY.BACK_QTIME.MAX.WARN}|<p>Maximum of average time spent in queue on BACKEND for trigger expression.</p>|`10`|
-|{$HAPROXY.BACK_RTIME.MAX.WARN}|<p>Maximum of average BACKEND response time for trigger expression.</p>|`10`|
+|{$HAPROXY.BACK_QTIME.MAX.WARN}|<p>Maximum of average time spent in queue on BACKEND for trigger expression.</p>|`10s`|
+|{$HAPROXY.BACK_RTIME.MAX.WARN}|<p>Maximum of average BACKEND response time for trigger expression.</p>|`10s`|
 |{$HAPROXY.FRONT_DREQ.MAX.WARN}|<p>The HAProxy maximum denied requests for trigger expression.</p>|`10`|
 |{$HAPROXY.FRONT_EREQ.MAX.WARN}|<p>The HAProxy maximum number of request errors for trigger expression.</p>|`10`|
-|{$HAPROXY.RESPONSE_TIME.MAX.WARN}|<p>The HAProxy stats page maximum response time in seconds for trigger expression.</p>|`10`|
+|{$HAPROXY.RESPONSE_TIME.MAX.WARN}|<p>The HAProxy stats page maximum response time in seconds for trigger expression.</p>|`10s`|
 |{$HAPROXY.SERVER_ERESP.MAX.WARN}|<p>Maximum of responses with error on server for trigger expression.</p>|`10`|
 |{$HAPROXY.SERVER_QCUR.MAX.WARN}|<p>Maximum number of requests on server unassigned in queue for trigger expression.</p>|`10`|
-|{$HAPROXY.SERVER_QTIME.MAX.WARN}|<p>Maximum of average time spent in queue on server for trigger expression.</p>|`10`|
-|{$HAPROXY.SERVER_RTIME.MAX.WARN}|<p>Maximum of average server response time for trigger expression.</p>|`10`|
-|{$HAPROXY.STATS.HOST}|<p>The host of HAProxy stats page.</p>|`haproxy`|
+|{$HAPROXY.SERVER_QTIME.MAX.WARN}|<p>Maximum of average time spent in queue on server for trigger expression.</p>|`10s`|
+|{$HAPROXY.SERVER_RTIME.MAX.WARN}|<p>Maximum of average server response time for trigger expression.</p>|`10s`|
+|{$HAPROXY.STATS.HOST}|<p>The IP address or DNS hostname of the HAProxy stats page.</p>|`haproxy`|
 |{$HAPROXY.STATS.PATH}|<p>The path of HAProxy stats page.</p>|`stats`|
-|{$HAPROXY.STATS.PORT}|<p>The port of the HAProxy stats host or container.</p>|`9000`|
+|{$HAPROXY.STATS.PORT}|<p>The port of the HAProxy stats host or container.</p>|`8404`|
 |{$HAPROXY.STATS.SCHEME}|<p>The scheme of HAProxy stats page(http/https).</p>|`http`|
 
 ## Template links
@@ -74,9 +74,11 @@ There are no template links in this template.
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
+|HAProxy|HAProxy: Version|<p>-</p>|DEPENDENT|haproxy.version<p>**Preprocessing**:</p><p>- REGEX: `HAProxy version (\d+\.\d+\.\d+), \1`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|HAProxy|HAProxy: Uptime|<p>-</p>|DEPENDENT|haproxy.uptime<p>**Preprocessing**:</p><p>- REGEX: `uptime = </b>(.*)<br> \1`</p>|
 |HAProxy|HAProxy: Service status|<p>-</p>|SIMPLE|net.tcp.service["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
 |HAProxy|HAProxy: Service response time|<p>-</p>|SIMPLE|net.tcp.service.perf["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]|
-|HAProxy|HAProxy Backend {#PXNAME}: Status|<p>-</p>|DEPENDENT|haproxy.backend.status[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()`</p><p>- BOOL_TO_DECIMAL|
+|HAProxy|HAProxy Backend {#PXNAME}: Status|<p>-</p>|DEPENDENT|haproxy.backend.status[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()`</p><p>- BOOL_TO_DECIMAL<p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
 |HAProxy|HAProxy Backend {#PXNAME}: Responses time|<p>Average backend response time (in ms) for the last 1,024 requests</p>|DEPENDENT|haproxy.backend.rtime[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].rtime.first()`</p><p>- MULTIPLIER: `0.001`</p>|
 |HAProxy|HAProxy Backend {#PXNAME}: Errors connection per second|<p>Number of requests that encountered an error attempting to connect to a backend server.</p>|DEPENDENT|haproxy.backend.econ.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].econ.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy Backend {#PXNAME}: Responses denied per second|<p>Responses denied due to security concerns (ACL-restricted).</p>|DEPENDENT|haproxy.backend.dresp.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dresp.first()`</p><p>- CHANGE_PER_SECOND|
@@ -99,7 +101,7 @@ There are no template links in this template.
 |HAProxy|HAProxy Frontend {#PXNAME}: Number of responses with codes 5xx per second|<p>Number of HTTP server errors per second.</p>|DEPENDENT|haproxy.frontend.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy Frontend {#PXNAME}: Incoming traffic|<p>Number of bits received by the frontend</p>|DEPENDENT|haproxy.frontend.bin[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].bin.first()`</p><p>- MULTIPLIER: `8`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy Frontend {#PXNAME}: Outgoing traffic|<p>Number of bits sent by the frontend</p>|DEPENDENT|haproxy.frontend.bout[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].bout.first()`</p><p>- MULTIPLIER: `8`</p><p>- CHANGE_PER_SECOND|
-|HAProxy|HAProxy {#PXNAME} {#SVNAME}: Status|<p>-</p>|DEPENDENT|haproxy.server.status[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()`</p><p>- BOOL_TO_DECIMAL|
+|HAProxy|HAProxy {#PXNAME} {#SVNAME}: Status|<p>-</p>|DEPENDENT|haproxy.server.status[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].status.first()`</p><p>- BOOL_TO_DECIMAL<p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Responses time|<p>Average server response time (in ms) for the last 1,024 requests.</p>|DEPENDENT|haproxy.server.rtime[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].rtime.first()`</p><p>- MULTIPLIER: `0.001`</p>|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Errors connection per second|<p>Number of requests that encountered an error attempting to connect to a backend server.</p>|DEPENDENT|haproxy.server.econ.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].econ.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Responses denied per second|<p>Responses denied due to security concerns (ACL-restricted).</p>|DEPENDENT|haproxy.server.dresp.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].dresp.first()`</p><p>- CHANGE_PER_SECOND|
@@ -111,11 +113,14 @@ There are no template links in this template.
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Number of responses with codes 4xx per second|<p>Number of HTTP client errors per second.</p>|DEPENDENT|haproxy.server.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_4xx.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Number of responses with codes 5xx per second|<p>Number of HTTP server errors per second.</p>|DEPENDENT|haproxy.server.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()`</p><p>- CHANGE_PER_SECOND|
 |Zabbix_raw_items|HAProxy: Get stats|<p>HAProxy Statistics Report in CSV format</p>|HTTP_AGENT|haproxy.get<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return value.slice(2,-1)`</p><p>- CSV_TO_JSON: ` 1`</p>|
+|Zabbix_raw_items|HAProxy: Get stats page|<p>HAProxy Statistics Report HTML</p>|HTTP_AGENT|haproxy.get_html|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
+|HAProxy: Version has changed (new version: {ITEM.VALUE})|<p>HAProxy version has changed. Ack to close.</p>|`{TEMPLATE_NAME:haproxy.version.diff()}=1 and {TEMPLATE_NAME:haproxy.version.strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|HAProxy: has been restarted (uptime < 10m)|<p>Uptime is less than 10 minutes</p>|`{TEMPLATE_NAME:haproxy.uptime.last()}<10m`|INFO|<p>Manual close: YES</p>|
 |HAProxy: Service is down|<p>-</p>|`{TEMPLATE_NAME:net.tcp.service["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"].last()}=0`|AVERAGE|<p>Manual close: YES</p>|
 |HAProxy: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN}s for 5m)|<p>-</p>|`{TEMPLATE_NAME:net.tcp.service.perf["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"].min(5m)}>{$HAPROXY.RESPONSE_TIME.MAX.WARN}`|WARNING|<p>Manual close: YES</p><p>**Depends on**:</p><p>- HAProxy: Service is down</p>|
 |HAProxy backend {#PXNAME}: Server is DOWN|<p>Backend is not available.</p>|`{TEMPLATE_NAME:haproxy.backend.status[{#PXNAME}:{#SVNAME}].max(#5)}=0`|AVERAGE||

@@ -9,9 +9,9 @@
    </groups>
    <templates>
       <template>
-         <template>Template App HAProxy by HTTP</template>
-         <name>Template App HAProxy by HTTP</name>
-         <description>Get metrics from status page using HTTP agent&#13;
+         <template>Template App HAProxy by Zabbix agent</template>
+         <name>Template App HAProxy by Zabbix agent</name>
+         <description>Get metrics from status page using Zabbix agent&#13;
 https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.&#13;
 &#13;
 &#13;
@@ -33,48 +33,6 @@ Template tooling version used: 0.34</description>
          </applications>
          <items>
             <item>
-               <name>HAProxy: Get stats</name>
-               <type>HTTP_AGENT</type>
-               <key>haproxy.get</key>
-               <history>1h</history>
-               <trends>0</trends>
-               <value_type>TEXT</value_type>
-               <description>HAProxy Statistics Report in CSV format</description>
-               <applications>
-                  <application>
-                     <name>Zabbix raw items</name>
-                  </application>
-               </applications>
-               <preprocessing>
-                  <step>
-                     <type>JAVASCRIPT</type>
-                     <params>return value.slice(2,-1)</params>
-                  </step>
-                  <step>
-                     <type>CSV_TO_JSON</type>
-                     <params>
-
-1</params>
-                  </step>
-               </preprocessing>
-               <url>{$HAPROXY.STATS.SCHEME}://{$HAPROXY.STATS.HOST}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv</url>
-            </item>
-            <item>
-               <name>HAProxy: Get stats page</name>
-               <type>HTTP_AGENT</type>
-               <key>haproxy.get_html</key>
-               <history>1h</history>
-               <trends>0</trends>
-               <value_type>TEXT</value_type>
-               <description>HAProxy Statistics Report HTML</description>
-               <applications>
-                  <application>
-                     <name>Zabbix raw items</name>
-                  </application>
-               </applications>
-               <url>{$HAPROXY.STATS.SCHEME}://{$HAPROXY.STATS.HOST}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}</url>
-            </item>
-            <item>
                <name>HAProxy: Uptime</name>
                <type>DEPENDENT</type>
                <key>haproxy.uptime</key>
@@ -95,7 +53,7 @@ Template tooling version used: 0.34</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>haproxy.get_html</key>
+                  <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -132,7 +90,7 @@ Template tooling version used: 0.34</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>haproxy.get_html</key>
+                  <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -146,8 +104,7 @@ Template tooling version used: 0.34</description>
             </item>
             <item>
                <name>HAProxy: Service response time</name>
-               <type>SIMPLE</type>
-               <key>net.tcp.service.perf["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]</key>
+               <key>net.tcp.service.perf["{$HAPROXY.STATS.SCHEME}","{HOST.CONN}","{$HAPROXY.STATS.PORT}"]</key>
                <history>7d</history>
                <value_type>FLOAT</value_type>
                <units>s</units>
@@ -165,7 +122,7 @@ Template tooling version used: 0.34</description>
                      <dependencies>
                         <dependency>
                            <name>HAProxy: Service is down</name>
-                           <expression>{Template App HAProxy by HTTP:net.tcp.service["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"].last()}=0</expression>
+                           <expression>{Template App HAProxy by Zabbix agent:net.tcp.service["{$HAPROXY.STATS.SCHEME}","{HOST.CONN}","{$HAPROXY.STATS.PORT}"].last()}=0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -173,8 +130,7 @@ Template tooling version used: 0.34</description>
             </item>
             <item>
                <name>HAProxy: Service status</name>
-               <type>SIMPLE</type>
-               <key>net.tcp.service["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]</key>
+               <key>net.tcp.service["{$HAPROXY.STATS.SCHEME}","{HOST.CONN}","{$HAPROXY.STATS.PORT}"]</key>
                <history>7d</history>
                <applications>
                   <application>
@@ -198,6 +154,44 @@ Template tooling version used: 0.34</description>
                      <manual_close>YES</manual_close>
                   </trigger>
                </triggers>
+            </item>
+            <item>
+               <name>HAProxy: Get stats</name>
+               <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
+               <history>1h</history>
+               <trends>0</trends>
+               <value_type>TEXT</value_type>
+               <description>HAProxy Statistics Report in CSV format</description>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>JAVASCRIPT</type>
+                     <params>return value.slice(2,-1)</params>
+                  </step>
+                  <step>
+                     <type>CSV_TO_JSON</type>
+                     <params>
+
+1</params>
+                  </step>
+               </preprocessing>
+            </item>
+            <item>
+               <name>HAProxy: Get stats page</name>
+               <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}"]</key>
+               <history>1h</history>
+               <trends>0</trends>
+               <value_type>TEXT</value_type>
+               <description>HAProxy Statistics Report HTML</description>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
             </item>
          </items>
          <discovery_rules>
@@ -241,7 +235,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -267,7 +261,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -293,7 +287,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -323,7 +317,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -359,7 +353,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -395,7 +389,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -435,7 +429,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -469,7 +463,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -495,12 +489,12 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                </item_prototypes>
                <master_item>
-                  <key>haproxy.get</key>
+                  <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                </master_item>
                <lld_macro_paths>
                   <lld_macro_path>
@@ -559,7 +553,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -590,7 +584,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -616,7 +610,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -650,7 +644,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -684,7 +678,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -710,7 +704,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -736,7 +730,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -762,7 +756,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -788,7 +782,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -810,7 +804,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -832,7 +826,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -854,7 +848,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -880,7 +874,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -906,7 +900,7 @@ Template tooling version used: 0.34</description>
                         <graph_item>
                            <color>1A7C11</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.hrsp_1xx.rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -914,7 +908,7 @@ Template tooling version used: 0.34</description>
                            <sortorder>1</sortorder>
                            <color>2774A4</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.hrsp_2xx.rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -922,7 +916,7 @@ Template tooling version used: 0.34</description>
                            <sortorder>2</sortorder>
                            <color>F63100</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.hrsp_3xx.rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -930,7 +924,7 @@ Template tooling version used: 0.34</description>
                            <sortorder>3</sortorder>
                            <color>A54F10</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -938,7 +932,7 @@ Template tooling version used: 0.34</description>
                            <sortorder>4</sortorder>
                            <color>FC6EA3</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -951,7 +945,7 @@ Template tooling version used: 0.34</description>
                            <drawtype>GRADIENT_LINE</drawtype>
                            <color>1A7C11</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.bin[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -960,7 +954,7 @@ Template tooling version used: 0.34</description>
                            <drawtype>GRADIENT_LINE</drawtype>
                            <color>2774A4</color>
                            <item>
-                              <host>Template App HAProxy by HTTP</host>
+                              <host>Template App HAProxy by Zabbix agent</host>
                               <key>haproxy.frontend.bout[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
@@ -968,7 +962,7 @@ Template tooling version used: 0.34</description>
                   </graph_prototype>
                </graph_prototypes>
                <master_item>
-                  <key>haproxy.get</key>
+                  <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                </master_item>
                <lld_macro_paths>
                   <lld_macro_path>
@@ -1022,7 +1016,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -1048,7 +1042,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -1074,7 +1068,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1108,7 +1102,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -1134,7 +1128,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -1156,7 +1150,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1192,7 +1186,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1228,7 +1222,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1268,7 +1262,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1302,7 +1296,7 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                   <item_prototype>
@@ -1328,12 +1322,12 @@ Template tooling version used: 0.34</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>haproxy.get</key>
+                        <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                      </master_item>
                   </item_prototype>
                </item_prototypes>
                <master_item>
-                  <key>haproxy.get</key>
+                  <key>web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]</key>
                </master_item>
                <lld_macro_paths>
                   <lld_macro_path>
@@ -1402,11 +1396,6 @@ Template tooling version used: 0.34</description>
                <macro>{$HAPROXY.SERVER_RTIME.MAX.WARN}</macro>
                <value>10s</value>
                <description>Maximum of average server response time for trigger expression.</description>
-            </macro>
-            <macro>
-               <macro>{$HAPROXY.STATS.HOST}</macro>
-               <value>haproxy</value>
-               <description>The IP address or DNS hostname of the HAProxy stats page.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.STATS.PATH}</macro>

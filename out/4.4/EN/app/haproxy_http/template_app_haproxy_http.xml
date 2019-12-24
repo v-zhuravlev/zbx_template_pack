@@ -60,6 +60,91 @@ Template tooling version used: 0.34</description>
                <url>{$HAPROXY.STATS.SCHEME}://{$HAPROXY.STATS.HOST}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv</url>
             </item>
             <item>
+               <name>HAProxy: Get stats page</name>
+               <type>HTTP_AGENT</type>
+               <key>haproxy.get_html</key>
+               <history>1h</history>
+               <trends>0</trends>
+               <value_type>TEXT</value_type>
+               <description>HAProxy Statistics Report HTML</description>
+               <applications>
+                  <application>
+                     <name>Zabbix raw items</name>
+                  </application>
+               </applications>
+               <url>{$HAPROXY.STATS.SCHEME}://{$HAPROXY.STATS.HOST}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}</url>
+            </item>
+            <item>
+               <name>HAProxy: Uptime</name>
+               <type>DEPENDENT</type>
+               <key>haproxy.uptime</key>
+               <delay>0</delay>
+               <history>7d</history>
+               <value_type>FLOAT</value_type>
+               <units>s</units>
+               <applications>
+                  <application>
+                     <name>HAProxy</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>REGEX</type>
+                     <params>uptime = &lt;/b&gt;(.*)&lt;br&gt;
+\1</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>haproxy.get_html</key>
+               </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{last()}&lt;10m</expression>
+                     <name>HAProxy: has been restarted (uptime &lt; 10m)</name>
+                     <priority>INFO</priority>
+                     <description>Uptime is less than 10 minutes</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
+               <name>HAProxy: Version</name>
+               <type>DEPENDENT</type>
+               <key>haproxy.version</key>
+               <delay>0</delay>
+               <history>90d</history>
+               <trends>0</trends>
+               <value_type>CHAR</value_type>
+               <applications>
+                  <application>
+                     <name>HAProxy</name>
+                  </application>
+               </applications>
+               <preprocessing>
+                  <step>
+                     <type>REGEX</type>
+                     <params>HAProxy version (\d+\.\d+\.\d+),
+\1</params>
+                  </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1d</params>
+                  </step>
+               </preprocessing>
+               <master_item>
+                  <key>haproxy.get_html</key>
+               </master_item>
+               <triggers>
+                  <trigger>
+                     <expression>{diff()}=1 and {strlen()}&gt;0</expression>
+                     <name>HAProxy: Version has changed (new version: {ITEM.VALUE})</name>
+                     <priority>INFO</priority>
+                     <description>HAProxy version has changed. Ack to close.</description>
+                     <manual_close>YES</manual_close>
+                  </trigger>
+               </triggers>
+            </item>
+            <item>
                <name>HAProxy: Service response time</name>
                <type>SIMPLE</type>
                <key>net.tcp.service.perf["{$HAPROXY.STATS.SCHEME}","{$HAPROXY.STATS.HOST}","{$HAPROXY.STATS.PORT}"]</key>
@@ -343,6 +428,10 @@ Template tooling version used: 0.34</description>
                         <step>
                            <type>BOOL_TO_DECIMAL</type>
                            <params/>
+                        </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>10m</params>
                         </step>
                      </preprocessing>
                      <master_item>
@@ -1173,6 +1262,10 @@ Template tooling version used: 0.34</description>
                            <type>BOOL_TO_DECIMAL</type>
                            <params/>
                         </step>
+                        <step>
+                           <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                           <params>10m</params>
+                        </step>
                      </preprocessing>
                      <master_item>
                         <key>haproxy.get</key>
@@ -1267,12 +1360,12 @@ Template tooling version used: 0.34</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.BACK_QTIME.MAX.WARN}</macro>
-               <value>10</value>
+               <value>10s</value>
                <description>Maximum of average time spent in queue on BACKEND for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.BACK_RTIME.MAX.WARN}</macro>
-               <value>10</value>
+               <value>10s</value>
                <description>Maximum of average BACKEND response time for trigger expression.</description>
             </macro>
             <macro>
@@ -1287,7 +1380,7 @@ Template tooling version used: 0.34</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.RESPONSE_TIME.MAX.WARN}</macro>
-               <value>10</value>
+               <value>10s</value>
                <description>The HAProxy stats page maximum response time in seconds for trigger expression.</description>
             </macro>
             <macro>
@@ -1302,18 +1395,18 @@ Template tooling version used: 0.34</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.SERVER_QTIME.MAX.WARN}</macro>
-               <value>10</value>
+               <value>10s</value>
                <description>Maximum of average time spent in queue on server for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.SERVER_RTIME.MAX.WARN}</macro>
-               <value>10</value>
+               <value>10s</value>
                <description>Maximum of average server response time for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.STATS.HOST}</macro>
                <value>haproxy</value>
-               <description>The host of HAProxy stats page.</description>
+               <description>The IP address or DNS hostname of the HAProxy stats page.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.STATS.PATH}</macro>
@@ -1322,7 +1415,7 @@ Template tooling version used: 0.34</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.STATS.PORT}</macro>
-               <value>9000</value>
+               <value>8404</value>
                <description>The port of the HAProxy stats host or container.</description>
             </macro>
             <macro>
