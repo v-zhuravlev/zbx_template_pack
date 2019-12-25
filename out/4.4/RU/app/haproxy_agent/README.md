@@ -7,7 +7,7 @@ For Zabbix version: 4.4
 The template to monitor HAProxy by Zabbix that work without any external scripts.
 Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-`Template App HAProxy by Zabbix agent` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/) with Zabbix agent:
+`Template App HAProxy by Zabbix agent` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/)  with Zabbix agent:
 
 Note that this solution supports https and redirects.
 
@@ -28,7 +28,6 @@ frontend stats
     stats enable
     stats uri /stats
     stats refresh 10s
-    stats admin if LOCALHOST
 ```
 
 If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
@@ -112,7 +111,7 @@ There are no template links in this template.
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Retried connections per second|<p>Number of times a connection was retried.</p>|DEPENDENT|haproxy.server.wretr.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wretr.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Number of responses with codes 4xx per second|<p>Number of HTTP client errors per second.</p>|DEPENDENT|haproxy.server.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_4xx.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Number of responses with codes 5xx per second|<p>Number of HTTP server errors per second.</p>|DEPENDENT|haproxy.server.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()`</p><p>- CHANGE_PER_SECOND|
-|Zabbix_raw_items|HAProxy: Get stats|<p>HAProxy Statistics Report in CSV format</p>|ZABBIX_PASSIVE|web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return value.slice(2,-1)`</p><p>- CSV_TO_JSON: ` 1`</p>|
+|Zabbix_raw_items|HAProxy: Get stats|<p>HAProxy Statistics Report in CSV format</p>|ZABBIX_PASSIVE|web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH};csv"]<p>**Preprocessing**:</p><p>- REGEX: `# ([\s\S]*) \1`</p><p>- CSV_TO_JSON: ` 1`</p>|
 |Zabbix_raw_items|HAProxy: Get stats page|<p>HAProxy Statistics Report HTML</p>|ZABBIX_PASSIVE|web.page.get["{$HAPROXY.STATS.SCHEME}://{HOST.CONN}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}"]|
 
 ## Triggers
@@ -142,5 +141,5 @@ There are no template links in this template.
 Please report any issues with the template at https://support.zabbix.com
 
 You can also provide feedback, discuss the template or ask for help with it at
-[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx).
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/).
 
