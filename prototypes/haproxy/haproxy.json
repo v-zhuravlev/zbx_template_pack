@@ -43,8 +43,8 @@
         "_resource": "HAProxy",
         "preprocessing": [
             {
-                "type": "REGEX",
-                "params": "HAProxy version (\\d+\\.\\d+\\.\\d+),\r\n\\1"
+                "type": "JAVASCRIPT",
+                "params": "try {\n    return value.match(/HAProxy version (\\d+\\.\\d+\\.\\d+),/)[1];\n}\ncatch (error) {\n    throw \"HAProxy version is not found : \" + error;\n}"
             },
             {
                 "type": "DISCARD_UNCHANGED_HEARTBEAT",
@@ -69,8 +69,8 @@
         "_resource": "HAProxy",
         "preprocessing": [
             {
-                "type": "REGEX",
-                "params": "uptime = <\/b>(.*)<br>\r\n\\1"
+                "type": "JAVASCRIPT",
+                "params": "try {\n    var t = value.match(/(\\d+)d (\\d+)h(\\d+)m(\\d+)s/);\n    return t[1] * 86400 + t[2] * 3600 + t[3] * 60 + t[4] * 1;\n}\ncatch (error) {\n    throw \"HAProxy uptime is not found : \" + error;\n}"
             }
         ],
         "triggers": [
@@ -295,6 +295,22 @@
             {
                 "type": "CHANGE_PER_SECOND"
             }
+        ],
+        "graphs": [
+            {
+                "graphtype": "NORMAL",
+                "name": "Backend {#PXNAME} Redispatched requests and retried connections per second",
+                "graph_items": [
+                    {
+                        "name": "haproxy.backend.wredis.rate[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "haproxy.backend.wretr.rate[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
         ]
     },
     {
@@ -354,6 +370,22 @@
             {
                 "type": "JSONPATH",
                 "params": "$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].req_rate.first()"
+            }
+        ],
+        "graphs": [
+            {
+                "graphtype": "NORMAL",
+                "name": "Frontend {#PXNAME} Requests and sessions per second",
+                "graph_items": [
+                    {
+                        "name": "haproxy.frontend.req_rate[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "haproxy.frontend.rate[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
             }
         ]
     },
@@ -427,7 +459,16 @@
         "_group": "HAProxy",
         "_resource": "HAProxy",
         "description": "Percentage of sessions used (scur / slim * 100).",
-        "application_prototype": "__RESOURCE__ frontend {#PXNAME}"
+        "application_prototype": "__RESOURCE__ frontend {#PXNAME}",
+        "triggers": [
+            {
+                "_id": "trigger.frontend.sutil",
+                "name": "__RESOURCE__ frontend {#PXNAME}: Session utilization more than {$HAPROXY.FRONT_SUTIL.MAX.WARN} for 5m",
+                "priority": "WARNING",
+                "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_SUTIL.MAX.WARN}",
+                "description": "Alerting on this metric is essential to ensure your server has sufficient capacity to handle all concurrent sessions. Unlike requests, upon reaching the session limit HAProxy will deny additional clients until resource consumption drops. Furthermore, if you find your session usage percentage to be hovering above 80%, it could be time to either modify HAProxy’s configuration to allow more sessions, or migrate your HAProxy server to a bigger box."
+            }
+        ]
     },
     {
         "_id": "haproxy.frontend.ereq.rate",
@@ -456,6 +497,22 @@
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_EREQ.MAX.WARN}",
                 "description": "Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}."
+            }
+        ],
+        "graphs": [
+            {
+                "graphtype": "NORMAL",
+                "name": "Frontend {#PXNAME} Errors and denials per second",
+                "graph_items": [
+                    {
+                        "name": "haproxy.frontend.ereq.rate[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "haproxy.frontend.dreq.rate[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
             }
         ]
     },
@@ -512,7 +569,7 @@
         "graphs": [
             {
                 "graphtype": "NORMAL",
-                "name": "{#PXNAME} {#SVNAME} Number of response codes",
+                "name": "Frontend {#PXNAME} Number of response codes",
                 "graph_items": [
                     {
                         "name": "haproxy.frontend.hrsp_1xx.rate[{#PXNAME}:{#SVNAME}]",
@@ -753,6 +810,22 @@
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_RTIME.MAX.WARN}",
                 "description": "Average server response time (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_RTIME.MAX.WARN}."
+            }
+        ],
+        "graphs": [
+            {
+                "graphtype": "NORMAL",
+                "name": "{#PXNAME} {#SVNAME} Response time and time in queue",
+                "graph_items": [
+                    {
+                        "name": "haproxy.server.rtime[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "haproxy.server.qtime[{#PXNAME}:{#SVNAME}]",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
             }
         ]
     },
