@@ -15,8 +15,15 @@ templates:
     description: |
       Get metrics from status page using Zabbix agent
       https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.
+      Example configuration of HAProxy:        
+        frontend stats
+            bind *:8404
+            stats enable
+            stats uri /stats
+            stats refresh 10s
+
     _documentation:
-      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/
       _tested_on:
         - name: HAProxy
           version: "1.8"
@@ -26,7 +33,7 @@ templates:
         The template to monitor HAProxy by Zabbix that work without any external scripts.
         Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-        `Template App HAProxy by Zabbix agent` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/) with Zabbix agent:
+        `Template App HAProxy by Zabbix agent` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/)  with Zabbix agent:
 
         Note that this solution supports https and redirects.
       _setup: |
@@ -39,7 +46,6 @@ templates:
             stats enable
             stats uri /stats
             stats refresh 10s
-            stats admin if LOCALHOST
         ```
 
         If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
