@@ -15,8 +15,16 @@ templates:
     description: |
       Get metrics from status page using HTTP agent
       https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.
+      Example configuration of HAProxy:        
+        frontend stats
+            bind *:8404
+            stats enable
+            stats uri /stats
+            stats refresh 10s
+            #stats auth Username:Password  # Authentication credentials
+
     _documentation:
-      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx
+      _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/
       _tested_on:
         - name: HAProxy
           version: "1.8"
@@ -26,7 +34,7 @@ templates:
         The template to monitor HAProxy by Zabbix that work without any external scripts.
         Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-        `Template App HAProxy by HTTP` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/) with HTTP agent remotely:
+        `Template App HAProxy by HTTP` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/)  with HTTP agent remotely:
 
         Note that this solution supports https and redirects.
       _setup: |
@@ -39,10 +47,13 @@ templates:
             stats enable
             stats uri /stats
             stats refresh 10s
-            stats admin if LOCALHOST
+            #stats auth Username:Password  # Authentication credentials
         ```
 
-        If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.HOST},{$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
+        If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.HOST},
+        {$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
+        If you want to use authentication, set the username and password in the "stats auth" option of the configuration file and 
+        in the macros {$HAPROXY.USERNAME},{$HAPROXY.PASSWORD}.
     items:
       - _prototype: haproxy.get
         type: HTTP_AGENT
@@ -51,6 +62,14 @@ templates:
         status_codes: 200
         follow_redirects: "YES"
         retrieve_mode: BODY
+        authtype: BASIC
+        username: "{$HAPROXY.USERNAME}"
+        password: "{$HAPROXY.PASSWORD}"
+        preprocessing:
+          - type: REGEX
+            params: "# ([\\s\\S]*)\\n\n\\1"
+          - type: CSV_TO_JSON
+            params: "\n\n1"
       - _prototype: haproxy.get_html
         type: HTTP_AGENT
         url: "{$HAPROXY.STATS.SCHEME}://{$HAPROXY.STATS.HOST}:{$HAPROXY.STATS.PORT}/{$HAPROXY.STATS.PATH}"
@@ -205,8 +224,14 @@ templates:
         _description: "The port of the HAProxy stats host or container."
         value: "8404"
       - macro: "{$HAPROXY.STATS.PATH}"
-        _description: "The path of HAProxy stats page."
+        _description: "The path of the HAProxy stats page."
         value: "stats"
+      - macro: "{$HAPROXY.USERNAME}"
+        _description: "The username of the HAProxy stats page."
+        value: ""
+      - macro: "{$HAPROXY.PASSWORD}"
+        _description: "The password of the HAProxy stats page."
+        value: ""
       - macro: "{$HAPROXY.RESPONSE_TIME.MAX.WARN}"
         _description: "The HAProxy stats page maximum response time in seconds for trigger expression."
         value: "10s"
