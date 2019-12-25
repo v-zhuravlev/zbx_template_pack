@@ -89,9 +89,14 @@ Template tooling version used: 0.34</description>
                </applications>
                <preprocessing>
                   <step>
-                     <type>REGEX</type>
-                     <params>uptime = &lt;/b&gt;(.*)&lt;br&gt;
-\1</params>
+                     <type>JAVASCRIPT</type>
+                     <params>try {
+    var t = value.match(/(\d+)d (\d+)h(\d+)m(\d+)s/);
+    return t[1] * 86400 + t[2] * 3600 + t[3] * 60 + t[4] * 1;
+}
+catch (error) {
+    throw "HAProxy uptime is not found : " + error;
+}</params>
                   </step>
                </preprocessing>
                <master_item>
@@ -122,9 +127,13 @@ Template tooling version used: 0.34</description>
                </applications>
                <preprocessing>
                   <step>
-                     <type>REGEX</type>
-                     <params>HAProxy version (\d+\.\d+\.\d+),
-\1</params>
+                     <type>JAVASCRIPT</type>
+                     <params>try {
+    return value.match(/HAProxy version (\d+\.\d+\.\d+),/)[1];
+}
+catch (error) {
+    throw "HAProxy version is not found : " + error;
+}</params>
                   </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -499,6 +508,28 @@ Template tooling version used: 0.34</description>
                      </master_item>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>HAProxy: Backend {#PXNAME} Redispatched requests and retried connections per second</name>
+                     <graph_items>
+                        <graph_item>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.backend.wredis.rate[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.backend.wretr.rate[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>haproxy.get</key>
                </master_item>
@@ -897,11 +928,61 @@ Template tooling version used: 0.34</description>
                            <name>HAProxy frontend {#PXNAME}</name>
                         </application_prototype>
                      </application_prototypes>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{$HAPROXY.FRONT_SUTIL.MAX.WARN}</expression>
+                           <name>HAProxy frontend {#PXNAME}: Session utilization more than {$HAPROXY.FRONT_SUTIL.MAX.WARN} for 5m</name>
+                           <priority>WARNING</priority>
+                           <description>Alerting on this metric is essential to ensure your server has sufficient capacity to handle all concurrent sessions. Unlike requests, upon reaching the session limit HAProxy will deny additional clients until resource consumption drops. Furthermore, if you find your session usage percentage to be hovering above 80%, it could be time to either modify HAProxy’s configuration to allow more sessions, or migrate your HAProxy server to a bigger box.</description>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                </item_prototypes>
                <graph_prototypes>
                   <graph_prototype>
-                     <name>HAProxy: {#PXNAME} {#SVNAME} Number of response codes</name>
+                     <name>HAProxy: Frontend {#PXNAME} Errors and denials per second</name>
+                     <graph_items>
+                        <graph_item>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.ereq.rate[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.dreq.rate[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+                  <graph_prototype>
+                     <name>HAProxy: Frontend {#PXNAME} In/Out traffic</name>
+                     <graph_items>
+                        <graph_item>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.bin[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <drawtype>GRADIENT_LINE</drawtype>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.frontend.bout[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+                  <graph_prototype>
+                     <name>HAProxy: Frontend {#PXNAME} Number of response codes</name>
                      <graph_items>
                         <graph_item>
                            <color>1A7C11</color>
@@ -945,23 +1026,21 @@ Template tooling version used: 0.34</description>
                      </graph_items>
                   </graph_prototype>
                   <graph_prototype>
-                     <name>HAProxy: Frontend {#PXNAME} In/Out traffic</name>
+                     <name>HAProxy: Frontend {#PXNAME} Requests and sessions per second</name>
                      <graph_items>
                         <graph_item>
-                           <drawtype>GRADIENT_LINE</drawtype>
                            <color>1A7C11</color>
                            <item>
                               <host>Template App HAProxy by HTTP</host>
-                              <key>haproxy.frontend.bin[{#PXNAME}:{#SVNAME}]</key>
+                              <key>haproxy.frontend.req_rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
                         <graph_item>
                            <sortorder>1</sortorder>
-                           <drawtype>GRADIENT_LINE</drawtype>
                            <color>2774A4</color>
                            <item>
                               <host>Template App HAProxy by HTTP</host>
-                              <key>haproxy.frontend.bout[{#PXNAME}:{#SVNAME}]</key>
+                              <key>haproxy.frontend.rate[{#PXNAME}:{#SVNAME}]</key>
                            </item>
                         </graph_item>
                      </graph_items>
@@ -1332,6 +1411,28 @@ Template tooling version used: 0.34</description>
                      </master_item>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>HAProxy: {#PXNAME} {#SVNAME} Response time and time in queue</name>
+                     <graph_items>
+                        <graph_item>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.server.rtime[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                        <graph_item>
+                           <sortorder>1</sortorder>
+                           <color>2774A4</color>
+                           <item>
+                              <host>Template App HAProxy by HTTP</host>
+                              <key>haproxy.server.qtime[{#PXNAME}:{#SVNAME}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>haproxy.get</key>
                </master_item>
@@ -1377,6 +1478,11 @@ Template tooling version used: 0.34</description>
                <macro>{$HAPROXY.FRONT_EREQ.MAX.WARN}</macro>
                <value>10</value>
                <description>The HAProxy maximum number of request errors for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.FRONT_SUTIL.MAX.WARN}</macro>
+               <value>80%</value>
+               <description>Maximum of session usage percentage on frontend for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.RESPONSE_TIME.MAX.WARN}</macro>
