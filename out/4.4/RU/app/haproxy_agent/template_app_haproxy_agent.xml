@@ -131,7 +131,7 @@ catch (error) {
                <triggers>
                   <trigger>
                      <expression>{min(5m)}&gt;{$HAPROXY.RESPONSE_TIME.MAX.WARN}</expression>
-                     <name>HAProxy: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN}s for 5m)</name>
+                     <name>HAProxy: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN} for 5m)</name>
                      <priority>WARNING</priority>
                      <manual_close>YES</manual_close>
                      <dependencies>
@@ -932,7 +932,7 @@ catch (error) {
                      <trigger_prototypes>
                         <trigger_prototype>
                            <expression>{min(5m)}&gt;{$HAPROXY.FRONT_SUTIL.MAX.WARN}</expression>
-                           <name>HAProxy frontend {#PXNAME}: Session utilization more than {$HAPROXY.FRONT_SUTIL.MAX.WARN} for 5m</name>
+                           <name>HAProxy frontend {#PXNAME}: Session utilization more than {$HAPROXY.FRONT_SUTIL.MAX.WARN}% for 5m</name>
                            <priority>WARNING</priority>
                            <description>Alerting on this metric is essential to ensure your server has sufficient capacity to handle all concurrent sessions. Unlike requests, upon reaching the session limit HAProxy will deny additional clients until resource consumption drops. Furthermore, if you find your session usage percentage to be hovering above 80%, it could be time to either modify HAProxy’s configuration to allow more sessions, or migrate your HAProxy server to a bigger box.</description>
                         </trigger_prototype>
@@ -1482,7 +1482,7 @@ catch (error) {
             </macro>
             <macro>
                <macro>{$HAPROXY.FRONT_SUTIL.MAX.WARN}</macro>
-               <value>80%</value>
+               <value>80</value>
                <description>Maximum of session usage percentage on frontend for trigger expression.</description>
             </macro>
             <macro>
