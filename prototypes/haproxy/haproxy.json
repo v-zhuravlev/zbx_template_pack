@@ -138,10 +138,10 @@
         "triggers": [
             {
                 "_id": "trigger.backend.rtime",
-                "name": "__RESOURCE__ backend {#PXNAME}: Average response time more than {$HAPROXY.BACK_RTIME.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ backend {#PXNAME}: Average response time is more than {$HAPROXY.BACK_RTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_RTIME.MAX.WARN}",
-                "description": "Average backend response time (in ms) for the last 1,024 requests more than {$HAPROXY.BACK_RTIME.MAX.WARN}."
+                "description": "Average backend response time (in ms) for the last 1,024 requests is more than {$HAPROXY.BACK_RTIME.MAX.WARN}."
             }
         ]
     },
@@ -210,10 +210,10 @@
         "triggers": [
             {
                 "_id": "trigger.backend.eresp",
-                "name": "__RESOURCE__ backend {#PXNAME}: Number of responses with error more than {$HAPROXY.BACK_ERESP.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ backend {#PXNAME}: Number of responses with error is more than {$HAPROXY.BACK_ERESP.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_ERESP.MAX.WARN}",
-                "description": "Number of requests on backend, whose responses yielded an error, more than {$HAPROXY.BACK_ERESP.MAX.WARN}."
+                "description": "Number of requests on backend, whose responses yielded an error, is more than {$HAPROXY.BACK_ERESP.MAX.WARN}."
             }
         ]
     },
@@ -237,10 +237,10 @@
         "triggers": [
             {
                 "_id": "trigger.backend.qcur",
-                "name": "__RESOURCE__ backend {#PXNAME}: Current number of requests unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ backend {#PXNAME}: Current number of requests unassigned in queue is more than {$HAPROXY.BACK_QCUR.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_QCUR.MAX.WARN}",
-                "description": "Current number of requests on backend unassigned in queue more than {$HAPROXY.BACK_QCUR.MAX.WARN}."
+                "description": "Current number of requests on backend unassigned in queue is more than {$HAPROXY.BACK_QCUR.MAX.WARN}."
             }
         ]
     },
@@ -269,10 +269,10 @@
         "triggers": [
             {
                 "_id": "trigger.backend.qtime",
-                "name": "__RESOURCE__ backend {#PXNAME}: Average time spent in queue more than {$HAPROXY.BACK_QTIME.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ backend {#PXNAME}: Average time spent in queue is more than {$HAPROXY.BACK_QTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.BACK_QTIME.MAX.WARN}",
-                "description": "Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.BACK_QTIME.MAX.WARN}."
+                "description": "Average time spent in queue (in ms) for the last 1,024 requests is more than {$HAPROXY.BACK_QTIME.MAX.WARN}."
             }
         ]
     },
@@ -298,6 +298,7 @@
         ],
         "graphs": [
             {
+                "_id": "haproxy.backend.rr",
                 "graphtype": "NORMAL",
                 "name": "Backend {#PXNAME} Redispatched requests and retried connections per second",
                 "graph_items": [
@@ -374,6 +375,7 @@
         ],
         "graphs": [
             {
+                "_id": "haproxy.frontend.rate",
                 "graphtype": "NORMAL",
                 "name": "Frontend {#PXNAME} Requests and sessions per second",
                 "graph_items": [
@@ -463,7 +465,7 @@
         "triggers": [
             {
                 "_id": "trigger.frontend.sutil",
-                "name": "__RESOURCE__ frontend {#PXNAME}: Session utilization more than {$HAPROXY.FRONT_SUTIL.MAX.WARN}% for 5m",
+                "name": "__RESOURCE__ frontend {#PXNAME}: Session utilization is more than {$HAPROXY.FRONT_SUTIL.MAX.WARN}% for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_SUTIL.MAX.WARN}",
                 "description": "Alerting on this metric is essential to ensure your server has sufficient capacity to handle all concurrent sessions. Unlike requests, upon reaching the session limit HAProxy will deny additional clients until resource consumption drops. Furthermore, if you find your session usage percentage to be hovering above 80%, it could be time to either modify HAProxy’s configuration to allow more sessions, or migrate your HAProxy server to a bigger box."
@@ -493,14 +495,15 @@
         "triggers": [
             {
                 "_id": "trigger.frontend.ereq",
-                "name": "__RESOURCE__ frontend {#PXNAME}: Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ frontend {#PXNAME}: Number of request errors is more than {$HAPROXY.FRONT_EREQ.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_EREQ.MAX.WARN}",
-                "description": "Number of request errors more than {$HAPROXY.FRONT_EREQ.MAX.WARN}."
+                "description": "Number of request errors is more than {$HAPROXY.FRONT_EREQ.MAX.WARN}."
             }
         ],
         "graphs": [
             {
+                "_id": "haproxy.frontend.err",
                 "graphtype": "NORMAL",
                 "name": "Frontend {#PXNAME} Errors and denials per second",
                 "graph_items": [
@@ -539,10 +542,10 @@
         "triggers": [
             {
                 "_id": "trigger.frontend.dreq",
-                "name": "__RESOURCE__ frontend {#PXNAME}: Number of requests denied more than {$HAPROXY.FRONT_DREQ.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ frontend {#PXNAME}: Number of requests denied is more than {$HAPROXY.FRONT_DREQ.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.FRONT_DREQ.MAX.WARN}",
-                "description": "Number of requests denied due to security concerns (ACL-restricted) more than {$HAPROXY.FRONT_DREQ.MAX.WARN}."
+                "description": "Number of requests denied due to security concerns (ACL-restricted) is more than {$HAPROXY.FRONT_DREQ.MAX.WARN}."
             }
         ]
     },
@@ -568,8 +571,9 @@
         ],
         "graphs": [
             {
-                "graphtype": "NORMAL",
-                "name": "Frontend {#PXNAME} Number of response codes",
+                "_id": "haproxy.frontend.resp",
+                "graphtype": "STACKED",
+                "name": "Frontend {#PXNAME} Responses by HTTP code",
                 "graph_items": [
                     {
                         "name": "haproxy.frontend.hrsp_1xx.rate[{#PXNAME}:{#SVNAME}]",
@@ -706,6 +710,7 @@
         ],
         "graphs": [
             {
+                "_id": "haproxy.frontend.traf",
                 "graphtype": "NORMAL",
                 "name": "Frontend {#PXNAME} In/Out traffic",
                 "graph_items": [
@@ -806,14 +811,15 @@
         "triggers": [
             {
                 "_id": "trigger.server.rtime",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average response time more than {$HAPROXY.SERVER_RTIME.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average response time is more than {$HAPROXY.SERVER_RTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_RTIME.MAX.WARN}",
-                "description": "Average server response time (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_RTIME.MAX.WARN}."
+                "description": "Average server response time (in ms) for the last 1,024 requests is more than {$HAPROXY.SERVER_RTIME.MAX.WARN}."
             }
         ],
         "graphs": [
             {
+                "_id": "haproxy.server.time",
                 "graphtype": "NORMAL",
                 "name": "{#PXNAME} {#SVNAME} Response time and time in queue",
                 "graph_items": [
@@ -894,10 +900,10 @@
         "triggers": [
             {
                 "_id": "trigger.server.eresp",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Number of responses with error more than {$HAPROXY.SERVER_ERESP.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Number of responses with error is more than {$HAPROXY.SERVER_ERESP.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_ERESP.MAX.WARN}",
-                "description": "Number of requests on server, whose responses yielded an error, more than {$HAPROXY.SERVER_ERESP.MAX.WARN}."
+                "description": "Number of requests on server, whose responses yielded an error, is more than {$HAPROXY.SERVER_ERESP.MAX.WARN}."
             }
         ]
     },
@@ -921,10 +927,10 @@
         "triggers": [
             {
                 "_id": "trigger.server.qcur",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Current number of requests unassigned in queue is more than {$HAPROXY.SERVER_QCUR.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_QCUR.MAX.WARN}",
-                "description": "Current number of requests unassigned in queue more than {$HAPROXY.SERVER_QCUR.MAX.WARN}."
+                "description": "Current number of requests unassigned in queue is more than {$HAPROXY.SERVER_QCUR.MAX.WARN}."
             }
         ]
     },
@@ -953,10 +959,10 @@
         "triggers": [
             {
                 "_id": "trigger.server.qtime",
-                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average time spent in queue more than {$HAPROXY.SERVER_QTIME.MAX.WARN} for 5m",
+                "name": "__RESOURCE__ {#PXNAME} {#SVNAME}: Average time spent in queue is more than {$HAPROXY.SERVER_QTIME.MAX.WARN} for 5m",
                 "priority": "WARNING",
                 "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.SERVER_QTIME.MAX.WARN}",
-                "description": "Average time spent in queue (in ms) for the last 1,024 requests more than {$HAPROXY.SERVER_QTIME.MAX.WARN}."
+                "description": "Average time spent in queue (in ms) for the last 1,024 requests is more than {$HAPROXY.SERVER_QTIME.MAX.WARN}."
             }
         ]
     },
