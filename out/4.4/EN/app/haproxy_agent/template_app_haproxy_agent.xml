@@ -13,9 +13,15 @@
          <name>Template App HAProxy by Zabbix agent</name>
          <description>Get metrics from status page using Zabbix agent&#13;
 https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.&#13;
+Example configuration of HAProxy:        &#13;
+  frontend stats&#13;
+      bind *:8404&#13;
+      stats enable&#13;
+      stats uri /stats&#13;
+      stats refresh 10s&#13;
 &#13;
 &#13;
-You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/&#13;
 &#13;
 Template tooling version used: 0.34</description>
          <groups>
@@ -178,8 +184,9 @@ catch (error) {
                </applications>
                <preprocessing>
                   <step>
-                     <type>JAVASCRIPT</type>
-                     <params>return value.slice(2,-1)</params>
+                     <type>REGEX</type>
+                     <params># ([\s\S]*)
+\1</params>
                   </step>
                   <step>
                      <type>CSV_TO_JSON</type>

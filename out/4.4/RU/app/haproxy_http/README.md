@@ -7,7 +7,7 @@ For Zabbix version: 4.4
 The template to monitor HAProxy by Zabbix that work without any external scripts.
 Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
 
-`Template App HAProxy by HTTP` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/) with HTTP agent remotely:
+`Template App HAProxy by HTTP` collects metrics by polling [HAProxy Stats Page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/)  with HTTP agent remotely:
 
 Note that this solution supports https and redirects.
 
@@ -28,10 +28,13 @@ frontend stats
     stats enable
     stats uri /stats
     stats refresh 10s
-    stats admin if LOCALHOST
+    #stats auth Username:Password  # Authentication credentials
 ```
 
-If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.HOST},{$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
+If you use another location, don't forget to change the macros {$HAPROXY.STATS.SCHEME},{$HAPROXY.STATS.HOST},
+{$HAPROXY.STATS.PORT},{$HAPROXY.STATS.PATH}.
+If you want to use authentication, set the username and password in the "stats auth" option of the configuration file and 
+in the macros {$HAPROXY.USERNAME},{$HAPROXY.PASSWORD}.
 
 
 ## Zabbix configuration
@@ -49,15 +52,17 @@ No specific Zabbix configuration is required.
 |{$HAPROXY.FRONT_DREQ.MAX.WARN}|<p>The HAProxy maximum denied requests for trigger expression.</p>|`10`|
 |{$HAPROXY.FRONT_EREQ.MAX.WARN}|<p>The HAProxy maximum number of request errors for trigger expression.</p>|`10`|
 |{$HAPROXY.FRONT_SUTIL.MAX.WARN}|<p>Maximum of session usage percentage on frontend for trigger expression.</p>|`80%`|
+|{$HAPROXY.PASSWORD}|<p>The password of the HAProxy stats page.</p>|``|
 |{$HAPROXY.RESPONSE_TIME.MAX.WARN}|<p>The HAProxy stats page maximum response time in seconds for trigger expression.</p>|`10s`|
 |{$HAPROXY.SERVER_ERESP.MAX.WARN}|<p>Maximum of responses with error on server for trigger expression.</p>|`10`|
 |{$HAPROXY.SERVER_QCUR.MAX.WARN}|<p>Maximum number of requests on server unassigned in queue for trigger expression.</p>|`10`|
 |{$HAPROXY.SERVER_QTIME.MAX.WARN}|<p>Maximum of average time spent in queue on server for trigger expression.</p>|`10s`|
 |{$HAPROXY.SERVER_RTIME.MAX.WARN}|<p>Maximum of average server response time for trigger expression.</p>|`10s`|
 |{$HAPROXY.STATS.HOST}|<p>The IP address or DNS hostname of the HAProxy stats page.</p>|`haproxy`|
-|{$HAPROXY.STATS.PATH}|<p>The path of HAProxy stats page.</p>|`stats`|
+|{$HAPROXY.STATS.PATH}|<p>The path of the HAProxy stats page.</p>|`stats`|
 |{$HAPROXY.STATS.PORT}|<p>The port of the HAProxy stats host or container.</p>|`8404`|
 |{$HAPROXY.STATS.SCHEME}|<p>The scheme of HAProxy stats page(http/https).</p>|`http`|
+|{$HAPROXY.USERNAME}|<p>The username of the HAProxy stats page.</p>|``|
 
 ## Template links
 
@@ -113,7 +118,7 @@ There are no template links in this template.
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Retried connections per second|<p>Number of times a connection was retried.</p>|DEPENDENT|haproxy.server.wretr.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].wretr.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Number of responses with codes 4xx per second|<p>Number of HTTP client errors per second.</p>|DEPENDENT|haproxy.server.hrsp_4xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_4xx.first()`</p><p>- CHANGE_PER_SECOND|
 |HAProxy|HAProxy {#PXNAME} {#SVNAME}: Number of responses with codes 5xx per second|<p>Number of HTTP server errors per second.</p>|DEPENDENT|haproxy.server.hrsp_5xx.rate[{#PXNAME}:{#SVNAME}]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.pxname == '{#PXNAME}' && @.svname == '{#SVNAME}')].hrsp_5xx.first()`</p><p>- CHANGE_PER_SECOND|
-|Zabbix_raw_items|HAProxy: Get stats|<p>HAProxy Statistics Report in CSV format</p>|HTTP_AGENT|haproxy.get<p>**Preprocessing**:</p><p>- JAVASCRIPT: `return value.slice(2,-1)`</p><p>- CSV_TO_JSON: ` 1`</p>|
+|Zabbix_raw_items|HAProxy: Get stats|<p>HAProxy Statistics Report in CSV format</p>|HTTP_AGENT|haproxy.get<p>**Preprocessing**:</p><p>- REGEX: `# ([\s\S]*)\n \1`</p><p>- CSV_TO_JSON: ` 1`</p>|
 |Zabbix_raw_items|HAProxy: Get stats page|<p>HAProxy Statistics Report HTML</p>|HTTP_AGENT|haproxy.get_html|
 
 ## Triggers
@@ -143,5 +148,5 @@ There are no template links in this template.
 Please report any issues with the template at https://support.zabbix.com
 
 You can also provide feedback, discuss the template or ask for help with it at
-[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx).
+[ZABBIX forums](https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/).
 

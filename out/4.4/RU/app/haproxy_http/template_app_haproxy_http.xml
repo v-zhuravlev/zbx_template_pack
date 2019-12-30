@@ -13,9 +13,16 @@
          <name>Template App HAProxy by HTTP</name>
          <description>Get metrics from status page using HTTP agent&#13;
 https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/.&#13;
+Example configuration of HAProxy:        &#13;
+  frontend stats&#13;
+      bind *:8404&#13;
+      stats enable&#13;
+      stats uri /stats&#13;
+      stats refresh 10s&#13;
+      #stats auth Username:Password  # Authentication credentials&#13;
 &#13;
 &#13;
-You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384765-discussion-thread-for-official-zabbix-template-nginx&#13;
+You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/&#13;
 &#13;
 Template tooling version used: 0.34</description>
          <groups>
@@ -39,6 +46,9 @@ Template tooling version used: 0.34</description>
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
+               <authtype>BASIC</authtype>
+               <username>{$HAPROXY.USERNAME}</username>
+               <password>{$HAPROXY.PASSWORD}</password>
                <description>HAProxy Statistics Report in CSV format</description>
                <applications>
                   <application>
@@ -47,8 +57,9 @@ Template tooling version used: 0.34</description>
                </applications>
                <preprocessing>
                   <step>
-                     <type>JAVASCRIPT</type>
-                     <params>return value.slice(2,-1)</params>
+                     <type>REGEX</type>
+                     <params># ([\s\S]*)\n
+\1</params>
                   </step>
                   <step>
                      <type>CSV_TO_JSON</type>
@@ -1485,6 +1496,10 @@ catch (error) {
                <description>Maximum of session usage percentage on frontend for trigger expression.</description>
             </macro>
             <macro>
+               <macro>{$HAPROXY.PASSWORD}</macro>
+               <description>The password of the HAProxy stats page.</description>
+            </macro>
+            <macro>
                <macro>{$HAPROXY.RESPONSE_TIME.MAX.WARN}</macro>
                <value>10s</value>
                <description>The HAProxy stats page maximum response time in seconds for trigger expression.</description>
@@ -1517,7 +1532,7 @@ catch (error) {
             <macro>
                <macro>{$HAPROXY.STATS.PATH}</macro>
                <value>stats</value>
-               <description>The path of HAProxy stats page.</description>
+               <description>The path of the HAProxy stats page.</description>
             </macro>
             <macro>
                <macro>{$HAPROXY.STATS.PORT}</macro>
@@ -1528,6 +1543,10 @@ catch (error) {
                <macro>{$HAPROXY.STATS.SCHEME}</macro>
                <value>http</value>
                <description>The scheme of HAProxy stats page(http/https).</description>
+            </macro>
+            <macro>
+               <macro>{$HAPROXY.USERNAME}</macro>
+               <description>The username of the HAProxy stats page.</description>
             </macro>
          </macros>
       </template>
