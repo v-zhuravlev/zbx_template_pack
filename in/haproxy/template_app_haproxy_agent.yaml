@@ -77,8 +77,6 @@ templates:
             expression: "{TEMPLATE_NAME:METRIC.last()}=0"
             manual_close: "YES"
             priority: AVERAGE
-            # _depends_on:
-            #   - trigger.proc.not_running
       - _id: haproxy.perf
         name: Service response time
         type: ZABBIX_PASSIVE
@@ -96,9 +94,7 @@ templates:
             manual_close: "YES"
             priority: WARNING
             _depends_on:
-              # - trigger.proc.not_running
               - trigger.status
-      # - _prototype: haproxy.version
     discovery_rules:
       - name: BACKEND discovery
         description: |-
@@ -147,7 +143,6 @@ templates:
               operator: MATCHES_REGEX
               formulaid: A
         items:
-          # - _prototype: haproxy.frontend.status
           - _prototype: haproxy.frontend.req_rate
           - _prototype: haproxy.frontend.rate
           - _prototype: haproxy.frontend.scur
@@ -239,17 +234,35 @@ templates:
       - macro: "{$HAPROXY.FRONT_SUTIL.MAX.WARN}"
         _description: "Maximum of session usage percentage on frontend for trigger expression."
         value: "80"
-    # screens:
-    #   - name: "HAProxy performance"
-    #     hsize: 2
-    #     vsize: 2
-    #     screen_items:
-    #       - _graph_id: haproxy.connections
-    #         x: 0
-    #         y: 0
-    #       - _graph_id: haproxy.requests
-    #         x: 1
-    #         y: 0
-    #       - _graph_id: haproxy.connections.rate
-    #         x: 0
-    #         y: 1
+
+    screens:
+      - name: "HAProxy Frontend performance"
+        hsize: 2
+        vsize: 2
+        screen_items:
+          - _graph_id: haproxy.frontend.rate
+            x: 0
+            y: 0
+          - _graph_id: haproxy.frontend.err
+            x: 1
+            y: 0
+          - _graph_id: haproxy.frontend.resp
+            x: 0
+            y: 1
+          - _graph_id: haproxy.frontend.traf
+            x: 1
+            y: 1
+      - name: "HAProxy Backend performance"
+        hsize: 1
+        vsize: 1
+        screen_items:
+          - _graph_id: haproxy.backend.rr
+            x: 0
+            y: 0
+      - name: "HAProxy Server performance"
+        hsize: 1
+        vsize: 1
+        screen_items:
+          - _graph_id: haproxy.server.time
+            x: 0
+            y: 0
