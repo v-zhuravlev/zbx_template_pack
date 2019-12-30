@@ -76,6 +76,9 @@ templates:
         status_codes: 200
         follow_redirects: "YES"
         retrieve_mode: BODY
+        authtype: BASIC
+        username: "{$HAPROXY.USERNAME}"
+        password: "{$HAPROXY.PASSWORD}"
       - _prototype: haproxy.version
       - _prototype: haproxy.uptime
       - _id: haproxy.ping
@@ -111,7 +114,7 @@ templates:
         _resource: HAProxy
         triggers:
           - _id: trigger.perf.low
-            name: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN}s for 5m)
+            name: Service response time is too high (over {$HAPROXY.RESPONSE_TIME.MAX.WARN} for 5m)
             expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$HAPROXY.RESPONSE_TIME.MAX.WARN}"
             manual_close: "YES"
             priority: WARNING
