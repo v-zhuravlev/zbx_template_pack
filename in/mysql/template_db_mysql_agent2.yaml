@@ -13,7 +13,7 @@ templates:
         - name: MariaDB
           version: "10.4"
         - name: Zabbix
-          version: 4.4.0
+          version: "4.4.0"
       _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql
       _overview: |-
         The template is developed for monitoring DBMS MySQL and its forks.
@@ -45,25 +45,31 @@ templates:
       - macro: "{$MYSQL.SLOW_QUERIES.MAX.WARN}"
         _description: The number of slow queries for trigger expression.
         value: "3"
-      - macro: "{$MYSQL.HOST}"
+      - macro: "{$MYSQL.BUFF_UTIL.MIN.WARN}"
+        _description: The minimum buffer pool utilization in percent for trigger expression.
+        value: "50"
+      # - macro: "{$MYSQL.HOST}"
+      #   _description: Hostname or IP of MySQL host or container.
+      #   value: "localhost"
+      # - macro: "{$MYSQL.PORT}"
+      #   _description: MySQL service port.
+      #   value: "3306"
+      - macro: "{$MYSQL.DSN}"
         _description: Hostname or IP of MySQL host or container.
-        value: "localhost"
-      - macro: "{$MYSQL.PORT}"
-        _description: MySQL service port.
-        value: "3306"
+        value: "<Put your DSN>"
     items:
       - _prototype: mysql.get_status_variables
         type: ZABBIX_PASSIVE
-        key: mysql.get_status_variables["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+        key: mysql.get_status_variables["{$MYSQL.DSN}"]
       - _prototype: mysql.ping
         type: ZABBIX_PASSIVE
-        key: mysql.ping["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+        key: mysql.ping["{$MYSQL.DSN}"]
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 10m
       - _prototype: mysql.version
         type: ZABBIX_PASSIVE
-        key: mysql.version["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+        key: mysql.version["{$MYSQL.DSN}"]
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
@@ -120,6 +126,8 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: $[?(@.Variable_name=='Max_used_connections')].Value.first()
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
       - _prototype: mysql.threads_cached
         preprocessing:
           - type: JSONPATH
@@ -158,6 +166,8 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: $[?(@.Variable_name=='Innodb_buffer_pool_pages_total')].Value.first()
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
       - _prototype: mysql.innodb_buffer_pool_read_requests
         preprocessing:
           - type: JSONPATH
@@ -243,7 +253,7 @@ templates:
           - type: CHANGE_PER_SECOND
     discovery_rules:
       - name: Databases discovery
-        key: mysql.db.discovery["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+        key: mysql.db.discovery["{$MYSQL.DSN}"]
         type: ZABBIX_PASSIVE
         update: 1h
         description: Scanning databases in DBMS.
@@ -262,7 +272,7 @@ templates:
             _resource: MySQL
             name: "Size of database {#DATABASE}"
             type: ZABBIX_PASSIVE
-            key: mysql.dbsize["{$MYSQL.HOST}","{$MYSQL.PORT}","{#DATABASE}"]
+            key: mysql.dbsize["{$MYSQL.DSN}","{#DATABASE}"]
             value_type: UNSIGNED
             units: B
             update: 5m
@@ -271,7 +281,7 @@ templates:
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
       - name: Replication discovery
-        key: mysql.replication.discovery["{$MYSQL.HOST}","{$MYSQL.PORT}"]
+        key: mysql.replication.discovery["{$MYSQL.DSN}"]
         type: ZABBIX_PASSIVE
         update: 1h
         description: 'If "show slave status" returns Master_Host, "Replication: *" items are created.'
@@ -283,7 +293,7 @@ templates:
             _resource: MySQL
             name: "Replication Slave status {#MASTERHOST}"
             type: ZABBIX_PASSIVE
-            key: mysql.slave_status["{$MYSQL.HOST}","{$MYSQL.PORT}","{#MASTERHOST}"]
+            key: mysql.slave_status["{$MYSQL.DSN}","{#MASTERHOST}"]
             value_type: TEXT
             update: 1m
             history: 1h

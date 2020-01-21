@@ -13,11 +13,11 @@ templates:
         - name: MariaDB
           version: "10.4"
         - name: Zabbix
-          version: 4.4.0
+          version: "4.4.0"
       _zabbix_forum_url: https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql
-      _overview: |-
+      _overview: |
         The template is developed for monitoring DBMS MySQL and its forks.
-      _setup: |-
+      _setup: |
         1. Create MySQL user for monitoring (`<password>` at your discretion):
 
         ```text
@@ -27,14 +27,14 @@ templates:
 
         For more information please read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html
 
-        2. Set the user name and password for items of type "Database monitor".
+        2. Set the user name and password in host macros ({$MYSQL.USER} and {$MYSQL.PASSWORD}).
     description: |
       Requirements for template operation:
       1.Create MySQL user for monitoring. For example:
       CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '<password>';
       GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';
       For more information read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html , please. 
-      2. Set the user name and password for items of type "Database monitor".
+      2. Set the user name and password in host macros ({$MYSQL.USER} and {$MYSQL.PASSWORD}).
     macros:
       - macro: "{$MYSQL.ABORTED_CONN.MAX.WARN}"
         _description: The number of failed attempts to connect to the MySQL server for trigger expression.
@@ -45,21 +45,30 @@ templates:
       - macro: "{$MYSQL.SLOW_QUERIES.MAX.WARN}"
         _description: The number of slow queries for trigger expression.
         value: "3"
+      - macro: "{$MYSQL.BUFF_UTIL.MIN.WARN}"
+        _description: The minimum buffer pool utilization in percent for trigger expression.
+        value: "50"
       - macro: "{$MYSQL.DSN}"
         _description: System data source name.
-        value: test
+        value: <Put your DSN here>
+      - macro: "{$MYSQL.USER}"
+        _description: MySQL username.
+        value: <Put your username here>
+      - macro: "{$MYSQL.PASSWORD}"
+        _description: MySQL user password.
+        value: <Put your password here>
     items:
       - _prototype: mysql.get_status_variables
         type: ODBC
         key: db.odbc.get[get_status_variables,"{$MYSQL.DSN}"]
-        username: root
-        password: root_pwd
+        username: "{$MYSQL.USER}"
+        password: "{$MYSQL.PASSWORD}"
         params: show global status
       - _prototype: mysql.ping
         type: ODBC
         key: db.odbc.select[ping,"{$MYSQL.DSN}"]
-        username: root
-        password: root_pwd
+        username: "{$MYSQL.USER}"
+        password: "{$MYSQL.PASSWORD}"
         params: select "1"
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
@@ -67,8 +76,8 @@ templates:
       - _prototype: mysql.version
         type: ODBC
         key: db.odbc.select[version,"{$MYSQL.DSN}"]
-        username: root
-        password: root_pwd
+        username: "{$MYSQL.USER}"
+        password: "{$MYSQL.PASSWORD}"
         params: select version()
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
@@ -126,6 +135,8 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: $[?(@.Variable_name=='Max_used_connections')].Value.first()
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
       - _prototype: mysql.threads_cached
         preprocessing:
           - type: JSONPATH
@@ -164,6 +175,8 @@ templates:
         preprocessing:
           - type: JSONPATH
             params: $[?(@.Variable_name=='Innodb_buffer_pool_pages_total')].Value.first()
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1h
       - _prototype: mysql.innodb_buffer_pool_read_requests
         preprocessing:
           - type: JSONPATH
@@ -251,8 +264,8 @@ templates:
       - name: Databases discovery
         type: ODBC
         key: db.odbc.discovery[databases,"{$MYSQL.DSN}"]
-        username: root
-        password: root_pwd
+        username: "{$MYSQL.USER}"
+        password: "{$MYSQL.PASSWORD}"
         params: show databases
         update: 1h
         description: Scanning databases in DBMS.
@@ -272,8 +285,8 @@ templates:
             name: "Size of database {#DATABASE}"
             type: ODBC
             key: db.odbc.select[{#DATABASE}_size,"{$MYSQL.DSN}"]
-            username: root
-            password: root_pwd
+            username: "{$MYSQL.USER}"
+            password: "{$MYSQL.PASSWORD}"
             params: SELECT SUM(DATA_LENGTH + INDEX_LENGTH) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA="{#DATABASE}"
             value_type: UNSIGNED
             units: B
@@ -285,8 +298,8 @@ templates:
       - name: Replication discovery
         type: ODBC
         key: db.odbc.discovery[replication,"{$MYSQL.DSN}"]
-        username: root
-        password: root_pwd
+        username: "{$MYSQL.USER}"
+        password: "{$MYSQL.PASSWORD}"
         params: show slave status
         update: 1h
         description: 'If "show slave status" returns Master_Host, "Replication: *" items are created.'
@@ -296,11 +309,11 @@ templates:
         items:
           - _id: mysql.slave_status
             _resource: MySQL
-            name: "Replication Slave status {#MASTERHOST}"
+            name: "Replication Slave status {#MASTER_HOST}"
             type: ODBC
-            key: db.odbc.get[slave_status,"{$MYSQL.DSN}"]
-            username: root
-            password: root_pwd
+            key: db.odbc.get["{#MASTER_HOST}","{$MYSQL.DSN}"]
+            username: "{$MYSQL.USER}"
+            password: "{$MYSQL.PASSWORD}"
             params: show slave status
             value_type: TEXT
             update: 1m
@@ -309,9 +322,9 @@ templates:
             description: The item gets status information on essential parameters of the slave threads.
           - _id: mysql.seconds_behind_master
             _resource: MySQL
-            name: "Replication Seconds Behind Master {#MASTERHOST}"
+            name: "Replication Seconds Behind Master {#MASTER_HOST}"
             type: DEPENDENT
-            key: mysql.seconds_behind_master["{#MASTERHOST}"]
+            key: mysql.seconds_behind_master["{#MASTER_HOST}"]
             master_item: mysql.slave_status
             value_type: UNSIGNED
             units: s
@@ -322,13 +335,13 @@ templates:
               from the master in a timely fashion.
             preprocessing:
               - type: JSONPATH
-                params: $[?(@.Variable_name=='Seconds_Behind_Master')].Value.first()
-              - type: DISCARD_UNCHANGED_HEARTBEAT
-                params: 1h
-              - type: NOT_MATCHES_REGEX
-                params: "null"
+                params: $.[?(@.Master_Host=='{#MASTER_HOST}')]['Seconds_Behind_Master'].first()
+              - type: MATCHES_REGEX
+                params: \d+
                 error_handler: CUSTOM_ERROR
                 error_handler_params: Replication is not performed.
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1h
             triggers:
               - _id: trigger.seconds_behind_master
                 name: "Replication lag is too high (over {$MYSQL.REPL_LAG.MAX.WARN} for 5m)"
@@ -336,9 +349,9 @@ templates:
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$MYSQL.REPL_LAG.MAX.WARN}"
           - _id: mysql.slave_io_running
             _resource: MySQL
-            name: "Replication Slave IO Running {#MASTERHOST}"
+            name: "Replication Slave IO Running {#MASTER_HOST}"
             type: DEPENDENT
-            key: mysql.slave_io_running["{#MASTERHOST}"]
+            key: mysql.slave_io_running["{#MASTER_HOST}"]
             master_item: mysql.slave_status
             value_type: CHAR
             _group: MySQL
@@ -348,7 +361,7 @@ templates:
               explicitly stopped it with STOP SLAVE.
             preprocessing:
               - type: JSONPATH
-                params: $[?(@.Variable_name=='Slave_IO_Running')].Value.first()
+                params: $.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_IO_Running'].first()
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
             triggers:
@@ -364,9 +377,9 @@ templates:
                   - trigger.slave_io_running
           - _id: mysql.slave_sql_running
             _resource: MySQL
-            name: "Replication Slave SQL Running {#MASTERHOST}"
+            name: "Replication Slave SQL Running {#MASTER_HOST}"
             type: DEPENDENT
-            key: mysql.slave_sql_running["{#MASTERHOST}"]
+            key: mysql.slave_sql_running["{#MASTER_HOST}"]
             master_item: mysql.slave_status
             value_type: CHAR
             _group: MySQL
@@ -375,7 +388,7 @@ templates:
               As with the I/O thread, this should normally be Yes.
             preprocessing:
               - type: JSONPATH
-                params: $[?(@.Variable_name=='Slave_SQL_Running')].Value.first()
+                params: $.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_SQL_Running'].first()
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
             triggers:
