@@ -35,8 +35,8 @@ No specific Zabbix configuration is required.
 |Name|Description|Default|
 |----|-----------|-------|
 |{$MYSQL.ABORTED_CONN.MAX.WARN}|<p>The number of failed attempts to connect to the MySQL server for trigger expression.</p>|`3`|
-|{$MYSQL.HOST}|<p>Hostname or IP of MySQL host or container.</p>|`localhost`|
-|{$MYSQL.PORT}|<p>MySQL service port.</p>|`3306`|
+|{$MYSQL.BUFF_UTIL.MIN.WARN}|<p>The minimum buffer pool utilization in percent for trigger expression.</p>|`50`|
+|{$MYSQL.DSN}|<p>Hostname or IP of MySQL host or container.</p>|`<Put your DSN>`|
 |{$MYSQL.REPL_LAG.MAX.WARN}|<p>The lag of slave from master for trigger expression.</p>|`30m`|
 |{$MYSQL.SLOW_QUERIES.MAX.WARN}|<p>The number of slow queries for trigger expression.</p>|`3`|
 
@@ -48,15 +48,15 @@ There are no template links in this template.
 
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
-|Databases discovery|<p>Scanning databases in DBMS.</p>|ZABBIX_PASSIVE|mysql.db.discovery["{$MYSQL.HOST}","{$MYSQL.PORT}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p><p>**Filter**:</p>AND_OR <p>- A: {#DATABASE} NOT_MATCHES_REGEX `information_schema`</p>|
-|Replication discovery|<p>If "show slave status" returns Master_Host, "Replication: *" items are created.</p>|ZABBIX_PASSIVE|mysql.replication.discovery["{$MYSQL.HOST}","{$MYSQL.PORT}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|Databases discovery|<p>Scanning databases in DBMS.</p>|ZABBIX_PASSIVE|mysql.db.discovery["{$MYSQL.DSN}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p><p>**Filter**:</p>AND_OR <p>- A: {#DATABASE} NOT_MATCHES_REGEX `information_schema`</p>|
+|Replication discovery|<p>If "show slave status" returns Master_Host, "Replication: *" items are created.</p>|ZABBIX_PASSIVE|mysql.replication.discovery["{$MYSQL.DSN}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 
 ## Items collected
 
 |Group|Name|Description|Type|Key and additional info|
 |-----|----|-----------|----|---------------------|
-|MySQL|MySQL: Status||ZABBIX_PASSIVE|mysql.ping["{$MYSQL.HOST}","{$MYSQL.PORT}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
-|MySQL|MySQL: Version||ZABBIX_PASSIVE|mysql.version["{$MYSQL.HOST}","{$MYSQL.PORT}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
+|MySQL|MySQL: Status||ZABBIX_PASSIVE|mysql.ping["{$MYSQL.DSN}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `10m`</p>|
+|MySQL|MySQL: Version||ZABBIX_PASSIVE|mysql.version["{$MYSQL.DSN}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1d`</p>|
 |MySQL|MySQL: Uptime|<p>The number of seconds that the server has been up.</p>|DEPENDENT|mysql.uptime<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Uptime')].Value.first()`</p>|
 |MySQL|MySQL: Aborted clients per second|<p>The number of connections that were aborted because the client died without closing the connection properly.</p>|DEPENDENT|mysql.aborted_clients.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Aborted_clients')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Aborted connections per second|<p>The number of failed attempts to connect to the MySQL server.</p>|DEPENDENT|mysql.aborted_connects.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Aborted_connects')].Value.first()`</p><p>- CHANGE_PER_SECOND|
@@ -67,7 +67,7 @@ There are no template links in this template.
 |MySQL|MySQL: Connection errors select per second|<p>Number of errors during calls to select() or poll() on the listening port. The client would not necessarily have been rejected in these cases.</p>|DEPENDENT|mysql.connection_errors_select.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Connection_errors_select')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Connection errors tcpwrap per second|<p>Number of connections the libwrap library refused.</p>|DEPENDENT|mysql.connection_errors_tcpwrap.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Connection_errors_tcpwrap')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Connections per second|<p>The number of connection attempts (successful or not) to the MySQL server.</p>|DEPENDENT|mysql.connections.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Connections')].Value.first()`</p><p>- CHANGE_PER_SECOND|
-|MySQL|MySQL: Max used connections|<p>The maximum number of connections that have been in use simultaneously since the server started.</p>|DEPENDENT|mysql.max_used_connections<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Max_used_connections')].Value.first()`</p>|
+|MySQL|MySQL: Max used connections|<p>The maximum number of connections that have been in use simultaneously since the server started.</p>|DEPENDENT|mysql.max_used_connections<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Max_used_connections')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |MySQL|MySQL: Threads cached|<p>The number of threads in the thread cache.</p>|DEPENDENT|mysql.threads_cached<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Threads_cached')].Value.first()`</p>|
 |MySQL|MySQL: Threads connected|<p>The number of currently open connections.</p>|DEPENDENT|mysql.threads_connected<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Threads_connected')].Value.first()`</p>|
 |MySQL|MySQL: Threads created|<p>The number of threads created to handle connections. If Threads_created is big, you may want to increase the thread_cache_size value. The cache miss rate can be calculated as Threads_created/Connections.</p>|DEPENDENT|mysql.threads_created<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Threads_created')].Value.first()`</p>|
@@ -78,7 +78,7 @@ There are no template links in this template.
 |MySQL|MySQL: Created tmp tables on disk|<p>The number of internal on-disk temporary tables created by the server while executing statements.</p>|DEPENDENT|mysql.created_tmp_disk_tables<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Created_tmp_disk_tables')].Value.first()`</p>|
 |MySQL|MySQL: Created tmp tables on memory|<p>The number of internal temporary tables created by the server while executing statements.</p>|DEPENDENT|mysql.created_tmp_tables<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Created_tmp_tables')].Value.first()`</p>|
 |MySQL|MySQL: InnoDB buffer pool pages free|<p>The total size of the InnoDB buffer pool, in pages.</p>|DEPENDENT|mysql.innodb_buffer_pool_pages_free<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_pages_free')].Value.first()`</p>|
-|MySQL|MySQL: InnoDB buffer pool pages total|<p>The total size of the InnoDB buffer pool, in pages.</p>|DEPENDENT|mysql.innodb_buffer_pool_pages_total<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_pages_total')].Value.first()`</p>|
+|MySQL|MySQL: InnoDB buffer pool pages total|<p>The total size of the InnoDB buffer pool, in pages.</p>|DEPENDENT|mysql.innodb_buffer_pool_pages_total<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_pages_total')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |MySQL|MySQL: InnoDB buffer pool read requests per second|<p>The number of logical read requests per second.</p>|DEPENDENT|mysql.innodb_buffer_pool_read_requests.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_read_requests')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: InnoDB buffer pool reads per second|<p>The number of logical reads per second that InnoDB could not satisfy from the buffer pool, and had to read directly from disk.</p>|DEPENDENT|mysql.innodb_buffer_pool_reads.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_reads')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: InnoDB row lock time|<p>The total time spent in acquiring row locks for InnoDB tables, in milliseconds.</p>|DEPENDENT|mysql.innodb_row_lock_time<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_row_lock_time')].Value.first()`</p><p>- MULTIPLIER: `0.001`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
@@ -93,30 +93,31 @@ There are no template links in this template.
 |MySQL|MySQL: Command Update per second|<p>The Com_update counter variable indicates the number of times the update statement has been executed.</p>|DEPENDENT|mysql.com_update.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Com_update')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Queries per second|<p>The number of statements executed by the server. This variable includes statements executed within stored programs, unlike the Questions variable.</p>|DEPENDENT|mysql.queries.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Queries')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Questions per second|<p>The number of statements executed by the server. This includes only statements sent to the server by clients and not statements executed within stored programs, unlike the Queries variable.</p>|DEPENDENT|mysql.questions.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Questions')].Value.first()`</p><p>- CHANGE_PER_SECOND|
-|MySQL|MySQL: Size of database {#DATABASE}|<p>-</p>|ZABBIX_PASSIVE|mysql.dbsize["{$MYSQL.HOST}","{$MYSQL.PORT}","{#DATABASE}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
+|MySQL|MySQL: Size of database {#DATABASE}|<p>-</p>|ZABBIX_PASSIVE|mysql.dbsize["{$MYSQL.DSN}","{#DATABASE}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |MySQL|MySQL: Replication Seconds Behind Master {#MASTERHOST}|<p>The number of seconds that the slave SQL thread is behind processing the master binary log.</p><p>A high number (or an increasing one) can indicate that the slave is unable to handle events</p><p>from the master in a timely fashion.</p>|DEPENDENT|mysql.seconds_behind_master["{#MASTERHOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Seconds_Behind_Master')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p><p>- NOT_MATCHES_REGEX: `null`</p><p>⛔️ON_FAIL: `CUSTOM_ERROR -> Replication is not performed.`</p>|
 |MySQL|MySQL: Replication Slave IO Running {#MASTERHOST}|<p>Whether the I/O thread for reading the master's binary log is running. </p><p>Normally, you want this to be Yes unless you have not yet started replication or have </p><p>explicitly stopped it with STOP SLAVE.</p>|DEPENDENT|mysql.slave_io_running["{#MASTERHOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Slave_IO_Running')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |MySQL|MySQL: Replication Slave SQL Running {#MASTERHOST}|<p>Whether the SQL thread for executing events in the relay log is running. </p><p>As with the I/O thread, this should normally be Yes.</p>|DEPENDENT|mysql.slave_sql_running["{#MASTERHOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Slave_SQL_Running')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
-|Zabbix_raw_items|MySQL: Get status variables|<p>The item gets server global status information.</p>|ZABBIX_PASSIVE|mysql.get_status_variables["{$MYSQL.HOST}","{$MYSQL.PORT}"]|
+|Zabbix_raw_items|MySQL: Get status variables|<p>The item gets server global status information.</p>|ZABBIX_PASSIVE|mysql.get_status_variables["{$MYSQL.DSN}"]|
 |Zabbix_raw_items|MySQL: InnoDB buffer pool read requests|<p>The number of logical read requests.</p>|DEPENDENT|mysql.innodb_buffer_pool_read_requests<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_read_requests')].Value.first()`</p>|
 |Zabbix_raw_items|MySQL: InnoDB buffer pool reads|<p>The number of logical reads that InnoDB could not satisfy from the buffer pool, and had to read directly from disk.</p>|DEPENDENT|mysql.innodb_buffer_pool_reads<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_reads')].Value.first()`</p>|
-|Zabbix_raw_items|MySQL: Replication Slave status {#MASTERHOST}|<p>The item gets status information on essential parameters of the slave threads.</p>|ZABBIX_PASSIVE|mysql.slave_status["{$MYSQL.HOST}","{$MYSQL.PORT}","{#MASTERHOST}"]|
+|Zabbix_raw_items|MySQL: Replication Slave status {#MASTERHOST}|<p>The item gets status information on essential parameters of the slave threads.</p>|ZABBIX_PASSIVE|mysql.slave_status["{$MYSQL.DSN}","{#MASTERHOST}"]|
 
 ## Triggers
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
-|MySQL: Service is down||`{TEMPLATE_NAME:mysql.ping["{$MYSQL.HOST}","{$MYSQL.PORT}"].last()}=0`|HIGH||
-|MySQL: Version has changed (new version value received: {ITEM.VALUE})|<p>MySQL version has changed. Ack to close.</p>|`{TEMPLATE_NAME:mysql.version["{$MYSQL.HOST}","{$MYSQL.PORT}"].diff()}=1 and {TEMPLATE_NAME:mysql.version["{$MYSQL.HOST}","{$MYSQL.PORT}"].strlen()}>0`|INFO|<p>Manual close: YES</p>|
+|MySQL: Service is down||`{TEMPLATE_NAME:mysql.ping["{$MYSQL.DSN}"].last()}=0`|HIGH||
+|MySQL: Version has changed (new version value received: {ITEM.VALUE})|<p>MySQL version has changed. Ack to close.</p>|`{TEMPLATE_NAME:mysql.version["{$MYSQL.DSN}"].diff()}=1 and {TEMPLATE_NAME:mysql.version["{$MYSQL.DSN}"].strlen()}>0`|INFO|<p>Manual close: YES</p>|
 |MySQL: Service has been restarted (uptime < 10m)|<p>MySQL uptime is less than 10 minutes.</p>|`{TEMPLATE_NAME:mysql.uptime.last()}<10m`|INFO||
 |MySQL: Server has aborted connections (over {$MYSQL.ABORTED_CONN.MAX.WARN} for 5m)|<p>The number of failed attempts to connect to the MySQL server is more than {$MYSQL.ABORTED_CONN.MAX.WARN} in the last 5 minutes.</p>|`{TEMPLATE_NAME:mysql.aborted_connects.rate.min(5m)}>{$MYSQL.ABORTED_CONN.MAX.WARN}`|AVERAGE|<p>**Depends on**:</p><p>- MySQL: Refused connections (max_connections limit reached)</p>|
 |MySQL: Refused connections (max_connections limit reached)|<p>Number of refused connections due to the max_connections limit being reached.</p>|`{TEMPLATE_NAME:mysql.connection_errors_max_connections.rate.last()}>0`|AVERAGE||
+|MySQL: Buffer pool utilization is too low (less {$MYSQL.BUFF_UTIL.MIN.WARN}% for 5m)|<p>The buffer pool utilization is less than {$MYSQL.BUFF_UTIL.MIN.WARN}% in the last 5 minutes. This means that there is a lot of unused RAM allocated for the buffer pool, which you can easily reallocate at the moment.</p>|`{TEMPLATE_NAME:mysql.buffer_pool_utilization.max(5m)}<{$MYSQL.BUFF_UTIL.MIN.WARN}`|WARNING||
 |MySQL: Server has slow queries (over {$MYSQL.SLOW_QUERIES.MAX.WARN} for 5m)|<p>The number of slow queries is more than {$MYSQL.SLOW_QUERIES.MAX.WARN} in the last 5 minutes.</p>|`{TEMPLATE_NAME:mysql.slow_queries.rate.min(5m)}>{$MYSQL.SLOW_QUERIES.MAX.WARN}`|WARNING||
 |MySQL: Replication lag is too high (over {$MYSQL.REPL_LAG.MAX.WARN} for 5m)|<p>-</p>|`{TEMPLATE_NAME:mysql.seconds_behind_master["{#MASTERHOST}"].min(5m)}>{$MYSQL.REPL_LAG.MAX.WARN}`|WARNING||
 |MySQL: The slave I/O thread is not running|<p>Whether the I/O thread for reading the master's binary log is running.</p>|`{TEMPLATE_NAME:mysql.slave_io_running["{#MASTERHOST}"].count(#1,"No",eq)}=1`|AVERAGE||
 |MySQL: The slave I/O thread is not connected to a replication master|<p>-</p>|`{TEMPLATE_NAME:mysql.slave_io_running["{#MASTERHOST}"].count(#1,"Yes",ne)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: The slave I/O thread is not running</p>|
 |MySQL: The SQL thread is not running|<p>Whether the SQL thread for executing events in the relay log is running.</p>|`{TEMPLATE_NAME:mysql.slave_sql_running["{#MASTERHOST}"].count(#1,"No",eq)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: The slave I/O thread is not running</p>|
-|MySQL: Failed to get items (no data for 30m)|<p>Zabbix has not received data for items for the last 30 minutes.</p>|`{TEMPLATE_NAME:mysql.get_status_variables["{$MYSQL.HOST}","{$MYSQL.PORT}"].nodata(30m)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: Service is down</p>|
+|MySQL: Failed to get items (no data for 30m)|<p>Zabbix has not received data for items for the last 30 minutes.</p>|`{TEMPLATE_NAME:mysql.get_status_variables["{$MYSQL.DSN}"].nodata(30m)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: Service is down</p>|
 
 ## Feedback
 

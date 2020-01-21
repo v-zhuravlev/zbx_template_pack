@@ -1025,6 +1025,12 @@ Template tooling version used: 0.35</description>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -1759,6 +1765,12 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   <step>
                      <type>11</type>
                      <params>/resultset/row[field/text()='Innodb_buffer_pool_pages_total']/field[@name='Value']/text()</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3577,6 +3589,10 @@ return JSON.stringify(s)</params>
                <value>3</value>
             </macro>
             <macro>
+               <macro>{$MYSQL.BUFF_UTIL.MIN.WARN}</macro>
+               <value>50</value>
+            </macro>
+            <macro>
                <macro>{$MYSQL.HOST}</macro>
                <value>localhost</value>
             </macro>
@@ -4221,6 +4237,23 @@ The number of failed attempts to connect to the MySQL server is more than {$MYS
          <priority>3</priority>
          <description>Last value: {ITEM.LASTVALUE1}&#13;
 Number of refused connections due to the max_connections limit being reached.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template DB MySQL by Zabbix agent:mysql.buffer_pool_utilization.max(5m)}&lt;{$MYSQL.BUFF_UTIL.MIN.WARN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>MySQL: Buffer pool utilization is too low (less {$MYSQL.BUFF_UTIL.MIN.WARN}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The buffer pool utilization is less than {$MYSQL.BUFF_UTIL.MIN.WARN}% in the last 5 minutes. This means that there is a lot of unused RAM allocated for the buffer pool, which you can easily reallocate at the moment.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>

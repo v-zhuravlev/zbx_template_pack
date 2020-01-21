@@ -16,7 +16,7 @@
 CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '&lt;password&gt;';&#13;
 GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';&#13;
 For more information read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html , please. &#13;
-2. Set the user name and password for items of type "Database monitor".&#13;
+2. Set the user name and password in host macros ({$MYSQL.USER} and {$MYSQL.PASSWORD}).&#13;
 &#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql&#13;
@@ -44,8 +44,8 @@ Template tooling version used: 0.35</description>
                <trends>0</trends>
                <value_type>TEXT</value_type>
                <params>show global status</params>
-               <username>root</username>
-               <password>root_pwd</password>
+               <username>{$MYSQL.USER}</username>
+               <password>{$MYSQL.PASSWORD}</password>
                <description>The item gets server global status information.</description>
                <applications>
                   <application>
@@ -73,8 +73,8 @@ Template tooling version used: 0.35</description>
                <key>db.odbc.select[ping,"{$MYSQL.DSN}"]</key>
                <history>7d</history>
                <params>select "1"</params>
-               <username>root</username>
-               <password>root_pwd</password>
+               <username>{$MYSQL.USER}</username>
+               <password>{$MYSQL.PASSWORD}</password>
                <applications>
                   <application>
                      <name>MySQL</name>
@@ -106,8 +106,8 @@ Template tooling version used: 0.35</description>
                <trends>0</trends>
                <value_type>CHAR</value_type>
                <params>select version()</params>
-               <username>root</username>
-               <password>root_pwd</password>
+               <username>{$MYSQL.USER}</username>
+               <password>{$MYSQL.PASSWORD}</password>
                <applications>
                   <application>
                      <name>MySQL</name>
@@ -233,6 +233,14 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <name>MySQL</name>
                   </application>
                </applications>
+               <triggers>
+                  <trigger>
+                     <expression>{max(5m)}&lt;{$MYSQL.BUFF_UTIL.MIN.WARN}</expression>
+                     <name>MySQL: Buffer pool utilization is too low (less {$MYSQL.BUFF_UTIL.MIN.WARN}% for 5m)</name>
+                     <priority>WARNING</priority>
+                     <description>The buffer pool utilization is less than {$MYSQL.BUFF_UTIL.MIN.WARN}% in the last 5 minutes. This means that there is a lot of unused RAM allocated for the buffer pool, which you can easily reallocate at the moment.</description>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>MySQL: Bytes received</name>
@@ -700,6 +708,10 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <type>JSONPATH</type>
                      <params>$[?(@.Variable_name=='Innodb_buffer_pool_pages_total')].Value.first()</params>
                   </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1h</params>
+                  </step>
                </preprocessing>
                <master_item>
                   <key>db.odbc.get[get_status_variables,"{$MYSQL.DSN}"]</key>
@@ -905,6 +917,10 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   <step>
                      <type>JSONPATH</type>
                      <params>$[?(@.Variable_name=='Max_used_connections')].Value.first()</params>
+                  </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1h</params>
                   </step>
                </preprocessing>
                <master_item>
@@ -1127,8 +1143,8 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <key>db.odbc.discovery[databases,"{$MYSQL.DSN}"]</key>
                <delay>1h</delay>
                <params>show databases</params>
-               <username>root</username>
-               <password>root_pwd</password>
+               <username>{$MYSQL.USER}</username>
+               <password>{$MYSQL.PASSWORD}</password>
                <filter>
                   <evaltype>AND_OR</evaltype>
                   <conditions>
@@ -1150,8 +1166,8 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <history>7d</history>
                      <units>B</units>
                      <params>SELECT SUM(DATA_LENGTH + INDEX_LENGTH) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA="{#DATABASE}"</params>
-                     <username>root</username>
-                     <password>root_pwd</password>
+                     <username>{$MYSQL.USER}</username>
+                     <password>{$MYSQL.PASSWORD}</password>
                      <applications>
                         <application>
                            <name>MySQL</name>
@@ -1178,20 +1194,20 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <key>db.odbc.discovery[replication,"{$MYSQL.DSN}"]</key>
                <delay>1h</delay>
                <params>show slave status</params>
-               <username>root</username>
-               <password>root_pwd</password>
+               <username>{$MYSQL.USER}</username>
+               <password>{$MYSQL.PASSWORD}</password>
                <description>If "show slave status" returns Master_Host, "Replication: *" items are created.</description>
                <item_prototypes>
                   <item_prototype>
-                     <name>MySQL: Replication Slave status {#MASTERHOST}</name>
+                     <name>MySQL: Replication Slave status {#MASTER_HOST}</name>
                      <type>ODBC</type>
-                     <key>db.odbc.get[slave_status,"{$MYSQL.DSN}"]</key>
+                     <key>db.odbc.get["{#MASTER_HOST}","{$MYSQL.DSN}"]</key>
                      <history>1h</history>
                      <trends>0</trends>
                      <value_type>TEXT</value_type>
                      <params>show slave status</params>
-                     <username>root</username>
-                     <password>root_pwd</password>
+                     <username>{$MYSQL.USER}</username>
+                     <password>{$MYSQL.PASSWORD}</password>
                      <description>The item gets status information on essential parameters of the slave threads.</description>
                      <applications>
                         <application>
@@ -1200,9 +1216,9 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      </applications>
                   </item_prototype>
                   <item_prototype>
-                     <name>MySQL: Replication Seconds Behind Master {#MASTERHOST}</name>
+                     <name>MySQL: Replication Seconds Behind Master {#MASTER_HOST}</name>
                      <type>DEPENDENT</type>
-                     <key>mysql.seconds_behind_master["{#MASTERHOST}"]</key>
+                     <key>mysql.seconds_behind_master["{#MASTER_HOST}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>s</units>
@@ -1217,21 +1233,21 @@ from the master in a timely fashion.</description>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
-                           <params>$[?(@.Variable_name=='Seconds_Behind_Master')].Value.first()</params>
+                           <params>$.[?(@.Master_Host=='{#MASTER_HOST}')]['Seconds_Behind_Master'].first()</params>
+                        </step>
+                        <step>
+                           <type>MATCHES_REGEX</type>
+                           <params>\d+</params>
+                           <error_handler>CUSTOM_ERROR</error_handler>
+                           <error_handler_params>Replication is not performed.</error_handler_params>
                         </step>
                         <step>
                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
                            <params>1h</params>
                         </step>
-                        <step>
-                           <type>NOT_MATCHES_REGEX</type>
-                           <params>null</params>
-                           <error_handler>CUSTOM_ERROR</error_handler>
-                           <error_handler_params>Replication is not performed.</error_handler_params>
-                        </step>
                      </preprocessing>
                      <master_item>
-                        <key>db.odbc.get[slave_status,"{$MYSQL.DSN}"]</key>
+                        <key>db.odbc.get["{#MASTER_HOST}","{$MYSQL.DSN}"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1242,9 +1258,9 @@ from the master in a timely fashion.</description>
                      </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
-                     <name>MySQL: Replication Slave IO Running {#MASTERHOST}</name>
+                     <name>MySQL: Replication Slave IO Running {#MASTER_HOST}</name>
                      <type>DEPENDENT</type>
-                     <key>mysql.slave_io_running["{#MASTERHOST}"]</key>
+                     <key>mysql.slave_io_running["{#MASTER_HOST}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>0</trends>
@@ -1260,7 +1276,7 @@ explicitly stopped it with STOP SLAVE.</description>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
-                           <params>$[?(@.Variable_name=='Slave_IO_Running')].Value.first()</params>
+                           <params>$.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_IO_Running'].first()</params>
                         </step>
                         <step>
                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1268,7 +1284,7 @@ explicitly stopped it with STOP SLAVE.</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>db.odbc.get[slave_status,"{$MYSQL.DSN}"]</key>
+                        <key>db.odbc.get["{#MASTER_HOST}","{$MYSQL.DSN}"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1284,16 +1300,16 @@ explicitly stopped it with STOP SLAVE.</description>
                            <dependencies>
                               <dependency>
                                  <name>MySQL: The slave I/O thread is not running</name>
-                                 <expression>{Template DB MySQL by ODBC:mysql.slave_io_running["{#MASTERHOST}"].count(#1,"No",eq)}=1</expression>
+                                 <expression>{Template DB MySQL by ODBC:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
                   <item_prototype>
-                     <name>MySQL: Replication Slave SQL Running {#MASTERHOST}</name>
+                     <name>MySQL: Replication Slave SQL Running {#MASTER_HOST}</name>
                      <type>DEPENDENT</type>
-                     <key>mysql.slave_sql_running["{#MASTERHOST}"]</key>
+                     <key>mysql.slave_sql_running["{#MASTER_HOST}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>0</trends>
@@ -1308,7 +1324,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
-                           <params>$[?(@.Variable_name=='Slave_SQL_Running')].Value.first()</params>
+                           <params>$.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_SQL_Running'].first()</params>
                         </step>
                         <step>
                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1316,7 +1332,7 @@ As with the I/O thread, this should normally be Yes.</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>db.odbc.get[slave_status,"{$MYSQL.DSN}"]</key>
+                        <key>db.odbc.get["{#MASTER_HOST}","{$MYSQL.DSN}"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1327,7 +1343,7 @@ As with the I/O thread, this should normally be Yes.</description>
                            <dependencies>
                               <dependency>
                                  <name>MySQL: The slave I/O thread is not running</name>
-                                 <expression>{Template DB MySQL by ODBC:mysql.slave_io_running["{#MASTERHOST}"].count(#1,"No",eq)}=1</expression>
+                                 <expression>{Template DB MySQL by ODBC:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
@@ -1349,9 +1365,19 @@ As with the I/O thread, this should normally be Yes.</description>
                <description>The number of failed attempts to connect to the MySQL server for trigger expression.</description>
             </macro>
             <macro>
+               <macro>{$MYSQL.BUFF_UTIL.MIN.WARN}</macro>
+               <value>50</value>
+               <description>The minimum buffer pool utilization in percent for trigger expression.</description>
+            </macro>
+            <macro>
                <macro>{$MYSQL.DSN}</macro>
-               <value>test</value>
+               <value>&lt;Put your DSN here&gt;</value>
                <description>System data source name.</description>
+            </macro>
+            <macro>
+               <macro>{$MYSQL.PASSWORD}</macro>
+               <value>&lt;Put your password here&gt;</value>
+               <description>MySQL user password.</description>
             </macro>
             <macro>
                <macro>{$MYSQL.REPL_LAG.MAX.WARN}</macro>
@@ -1362,6 +1388,11 @@ As with the I/O thread, this should normally be Yes.</description>
                <macro>{$MYSQL.SLOW_QUERIES.MAX.WARN}</macro>
                <value>3</value>
                <description>The number of slow queries for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$MYSQL.USER}</macro>
+               <value>&lt;Put your username here&gt;</value>
+               <description>MySQL username.</description>
             </macro>
          </macros>
          <screens>
