@@ -24,7 +24,7 @@ GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_m
 
 For more information please read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html
 
-2. Set the user name and password for items of type "Database monitor".
+2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like <user:password@protocol(host:port or /path/to/socket)/>.
 
 ## Zabbix configuration
 
@@ -36,7 +36,7 @@ No specific Zabbix configuration is required.
 |----|-----------|-------|
 |{$MYSQL.ABORTED_CONN.MAX.WARN}|<p>The number of failed attempts to connect to the MySQL server for trigger expression.</p>|`3`|
 |{$MYSQL.BUFF_UTIL.MIN.WARN}|<p>The minimum buffer pool utilization in percent for trigger expression.</p>|`50`|
-|{$MYSQL.DSN}|<p>Hostname or IP of MySQL host or container.</p>|`<Put your DSN>`|
+|{$MYSQL.DSN}|<p>System data source name like <user:password@protocol(host:port or /path/to/socket)/>.</p>|`<Put your DSN>`|
 |{$MYSQL.REPL_LAG.MAX.WARN}|<p>The lag of slave from master for trigger expression.</p>|`30m`|
 |{$MYSQL.SLOW_QUERIES.MAX.WARN}|<p>The number of slow queries for trigger expression.</p>|`3`|
 
@@ -94,13 +94,13 @@ There are no template links in this template.
 |MySQL|MySQL: Queries per second|<p>The number of statements executed by the server. This variable includes statements executed within stored programs, unlike the Questions variable.</p>|DEPENDENT|mysql.queries.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Queries')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Questions per second|<p>The number of statements executed by the server. This includes only statements sent to the server by clients and not statements executed within stored programs, unlike the Queries variable.</p>|DEPENDENT|mysql.questions.rate<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Questions')].Value.first()`</p><p>- CHANGE_PER_SECOND|
 |MySQL|MySQL: Size of database {#DATABASE}|<p>-</p>|ZABBIX_PASSIVE|mysql.dbsize["{$MYSQL.DSN}","{#DATABASE}"]<p>**Preprocessing**:</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
-|MySQL|MySQL: Replication Seconds Behind Master {#MASTERHOST}|<p>The number of seconds that the slave SQL thread is behind processing the master binary log.</p><p>A high number (or an increasing one) can indicate that the slave is unable to handle events</p><p>from the master in a timely fashion.</p>|DEPENDENT|mysql.seconds_behind_master["{#MASTERHOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Seconds_Behind_Master')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p><p>- NOT_MATCHES_REGEX: `null`</p><p>⛔️ON_FAIL: `CUSTOM_ERROR -> Replication is not performed.`</p>|
-|MySQL|MySQL: Replication Slave IO Running {#MASTERHOST}|<p>Whether the I/O thread for reading the master's binary log is running. </p><p>Normally, you want this to be Yes unless you have not yet started replication or have </p><p>explicitly stopped it with STOP SLAVE.</p>|DEPENDENT|mysql.slave_io_running["{#MASTERHOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Slave_IO_Running')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
-|MySQL|MySQL: Replication Slave SQL Running {#MASTERHOST}|<p>Whether the SQL thread for executing events in the relay log is running. </p><p>As with the I/O thread, this should normally be Yes.</p>|DEPENDENT|mysql.slave_sql_running["{#MASTERHOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Slave_SQL_Running')].Value.first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
+|MySQL|MySQL: Replication Seconds Behind Master {#MASTER_HOST}|<p>The number of seconds that the slave SQL thread is behind processing the master binary log.</p><p>A high number (or an increasing one) can indicate that the slave is unable to handle events</p><p>from the master in a timely fashion.</p>|DEPENDENT|mysql.seconds_behind_master["{#MASTER_HOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.Master_Host=='{#MASTER_HOST}')]['Seconds_Behind_Master'].first()`</p><p>- MATCHES_REGEX: `\d+`</p><p>⛔️ON_FAIL: `CUSTOM_ERROR -> Replication is not performed.`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
+|MySQL|MySQL: Replication Slave IO Running {#MASTER_HOST}|<p>Whether the I/O thread for reading the master's binary log is running. </p><p>Normally, you want this to be Yes unless you have not yet started replication or have </p><p>explicitly stopped it with STOP SLAVE.</p>|DEPENDENT|mysql.slave_io_running["{#MASTER_HOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_IO_Running'].first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
+|MySQL|MySQL: Replication Slave SQL Running {#MASTER_HOST}|<p>Whether the SQL thread for executing events in the relay log is running. </p><p>As with the I/O thread, this should normally be Yes.</p>|DEPENDENT|mysql.slave_sql_running["{#MASTER_HOST}"]<p>**Preprocessing**:</p><p>- JSONPATH: `$.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_SQL_Running'].first()`</p><p>- DISCARD_UNCHANGED_HEARTBEAT: `1h`</p>|
 |Zabbix_raw_items|MySQL: Get status variables|<p>The item gets server global status information.</p>|ZABBIX_PASSIVE|mysql.get_status_variables["{$MYSQL.DSN}"]|
 |Zabbix_raw_items|MySQL: InnoDB buffer pool read requests|<p>The number of logical read requests.</p>|DEPENDENT|mysql.innodb_buffer_pool_read_requests<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_read_requests')].Value.first()`</p>|
 |Zabbix_raw_items|MySQL: InnoDB buffer pool reads|<p>The number of logical reads that InnoDB could not satisfy from the buffer pool, and had to read directly from disk.</p>|DEPENDENT|mysql.innodb_buffer_pool_reads<p>**Preprocessing**:</p><p>- JSONPATH: `$[?(@.Variable_name=='Innodb_buffer_pool_reads')].Value.first()`</p>|
-|Zabbix_raw_items|MySQL: Replication Slave status {#MASTERHOST}|<p>The item gets status information on essential parameters of the slave threads.</p>|ZABBIX_PASSIVE|mysql.slave_status["{$MYSQL.DSN}","{#MASTERHOST}"]|
+|Zabbix_raw_items|MySQL: Replication Slave status {#MASTER_HOST}|<p>The item gets status information on essential parameters of the slave threads.</p>|ZABBIX_PASSIVE|mysql.slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]|
 
 ## Triggers
 
@@ -113,10 +113,10 @@ There are no template links in this template.
 |MySQL: Refused connections (max_connections limit reached)|<p>Number of refused connections due to the max_connections limit being reached.</p>|`{TEMPLATE_NAME:mysql.connection_errors_max_connections.rate.last()}>0`|AVERAGE||
 |MySQL: Buffer pool utilization is too low (less {$MYSQL.BUFF_UTIL.MIN.WARN}% for 5m)|<p>The buffer pool utilization is less than {$MYSQL.BUFF_UTIL.MIN.WARN}% in the last 5 minutes. This means that there is a lot of unused RAM allocated for the buffer pool, which you can easily reallocate at the moment.</p>|`{TEMPLATE_NAME:mysql.buffer_pool_utilization.max(5m)}<{$MYSQL.BUFF_UTIL.MIN.WARN}`|WARNING||
 |MySQL: Server has slow queries (over {$MYSQL.SLOW_QUERIES.MAX.WARN} for 5m)|<p>The number of slow queries is more than {$MYSQL.SLOW_QUERIES.MAX.WARN} in the last 5 minutes.</p>|`{TEMPLATE_NAME:mysql.slow_queries.rate.min(5m)}>{$MYSQL.SLOW_QUERIES.MAX.WARN}`|WARNING||
-|MySQL: Replication lag is too high (over {$MYSQL.REPL_LAG.MAX.WARN} for 5m)|<p>-</p>|`{TEMPLATE_NAME:mysql.seconds_behind_master["{#MASTERHOST}"].min(5m)}>{$MYSQL.REPL_LAG.MAX.WARN}`|WARNING||
-|MySQL: The slave I/O thread is not running|<p>Whether the I/O thread for reading the master's binary log is running.</p>|`{TEMPLATE_NAME:mysql.slave_io_running["{#MASTERHOST}"].count(#1,"No",eq)}=1`|AVERAGE||
-|MySQL: The slave I/O thread is not connected to a replication master|<p>-</p>|`{TEMPLATE_NAME:mysql.slave_io_running["{#MASTERHOST}"].count(#1,"Yes",ne)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: The slave I/O thread is not running</p>|
-|MySQL: The SQL thread is not running|<p>Whether the SQL thread for executing events in the relay log is running.</p>|`{TEMPLATE_NAME:mysql.slave_sql_running["{#MASTERHOST}"].count(#1,"No",eq)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: The slave I/O thread is not running</p>|
+|MySQL: Replication lag is too high (over {$MYSQL.REPL_LAG.MAX.WARN} for 5m)|<p>-</p>|`{TEMPLATE_NAME:mysql.seconds_behind_master["{#MASTER_HOST}"].min(5m)}>{$MYSQL.REPL_LAG.MAX.WARN}`|WARNING||
+|MySQL: The slave I/O thread is not running|<p>Whether the I/O thread for reading the master's binary log is running.</p>|`{TEMPLATE_NAME:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1`|AVERAGE||
+|MySQL: The slave I/O thread is not connected to a replication master|<p>-</p>|`{TEMPLATE_NAME:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"Yes",ne)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: The slave I/O thread is not running</p>|
+|MySQL: The SQL thread is not running|<p>Whether the SQL thread for executing events in the relay log is running.</p>|`{TEMPLATE_NAME:mysql.slave_sql_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: The slave I/O thread is not running</p>|
 |MySQL: Failed to get items (no data for 30m)|<p>Zabbix has not received data for items for the last 30 minutes.</p>|`{TEMPLATE_NAME:mysql.get_status_variables["{$MYSQL.DSN}"].nodata(30m)}=1`|WARNING|<p>**Depends on**:</p><p>- MySQL: Service is down</p>|
 
 ## Feedback
