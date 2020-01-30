@@ -27,14 +27,14 @@ templates:
 
         For more information please read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html
 
-        2. Set the user name and password for items of type "Database monitor".
+        2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like <user:password@protocol(host:port or /path/to/socket)/>.
     description: |
       Requirements for template operation:
       1.Create MySQL user for monitoring. For example:
       CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '<password>';
       GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';
       For more information read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html , please. 
-      2. Set the user name and password for items of type "Database monitor".
+      2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like <user:password@protocol(host:port or /path/to/socket)/>.
     macros:
       - macro: "{$MYSQL.ABORTED_CONN.MAX.WARN}"
         _description: The number of failed attempts to connect to the MySQL server for trigger expression.
@@ -48,14 +48,8 @@ templates:
       - macro: "{$MYSQL.BUFF_UTIL.MIN.WARN}"
         _description: The minimum buffer pool utilization in percent for trigger expression.
         value: "50"
-      # - macro: "{$MYSQL.HOST}"
-      #   _description: Hostname or IP of MySQL host or container.
-      #   value: "localhost"
-      # - macro: "{$MYSQL.PORT}"
-      #   _description: MySQL service port.
-      #   value: "3306"
       - macro: "{$MYSQL.DSN}"
-        _description: Hostname or IP of MySQL host or container.
+        _description: System data source name like <user:password@protocol(host:port or /path/to/socket)/>.
         value: "<Put your DSN>"
     items:
       - _prototype: mysql.get_status_variables
@@ -291,9 +285,9 @@ templates:
         items:
           - _id: mysql.slave_status
             _resource: MySQL
-            name: "Replication Slave status {#MASTERHOST}"
+            name: "Replication Slave status {#MASTER_HOST}"
             type: ZABBIX_PASSIVE
-            key: mysql.slave_status["{$MYSQL.DSN}","{#MASTERHOST}"]
+            key: mysql.slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]
             value_type: TEXT
             update: 1m
             history: 1h
@@ -301,9 +295,9 @@ templates:
             description: The item gets status information on essential parameters of the slave threads.
           - _id: mysql.seconds_behind_master
             _resource: MySQL
-            name: "Replication Seconds Behind Master {#MASTERHOST}"
+            name: "Replication Seconds Behind Master {#MASTER_HOST}"
             type: DEPENDENT
-            key: mysql.seconds_behind_master["{#MASTERHOST}"]
+            key: mysql.seconds_behind_master["{#MASTER_HOST}"]
             master_item: mysql.slave_status
             value_type: UNSIGNED
             units: s
@@ -314,13 +308,13 @@ templates:
               from the master in a timely fashion.
             preprocessing:
               - type: JSONPATH
-                params: $[?(@.Variable_name=='Seconds_Behind_Master')].Value.first()
-              - type: DISCARD_UNCHANGED_HEARTBEAT
-                params: 1h
-              - type: NOT_MATCHES_REGEX
-                params: "null"
+                params: $.[?(@.Master_Host=='{#MASTER_HOST}')]['Seconds_Behind_Master'].first()
+              - type: MATCHES_REGEX
+                params: \d+
                 error_handler: CUSTOM_ERROR
                 error_handler_params: Replication is not performed.
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1h
             triggers:
               - _id: trigger.seconds_behind_master
                 name: "Replication lag is too high (over {$MYSQL.REPL_LAG.MAX.WARN} for 5m)"
@@ -328,9 +322,9 @@ templates:
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{$MYSQL.REPL_LAG.MAX.WARN}"
           - _id: mysql.slave_io_running
             _resource: MySQL
-            name: "Replication Slave IO Running {#MASTERHOST}"
+            name: "Replication Slave IO Running {#MASTER_HOST}"
             type: DEPENDENT
-            key: mysql.slave_io_running["{#MASTERHOST}"]
+            key: mysql.slave_io_running["{#MASTER_HOST}"]
             master_item: mysql.slave_status
             value_type: CHAR
             _group: MySQL
@@ -340,7 +334,7 @@ templates:
               explicitly stopped it with STOP SLAVE.
             preprocessing:
               - type: JSONPATH
-                params: $[?(@.Variable_name=='Slave_IO_Running')].Value.first()
+                params: $.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_IO_Running'].first()
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
             triggers:
@@ -356,9 +350,9 @@ templates:
                   - trigger.slave_io_running
           - _id: mysql.slave_sql_running
             _resource: MySQL
-            name: "Replication Slave SQL Running {#MASTERHOST}"
+            name: "Replication Slave SQL Running {#MASTER_HOST}"
             type: DEPENDENT
-            key: mysql.slave_sql_running["{#MASTERHOST}"]
+            key: mysql.slave_sql_running["{#MASTER_HOST}"]
             master_item: mysql.slave_status
             value_type: CHAR
             _group: MySQL
@@ -367,7 +361,7 @@ templates:
               As with the I/O thread, this should normally be Yes.
             preprocessing:
               - type: JSONPATH
-                params: $[?(@.Variable_name=='Slave_SQL_Running')].Value.first()
+                params: $.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_SQL_Running'].first()
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
             triggers:
