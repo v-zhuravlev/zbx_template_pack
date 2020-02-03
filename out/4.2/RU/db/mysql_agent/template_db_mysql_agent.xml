@@ -142,7 +142,7 @@ Template tooling version used: 0.35</description>
                <preprocessing>
                   <step>
                      <type>21</type>
-                     <params>return value.search(/is alive/)&gt;0?1:0</params>
+                     <params>return value.indexOf('is alive') !== -1 ? 1 : 0;</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3110,12 +3110,9 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>21</type>
-                     <params>arr = value.split('\n')
-s = []
-for (var i in arr) {
-  s.push({"{#DBNAME}": arr[i]})
-}
-return JSON.stringify(s)</params>
+                     <params>return JSON.stringify(value.split("\n").map(function (name) {
+    return ({"{#DBNAME}": name});
+}));</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3561,14 +3558,12 @@ Whether the SQL thread for executing events in the relay log is running.</descri
                <preprocessing>
                   <step>
                      <type>21</type>
-                     <params>var a = value.match(/Master_Host.*&gt;(.*)&lt;.*/)
-if (a) {
-  s = [{"{#MASTERHOST}": a[1]}]
-} 
-else {
-  s = []
+                     <params>var matches = value.match(/Master_Host.*&gt;(.*)&lt;.*/);
+if (matches) {
+    return JSON.stringify([{"{#MASTERHOST}": matches[1]}]);
 }
-return JSON.stringify(s)</params>
+
+return '[]';</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
