@@ -125,12 +125,9 @@ templates:
         preprocessing:
           - type: JAVASCRIPT
             params: |-
-              arr = value.split('\n')
-              s = []
-              for (var i in arr) {
-                s.push({"{#DBNAME}": arr[i]})
-              }
-              return JSON.stringify(s)
+              return JSON.stringify(value.split("\n").map(function (name) {
+                  return ({"{#DBNAME}": name});
+              }));
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
         filter:
@@ -161,14 +158,12 @@ templates:
         preprocessing:
           - type: JAVASCRIPT
             params: |-
-              var a = value.match(/Master_Host.*>(.*)<.*/)
-              if (a) {
-                s = [{"{#MASTERHOST}": a[1]}]
-              } 
-              else {
-                s = []
+              var matches = value.match(/Master_Host.*>(.*)<.*/);
+              if (matches) {
+                  return JSON.stringify([{"{#MASTERHOST}": matches[1]}]);
               }
-              return JSON.stringify(s)
+
+              return '[]';
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
         items:

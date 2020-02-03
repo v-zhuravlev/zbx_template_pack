@@ -17,7 +17,9 @@
         "priority": "WARNING",
         "expression": "{TEMPLATE_NAME:METRIC.nodata(30m)}=1",
         "description": "Zabbix has not received data for items for the last 30 minutes.",
-        "_depends_on": ["trigger.ping"]
+        "_depends_on": [
+          "trigger.ping"
+        ]
       }
     ]
   },
@@ -36,7 +38,7 @@
     "preprocessing": [
       {
         "type": "JAVASCRIPT",
-        "params": "return value.search(/is alive/)>0?1:0"
+        "params": "return value.indexOf('is alive') !== -1 ? 1 : 0;"
       },
       {
         "type": "DISCARD_UNCHANGED_HEARTBEAT",
@@ -183,7 +185,9 @@
         "priority": "AVERAGE",
         "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$MYSQL.ABORTED_CONN.MAX.WARN}",
         "description": "The number of failed attempts to connect to the MySQL server is more than {$MYSQL.ABORTED_CONN.MAX.WARN} in the last 5 minutes.",
-        "_depends_on": ["trigger.connection_errors_max_connections"]
+        "_depends_on": [
+          "trigger.connection_errors_max_connections"
+        ]
       }
     ]
   },
