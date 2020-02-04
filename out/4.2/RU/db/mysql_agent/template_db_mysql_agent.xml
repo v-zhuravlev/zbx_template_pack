@@ -26,7 +26,7 @@ password=&lt;password&gt;&#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql&#13;
 &#13;
-Template tooling version used: 0.34</description>
+Template tooling version used: 0.35</description>
          <groups>
             <group>
                <name>Templates/Databases</name>
@@ -142,7 +142,7 @@ Template tooling version used: 0.34</description>
                <preprocessing>
                   <step>
                      <type>21</type>
-                     <params>return value.search(/is alive/)&gt;0?1:0</params>
+                     <params>return value.indexOf('is alive') !== -1 ? 1 : 0;</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -1025,6 +1025,12 @@ Template tooling version used: 0.34</description>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
                </preprocessing>
                <jmx_endpoint/>
                <timeout>3s</timeout>
@@ -1759,6 +1765,12 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   <step>
                      <type>11</type>
                      <params>/resultset/row[field/text()='Innodb_buffer_pool_pages_total']/field[@name='Value']/text()</params>
+                     <error_handler>0</error_handler>
+                     <error_handler_params/>
+                  </step>
+                  <step>
+                     <type>20</type>
+                     <params>1h</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3098,12 +3110,9 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>21</type>
-                     <params>arr = value.split('\n')
-s = []
-for (var i in arr) {
-  s.push({"{#DBNAME}": arr[i]})
-}
-return JSON.stringify(s)</params>
+                     <params>return JSON.stringify(value.split("\n").map(function (name) {
+    return ({"{#DBNAME}": name});
+}));</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3549,14 +3558,12 @@ Whether the SQL thread for executing events in the relay log is running.</descri
                <preprocessing>
                   <step>
                      <type>21</type>
-                     <params>var a = value.match(/Master_Host.*&gt;(.*)&lt;.*/)
-if (a) {
-  s = [{"{#MASTERHOST}": a[1]}]
-} 
-else {
-  s = []
+                     <params>var matches = value.match(/Master_Host.*&gt;(.*)&lt;.*/);
+if (matches) {
+    return JSON.stringify([{"{#MASTERHOST}": matches[1]}]);
 }
-return JSON.stringify(s)</params>
+
+return '[]';</params>
                      <error_handler>0</error_handler>
                      <error_handler_params/>
                   </step>
@@ -3575,6 +3582,10 @@ return JSON.stringify(s)</params>
             <macro>
                <macro>{$MYSQL.ABORTED_CONN.MAX.WARN}</macro>
                <value>3</value>
+            </macro>
+            <macro>
+               <macro>{$MYSQL.BUFF_UTIL.MIN.WARN}</macro>
+               <value>50</value>
             </macro>
             <macro>
                <macro>{$MYSQL.HOST}</macro>
@@ -4221,6 +4232,23 @@ The number of failed attempts to connect to the MySQL server is more than {$MYS
          <priority>3</priority>
          <description>Last value: {ITEM.LASTVALUE1}&#13;
 Number of refused connections due to the max_connections limit being reached.</description>
+         <type>0</type>
+         <manual_close>0</manual_close>
+         <dependencies/>
+         <tags/>
+      </trigger>
+      <trigger>
+         <expression>{Template DB MySQL by Zabbix agent:mysql.buffer_pool_utilization.max(5m)}&lt;{$MYSQL.BUFF_UTIL.MIN.WARN}</expression>
+         <recovery_mode>0</recovery_mode>
+         <recovery_expression/>
+         <name>MySQL: Buffer pool utilization is too low (less {$MYSQL.BUFF_UTIL.MIN.WARN}% for 5m)</name>
+         <correlation_mode>0</correlation_mode>
+         <correlation_tag/>
+         <url/>
+         <status>0</status>
+         <priority>2</priority>
+         <description>Last value: {ITEM.LASTVALUE1}&#13;
+The buffer pool utilization is less than {$MYSQL.BUFF_UTIL.MIN.WARN}% in the last 5 minutes. This means that there is a lot of unused RAM allocated for the buffer pool, which you can easily reallocate at the moment.</description>
          <type>0</type>
          <manual_close>0</manual_close>
          <dependencies/>

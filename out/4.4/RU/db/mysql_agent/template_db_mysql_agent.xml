@@ -26,7 +26,7 @@ password=&lt;password&gt;&#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql&#13;
 &#13;
-Template tooling version used: 0.34</description>
+Template tooling version used: 0.35</description>
          <groups>
             <group>
                <name>Templates/Databases</name>
@@ -145,6 +145,14 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <name>MySQL</name>
                   </application>
                </applications>
+               <triggers>
+                  <trigger>
+                     <expression>{max(5m)}&lt;{$MYSQL.BUFF_UTIL.MIN.WARN}</expression>
+                     <name>MySQL: Buffer pool utilization is too low (less {$MYSQL.BUFF_UTIL.MIN.WARN}% for 5m)</name>
+                     <priority>WARNING</priority>
+                     <description>The buffer pool utilization is less than {$MYSQL.BUFF_UTIL.MIN.WARN}% in the last 5 minutes. This means that there is a lot of unused RAM allocated for the buffer pool, which you can easily reallocate at the moment.</description>
+                  </trigger>
+               </triggers>
             </item>
             <item>
                <name>MySQL: Bytes received</name>
@@ -639,6 +647,10 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <type>XMLPATH</type>
                      <params>/resultset/row[field/text()='Innodb_buffer_pool_pages_total']/field[@name='Value']/text()</params>
                   </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1h</params>
+                  </step>
                </preprocessing>
                <master_item>
                   <key>mysql.get_status_variables["{$MYSQL.HOST}","{$MYSQL.PORT}"]</key>
@@ -845,6 +857,10 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <type>XMLPATH</type>
                      <params>/resultset/row[field/text()='Max_used_connections']/field[@name='Value']/text()</params>
                   </step>
+                  <step>
+                     <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                     <params>1h</params>
+                  </step>
                </preprocessing>
                <master_item>
                   <key>mysql.get_status_variables["{$MYSQL.HOST}","{$MYSQL.PORT}"]</key>
@@ -865,7 +881,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>return value.search(/is alive/)&gt;0?1:0</params>
+                     <params>return value.indexOf('is alive') !== -1 ? 1 : 0;</params>
                   </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1163,12 +1179,9 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>arr = value.split('\n')
-s = []
-for (var i in arr) {
-  s.push({"{#DBNAME}": arr[i]})
-}
-return JSON.stringify(s)</params>
+                     <params>return JSON.stringify(value.split("\n").map(function (name) {
+    return ({"{#DBNAME}": name});
+}));</params>
                   </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1334,14 +1347,12 @@ As with the I/O thread, this should normally be Yes.</description>
                <preprocessing>
                   <step>
                      <type>JAVASCRIPT</type>
-                     <params>var a = value.match(/Master_Host.*&gt;(.*)&lt;.*/)
-if (a) {
-  s = [{"{#MASTERHOST}": a[1]}]
-} 
-else {
-  s = []
+                     <params>var matches = value.match(/Master_Host.*&gt;(.*)&lt;.*/);
+if (matches) {
+    return JSON.stringify([{"{#MASTERHOST}": matches[1]}]);
 }
-return JSON.stringify(s)</params>
+
+return '[]';</params>
                   </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1355,6 +1366,11 @@ return JSON.stringify(s)</params>
                <macro>{$MYSQL.ABORTED_CONN.MAX.WARN}</macro>
                <value>3</value>
                <description>The number of failed attempts to connect to the MySQL server for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$MYSQL.BUFF_UTIL.MIN.WARN}</macro>
+               <value>50</value>
+               <description>The minimum buffer pool utilization in percent for trigger expression.</description>
             </macro>
             <macro>
                <macro>{$MYSQL.HOST}</macro>
