@@ -25,6 +25,16 @@
                 "$2"
               ]
             }
+          },
+          {
+            "label": "New template",
+            "description": "Add new template",
+            "body": {
+              "name": "Template App $1",
+              "_classes": [
+                "$2"
+              ]
+            }
           }
         ],
         "$id": "/properties/templates/items",
@@ -216,7 +226,7 @@
           },
           "name": {
             "$id": "/properties/templates/items/properties/name",
-            "description": "Template name",
+            // "description": "Template name",
             "type": "string",
             "title": "Template name",
             "pattern": "^Template.+",
@@ -413,10 +423,52 @@
                   "$ref": "./zabbix_metric_prototype_schema.json#/definitions/preprocessing"
                 },
                 "type": {
-                  "type": "string"
+                  "$ref": "./zabbix_metric_prototype_schema.json#/definitions/type"
                 },
                 "description": {
                   "type": "string"
+                },
+                "lld_macro_paths": {
+                  "$id": "/properties/templates/items/properties/lld_macro_paths",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/templates/items/properties/lld_macro_paths/items",
+                    "type": "object",
+                    "defaultSnippets": [
+                      {
+                        "label": "{$MEMORY.UTIL.MAX}",
+                        "body": {
+                          "macro": "{$$0MEMORY.UTIL.MAX}",
+                          "value": "90",
+                          "_description": "This macro is used as a threshold in memory utilization trigger."
+                        }
+                      },
+                      {
+                        "label": "{$MEMORY.AVAILABLE.MIN}",
+                        "body": {
+                          "macro": "{$$0MEMORY.AVAILABLE.MIN}",
+                          "value": "20M",
+                          "_description": "This macro is used as a threshold in memory available trigger."
+                        }
+                      }
+                    ],
+                    "properties": {
+                      "lld_macro": {
+                        "$id": "/properties/templates/items/properties/lld_macro_paths/items/properties/lld_macro",
+                        "type": "string",
+                        "title": "The LLD Macro",
+                        "default": "",
+                        "pattern": "^\\{\\#[0-9A-Z_\\.]+(:\".*\")?\\}$",
+                        "description": "LLD macro"
+                      },
+                      "path": {
+                        "$id": "/properties/templates/items/properties/lld_macro_paths/items/properties/path",
+                        "type": "string",
+                        "title": "The LLD Macro value"
+                        // "pattern": "^\\$\\.[0-9A-Za-z_\\.]+(:\".*\")?\\"
+                      }
+                    }
+                  }
                 },
                 "filter": {
                   "type": "object",
@@ -482,106 +534,106 @@
           }
         }
       }
-    },
-    "value_maps": {
-      "$id": "/properties/value_maps",
-      "type": "array",
-      "items": {
-        "defaultSnippets": [
-          {
-            "label": "New value map",
-            "body": {
-              "name": "$1",
-              "mappings": [
-                {
-                  "value": "$2",
-                  "newvalue": "$3"
-                }
-              ]
-            }
-          },
-          {
-            "label": "IF-MIB::ifOperStatus",
-            "body": {
-              "name": "IF-MIB::ifOperStatus",
-              "mappings": [
-                {
-                  "value": "1",
-                  "newvalue": "up"
-                },
-                {
-                  "value": "2",
-                  "newvalue": "down"
-                },
-                {
-                  "value": "4",
-                  "newvalue": "unknown"
-                },
-                {
-                  "value": "5",
-                  "newvalue": "dormant"
-                },
-                {
-                  "value": "6",
-                  "newvalue": "notPresent"
-                },
-                {
-                  "value": "7",
-                  "newvalue": "lowerLayerDown"
-                }
-              ]
-            }
-          }
-        ],
-        "$id": "/properties/value_maps/items",
-        "type": "object",
-        "required": [
-          "name",
-          "mappings"
-        ],
-        "properties": {
-          "name": {
-            "$id": "/properties/value_maps/items/properties/name",
-            "type": "string",
-            "title": "The Name Schema",
-            "default": "",
-            "examples": [
-              "EQUIPMENT-MIB::swFanStatus"
+    }
+  },
+  "value_maps": {
+    "$id": "/properties/value_maps",
+    "type": "array",
+    "items": {
+      "defaultSnippets": [
+        {
+          "label": "New value map",
+          "body": {
+            "name": "$1",
+            "mappings": [
+              {
+                "value": "$2",
+                "newvalue": "$3"
+              }
             ]
-          },
-          "mappings": {
-            "$id": "/properties/value_maps/items/properties/mappings",
-            "type": "array",
-            "items": {
-              "$id": "/properties/value_maps/items/properties/mappings/items",
-              "type": "object",
-              "default": {
-                "value": "",
-                "newvalue": ""
+          }
+        },
+        {
+          "label": "IF-MIB::ifOperStatus",
+          "body": {
+            "name": "IF-MIB::ifOperStatus",
+            "mappings": [
+              {
+                "value": "1",
+                "newvalue": "up"
               },
-              "required": [
-                "value",
-                "newvalue"
-              ],
-              "properties": {
-                "value": {
-                  "$id": "/properties/value_maps/items/properties/mappings/items/properties/value",
-                  "type": "string",
-                  "title": "The Value Schema",
-                  "default": "",
-                  "examples": [
-                    "0"
-                  ]
-                },
-                "newvalue": {
-                  "$id": "/properties/value_maps/items/properties/mappings/items/properties/newvalue",
-                  "type": "string",
-                  "title": "The Newvalue Schema",
-                  "default": "",
-                  "examples": [
-                    "other"
-                  ]
-                }
+              {
+                "value": "2",
+                "newvalue": "down"
+              },
+              {
+                "value": "4",
+                "newvalue": "unknown"
+              },
+              {
+                "value": "5",
+                "newvalue": "dormant"
+              },
+              {
+                "value": "6",
+                "newvalue": "notPresent"
+              },
+              {
+                "value": "7",
+                "newvalue": "lowerLayerDown"
+              }
+            ]
+          }
+        }
+      ],
+      "$id": "/properties/value_maps/items",
+      "type": "object",
+      "required": [
+        "name",
+        "mappings"
+      ],
+      "properties": {
+        "name": {
+          "$id": "/properties/value_maps/items/properties/name",
+          "type": "string",
+          "title": "The Name Schema",
+          "default": "",
+          "examples": [
+            "EQUIPMENT-MIB::swFanStatus"
+          ]
+        },
+        "mappings": {
+          "$id": "/properties/value_maps/items/properties/mappings",
+          "type": "array",
+          "items": {
+            "$id": "/properties/value_maps/items/properties/mappings/items",
+            "type": "object",
+            "default": {
+              "value": "",
+              "newvalue": ""
+            },
+            "required": [
+              "value",
+              "newvalue"
+            ],
+            "properties": {
+              "value": {
+                "$id": "/properties/value_maps/items/properties/mappings/items/properties/value",
+                "type": "string",
+                "title": "The Value Schema",
+                "default": "",
+                "examples": [
+                  "0"
+                ]
+              },
+              "newvalue": {
+                "$id": "/properties/value_maps/items/properties/mappings/items/properties/newvalue",
+                "type": "string",
+                "title": "The Newvalue Schema",
+                "default": "",
+                "examples": [
+                  "other"
+                ]
               }
             }
           }

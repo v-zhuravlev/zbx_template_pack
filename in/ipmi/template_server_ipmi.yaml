@@ -1,0 +1,131 @@
+---
+templates:
+  - name: Template Server HP by IPMI
+    _zbx_ver: "4.4"
+    _classes:
+      - SERVER
+    macros:
+      - macro: "{$IPMI.SENSOR_TYPE.MATCHES}"
+        value: ".*"
+        _description: "This macro is used in sensors discovery. Can be overridden on the host or linked template level."
+      - macro: "{$IPMI.SENSOR_TYPE.NOT_MATCHES}"
+        value: "invalid"
+        _description: "This macro is used in sensors discovery. Can be overridden on the host or linked template level."
+    items:
+      - _id: server.ipmi.get
+        name: Get IPMI sensors
+        type: IPMI
+        description: ""
+        key: ipmi.get
+        value_type: TEXT
+        history: 1h
+        _group: Zabbix_raw_items
+        update: 1m
+    discovery_rules:
+      - name: Discrete sensors discovery
+        type: DEPENDENT
+        key: ipmi.discrete.discovery
+        master_item: server.ipmi.get
+        description: ""
+        lld_macro_paths:
+          - lld_macro: "{#SENSOR_ID}"
+            path: $.id
+          - lld_macro: "{#SENSOR_READING_TYPE}"
+            path: $.reading.text
+          - lld_macro: "{#SENSOR_TYPE}"
+            path: $.sensor.text
+          - lld_macro: "{#SENSOR_UNIT}"
+            path: $.units
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#SENSOR_READING_TYPE}"
+              value: threshold
+              formulaid: A
+              operator: NOT_MATCHES_REGEX
+            - macro: "{#SENSOR_TYPE}"
+              value: "{$IPMI.SENSOR_TYPE.MATCHES}"
+              formulaid: B
+              operator: MATCHES_REGEX
+            - macro: "{#SENSOR_TYPE}"
+              value: "{$IPMI.SENSOR_TYPE.NOT_MATCHES}"
+              formulaid: C
+              operator: NOT_MATCHES_REGEX
+        items:
+          - _id: ipmi.state_text
+            name: "{#SENSOR_ID}"
+            type: DEPENDENT
+            key: ipmi.state_text[{#SENSOR_ID}]
+            master_item: server.ipmi.get
+            value_type: CHAR
+            _group: General
+            _resource: IPMI
+            application_prototype: __RESOURCE__ {#SENSOR_TYPE}
+            description: ""
+            preprocessing:
+              - type: JSONPATH
+                params: $.[?(@.id=='{#SENSOR_ID}')].state.text.first()
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+      - name: Threshold sensors discovery
+        type: DEPENDENT
+        key: ipmi.sensors.discovery
+        master_item: server.ipmi.get
+        description: ""
+        lld_macro_paths:
+          - lld_macro: "{#SENSOR_ID}"
+            path: $.id
+          - lld_macro: "{#SENSOR_READING_TYPE}"
+            path: $.reading.text
+          - lld_macro: "{#SENSOR_TYPE}"
+            path: $.sensor.text
+          - lld_macro: "{#SENSOR_UNIT}"
+            path: $.units
+          - lld_macro: "{#SENSOR_UP_CRIT}"
+            path: $.threshold.up.crit
+          - lld_macro: "{#SENSOR_UP_DISAST}"
+            path: $.threshold.up.non_recover
+        filter:
+          evaltype: AND
+          conditions:
+            - macro: "{#SENSOR_READING_TYPE}"
+              value: threshold
+              formulaid: A
+              operator: MATCHES_REGEX
+            - macro: "{#SENSOR_TYPE}"
+              value: "{$IPMI.SENSOR_TYPE.MATCHES}"
+              formulaid: B
+              operator: MATCHES_REGEX
+            - macro: "{#SENSOR_TYPE}"
+              value: "{$IPMI.SENSOR_TYPE.NOT_MATCHES}"
+              formulaid: C
+              operator: NOT_MATCHES_REGEX
+        items:
+          - _id: ipmi.state_text
+            name: "{#SENSOR_ID}, {#SENSOR_UNIT}"
+            type: DEPENDENT
+            key: ipmi.value[{#SENSOR_ID}]
+            master_item: server.ipmi.get
+            value_type: FLOAT
+            _group: General
+            _resource: IPMI
+            application_prototype: __RESOURCE__ {#SENSOR_TYPE}
+            description: ""
+            preprocessing:
+              - type: JSONPATH
+                params: $.[?(@.id=='{#SENSOR_ID}')].value.first()
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1h
+            triggers:
+              - _id: ipmi.value.trigger.crit
+                name: "{#SENSOR_ID} value is too high (over {#SENSOR_UP_CRIT} for 5m)"
+                priority: HIGH
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_UP_CRIT}"
+                description: ""
+                _depends_on:
+                  - ipmi.value.trigger.disast
+              - _id: ipmi.value.trigger.disast
+                name: "{#SENSOR_ID} value is critical (over {#SENSOR_UP_DISAST} for 5m)"
+                priority: DISASTER
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_UP_DISAST}"
+                description: ""
