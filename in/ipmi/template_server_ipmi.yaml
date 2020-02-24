@@ -1,7 +1,7 @@
 ---
 templates:
-  - name: Template Server HP by IPMI
-    _zbx_ver: "4.4"
+  - name: Template Server by IPMI
+    _zbx_ver: "5.0"
     _classes:
       - SERVER
     macros:
@@ -81,10 +81,18 @@ templates:
             path: $.sensor.text
           - lld_macro: "{#SENSOR_UNIT}"
             path: $.units
-          - lld_macro: "{#SENSOR_UP_CRIT}"
-            path: $.threshold.up.crit
-          - lld_macro: "{#SENSOR_UP_DISAST}"
-            path: $.threshold.up.non_recover
+          - lld_macro: "{#SENSOR_LO_WARN}"
+            path: $.threshold.lower.non_crit
+          - lld_macro: "{#SENSOR_LO_CRIT}"
+            path: $.threshold.lower.crit
+          - lld_macro: "{#SENSOR_LO_DISAST}"
+            path: $.threshold.lower.non_recover
+          - lld_macro: "{#SENSOR_HI_WARN}"
+            path: $.threshold.upper.non_crit
+          - lld_macro: "{#SENSOR_HI_CRIT}"
+            path: $.threshold.upper.crit
+          - lld_macro: "{#SENSOR_HI_DISAST}"
+            path: $.threshold.upper.non_recover
         filter:
           evaltype: AND
           conditions:
@@ -117,15 +125,43 @@ templates:
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
             triggers:
-              - _id: ipmi.value.trigger.crit
-                name: "{#SENSOR_ID} value is too high (over {#SENSOR_UP_CRIT} for 5m)"
-                priority: HIGH
-                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_UP_CRIT}"
+              - _id: ipmi.value.trigger.lo.warn
+                name: "{#SENSOR_ID} value is low (over {#SENSOR_LO_WARN} for 5m)"
+                priority: WARNING
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}<{#SENSOR_LO_WARN}"
                 description: ""
                 _depends_on:
-                  - ipmi.value.trigger.disast
-              - _id: ipmi.value.trigger.disast
-                name: "{#SENSOR_ID} value is critical (over {#SENSOR_UP_DISAST} for 5m)"
+                  - ipmi.value.trigger.lo.crit
+                  - ipmi.value.trigger.lo.disast
+              - _id: ipmi.value.trigger.lo.crit
+                name: "{#SENSOR_ID} value is too low (over {#SENSOR_LO_CRIT} for 5m)"
+                priority: HIGH
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}<{#SENSOR_LO_CRIT}"
+                description: ""
+                _depends_on:
+                  - ipmi.value.trigger.lo.disast
+              - _id: ipmi.value.trigger.lo.disast
+                name: "{#SENSOR_ID} value is critically low (over {#SENSOR_LO_DISAST} for 5m)"
                 priority: DISASTER
-                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_UP_DISAST}"
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}<{#SENSOR_LO_DISAST}"
+                description: ""
+              - _id: ipmi.value.trigger.hi.warn
+                name: "{#SENSOR_ID} value is high (over {#SENSOR_HI_WARN} for 5m)"
+                priority: WARNING
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_HI_WARN}"
+                description: ""
+                _depends_on:
+                  - ipmi.value.trigger.hi.crit
+                  - ipmi.value.trigger.hi.disast
+              - _id: ipmi.value.trigger.hi.crit
+                name: "{#SENSOR_ID} value is too high (over {#SENSOR_HI_CRIT} for 5m)"
+                priority: HIGH
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_HI_CRIT}"
+                description: ""
+                _depends_on:
+                  - ipmi.value.trigger.hi.disast
+              - _id: ipmi.value.trigger.hi.disast
+                name: "{#SENSOR_ID} value is critically high (over {#SENSOR_HI_DISAST} for 5m)"
+                priority: DISASTER
+                expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_HI_DISAST}"
                 description: ""
