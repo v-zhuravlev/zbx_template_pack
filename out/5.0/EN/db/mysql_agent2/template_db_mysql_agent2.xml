@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template DB MySQL by Zabbix agent 2</template>
-         <name>Template DB MySQL by Zabbix agent 2</name>
+         <template>Template DB MySQL by Zabbix agent2</template>
+         <name>Template DB MySQL by Zabbix agent2</name>
          <description>Requirements for template operation:&#13;
 1.Create MySQL user for monitoring. For example:&#13;
 CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '&lt;password&gt;';&#13;
@@ -98,7 +98,7 @@ Template tooling version used: 0.35</description>
                      <dependencies>
                         <dependency>
                            <name>MySQL: Refused connections (max_connections limit reached)</name>
-                           <expression>{Template DB MySQL by Zabbix agent 2:mysql.connection_errors_max_connections.rate.last()}&gt;0</expression>
+                           <expression>{Template DB MySQL by Zabbix agent2:mysql.connection_errors_max_connections.rate.last()}&gt;0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -597,7 +597,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <dependencies>
                         <dependency>
                            <name>MySQL: Service is down</name>
-                           <expression>{Template DB MySQL by Zabbix agent 2:mysql.ping["{$MYSQL.DSN}"].last()}=0</expression>
+                           <expression>{Template DB MySQL by Zabbix agent2:mysql.ping["{$MYSQL.DSN}"].last()}=0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -1162,6 +1162,12 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      </preprocessing>
                   </item_prototype>
                </item_prototypes>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#DATABASE}</lld_macro>
+                     <path>$.Database</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
                <preprocessing>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1261,7 +1267,7 @@ explicitly stopped it with STOP SLAVE.</description>
                            <dependencies>
                               <dependency>
                                  <name>MySQL: The slave I/O thread is not running</name>
-                                 <expression>{Template DB MySQL by Zabbix agent 2:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
+                                 <expression>{Template DB MySQL by Zabbix agent2:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
@@ -1304,7 +1310,7 @@ As with the I/O thread, this should normally be Yes.</description>
                            <dependencies>
                               <dependency>
                                  <name>MySQL: The slave I/O thread is not running</name>
-                                 <expression>{Template DB MySQL by Zabbix agent 2:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
+                                 <expression>{Template DB MySQL by Zabbix agent2:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
@@ -1324,6 +1330,12 @@ As with the I/O thread, this should normally be Yes.</description>
                      </applications>
                   </item_prototype>
                </item_prototypes>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#MASTER_HOST}</lld_macro>
+                     <path>$.Master_Host</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
                <preprocessing>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1370,7 +1382,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <style>0</style>
                      <resource>
                         <name>MySQL: Operations</name>
-                        <host>Template DB MySQL by Zabbix agent 2</host>
+                        <host>Template DB MySQL by Zabbix agent2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
@@ -1392,7 +1404,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <style>0</style>
                      <resource>
                         <name>MySQL: Queries</name>
-                        <host>Template DB MySQL by Zabbix agent 2</host>
+                        <host>Template DB MySQL by Zabbix agent2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
@@ -1414,7 +1426,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <style>0</style>
                      <resource>
                         <name>MySQL: Connections</name>
-                        <host>Template DB MySQL by Zabbix agent 2</host>
+                        <host>Template DB MySQL by Zabbix agent2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
@@ -1436,7 +1448,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <style>0</style>
                      <resource>
                         <name>MySQL: Bandwidth</name>
-                        <host>Template DB MySQL by Zabbix agent 2</host>
+                        <host>Template DB MySQL by Zabbix agent2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
@@ -1458,7 +1470,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <style>0</style>
                      <resource>
                         <name>MySQL: InnoDB buffer pool</name>
-                        <host>Template DB MySQL by Zabbix agent 2</host>
+                        <host>Template DB MySQL by Zabbix agent2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
@@ -1480,7 +1492,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <style>0</style>
                      <resource>
                         <name>MySQL: Threads</name>
-                        <host>Template DB MySQL by Zabbix agent 2</host>
+                        <host>Template DB MySQL by Zabbix agent2</host>
                      </resource>
                      <width>750</width>
                      <height>100</height>
@@ -1510,7 +1522,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <drawtype>GRADIENT_LINE</drawtype>
                <color>1A7C11</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.bytes_received.rate</key>
                </item>
             </graph_item>
@@ -1519,7 +1531,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <drawtype>GRADIENT_LINE</drawtype>
                <color>2774A4</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.bytes_sent.rate</key>
                </item>
             </graph_item>
@@ -1531,7 +1543,7 @@ As with the I/O thread, this should normally be Yes.</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.aborted_clients.rate</key>
                </item>
             </graph_item>
@@ -1539,7 +1551,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.aborted_connects.rate</key>
                </item>
             </graph_item>
@@ -1547,7 +1559,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>2</sortorder>
                <color>F63100</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.connections.rate</key>
                </item>
             </graph_item>
@@ -1555,7 +1567,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>3</sortorder>
                <color>A54F10</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.max_used_connections</key>
                </item>
             </graph_item>
@@ -1567,7 +1579,7 @@ As with the I/O thread, this should normally be Yes.</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.innodb_buffer_pool_pages_free</key>
                </item>
             </graph_item>
@@ -1575,7 +1587,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.innodb_buffer_pool_pages_total</key>
                </item>
             </graph_item>
@@ -1583,7 +1595,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>2</sortorder>
                <color>F63100</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.innodb_buffer_pool_read_requests.rate</key>
                </item>
             </graph_item>
@@ -1591,7 +1603,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>3</sortorder>
                <color>A54F10</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.innodb_buffer_pool_reads.rate</key>
                </item>
             </graph_item>
@@ -1603,7 +1615,7 @@ As with the I/O thread, this should normally be Yes.</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.com_delete.rate</key>
                </item>
             </graph_item>
@@ -1611,7 +1623,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.com_insert.rate</key>
                </item>
             </graph_item>
@@ -1619,7 +1631,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>2</sortorder>
                <color>F63100</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.com_select.rate</key>
                </item>
             </graph_item>
@@ -1627,7 +1639,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>3</sortorder>
                <color>A54F10</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.com_update.rate</key>
                </item>
             </graph_item>
@@ -1639,7 +1651,7 @@ As with the I/O thread, this should normally be Yes.</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.queries.rate</key>
                </item>
             </graph_item>
@@ -1647,7 +1659,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.questions.rate</key>
                </item>
             </graph_item>
@@ -1655,7 +1667,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>2</sortorder>
                <color>F63100</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.slow_queries.rate</key>
                </item>
             </graph_item>
@@ -1667,7 +1679,7 @@ As with the I/O thread, this should normally be Yes.</description>
             <graph_item>
                <color>1A7C11</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.threads_cached</key>
                </item>
             </graph_item>
@@ -1675,7 +1687,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>1</sortorder>
                <color>2774A4</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.threads_connected</key>
                </item>
             </graph_item>
@@ -1683,7 +1695,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>2</sortorder>
                <color>F63100</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.threads_created</key>
                </item>
             </graph_item>
@@ -1691,7 +1703,7 @@ As with the I/O thread, this should normally be Yes.</description>
                <sortorder>3</sortorder>
                <color>A54F10</color>
                <item>
-                  <host>Template DB MySQL by Zabbix agent 2</host>
+                  <host>Template DB MySQL by Zabbix agent2</host>
                   <key>mysql.threads_running</key>
                </item>
             </graph_item>
