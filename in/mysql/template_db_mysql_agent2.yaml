@@ -1,6 +1,6 @@
 ---
 templates:
-  - name: Template DB MySQL by Zabbix agent 2
+  - name: Template DB MySQL by Zabbix agent2
     _zbx_ver: "4.4"
     _classes:
       - DB
@@ -254,6 +254,9 @@ templates:
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
+        lld_macro_paths:
+          - lld_macro: "{#DATABASE}"
+            path: $.Database
         filter:
           evaltype: AND_OR
           conditions:
@@ -282,6 +285,9 @@ templates:
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
+        lld_macro_paths:
+          - lld_macro: "{#MASTER_HOST}"
+            path: $.Master_Host
         items:
           - _id: mysql.slave_status
             _resource: MySQL
