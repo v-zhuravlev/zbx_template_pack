@@ -16,7 +16,7 @@
 CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '&lt;password&gt;';&#13;
 GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';&#13;
 For more information read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html , please. &#13;
-2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like &lt;user:password@protocol(host:port or /path/to/socket)/&gt;.&#13;
+2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like &lt;protocol(host:port or /path/to/socket)/&gt;.&#13;
 &#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql&#13;
@@ -52,7 +52,7 @@ Template tooling version used: 0.35</description>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Aborted_clients')].Value.first()</params>
+                     <params>$.Aborted_clients</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -60,7 +60,7 @@ Template tooling version used: 0.35</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -79,7 +79,7 @@ Template tooling version used: 0.35</description>
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Aborted_connects')].Value.first()</params>
+                     <params>$.Aborted_connects</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -87,7 +87,7 @@ Template tooling version used: 0.35</description>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -166,7 +166,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Bytes_received')].Value.first()</params>
+                     <params>$.Bytes_received</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -174,7 +174,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -194,7 +194,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Bytes_sent')].Value.first()</params>
+                     <params>$.Bytes_sent</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -202,7 +202,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -221,7 +221,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Com_delete')].Value.first()</params>
+                     <params>$.Com_delete</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -229,7 +229,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -248,7 +248,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Com_insert')].Value.first()</params>
+                     <params>$.Com_insert</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -256,7 +256,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -275,7 +275,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Com_select')].Value.first()</params>
+                     <params>$.Com_select</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -283,7 +283,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -302,7 +302,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Com_update')].Value.first()</params>
+                     <params>$.Com_update</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -310,7 +310,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -329,7 +329,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connection_errors_accept')].Value.first()</params>
+                     <params>$.Connection_errors_accept</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -337,7 +337,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -356,7 +356,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connection_errors_internal')].Value.first()</params>
+                     <params>$.Connection_errors_internal</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -364,7 +364,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -383,7 +383,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connection_errors_max_connections')].Value.first()</params>
+                     <params>$.Connection_errors_max_connections</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -391,7 +391,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -418,7 +418,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connection_errors_peer_address')].Value.first()</params>
+                     <params>$.Connection_errors_peer_address</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -426,7 +426,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -445,7 +445,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connection_errors_select')].Value.first()</params>
+                     <params>$.Connection_errors_select</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -453,7 +453,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -472,7 +472,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connection_errors_tcpwrap')].Value.first()</params>
+                     <params>$.Connection_errors_tcpwrap</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -480,7 +480,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -499,7 +499,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Connections')].Value.first()</params>
+                     <params>$.Connections</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -507,7 +507,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -525,11 +525,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Created_tmp_disk_tables')].Value.first()</params>
+                     <params>$.Created_tmp_disk_tables</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -547,11 +547,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Created_tmp_files')].Value.first()</params>
+                     <params>$.Created_tmp_files</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -569,16 +569,16 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Created_tmp_tables')].Value.first()</params>
+                     <params>$.Created_tmp_tables</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
                <name>MySQL: Get status variables</name>
-               <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+               <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                <history>1h</history>
                <trends>0</trends>
                <value_type>TEXT</value_type>
@@ -597,7 +597,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      <dependencies>
                         <dependency>
                            <name>MySQL: Service is down</name>
-                           <expression>{Template DB MySQL by Zabbix agent 2:mysql.ping["{$MYSQL.DSN}"].last()}=0</expression>
+                           <expression>{Template DB MySQL by Zabbix agent 2:mysql.ping["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"].last()}=0</expression>
                         </dependency>
                      </dependencies>
                   </trigger>
@@ -618,11 +618,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_buffer_pool_pages_free')].Value.first()</params>
+                     <params>$.Innodb_buffer_pool_pages_free</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -640,7 +640,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_buffer_pool_pages_total')].Value.first()</params>
+                     <params>$.Innodb_buffer_pool_pages_total</params>
                   </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -648,7 +648,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -666,11 +666,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_buffer_pool_read_requests')].Value.first()</params>
+                     <params>$.Innodb_buffer_pool_read_requests</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -689,7 +689,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_buffer_pool_read_requests')].Value.first()</params>
+                     <params>$.Innodb_buffer_pool_read_requests</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -697,7 +697,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -715,11 +715,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_buffer_pool_reads')].Value.first()</params>
+                     <params>$.Innodb_buffer_pool_reads</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -738,7 +738,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_buffer_pool_reads')].Value.first()</params>
+                     <params>$.Innodb_buffer_pool_reads</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -746,7 +746,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -766,7 +766,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_row_lock_time')].Value.first()</params>
+                     <params>$.Innodb_row_lock_time</params>
                   </step>
                   <step>
                      <type>MULTIPLIER</type>
@@ -778,7 +778,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -798,7 +798,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_row_lock_time_max')].Value.first()</params>
+                     <params>$.Innodb_row_lock_time_max</params>
                   </step>
                   <step>
                      <type>MULTIPLIER</type>
@@ -810,7 +810,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -828,11 +828,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Innodb_row_lock_waits')].Value.first()</params>
+                     <params>$.Innodb_row_lock_waits</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -850,7 +850,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Max_used_connections')].Value.first()</params>
+                     <params>$.Max_used_connections</params>
                   </step>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -858,12 +858,12 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
                <name>MySQL: Status</name>
-               <key>mysql.ping["{$MYSQL.DSN}"]</key>
+               <key>mysql.ping["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                <history>7d</history>
                <applications>
                   <application>
@@ -903,7 +903,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Queries')].Value.first()</params>
+                     <params>$.Queries</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -911,7 +911,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -930,7 +930,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Questions')].Value.first()</params>
+                     <params>$.Questions</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -938,7 +938,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -957,7 +957,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Slow_queries')].Value.first()</params>
+                     <params>$.Slow_queries</params>
                   </step>
                   <step>
                      <type>CHANGE_PER_SECOND</type>
@@ -965,7 +965,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -991,11 +991,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Threads_cached')].Value.first()</params>
+                     <params>$.Threads_cached</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -1013,11 +1013,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Threads_connected')].Value.first()</params>
+                     <params>$.Threads_connected</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -1035,11 +1035,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Threads_created')].Value.first()</params>
+                     <params>$.Threads_created</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -1057,11 +1057,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Threads_running')].Value.first()</params>
+                     <params>$.Threads_running</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
             </item>
             <item>
@@ -1080,11 +1080,11 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <preprocessing>
                   <step>
                      <type>JSONPATH</type>
-                     <params>$[?(@.Variable_name=='Uptime')].Value.first()</params>
+                     <params>$.Uptime</params>
                   </step>
                </preprocessing>
                <master_item>
-                  <key>mysql.get_status_variables["{$MYSQL.DSN}"]</key>
+                  <key>mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                </master_item>
                <triggers>
                   <trigger>
@@ -1097,7 +1097,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
             </item>
             <item>
                <name>MySQL: Version</name>
-               <key>mysql.version["{$MYSQL.DSN}"]</key>
+               <key>mysql.version["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                <delay>15m</delay>
                <history>7d</history>
                <trends>0</trends>
@@ -1128,7 +1128,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
             <discovery_rule>
                <name>Databases discovery</name>
                <type>ZABBIX_PASSIVE</type>
-               <key>mysql.db.discovery["{$MYSQL.DSN}"]</key>
+               <key>mysql.db.discovery["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                <delay>1h</delay>
                <filter>
                   <evaltype>AND_OR</evaltype>
@@ -1145,7 +1145,7 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                <item_prototypes>
                   <item_prototype>
                      <name>MySQL: Size of database {#DATABASE}</name>
-                     <key>mysql.dbsize["{$MYSQL.DSN}","{#DATABASE}"]</key>
+                     <key>mysql.db.size["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#DATABASE}"]</key>
                      <delay>5m</delay>
                      <history>7d</history>
                      <units>B</units>
@@ -1162,6 +1162,12 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
                      </preprocessing>
                   </item_prototype>
                </item_prototypes>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#DATABASE}</lld_macro>
+                     <path>$.Database</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
                <preprocessing>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1172,14 +1178,27 @@ last(mysql.innodb_buffer_pool_pages_free) ) /
             <discovery_rule>
                <name>Replication discovery</name>
                <type>ZABBIX_PASSIVE</type>
-               <key>mysql.replication.discovery["{$MYSQL.DSN}"]</key>
+               <key>mysql.replication.discovery["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]</key>
                <delay>1h</delay>
                <description>If "show slave status" returns Master_Host, "Replication: *" items are created.</description>
                <item_prototypes>
                   <item_prototype>
+                     <name>MySQL: Replication Slave status {#MASTER_HOST}</name>
+                     <key>mysql.replication.get_slave_status["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#MASTER_HOST}"]</key>
+                     <history>1h</history>
+                     <trends>0</trends>
+                     <value_type>TEXT</value_type>
+                     <description>The item gets status information on essential parameters of the slave threads.</description>
+                     <applications>
+                        <application>
+                           <name>Zabbix raw items</name>
+                        </application>
+                     </applications>
+                  </item_prototype>
+                  <item_prototype>
                      <name>MySQL: Replication Seconds Behind Master {#MASTER_HOST}</name>
                      <type>DEPENDENT</type>
-                     <key>mysql.seconds_behind_master["{#MASTER_HOST}"]</key>
+                     <key>mysql.replication.seconds_behind_master["{#MASTER_HOST}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <units>s</units>
@@ -1194,7 +1213,7 @@ from the master in a timely fashion.</description>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
-                           <params>$.[?(@.Master_Host=='{#MASTER_HOST}')]['Seconds_Behind_Master'].first()</params>
+                           <params>$.Seconds_Behind_Master</params>
                         </step>
                         <step>
                            <type>MATCHES_REGEX</type>
@@ -1208,7 +1227,7 @@ from the master in a timely fashion.</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>mysql.slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]</key>
+                        <key>mysql.replication.get_slave_status["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#MASTER_HOST}"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1221,7 +1240,7 @@ from the master in a timely fashion.</description>
                   <item_prototype>
                      <name>MySQL: Replication Slave IO Running {#MASTER_HOST}</name>
                      <type>DEPENDENT</type>
-                     <key>mysql.slave_io_running["{#MASTER_HOST}"]</key>
+                     <key>mysql.replication.slave_io_running["{#MASTER_HOST}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>0</trends>
@@ -1237,7 +1256,7 @@ explicitly stopped it with STOP SLAVE.</description>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
-                           <params>$.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_IO_Running'].first()</params>
+                           <params>$.Slave_IO_Running</params>
                         </step>
                         <step>
                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1245,7 +1264,7 @@ explicitly stopped it with STOP SLAVE.</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>mysql.slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]</key>
+                        <key>mysql.replication.get_slave_status["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#MASTER_HOST}"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1261,7 +1280,7 @@ explicitly stopped it with STOP SLAVE.</description>
                            <dependencies>
                               <dependency>
                                  <name>MySQL: The slave I/O thread is not running</name>
-                                 <expression>{Template DB MySQL by Zabbix agent 2:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
+                                 <expression>{Template DB MySQL by Zabbix agent 2:mysql.replication.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
@@ -1270,7 +1289,7 @@ explicitly stopped it with STOP SLAVE.</description>
                   <item_prototype>
                      <name>MySQL: Replication Slave SQL Running {#MASTER_HOST}</name>
                      <type>DEPENDENT</type>
-                     <key>mysql.slave_sql_running["{#MASTER_HOST}"]</key>
+                     <key>mysql.replication.slave_sql_running["{#MASTER_HOST}"]</key>
                      <delay>0</delay>
                      <history>7d</history>
                      <trends>0</trends>
@@ -1285,7 +1304,7 @@ As with the I/O thread, this should normally be Yes.</description>
                      <preprocessing>
                         <step>
                            <type>JSONPATH</type>
-                           <params>$.[?(@.Master_Host=='{#MASTER_HOST}')]['Slave_SQL_Running'].first()</params>
+                           <params>$.Slave_SQL_Running</params>
                         </step>
                         <step>
                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1293,7 +1312,7 @@ As with the I/O thread, this should normally be Yes.</description>
                         </step>
                      </preprocessing>
                      <master_item>
-                        <key>mysql.slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]</key>
+                        <key>mysql.replication.get_slave_status["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#MASTER_HOST}"]</key>
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
@@ -1304,26 +1323,19 @@ As with the I/O thread, this should normally be Yes.</description>
                            <dependencies>
                               <dependency>
                                  <name>MySQL: The slave I/O thread is not running</name>
-                                 <expression>{Template DB MySQL by Zabbix agent 2:mysql.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
+                                 <expression>{Template DB MySQL by Zabbix agent 2:mysql.replication.slave_io_running["{#MASTER_HOST}"].count(#1,"No",eq)}=1</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
-                  <item_prototype>
-                     <name>MySQL: Replication Slave status {#MASTER_HOST}</name>
-                     <key>mysql.slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]</key>
-                     <history>1h</history>
-                     <trends>0</trends>
-                     <value_type>TEXT</value_type>
-                     <description>The item gets status information on essential parameters of the slave threads.</description>
-                     <applications>
-                        <application>
-                           <name>Zabbix raw items</name>
-                        </application>
-                     </applications>
-                  </item_prototype>
                </item_prototypes>
+               <lld_macro_paths>
+                  <lld_macro_path>
+                     <lld_macro>{#MASTER_HOST}</lld_macro>
+                     <path>$.Master_Host</path>
+                  </lld_macro_path>
+               </lld_macro_paths>
                <preprocessing>
                   <step>
                      <type>DISCARD_UNCHANGED_HEARTBEAT</type>
@@ -1349,6 +1361,11 @@ As with the I/O thread, this should normally be Yes.</description>
                <description>System data source name like &lt;user:password@protocol(host:port or /path/to/socket)/&gt;.</description>
             </macro>
             <macro>
+               <macro>{$MYSQL.PASSWORD}</macro>
+               <value>&lt;Put your password&gt;</value>
+               <description>The password of the MYSQL instance.</description>
+            </macro>
+            <macro>
                <macro>{$MYSQL.REPL_LAG.MAX.WARN}</macro>
                <value>30m</value>
                <description>The lag of slave from master for trigger expression.</description>
@@ -1357,6 +1374,11 @@ As with the I/O thread, this should normally be Yes.</description>
                <macro>{$MYSQL.SLOW_QUERIES.MAX.WARN}</macro>
                <value>3</value>
                <description>The number of slow queries for trigger expression.</description>
+            </macro>
+            <macro>
+               <macro>{$MYSQL.USERNAME}</macro>
+               <value>&lt;Put your username&gt;</value>
+               <description>The username of the MYSQL instance.</description>
             </macro>
          </macros>
          <screens>
