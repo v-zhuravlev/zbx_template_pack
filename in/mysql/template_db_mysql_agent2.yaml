@@ -34,8 +34,14 @@ templates:
       CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '<password>';
       GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';
       For more information read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html , please. 
-      2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like <user:password@protocol(host:port or /path/to/socket)/>.
+      2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like <protocol(host:port or /path/to/socket)/>.
     macros:
+      - macro: "{$MYSQL.USERNAME}"
+        _description: "The username of the MYSQL instance."
+        value: "<Put your username>"
+      - macro: "{$MYSQL.PASSWORD}"
+        _description: "The password of the MYSQL instance."
+        value: "<Put your password>"
       - macro: "{$MYSQL.ABORTED_CONN.MAX.WARN}"
         _description: The number of failed attempts to connect to the MySQL server for trigger expression.
         value: "3"
@@ -54,16 +60,16 @@ templates:
     items:
       - _prototype: mysql.get_status_variables
         type: ZABBIX_PASSIVE
-        key: mysql.get_status_variables["{$MYSQL.DSN}"]
+        key: mysql.get_status_variables["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]
       - _prototype: mysql.ping
         type: ZABBIX_PASSIVE
-        key: mysql.ping["{$MYSQL.DSN}"]
+        key: mysql.ping["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 10m
       - _prototype: mysql.version
         type: ZABBIX_PASSIVE
-        key: mysql.version["{$MYSQL.DSN}"]
+        key: mysql.version["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]
         preprocessing:
           - type: DISCARD_UNCHANGED_HEARTBEAT
             params: 1d
@@ -247,7 +253,7 @@ templates:
           - type: CHANGE_PER_SECOND
     discovery_rules:
       - name: Databases discovery
-        key: mysql.db.discovery["{$MYSQL.DSN}"]
+        key: mysql.db.discovery["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]
         type: ZABBIX_PASSIVE
         update: 1h
         description: Scanning databases in DBMS.
@@ -269,7 +275,7 @@ templates:
             _resource: MySQL
             name: "Size of database {#DATABASE}"
             type: ZABBIX_PASSIVE
-            key: mysql.db.size["{$MYSQL.DSN}","{#DATABASE}"]
+            key: mysql.db.size["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#DATABASE}"]
             value_type: UNSIGNED
             units: B
             update: 5m
@@ -278,7 +284,7 @@ templates:
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
       - name: Replication discovery
-        key: mysql.replication.discovery["{$MYSQL.DSN}"]
+        key: mysql.replication.discovery["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}"]
         type: ZABBIX_PASSIVE
         update: 1h
         description: 'If "show slave status" returns Master_Host, "Replication: *" items are created.'
@@ -293,7 +299,7 @@ templates:
             _resource: MySQL
             name: "Replication Slave status {#MASTER_HOST}"
             type: ZABBIX_PASSIVE
-            key: mysql.replication.get_slave_status["{$MYSQL.DSN}","{#MASTER_HOST}"]
+            key: mysql.replication.get_slave_status["{$MYSQL.DSN}","{$MYSQL.USERNAME}","{$MYSQL.PASSWORD}","{#MASTER_HOST}"]
             value_type: TEXT
             update: 1m
             history: 1h
