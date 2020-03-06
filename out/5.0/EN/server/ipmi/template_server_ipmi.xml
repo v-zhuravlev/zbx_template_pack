@@ -95,6 +95,14 @@
                      <master_item>
                         <key>ipmi.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{diff()}&lt;1</expression>
+                           <name>IPMI: {#SENSOR_ID} last value differs from the previous value</name>
+                           <priority>INFO</priority>
+                           <manual_close>YES</manual_close>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                </item_prototypes>
                <master_item>
@@ -237,6 +245,20 @@
                      </trigger_prototypes>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>IPMI: {#SENSOR_ID}</name>
+                     <graph_items>
+                        <graph_item>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template Server by IPMI</host>
+                              <key>ipmi.value[{#SENSOR_ID}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>ipmi.get</key>
                </master_item>
