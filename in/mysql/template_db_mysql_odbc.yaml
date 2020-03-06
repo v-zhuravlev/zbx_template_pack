@@ -287,7 +287,7 @@ templates:
             key: db.odbc.select[{#DATABASE}_size,"{$MYSQL.DSN}"]
             username: "{$MYSQL.USER}"
             password: "{$MYSQL.PASSWORD}"
-            params: SELECT SUM(DATA_LENGTH + INDEX_LENGTH) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA="{#DATABASE}"
+            params: SELECT COALESCE(SUM(DATA_LENGTH + INDEX_LENGTH),0) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA="{#DATABASE}"
             value_type: UNSIGNED
             units: B
             update: 5m
