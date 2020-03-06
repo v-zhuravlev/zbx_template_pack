@@ -67,6 +67,13 @@ templates:
                 params: $.[?(@.id=='{#SENSOR_ID}')].state.text.first()
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1d
+            triggers:
+              - _id: ipmi.value.trigger.info
+                name: "{#SENSOR_ID} last value differs from the previous value"
+                priority: INFO
+                expression: "{TEMPLATE_NAME:METRIC.diff()}<1"
+                manual_close: "YES"
+                description: ""
       - name: Threshold sensors discovery
         type: DEPENDENT
         key: ipmi.sensors.discovery
@@ -124,6 +131,12 @@ templates:
                 params: $.[?(@.id=='{#SENSOR_ID}')].value.first()
               - type: DISCARD_UNCHANGED_HEARTBEAT
                 params: 1h
+            graphs:
+              - name: "{#SENSOR_ID}"
+                graphtype: NORMAL
+                graph_items:
+                  - name: ipmi.value[{#SENSOR_ID}]
+                    drawtype: SINGLE_LINE
             triggers:
               - _id: ipmi.value.trigger.lo.warn
                 name: "{#SENSOR_ID} value is low (over {#SENSOR_LO_WARN} for 5m)"
