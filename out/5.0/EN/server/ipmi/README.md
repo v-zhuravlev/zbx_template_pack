@@ -41,6 +41,7 @@ There are no template links in this template.
 
 |Name|Description|Expression|Severity|Dependencies and additional info|
 |----|-----------|----|----|----|
+|IPMI: {#SENSOR_ID} last value differs from the previous value||`{TEMPLATE_NAME:ipmi.state_text[{#SENSOR_ID}].diff()}<1`|INFO|<p>Manual close: YES</p>|
 |IPMI: {#SENSOR_ID} value is low (over {#SENSOR_LO_WARN} for 5m)||`{TEMPLATE_NAME:ipmi.value[{#SENSOR_ID}].min(5m)}<{#SENSOR_LO_WARN}`|WARNING|<p>**Depends on**:</p><p>- IPMI: {#SENSOR_ID} value is critically low (over {#SENSOR_LO_DISAST} for 5m)</p><p>- IPMI: {#SENSOR_ID} value is too low (over {#SENSOR_LO_CRIT} for 5m)</p>|
 |IPMI: {#SENSOR_ID} value is too low (over {#SENSOR_LO_CRIT} for 5m)||`{TEMPLATE_NAME:ipmi.value[{#SENSOR_ID}].min(5m)}<{#SENSOR_LO_CRIT}`|HIGH|<p>**Depends on**:</p><p>- IPMI: {#SENSOR_ID} value is critically low (over {#SENSOR_LO_DISAST} for 5m)</p>|
 |IPMI: {#SENSOR_ID} value is critically low (over {#SENSOR_LO_DISAST} for 5m)||`{TEMPLATE_NAME:ipmi.value[{#SENSOR_ID}].min(5m)}<{#SENSOR_LO_DISAST}`|DISASTER||
