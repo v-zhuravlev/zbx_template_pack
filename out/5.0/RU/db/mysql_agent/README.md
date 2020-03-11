@@ -38,6 +38,7 @@ For example in Centos use "systemctl edit zabbix-agent.service" to set the requi
 
 Add the rule to the SELinux policy (example for Centos):
 
+```text
 # cat <<EOF > zabbix_home.te
 module zabbix_home 1.0;
 
@@ -64,6 +65,7 @@ EOF
 # semodule_package -o zabbix_home.pp -m zabbix_home.mod
 # semodule -i zabbix_home.pp
 # restorecon -R /var/lib/zabbix
+```
 
 ## Zabbix configuration
 
