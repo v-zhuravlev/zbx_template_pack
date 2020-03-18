@@ -17,7 +17,7 @@ CREATE USER 'zbx_monitor'@'%' IDENTIFIED BY '&lt;password&gt;';&#13;
 GRANT USAGE,REPLICATION CLIENT,PROCESS,SHOW DATABASES,SHOW VIEW ON *.* TO 'zbx_monitor'@'%';&#13;
 For more information read the MYSQL documentation https://dev.mysql.com/doc/refman/8.0/en/grant.html , please. &#13;
 2. Set in the {$MYSQL.DSN} macro the system data source name of the MySQL instance like &lt;protocol(host:port or /path/to/socket)/&gt;.&#13;
-3. Set the user name and password in host macros ({$MYSQL.USER} and {$MYSQL.PASSWORD}).&#13;
+3. Set the user name and password in host macros ({$MYSQL.USER} and {$MYSQL.PASSWORD}) if you want to override parameters from the Zabbix agent configuration file.&#13;
 &#13;
 &#13;
 You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/384189-discussion-thread-for-official-zabbix-template-db-mysql&#13;
@@ -1363,7 +1363,6 @@ As with the I/O thread, this should normally be Yes.</description>
             </macro>
             <macro>
                <macro>{$MYSQL.PASSWORD}</macro>
-               <value>&lt;Put your password here&gt;</value>
                <description>MySQL user password.</description>
             </macro>
             <macro>
@@ -1378,8 +1377,7 @@ As with the I/O thread, this should normally be Yes.</description>
             </macro>
             <macro>
                <macro>{$MYSQL.USER}</macro>
-               <value>&lt;Put your username here&gt;</value>
-               <description>MySQL username.</description>
+               <description>MySQL user name.</description>
             </macro>
          </macros>
          <screens>
