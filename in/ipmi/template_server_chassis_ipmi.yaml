@@ -1,6 +1,6 @@
 ---
 templates:
-  - name: Template Server by IPMI
+  - name: Template Server Chassis by IPMI
     _zbx_ver: "5.0"
     _classes:
       - SERVER
@@ -69,9 +69,9 @@ templates:
                 params: 1d
             triggers:
               - _id: ipmi.value.trigger.info
-                name: "{#SENSOR_ID} last value differs from the previous value"
+                name: "{#SENSOR_ID} value has changed"
                 priority: INFO
-                expression: "{TEMPLATE_NAME:METRIC.diff()}<1"
+                expression: "{TEMPLATE_NAME:METRIC.diff()}=1"
                 manual_close: "YES"
                 description: ""
       - name: Threshold sensors discovery
@@ -139,7 +139,7 @@ templates:
                     drawtype: SINGLE_LINE
             triggers:
               - _id: ipmi.value.trigger.lo.warn
-                name: "{#SENSOR_ID} value is low (over {#SENSOR_LO_WARN} for 5m)"
+                name: "{#SENSOR_ID} value is less than lower non-critical threshold (under {#SENSOR_LO_WARN} for 5m)"
                 priority: WARNING
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}<{#SENSOR_LO_WARN}"
                 description: ""
@@ -147,19 +147,19 @@ templates:
                   - ipmi.value.trigger.lo.crit
                   - ipmi.value.trigger.lo.disast
               - _id: ipmi.value.trigger.lo.crit
-                name: "{#SENSOR_ID} value is too low (over {#SENSOR_LO_CRIT} for 5m)"
+                name: "{#SENSOR_ID} value is less than lower critical threshold (under {#SENSOR_LO_CRIT} for 5m)"
                 priority: HIGH
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}<{#SENSOR_LO_CRIT}"
                 description: ""
                 _depends_on:
                   - ipmi.value.trigger.lo.disast
               - _id: ipmi.value.trigger.lo.disast
-                name: "{#SENSOR_ID} value is critically low (over {#SENSOR_LO_DISAST} for 5m)"
+                name: "{#SENSOR_ID} value is less than lower non-recoverable threshold (under {#SENSOR_LO_DISAST} for 5m)"
                 priority: DISASTER
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}<{#SENSOR_LO_DISAST}"
                 description: ""
               - _id: ipmi.value.trigger.hi.warn
-                name: "{#SENSOR_ID} value is high (over {#SENSOR_HI_WARN} for 5m)"
+                name: "{#SENSOR_ID} value is more than upper non-critical threshold (over {#SENSOR_HI_WARN} for 5m)"
                 priority: WARNING
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_HI_WARN}"
                 description: ""
@@ -167,14 +167,14 @@ templates:
                   - ipmi.value.trigger.hi.crit
                   - ipmi.value.trigger.hi.disast
               - _id: ipmi.value.trigger.hi.crit
-                name: "{#SENSOR_ID} value is too high (over {#SENSOR_HI_CRIT} for 5m)"
+                name: "{#SENSOR_ID} value is more than upper critical threshold (over {#SENSOR_HI_CRIT} for 5m)"
                 priority: HIGH
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_HI_CRIT}"
                 description: ""
                 _depends_on:
                   - ipmi.value.trigger.hi.disast
               - _id: ipmi.value.trigger.hi.disast
-                name: "{#SENSOR_ID} value is critically high (over {#SENSOR_HI_DISAST} for 5m)"
+                name: "{#SENSOR_ID} value is more than upper non-recoverable threshold (over {#SENSOR_HI_DISAST} for 5m)"
                 priority: DISASTER
                 expression: "{TEMPLATE_NAME:METRIC.min(5m)}>{#SENSOR_HI_DISAST}"
                 description: ""

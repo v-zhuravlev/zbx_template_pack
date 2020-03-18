@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-   <version>4.4</version>
+   <version>5.0</version>
    <date>2015-12-30T14:41:30Z</date>
    <groups>
       <group>
@@ -9,8 +9,8 @@
    </groups>
    <templates>
       <template>
-         <template>Template Server HP by IPMI</template>
-         <name>Template Server HP by IPMI</name>
+         <template>Template Server Chassis by IPMI</template>
+         <name>Template Server Chassis by IPMI</name>
          <description>Template tooling version used: 0.35</description>
          <groups>
             <group>
@@ -95,6 +95,14 @@
                      <master_item>
                         <key>ipmi.get</key>
                      </master_item>
+                     <trigger_prototypes>
+                        <trigger_prototype>
+                           <expression>{diff()}=1</expression>
+                           <name>IPMI: {#SENSOR_ID} value has changed</name>
+                           <priority>INFO</priority>
+                           <manual_close>YES</manual_close>
+                        </trigger_prototype>
+                     </trigger_prototypes>
                   </item_prototype>
                </item_prototypes>
                <master_item>
@@ -173,24 +181,84 @@
                      </master_item>
                      <trigger_prototypes>
                         <trigger_prototype>
-                           <expression>{min(5m)}&gt;{#SENSOR_UP_CRIT}</expression>
-                           <name>IPMI: {#SENSOR_ID} value is too high (over {#SENSOR_UP_CRIT} for 5m)</name>
-                           <priority>HIGH</priority>
+                           <expression>{min(5m)}&lt;{#SENSOR_LO_WARN}</expression>
+                           <name>IPMI: {#SENSOR_ID} value is less than lower non-critical threshold (under {#SENSOR_LO_WARN} for 5m)</name>
+                           <priority>WARNING</priority>
                            <dependencies>
                               <dependency>
-                                 <name>IPMI: {#SENSOR_ID} value is critical (over {#SENSOR_UP_DISAST} for 5m)</name>
-                                 <expression>{Template Server HP by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&gt;{#SENSOR_UP_DISAST}</expression>
+                                 <name>IPMI: {#SENSOR_ID} value is less than lower critical threshold (under {#SENSOR_LO_CRIT} for 5m)</name>
+                                 <expression>{Template Server Chassis by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&lt;{#SENSOR_LO_CRIT}</expression>
+                              </dependency>
+                              <dependency>
+                                 <name>IPMI: {#SENSOR_ID} value is less than lower non-recoverable threshold (under {#SENSOR_LO_DISAST} for 5m)</name>
+                                 <expression>{Template Server Chassis by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&lt;{#SENSOR_LO_DISAST}</expression>
                               </dependency>
                            </dependencies>
                         </trigger_prototype>
                         <trigger_prototype>
-                           <expression>{min(5m)}&gt;{#SENSOR_UP_DISAST}</expression>
-                           <name>IPMI: {#SENSOR_ID} value is critical (over {#SENSOR_UP_DISAST} for 5m)</name>
+                           <expression>{min(5m)}&lt;{#SENSOR_LO_CRIT}</expression>
+                           <name>IPMI: {#SENSOR_ID} value is less than lower critical threshold (under {#SENSOR_LO_CRIT} for 5m)</name>
+                           <priority>HIGH</priority>
+                           <dependencies>
+                              <dependency>
+                                 <name>IPMI: {#SENSOR_ID} value is less than lower non-recoverable threshold (under {#SENSOR_LO_DISAST} for 5m)</name>
+                                 <expression>{Template Server Chassis by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&lt;{#SENSOR_LO_DISAST}</expression>
+                              </dependency>
+                           </dependencies>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&lt;{#SENSOR_LO_DISAST}</expression>
+                           <name>IPMI: {#SENSOR_ID} value is less than lower non-recoverable threshold (under {#SENSOR_LO_DISAST} for 5m)</name>
+                           <priority>DISASTER</priority>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{#SENSOR_HI_WARN}</expression>
+                           <name>IPMI: {#SENSOR_ID} value is more than upper non-critical threshold (over {#SENSOR_HI_WARN} for 5m)</name>
+                           <priority>WARNING</priority>
+                           <dependencies>
+                              <dependency>
+                                 <name>IPMI: {#SENSOR_ID} value is more than upper critical threshold (over {#SENSOR_HI_CRIT} for 5m)</name>
+                                 <expression>{Template Server Chassis by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&gt;{#SENSOR_HI_CRIT}</expression>
+                              </dependency>
+                              <dependency>
+                                 <name>IPMI: {#SENSOR_ID} value is more than upper non-recoverable threshold (over {#SENSOR_HI_DISAST} for 5m)</name>
+                                 <expression>{Template Server Chassis by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&gt;{#SENSOR_HI_DISAST}</expression>
+                              </dependency>
+                           </dependencies>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{#SENSOR_HI_CRIT}</expression>
+                           <name>IPMI: {#SENSOR_ID} value is more than upper critical threshold (over {#SENSOR_HI_CRIT} for 5m)</name>
+                           <priority>HIGH</priority>
+                           <dependencies>
+                              <dependency>
+                                 <name>IPMI: {#SENSOR_ID} value is more than upper non-recoverable threshold (over {#SENSOR_HI_DISAST} for 5m)</name>
+                                 <expression>{Template Server Chassis by IPMI:ipmi.value[{#SENSOR_ID}].min(5m)}&gt;{#SENSOR_HI_DISAST}</expression>
+                              </dependency>
+                           </dependencies>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                           <expression>{min(5m)}&gt;{#SENSOR_HI_DISAST}</expression>
+                           <name>IPMI: {#SENSOR_ID} value is more than upper non-recoverable threshold (over {#SENSOR_HI_DISAST} for 5m)</name>
                            <priority>DISASTER</priority>
                         </trigger_prototype>
                      </trigger_prototypes>
                   </item_prototype>
                </item_prototypes>
+               <graph_prototypes>
+                  <graph_prototype>
+                     <name>IPMI: {#SENSOR_ID}</name>
+                     <graph_items>
+                        <graph_item>
+                           <color>1A7C11</color>
+                           <item>
+                              <host>Template Server Chassis by IPMI</host>
+                              <key>ipmi.value[{#SENSOR_ID}]</key>
+                           </item>
+                        </graph_item>
+                     </graph_items>
+                  </graph_prototype>
+               </graph_prototypes>
                <master_item>
                   <key>ipmi.get</key>
                </master_item>
@@ -212,12 +280,28 @@
                      <path>$.units</path>
                   </lld_macro_path>
                   <lld_macro_path>
-                     <lld_macro>{#SENSOR_UP_CRIT}</lld_macro>
-                     <path>$.threshold.up.crit</path>
+                     <lld_macro>{#SENSOR_LO_WARN}</lld_macro>
+                     <path>$.threshold.lower.non_crit</path>
                   </lld_macro_path>
                   <lld_macro_path>
-                     <lld_macro>{#SENSOR_UP_DISAST}</lld_macro>
-                     <path>$.threshold.up.non_recover</path>
+                     <lld_macro>{#SENSOR_LO_CRIT}</lld_macro>
+                     <path>$.threshold.lower.crit</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SENSOR_LO_DISAST}</lld_macro>
+                     <path>$.threshold.lower.non_recover</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SENSOR_HI_WARN}</lld_macro>
+                     <path>$.threshold.upper.non_crit</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SENSOR_HI_CRIT}</lld_macro>
+                     <path>$.threshold.upper.crit</path>
+                  </lld_macro_path>
+                  <lld_macro_path>
+                     <lld_macro>{#SENSOR_HI_DISAST}</lld_macro>
+                     <path>$.threshold.upper.non_recover</path>
                   </lld_macro_path>
                </lld_macro_paths>
             </discovery_rule>
