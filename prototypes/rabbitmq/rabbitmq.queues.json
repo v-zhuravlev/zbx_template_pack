@@ -1,0 +1,454 @@
+[
+    {
+        "_id": "rabbitmq.queue.messages",
+        "key": "rabbitmq.queue.messages[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Count of the total messages in the queue",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].messages.first()"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.messages.limit",
+                "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>{$RABBITMQ.MESSAGES.MAX.WARN:\"{#QUEUE}\"}",
+                "name": "Too many messages in queue (over {$RABBITMQ.MESSAGES.MAX.WARN} for 5m)",
+                "opdata": "Current value: {ITEM.LASTVALUE1}",
+                "priority": "WARNING"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.queue.messages",
+                "name": "Queue {#VHOST}/{#QUEUE}: Messages status",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.queue.messages[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.ack[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.deliver[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.deliver_get[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.publish[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages_ready[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.redeliver[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages_unacknowledged[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.rate",
+        "key": "rabbitmq.queue.messages.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Count per second of the total messages in the queue",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].messages_details.rate.first()"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.queue.messages.rate",
+                "name": "Queue {#VHOST}/{#QUEUE}: Messages per second",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.queue.messages.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.ack.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.deliver.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.deliver_get.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.publish.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages_ready.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages.redeliver.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.queue.messages_unacknowledged.rate[\"{#VHOST}/{#QUEUE}\"]",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.consumers",
+        "key": "rabbitmq.queue.consumers[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Consumers",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number of consumers",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].consumers.first()"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.memory",
+        "key": "rabbitmq.queue.memory[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Memory",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "units": "B",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Bytes of memory consumed by the Erlang process associated with the queue, including stack, heap and internal structures",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].memory.first()"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages_ready",
+        "key": "rabbitmq.queue.messages_ready[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages ready",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number of messages ready to be delivered to clients",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].messages_ready.first()"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages_ready.rate",
+        "key": "rabbitmq.queue.messages_ready.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages ready per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number per second of messages ready to be delivered to clients",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].messages_ready_details.rate.first()"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages_unacknowledged",
+        "key": "rabbitmq.queue.messages_unacknowledged[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages unacknowledged",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number of messages delivered to clients but not yet acknowledged",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].messages_unacknowledged.first()"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages_unacknowledged.rate",
+        "key": "rabbitmq.queue.messages_unacknowledged.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages unacknowledged per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number per second of messages delivered to clients but not yet acknowledged",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].messages_unacknowledged_details.rate.first()"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.ack",
+        "key": "rabbitmq.queue.messages.ack[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages acknowledged",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number of messages delivered to clients and acknowledged",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.ack.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.ack.rate",
+        "key": "rabbitmq.queue.messages.ack.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages acknowledged per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Number per second of messages delivered to clients and acknowledged",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.ack_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.deliver",
+        "key": "rabbitmq.queue.messages.deliver[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages delivered",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Count of messages delivered in acknowledgement mode to consumers",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.deliver.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.deliver.rate",
+        "key": "rabbitmq.queue.messages.deliver.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages delivered per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Count of messages delivered in acknowledgement mode to consumers",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.deliver_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.deliver_get",
+        "key": "rabbitmq.queue.messages.deliver_get[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages delivered",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Sum of messages delivered in acknowledgement mode to consumers, in no-acknowledgement mode to consumers, in acknowledgement mode in response to basic.get, and in no-acknowledgement mode in response to basic.get",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.deliver_get.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.deliver_get.rate",
+        "key": "rabbitmq.queue.messages.deliver_get.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages delivered per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Rate per second of the sum of messages delivered in acknowledgement mode to consumers, in no-acknowledgement mode to consumers, in acknowledgement mode in response to basic.get, and in no-acknowledgement mode in response to basic.get",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.deliver_get_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.publish",
+        "key": "rabbitmq.queue.messages.publish[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages published",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Count of messages published",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.publish.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.publish.rate",
+        "key": "rabbitmq.queue.messages.publish.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages published per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Rate per second of messages published",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.publish_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.redeliver",
+        "key": "rabbitmq.queue.messages.redeliver[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages redelivered",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Count of subset of messages in deliver_get which had the redelivered flag set",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.redeliver.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.queue.messages.redeliver.rate",
+        "key": "rabbitmq.queue.messages.redeliver.rate[\"{#VHOST}/{#QUEUE}\"]",
+        "name": "Queue {#VHOST}/{#QUEUE}: Messages redelivered per second",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.queues",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "application_prototype": "RabbitMQ: Queue \"{#VHOST}/{#QUEUE}\"",
+        "description": "Rate per second of subset of messages in deliver_get which had the redelivered flag set",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$[?(@.name == \"{#QUEUE}\" && @.vhost == \"{#VHOST}\")].message_stats.redeliver_details.rate.first()",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ]
+    }
+]

@@ -1,0 +1,1554 @@
+templates:
+  - name: Template App Docker
+    _zbx_ver: "4.4"
+    _classes:
+      - APP
+    description: |-
+      Get Docker engine metrics from plugin for the New Zabbix Agent (zabbix-agent2).
+
+    _documentation:
+      _tested_on:
+        - name: Docker
+          version: 19.03.5
+
+      _overview: |+
+        The template to monitor Docker engine by Zabbix that work without any external scripts.
+        Most of the metrics are collected in one go, thanks to Zabbix bulk data collection.
+
+        `Template App Docker` — collects metrics by polling zabbix-agent2.
+
+      _setup: |
+        Setup and configure zabbix-agent2 compiled with the Docker monitoring plugin.
+
+        Test availability: `zabbix_get -s docker-host -k docker.info`
+
+      _zabbix_forum_url: ""
+
+    items:
+      - _prototype: docker.ping
+        key: docker.ping
+        value_map: Service state
+        preprocessing:
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: "10m"
+        triggers:
+          - _id: trigger.status
+            name: Service is down
+            expression: "{TEMPLATE_NAME:METRIC.last()}=0"
+            manual_close: "YES"
+            priority: AVERAGE
+
+      #################
+      ### Raw items ###
+      #################
+      - _prototype: docker.info
+        key: docker.info
+
+      - _prototype: docker.containers
+        key: docker.containers
+
+      - _prototype: docker.images
+        key: docker.images
+
+      - _prototype: docker.data_usage
+        key: docker.data_usage
+
+      #######################
+      ### Dependent items ###
+      #######################
+
+      # info section
+
+      - _prototype: docker._unsigned
+        name: Containers total
+        key: docker.containers.total
+        master_item: docker.info
+        description: Total number of containers on this host
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Containers"
+
+      - _prototype: docker._unsigned
+        name: Containers running
+        key: docker.containers.running
+        master_item: docker.info
+        description: Total number of containers running on this host
+        preprocessing:
+          - type: JSONPATH
+            params: "$.ContainersRunning"
+        graphs:
+          - _id: docker.containers
+            name: Containers
+            graph_items:
+              - name: docker.containers.running
+                drawtype: GRADIENT_LINE
+              - name: docker.containers.paused
+                drawtype: BOLD_LINE
+              - name: docker.containers.stopped
+                drawtype: BOLD_LINE
+              - name: docker.containers.total
+                drawtype: BOLD_LINE
+
+      - _prototype: docker._unsigned
+        name: Containers stopped
+        key: docker.containers.stopped
+        master_item: docker.info
+        description: Total number of containers stopped on this host
+        preprocessing:
+          - type: JSONPATH
+            params: "$.ContainersStopped"
+
+      - _prototype: docker._unsigned
+        name: Containers paused
+        key: docker.containers.paused
+        master_item: docker.info
+        description: Total number of containers paused on this host
+        preprocessing:
+          - type: JSONPATH
+            params: "$.ContainersPaused"
+
+      - _prototype: docker._unsigned
+        name: Images total
+        key: docker.images.total
+        master_item: docker.info
+        description: Number of images with intermediate image layers
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Images"
+
+      - _prototype: docker._char
+        name: Storage driver
+        key: docker.driver
+        master_item: docker.info
+        description: "Docker storage driver \n https://docs.docker.com/storage/storagedriver/"
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Driver"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Memory limit enabled
+        key: docker.mem_limit.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.MemoryLimit"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Swap limit enabled
+        key: docker.swap_limit.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.SwapLimit"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Kernel memory enabled
+        key: docker.kernel_mem.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.KernelMemory"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Kernel memory TCP enabled
+        key: docker.kernel_mem_tcp.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.KernelMemoryTCP"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: CPU CFS Period enabled
+        key: docker.cpu_cfs_period.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description: https://docs.docker.com/config/containers/resource_constraints/#configure-the-default-cfs-scheduler
+        preprocessing:
+          - type: JSONPATH
+            params: "$.CpuCfsPeriod"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: CPU CFS Quota enabled
+        key: docker.cpu_cfs_quota.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description: https://docs.docker.com/config/containers/resource_constraints/#configure-the-default-cfs-scheduler
+        preprocessing:
+          - type: JSONPATH
+            params: "$.CpuCfsQuota"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: CPU Shares enabled
+        key: docker.cpu_shares.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description: https://docs.docker.com/config/containers/resource_constraints/#configure-the-default-cfs-scheduler
+        preprocessing:
+          - type: JSONPATH
+            params: "$.CPUShares"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: CPU Set enabled
+        key: docker.cpu_set.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description: https://docs.docker.com/config/containers/resource_constraints/#configure-the-default-cfs-scheduler
+        preprocessing:
+          - type: JSONPATH
+            params: "$.CPUSet"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Pids limit enabled
+        key: docker.pids_limit.enabled
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.PidsLimit"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: IPv4 Forwarding enabled
+        key: docker.ipv4_forwarding.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.IPv4Forwarding"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      # - _prototype: docker._unsigned
+      #   name: Bridge Nf iptables enabled
+      #   key: docker.bridge_nf_iptables.enabled
+      #   value_map: Docker flag
+      #   master_item: docker.info
+      #   description:
+      #   preprocessing:
+      #     - type: JSONPATH
+      #       params: "$.BridgeNfIptables"
+      #     - type: BOOL_TO_DECIMAL
+      #     - type: DISCARD_UNCHANGED_HEARTBEAT
+      #       params: 1d
+
+      # - _prototype: docker._unsigned
+      #   name: Bridge Nf ip6tables enabled
+      #   key: docker.bridge_nf_ip6tables.enabled
+      #   value_map: Docker flag
+      #   master_item: docker.info
+      #   description:
+      #   preprocessing:
+      #     - type: JSONPATH
+      #       params: "$.BridgeNfIP6tables"
+      #     - type: BOOL_TO_DECIMAL
+      #     - type: DISCARD_UNCHANGED_HEARTBEAT
+      #       params: 1d
+
+      - _prototype: docker._unsigned
+        name: Debug enabled
+        key: docker.debug.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Debug"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Nfd
+        key: docker.nfd
+        master_item: docker.info
+        description: Number of used File Descriptors
+        preprocessing:
+          - type: JSONPATH
+            params: "$.NFd"
+
+      - _prototype: docker._unsigned
+        name: OomKill disabled
+        key: docker.oomkill.disabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.OomKillDisable"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Goroutines
+        key: docker.goroutines
+        master_item: docker.info
+        description: Number of goroutines
+        preprocessing:
+          - type: JSONPATH
+            params: "$.NGoroutines"
+        graphs:
+          - _id: docker.goroutines
+            name: Goroutines
+            graph_items:
+              - name: docker.goroutines
+                drawtype: GRADIENT_LINE
+
+      - _prototype: docker._char
+        name: Logging driver
+        key: docker.logging_driver
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.LoggingDriver"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._char
+        name: Cgroup driver
+        key: docker.cgroup_driver
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.CgroupDriver"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: NEvents listener
+        key: docker.nevents_listener
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.NEventsListener"
+
+      - _prototype: docker._char
+        name: Kernel version
+        key: docker.kernel_version
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.KernelVersion"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._char
+        name: Operating system
+        key: docker.operating_system
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.OperatingSystem"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._char
+        name: OS type
+        key: docker.os_type
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.OSType"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._char
+        name: Architecture
+        key: docker.architecture
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Architecture"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+        triggers:
+          - _id: trigger.docker.info
+            expression: "{TEMPLATE_NAME:METRIC.nodata(30m)}=1"
+            name: "Failed to fetch info data (or no data for 30m)"
+            description: "Zabbix has not received data for items for the last 30 minutes"
+            manual_close: "YES"
+            priority: WARNING
+            _depends_on:
+              - trigger.status
+
+      - _prototype: docker._unsigned
+        name: NCPU
+        key: docker.ncpu
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.NCPU"
+
+      - _prototype: docker._unsigned
+        name: Memory total
+        key: docker.mem.total
+        units: B
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.MemTotal"
+        graphs:
+          - _id: docker.mem.total
+            name: Memory total
+            graph_items:
+              - name: docker.mem.total
+                drawtype: BOLD_LINE
+
+      - _prototype: docker._char
+        name: Docker root dir
+        key: docker.root_dir
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.DockerRootDir"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._char
+        name: Name
+        key: docker.name
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.Name"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._char
+        name: Server version
+        key: docker.server_version
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.ServerVersion"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+        triggers:
+          - _prototype: trigger.version.changed
+
+      - _prototype: docker._char
+        name: Default runtime
+        key: docker.default_runtime
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.DefaultRuntime"
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      - _prototype: docker._unsigned
+        name: Live restore enabled
+        key: docker.live_restore.enabled
+        value_map: Docker flag
+        master_item: docker.info
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.LiveRestoreEnabled"
+          - type: BOOL_TO_DECIMAL
+          - type: DISCARD_UNCHANGED_HEARTBEAT
+            params: 1d
+
+      # data usage section
+
+      - _prototype: docker._unsigned
+        name: Layers size
+        key: docker.layers_size
+        units: B
+        master_item: docker.data_usage
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: "$.LayersSize"
+
+      - _prototype: docker._unsigned
+        name: Images size
+        key: docker.images_size
+        units: B
+        master_item: docker.data_usage
+        description:
+        preprocessing:
+          - type: JSONPATH
+            params: $.Images[*].Size.sum()
+        graphs:
+          - _id: docker.size
+            name: Size
+            graph_items:
+              - name: docker.images_size
+                drawtype: BOLD_LINE
+              - name: docker.layers_size
+                drawtype: BOLD_LINE
+              - name: docker.containers_size
+                drawtype: BOLD_LINE
+              - name: docker.volumes_size
+                drawtype: BOLD_LINE
+
+      - _prototype: docker._unsigned
+        name: Containers size
+        key: docker.containers_size
+        units: B
+        master_item: docker.data_usage
+        description:
+        preprocessing:
+          # - type: JAVASCRIPT
+          #   params: |-
+          #     return JSON.parse(value).Containers
+          #       .map(function (v){return v.SizeRw})
+          #       .reduce(function (a, b) {return a + b});
+          - type: JSONPATH
+            params: $.Containers[*].SizeRw.sum()
+
+      - _prototype: docker._unsigned
+        name: Volumes size
+        key: docker.volumes_size
+        units: B
+        master_item: docker.data_usage
+        description:
+        preprocessing:
+          # - type: JAVASCRIPT
+          #   params: |-
+          #     return JSON.parse(value).Volumes
+          #       .map(function (v){return v.UsageData.Size})
+          #       .reduce(function (a, b) {return a + b});
+          - type: JSONPATH
+            params: $.Volumes[*].UsageData.Size.sum()
+
+      # Images section
+
+      - _prototype: docker._unsigned
+        name: Images available
+        key: docker.images.top_level
+        master_item: docker.images
+        description: Number of top-level images
+        preprocessing:
+          - type: JSONPATH
+            params: "$.length()"
+        graphs:
+          - _id: docker.images
+            name: Images
+            graph_items:
+              - name: docker.images.top_level
+                drawtype: BOLD_LINE
+              - name: docker.images.total
+                drawtype: BOLD_LINE
+
+    #################
+    ### Discovery ###
+    #################
+
+    discovery_rules:
+      ### Images discovery ###
+      ##########################
+      - name: Images discovery
+        description: |
+          Discovery for images metrics
+
+        key: docker.images.discovery
+        type: ZABBIX_PASSIVE
+        delay: 15m
+
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#NAME}"
+              value: "{$DOCKER.LLD.FILTER.IMAGE.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+
+            - macro: "{#NAME}"
+              value: "{$DOCKER.LLD.FILTER.IMAGE.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
+
+        items:
+          - _prototype: docker._unsigned
+            _resource: Image {#NAME}
+            name: Created
+            key: docker.image.created["{#ID}"]
+            master_item: docker.images
+            units: unixtime
+            description:
+            application_prototype: "Docker: Image {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Id == "{#ID}")].Created.first()'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: docker._unsigned
+            _resource: Image {#NAME}
+            name: Size
+            key: docker.image.size["{#ID}"]
+            master_item: docker.images
+            units: B
+            description:
+            application_prototype: "Docker: Image {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Id == "{#ID}")].Size.first()'
+            # graphs:
+            #   - _id: docker.image.size
+            #     name: "{#ID} Size"
+            #     graph_items:
+            #       - name: docker.image.size["{#ID}"]
+            #         drawtype: GRADIENT_LINE
+
+      ### Containers discovery ###
+      ##########################
+
+      # Containers stats discovery
+      ############################
+      ############################
+      ############################
+
+      - name: Containers discovery
+        description: |
+          Discovery for containers metrics
+
+          Parameter:
+          true  - Returns all containers
+          false - Returns only running containers
+
+        key: docker.containers.discovery[false]
+        type: ZABBIX_PASSIVE
+        delay: 15m
+
+        filter:
+          evalType: "AND"
+          conditions:
+            - macro: "{#NAME}"
+              value: "{$DOCKER.LLD.FILTER.CONTAINER.MATCHES}"
+              operator: "MATCHES_REGEX"
+              formulaid: "A"
+
+            - macro: "{#NAME}"
+              value: "{$DOCKER.LLD.FILTER.CONTAINER.NOT_MATCHES}"
+              operator: "NOT_MATCHES_REGEX"
+              formulaid: "B"
+
+        items:
+          # Container master item
+          - _id: docker.container_stats
+            _resource: Container {#NAME}
+            name: Get stats
+            key: docker.container_stats["{#NAME}"]
+            description: Get container stats based on resource usage
+            application_prototype: "Docker: Container {#NAME}"
+            delay: 1m
+            history: 0
+            trends: 0
+            _group: Docker
+            type: ZABBIX_PASSIVE
+            value_type: CHAR
+
+          # Container dependent items
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: CPU total usage per second
+            key: docker.container_stats.cpu_usage.total.rate["{#NAME}"]
+            units: s
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.cpu_usage.total_usage"
+              - type: CHANGE_PER_SECOND
+              - type: MULTIPLIER
+                params: 0.000000001
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: CPU kernelmode usage per second
+            key: docker.container_stats.cpu_usage.kernel.rate["{#NAME}"]
+            units: s
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.cpu_usage.usage_in_kernelmode"
+              - type: CHANGE_PER_SECOND
+              - type: MULTIPLIER
+                params: 0.000000001
+            graphs:
+              - _id: docker.container_stats.cpu_usage
+                name: CPU usage
+                graphType: STACKED
+                graph_items:
+                  - name: docker.container_stats.cpu_usage.kernel.rate["{#NAME}"]
+                    drawtype: GRADIENT_LINE
+                  - name: docker.container_stats.cpu_usage.user.rate["{#NAME}"]
+                    drawtype: GRADIENT_LINE
+                  - name: docker.container_stats.cpu_usage.total.rate["{#NAME}"]
+                    drawtype: GRADIENT_LINE
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: CPU usermode usage per second
+            key: docker.container_stats.cpu_usage.user.rate["{#NAME}"]
+            units: s
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.cpu_usage.usage_in_usermode"
+              - type: CHANGE_PER_SECOND
+              - type: MULTIPLIER
+                params: 0.000000001
+
+          # - _prototype: docker._float
+          #   _resource: Container {#NAME}
+          #   name: CPU system usage per second
+          #   key: docker.container_stats.system_cpu_usage.rate["{#ID}"]
+          #   units: s
+          #   master_item: docker.container_stats
+          #   description:
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.cpu_stats.system_cpu_usage"
+          #     - type: CHANGE_PER_SECOND
+          #     - type: MULTIPLIER
+          #       params: 0.000000001
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Online CPUs
+            key: docker.container_stats.online_cpus["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.online_cpus"
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Throttling periods
+            key: docker.container_stats.cpu_usage.throttling_periods["{#NAME}"]
+            master_item: docker.container_stats
+            description: Number of periods with throttling active
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.throttling_data.periods"
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Throttled periods
+            key: docker.container_stats.cpu_usage.throttled_periods["{#NAME}"]
+            master_item: docker.container_stats
+            description: Number of periods when the container hits its throttling limit
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.throttling_data.throttled_periods"
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Throttled time
+            key: docker.container_stats.cpu_usage.throttled_time["{#NAME}"]
+            units: s
+            master_item: docker.container_stats
+            description: Aggregate time the container was throttled for in nanoseconds
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.cpu_stats.throttling_data.throttled_time"
+              - type: MULTIPLIER
+                params: 0.000000001
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Memory usage
+            key: docker.container_stats.memory.usage["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.memory_stats.usage"
+            graphs:
+              - _id: docker.container_stats.memory.usage
+                name: Memory usage
+                graph_items:
+                  - name: docker.container_stats.memory.usage["{#NAME}"]
+                    drawtype: GRADIENT_LINE
+                  - name: docker.container_stats.memory.max_usage["{#NAME}"]
+                    drawtype: GRADIENT_LINE
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Memory maximum usage
+            key: docker.container_stats.memory.max_usage["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.memory_stats.max_usage"
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Memory commit bytes
+            key: docker.container_stats.memory.commit_bytes["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.memory_stats.commitbytes"
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Memory commit peak bytes
+            key: docker.container_stats.memory.commit_peak_bytes["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.memory_stats.commitpeakbytes"
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Memory private working set
+            key: docker.container_stats.memory.private_working_set["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.memory_stats.privateworkingset"
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks bytes received per second
+            key: docker.networks.rx_bytes["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].rx_bytes.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+            graphs:
+              - _id: docker.networks.traffic
+                name: Network traffic
+                graph_items:
+                  - name: docker.networks.rx_bytes["{#NAME}"]
+                    drawtype: BOLD_LINE
+                  - name: docker.networks.tx_bytes["{#NAME}"]
+                    drawtype: BOLD_LINE
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks packets received per second
+            key: docker.networks.rx_packets["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].rx_packets.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+            graphs:
+              - _id: docker.networks.packets
+                name: Network packets
+                graph_items:
+                  - name: docker.networks.rx_packets["{#NAME}"]
+                    drawtype: BOLD_LINE
+                  - name: docker.networks.tx_packets["{#NAME}"]
+                    drawtype: BOLD_LINE
+                  - name: docker.networks.rx_errors["{#NAME}"]
+                    drawtype: BOLD_LINE
+                  - name: docker.networks.tx_errors["{#NAME}"]
+                    drawtype: BOLD_LINE
+                  - name: docker.networks.rx_dropped["{#NAME}"]
+                    drawtype: BOLD_LINE
+                  - name: docker.networks.tx_dropped["{#NAME}"]
+                    drawtype: BOLD_LINE
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks errors received per second
+            key: docker.networks.rx_errors["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].rx_errors.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks incoming packets dropped per second
+            key: docker.networks.rx_dropped["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].rx_dropped.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks bytes sent per second
+            key: docker.networks.tx_bytes["{#NAME}"]
+            units: B
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].tx_bytes.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks packets sent per second
+            key: docker.networks.tx_packets["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].tx_packets.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks errors sent per second
+            key: docker.networks.tx_errors["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].tx_errors.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Networks outgoing packets dropped per second
+            key: docker.networks.tx_dropped["{#NAME}"]
+            master_item: docker.container_stats
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.networks[*].tx_dropped.sum()"
+                error_handler: CUSTOM_VALUE
+                error_handler_params: 0
+              - type: CHANGE_PER_SECOND
+
+          # CONTAINER INFO SECTION
+          # Container master item
+          - _id: docker.container_info
+            _resource: Container {#NAME}
+            name: Get info
+            key: docker.container_info["{#NAME}"]
+            description: Return low-level information about a container
+            application_prototype: "Docker: Container {#NAME}"
+            delay: 1m
+            history: 0
+            trends: 0
+            _group: Docker
+            type: ZABBIX_PASSIVE
+            value_type: CHAR
+
+          # Container dependent items
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Created
+            key: docker.container_info.created["{#NAME}"]
+            master_item: docker.container_info
+            units: unixtime
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.Created"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: docker._char
+            _resource: Container {#NAME}
+            name: Image
+            key: docker.container_info.image["{#NAME}"]
+            master_item: docker.containers
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: '$[?(@.Names[0] == "{#NAME}")].Image.first()'
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Auto remove
+          #   key: docker.container_info.auto_remove["{#ID}"]
+          #   value_map: Docker flag
+          #   master_item: docker.container_info
+          #   description: Automatically remove container when it exits
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.AutoRemove"
+          #     - type: BOOL_TO_DECIMAL
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Restart count
+            key: docker.container_info.restart_count["{#NAME}"]
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.RestartCount"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU shares
+          #   key: docker.container_info.cpu_shares["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: CPU shares (relative weight vs. other containers)
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuShares"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Memory limit
+          #   key: docker.container_info.memory_limit["{#ID}"]
+          #   master_item: docker.container_info
+          #   units: B
+          #   description: Memory limit in bytes
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.Memory"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: NanoCPUs
+          #   key: docker.container_info.nano_cpus["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: CPU quota in units of 0.000000001 CPUs
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.NanoCpus"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Blkio weight
+          #   key: docker.container_info.blkio_weight["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: Block IO weight
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.BlkioWeight"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU period
+          #   key: docker.container_info.cpu_period["{#ID}"]
+          #   units: s
+          #   master_item: docker.container_info
+          #   description: The length of a CPU period in microseconds
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuPeriod"
+          #     - type: MULTIPLIER
+          #       params: 0.000001
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU quota
+          #   key: docker.container_info.cpu_quota["{#ID}"]
+          #   units: s
+          #   master_item: docker.container_info
+          #   description: CPU CFS (Completely Fair Scheduler) quota
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuQuota"
+          #     - type: MULTIPLIER
+          #       params: 0.000001
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU realtime period
+          #   key: docker.container_info.cpu_realtime_period["{#ID}"]
+          #   units: s
+          #   master_item: docker.container_info
+          #   description: The length of a CPU real-time period in microseconds
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuRealtimePeriod"
+          #     - type: MULTIPLIER
+          #       params: 0.000001
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU realtime runtime
+          #   key: docker.container_info.cpu_realtime_runtime["{#ID}"]
+          #   units: s
+          #   master_item: docker.container_info
+          #   description: CPU real-time runtime
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuRealtimeRuntime"
+          #     - type: MULTIPLIER
+          #       params: 0.000001
+
+          # - _prototype: docker._char
+          #   _resource: Container {#NAME}
+          #   name: CPU set CPUs
+          #   key: docker.container_info.cpu_set_cpus["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: CpusetCpus 0-2, 0,1
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpusetCpus"
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
+
+          # - _prototype: docker._char
+          #   _resource: Container {#NAME}
+          #   name: CPU set Mems
+          #   key: docker.container_info.cpu_set_mems["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: CpusetMems 0-2, 0,1
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpusetMems"
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Kernel memory limit
+          #   key: docker.container_info.kernel_memory_limit["{#ID}"]
+          #   units: B
+          #   master_item: docker.container_info
+          #   description: Kernel memory limit (in bytes)
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.KernelMemory"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Kernel memory TCP limit
+          #   key: docker.container_info.kernel_memory_tcp_limit["{#ID}"]
+          #   units: B
+          #   master_item: docker.container_info
+          #   description: Hard limit for kernel TCP buffer memory (in bytes)
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.KernelMemoryTCP"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Memory reservation
+          #   key: docker.container_info.memory_reservation["{#ID}"]
+          #   units: B
+          #   master_item: docker.container_info
+          #   description: Memory soft limit (in bytes)
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.MemoryReservation"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: Memory swap
+          #   key: docker.container_info.memory_swap["{#ID}"]
+          #   units: B
+          #   master_item: docker.container_info
+          #   description: Total memory usage (memory + swap)
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.MemorySwap"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: OomKill disabled
+          #   key: docker.container_info.oomkill.disabled["{#ID}"]
+          #   value_map: Docker flag
+          #   master_item: docker.container_info
+          #   description: Whether to disable OOM Killer or not
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.OomKillDisable"
+          #     - type: BOOL_TO_DECIMAL
+          #     - type: DISCARD_UNCHANGED_HEARTBEAT
+          #       params: 1d
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU count
+          #   key: docker.container_info.cpu_count["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: CPU count
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuCount"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: CPU percent
+          #   key: docker.container_info.cpu_pct["{#ID}"]
+          #   units: "%"
+          #   master_item: docker.container_info
+          #   description: CPU percent
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.CpuPercent"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: IO maximum IOps
+          #   key: docker.container_info.io_max_iops["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: Maximum IOps for the container system drive
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.IOMaximumIOps"
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: IO maximum bandwidth
+          #   key: docker.container_info.io_maximum_iops["{#ID}"]
+          #   master_item: docker.container_info
+          #   description: Maximum IO in bytes per second for the container system drive
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.HostConfig.IOMaximumBandwidth"
+
+          - _prototype: docker._char
+            _resource: Container {#NAME}
+            name: Status
+            key: docker.container_info.state.status["{#NAME}"]
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Status"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1h
+            triggers:
+              - _id: trigger.docker.status.changed
+                name: "Container has changed the state (new state: {ITEM.VALUE})"
+                expression: "{TEMPLATE_NAME:METRIC.change()}=1"
+                description: "__RESOURCE__ changed the state. Ack to close."
+                recovery_mode: NONE
+                # manual_close: "YES"
+                priority: INFO
+
+          - _prototype: docker._unsigned
+            _id: docker.container.state.running
+            _resource: Container {#NAME}
+            name: Running
+            key: docker.container_info.state.running["{#NAME}"]
+            value_map: Docker flag
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Running"
+              - type: BOOL_TO_DECIMAL
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Paused
+            key: docker.container_info.state.paused["{#NAME}"]
+            value_map: Docker flag
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Paused"
+              - type: BOOL_TO_DECIMAL
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Restarting
+            key: docker.container_info.state.restarting["{#NAME}"]
+            value_map: Docker flag
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Restarting"
+              - type: BOOL_TO_DECIMAL
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: OOMKilled
+            key: docker.container_info.state.oomkilled["{#NAME}"]
+            value_map: Docker flag
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.OOMKilled"
+              - type: BOOL_TO_DECIMAL
+
+          # - _prototype: docker._unsigned
+          #   _resource: Container {#NAME}
+          #   name: RemovalInProgress
+          #   key: docker.container_info.state.removalinprogress["{#ID}"]
+          #   value_map: Docker flag
+          #   master_item: docker.container_info
+          #   description:
+          #   application_prototype: "Docker: Container {#NAME}"
+          #   preprocessing:
+          #     - type: JSONPATH
+          #       params: "$.State.RemovalInProgress"
+          #     - type: BOOL_TO_DECIMAL
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Dead
+            key: docker.container_info.state.dead["{#NAME}"]
+            value_map: Docker flag
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Dead"
+              - type: BOOL_TO_DECIMAL
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Pid
+            key: docker.container_info.state.pid["{#NAME}"]
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Pid"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: docker._unsigned
+            _resource: Container {#NAME}
+            name: Exit code
+            key: docker.container_info.state.exitcode["{#NAME}"]
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.ExitCode"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+            triggers:
+              - _id: trigger.docker.exitcode
+                name: Container has been stopped with error code
+                expression: "{TEMPLATE_NAME:METRIC.last()}>0 and {TEMPLATE_NAME:__docker.container.state.running__.last()}=0"
+                opdata: "Exit code: {ITEM.LASTVALUE1}"
+                manual_close: "YES"
+                priority: AVERAGE
+
+          - _prototype: docker._char
+            _resource: Container {#NAME}
+            name: Error
+            key: docker.container_info.state.error["{#NAME}"]
+            master_item: docker.container_info
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.Error"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+            triggers:
+              - _prototype: trigger.version.changed
+                name: "An error has occurred in the container"
+                description: "__RESOURCE__ has an error. Ack to close."
+                priority: WARNING
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Started at
+            key: docker.container_info.started["{#NAME}"]
+            master_item: docker.container_info
+            units: unixtime
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.StartedAt"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+          - _prototype: docker._float
+            _resource: Container {#NAME}
+            name: Finished at
+            key: docker.container_info.finished["{#NAME}"]
+            master_item: docker.container_info
+            units: unixtime
+            description:
+            application_prototype: "Docker: Container {#NAME}"
+            preprocessing:
+              - type: JSONPATH
+                params: "$.State.FinishedAt"
+              - type: DISCARD_UNCHANGED_HEARTBEAT
+                params: 1d
+
+    macros:
+      - macro: "{$DOCKER.LLD.FILTER.CONTAINER.MATCHES}"
+        value: ".*"
+        _description: "Filter of discoverable containers"
+
+      - macro: "{$DOCKER.LLD.FILTER.CONTAINER.NOT_MATCHES}"
+        value: "CHANGE_IF_NEEDED"
+        _description: "Filter to exclude discovered containers"
+
+      - macro: "{$DOCKER.LLD.FILTER.IMAGE.MATCHES}"
+        value: ".*"
+        _description: "Filter of discoverable images"
+
+      - macro: "{$DOCKER.LLD.FILTER.IMAGE.NOT_MATCHES}"
+        value: "CHANGE_IF_NEEDED"
+        _description: "Filter to exclude discovered images"
+
+    screens:
+      - name: Docker overview
+        hsize: 2
+        vsize: 5
+        screen_items:
+          - _graph_id: docker.containers
+            x: 0
+            y: 0
+          - _graph_id: docker.size
+            x: 1
+            y: 0
+          - _graph_id: docker.mem.total
+            x: 0
+            y: 1
+          - _graph_id: docker.goroutines
+            x: 1
+            y: 1
+          - _graph_id: docker.images
+            x: 0
+            y: 2
+
+value_maps:
+  - name: Service state
+    mappings:
+      - value: "0"
+        newvalue: Down
+      - value: "1"
+        newvalue: Up
+
+  - name: Docker flag
+    mappings:
+      - value: "0"
+        newvalue: False
+      - value: "1"
+        newvalue: True

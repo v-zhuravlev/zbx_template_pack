@@ -1,0 +1,429 @@
+[
+    {
+        "_id": "rabbitmq.healthcheck",
+        "key": "rabbitmq.healthcheck",
+        "name": "Healthcheck",
+        "delay": "1m",
+        "history": "7h",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "value_type": "UNSIGNED",
+        "description": "Runs basic healthchecks in the current node. Checks that the rabbit application is running, channels and queues can be listed successfully, and that no alarms are in effect.",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.status"
+            },
+            {
+                "type": "BOOL_TO_DECIMAL",
+                "error_handler": "CUSTOM_VALUE",
+                "error_handler_params": "0"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.healthcheck",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}=0",
+                "name": "Node healthcheck failed",
+                "opdata": "Current state: {ITEM.LASTVALUE1}",
+                "priority": "AVERAGE",
+                "description": "https://www.rabbitmq.com/monitoring.html#health-checks"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.fd_used",
+        "key": "rabbitmq.node.fd_used",
+        "name": "Used file descriptors",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Used file descriptors",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.fd_used"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.node.fd_used",
+                "name": "File descriptors",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.node.fd_used",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.disk_free",
+        "key": "rabbitmq.node.disk_free",
+        "name": "Free disk space",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "units": "B",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Current free disk space",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.disk_free"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.node.disk_free",
+                "name": "Disk free",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.node.disk_free",
+                        "drawtype": "GRADIENT_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.node.disk_free_limit",
+                        "drawtype": "BOLD_LINE",
+                        "color": "FF0000"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.disk_free_limit",
+        "key": "rabbitmq.node.disk_free_limit",
+        "name": "Disk free limit",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "units": "B",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Disk free space limit in bytes",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.disk_free_limit"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.mem_used",
+        "key": "rabbitmq.node.mem_used",
+        "name": "Memory used",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "units": "B",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Memory used in bytes",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.mem_used"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.node.mem_used",
+                "name": "Memory used",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.node.mem_used",
+                        "drawtype": "GRADIENT_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.node.mem_limit",
+                        "drawtype": "BOLD_LINE",
+                        "color": "FF0000"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.mem_limit",
+        "key": "rabbitmq.node.mem_limit",
+        "name": "Memory limit",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "units": "B",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Memory usage high watermark in bytes",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.mem_limit"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.run_queue",
+        "key": "rabbitmq.node.run_queue",
+        "name": "Runtime run queue",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Average number of Erlang processes waiting to run",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.run_queue"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.sockets_used",
+        "key": "rabbitmq.node.sockets_used",
+        "name": "Sockets used",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Number of file descriptors used as sockets",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.sockets_used"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.node.sockets",
+                "name": "Sockets",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.node.sockets_used",
+                        "drawtype": "GRADIENT_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.node.sockets_total",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.sockets_total",
+        "key": "rabbitmq.node.sockets_total",
+        "name": "Sockets available",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "File descriptors available for use as sockets",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.sockets_total"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.partitions",
+        "key": "rabbitmq.node.partitions",
+        "name": "Number of network partitions",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Number of network partitions this node is seeing",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.partitions"
+            },
+            {
+                "type": "JAVASCRIPT",
+                "params": "return JSON.parse(value).length;"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.partitions",
+                "expression": "{TEMPLATE_NAME:METRIC.min(5m)}>0",
+                "name": "Number of network partitions is too high (more than 0 for 5m)",
+                "opdata": "Current value: {ITEM.LASTVALUE1}",
+                "description": "https://www.rabbitmq.com/partitions.html#detecting",
+                "priority": "WARNING"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.running",
+        "key": "rabbitmq.node.running",
+        "name": "Is running",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Is the node running or not",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.running"
+            },
+            {
+                "type": "BOOL_TO_DECIMAL"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.node.is_running",
+                "expression": "{TEMPLATE_NAME:METRIC.max(5m)}=0",
+                "name": "Node is not running",
+                "opdata": "Current state: {ITEM.LASTVALUE1}",
+                "priority": "AVERAGE",
+                "description": "RabbitMQ node is not running",
+                "_depends_on": [
+                    "trigger.proc.not_running",
+                    "trigger.status"
+                ]
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.node.running",
+                "name": "Node status",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.node.running",
+                        "drawtype": "BOLD_LINE"
+                    },
+                    {
+                        "name": "rabbitmq.healthcheck",
+                        "drawtype": "BOLD_LINE"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.mem_alarm",
+        "key": "rabbitmq.node.mem_alarm",
+        "name": "Memory alarm",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Does the host has memory alarm",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.mem_alarm"
+            },
+            {
+                "type": "BOOL_TO_DECIMAL"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.memory.alarm",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}=1",
+                "name": "Memory alarm (Memory usage threshold has been reached)",
+                "opdata": "Current state: {ITEM.LASTVALUE1}",
+                "description": "https://www.rabbitmq.com/memory.html",
+                "priority": "AVERAGE"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.disk_free_alarm",
+        "key": "rabbitmq.node.disk_free_alarm",
+        "name": "Disk free alarm",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "UNSIGNED",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Does the node have disk alarm",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.disk_free_alarm"
+            },
+            {
+                "type": "BOOL_TO_DECIMAL"
+            }
+        ],
+        "triggers": [
+            {
+                "_id": "trigger.disk.alarm",
+                "expression": "{TEMPLATE_NAME:METRIC.last()}=1",
+                "name": "Free disk space alarm (Free space threshold has been reached)",
+                "opdata": "Current state: {ITEM.LASTVALUE1}",
+                "description": "https://www.rabbitmq.com/disk-alarms.html",
+                "priority": "AVERAGE"
+            }
+        ]
+    },
+    {
+        "_id": "rabbitmq.node.uptime",
+        "key": "rabbitmq.node.uptime",
+        "name": "Uptime",
+        "type": "DEPENDENT",
+        "masterItem": "rabbitmq.nodes",
+        "history": "7d",
+        "value_type": "FLOAT",
+        "units": "s",
+        "_group": "RabbitMQ",
+        "_resource": "RabbitMQ",
+        "description": "Uptime in milliseconds",
+        "preprocessing": [
+            {
+                "type": "JSONPATH",
+                "params": "$.uptime"
+            },
+            {
+                "type": "MULTIPLIER",
+                "params": "0.001"
+            }
+        ],
+        "triggers": [
+            {
+                "_prototype": "trigger.uptime.restarted"
+            }
+        ],
+        "graphs": [
+            {
+                "_id": "rabbitmq.node.uptime",
+                "name": "Uptime",
+                "graph_items": [
+                    {
+                        "name": "rabbitmq.node.uptime",
+                        "drawtype": "SINGLE_LINE"
+                    }
+                ]
+            }
+        ]
+    }
+]
